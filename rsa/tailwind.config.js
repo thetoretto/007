@@ -69,22 +69,30 @@ export default {
         },
       },
       animation: {
-        'fade-in': 'fadeIn 0.3s ease-in-out',
+        'fade-in': 'fade-in 0.5s ease-out',
+        'fade-in-fast': 'fade-in 0.3s ease-out',
         'slide-up': 'slideUp 0.3s ease-in-out',
         'slide-right': 'slideRight 0.3s ease-in-out',
+        'ping-slow': 'ping-slow 1.5s cubic-bezier(0, 0, 0.2, 1) infinite',
       },
       keyframes: {
-        fadeIn: {
-          '0%': { opacity: '0' },
-          '100%': { opacity: '1' },
+        'fade-in': {
+          'from': { opacity: '0', transform: 'translateY(5px)' },
+          'to': { opacity: '1', transform: 'translateY(0)' },
         },
-        slideUp: {
-          '0%': { transform: 'translateY(10px)', opacity: '0' },
-          '100%': { transform: 'translateY(0)', opacity: '1' },
+        'slideUp': { // Assuming slideUp definition is needed
+          'from': { opacity: '0', transform: 'translateY(10px)' },
+          'to': { opacity: '1', transform: 'translateY(0)' },
         },
-        slideRight: {
-          '0%': { transform: 'translateX(-10px)', opacity: '0' },
-          '100%': { transform: 'translateX(0)', opacity: '1' },
+        'slideRight': { // Assuming slideRight definition is needed
+          'from': { opacity: '0', transform: 'translateX(-10px)' },
+          'to': { opacity: '1', transform: 'translateX(0)' },
+        },
+        'ping-slow': {
+          '75%, 100%': {
+            transform: 'scale(1.5)',
+            opacity: '0',
+          },
         },
       },
     },

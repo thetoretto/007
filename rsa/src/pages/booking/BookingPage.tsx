@@ -2,10 +2,12 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProgressBar from '../../components/common/ProgressBar';
 import RouteSelection from '../../components/booking/RouteSelection';
-import VehicleAndSeat from '../../components/booking/VehicleAndSeat';
+import VehicleSelection from '../../components/booking/VehicleSelection';
+import SeatSelection from '../../components/booking/SeatSelection';
 import Schedule from '../../components/booking/Schedule';
 import PickupAndExtras from '../../components/booking/PickupAndExtras';
-import ReviewAndPayment from '../../components/booking/ReviewAndPayment';
+import Review from '../../components/booking/Review';
+import Payment from '../../components/booking/Payment';
 import useBookingStore from '../../store/bookingStore';
 import useAuthStore from '../../store/authStore';
 
@@ -16,10 +18,11 @@ const BookingPage: React.FC = () => {
 
   const steps = [
     'Route',
-    'Vehicle & Seat',
     'Schedule',
-    'Pickup & Extras',
-    'Review & Payment',
+    'Vehicle',
+    'Seat',
+    'Review',
+    { label: 'Payment', numbered: false } // Special case for last step
   ];
 
   const canProceed = () => {
@@ -27,11 +30,15 @@ const BookingPage: React.FC = () => {
       case 1:
         return !!selectedRoute;
       case 2:
-        return !!selectedVehicle && !!selectedSeat;
-      case 3:
         return !!selectedTimeSlot;
+      case 3:
+        return !!selectedVehicle;
       case 4:
-        return true; // No required fields in step 4
+        return !!selectedSeat;
+      case 5:
+        return true; // Review validation
+      case 6:
+        return true; // Payment handled separately
       default:
         return false;
     }
@@ -42,21 +49,22 @@ const BookingPage: React.FC = () => {
       case 1:
         return <RouteSelection />;
       case 2:
-        return <VehicleAndSeat />;
-      case 3:
         return <Schedule />;
+      case 3:
+        return <VehicleSelection />;
       case 4:
-        return <PickupAndExtras />;
+        return <SeatSelection />;
       case 5:
-        return <ReviewAndPayment />;
+        return <Review />;
+      case 6:
+        return <Payment />;
       default:
         return <RouteSelection />;
     }
   };
 
   const handleNext = () => {
-    if (currentStep === 5 && !user) {
-      // If trying to proceed to payment without being logged in
+    if (currentStep === 6 && !user) {
       navigate('/login', { state: { redirectTo: '/book' } });
       return;
     }
@@ -90,23 +98,23 @@ const BookingPage: React.FC = () => {
         {currentStep > 1 ? (
           <button
             onClick={handlePrev}
-            className="btn btn-secondary"
+            className="btn btn-secondary transition-transform duration-150 ease-in-out hover:scale-105 hover:shadow-sm"
           >
             Back
           </button>
         ) : (
-          <div></div> // Empty div to maintain layout with flex justify-between
+          <div></div>
         )}
         
-        {currentStep < 5 && (
+        {currentStep < 6 ? (
           <button
             onClick={handleNext}
             disabled={!canProceed()}
-            className={`btn ${canProceed() ? 'btn-primary' : 'btn-disabled'}`}
+            className={`btn ${canProceed() ? 'btn-primary transition-transform duration-150 ease-in-out hover:scale-105 hover:shadow-sm' : 'btn-disabled'}`}
           >
-            Continue
+            {currentStep === 5 ? 'Proceed to Payment' : 'Continue'}
           </button>
-        )}
+        ) : null}
       </div>
     </div>
   );

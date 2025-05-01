@@ -1,8 +1,39 @@
 import React, { useEffect, useState } from 'react';
-import { ArrowRight, MapPin, Search } from 'lucide-react';
+import { ArrowRight, MapPin, Search, Check } from 'lucide-react';
 import useBookingStore from '../../store/bookingStore';
-import LoadingSpinner from '../common/LoadingSpinner';
+import LoadingSpinner from '../common/LoadingSpinner'; 
 import { Route } from '../../types';
+
+// Rwanda cities for dropdowns
+const rwandaCities = [
+  'Kigali',
+  'Butare',
+  'Gitarama',
+  'Ruhengeri',
+  'Gisenyi',
+  'Byumba',
+  'Cyangugu',
+  'Gikongoro',
+  'Kibungo',
+  'Kibuye',
+  'Nyanza',
+  'Ruhango',
+  'Rwamagana'
+];
+
+// Popular bus stops in Rwanda
+const popularBusStops = [
+  'Nyabugogo Bus Terminal',
+  'Remera Bus Stop',
+  'Kimironko Bus Station',
+  'Downtown Kigali Station',
+  'Huye Bus Terminal',
+  'Musanze Bus Station',
+  'Rubavu Terminal',
+  'Rusizi Bus Stop',
+  'Nyagatare Station',
+  'Karongi Bus Terminal'
+];
 
 const RouteSelection: React.FC = () => {
   const { 
@@ -15,6 +46,10 @@ const RouteSelection: React.FC = () => {
   } = useBookingStore();
   
   const [searchTerm, setSearchTerm] = useState('');
+  const [originCity, setOriginCity] = useState('');
+  const [destinationCity, setDestinationCity] = useState('');
+  const [pickAvailable, setPickAvailable] = useState(false);
+  const [departureStop, setDepartureStop] = useState('');
   const [filteredRoutes, setFilteredRoutes] = useState<Route[]>([]);
 
   useEffect(() => {
@@ -71,6 +106,75 @@ const RouteSelection: React.FC = () => {
     <div className="animate-fade-in">
       <h2 className="text-xl font-semibold mb-4">Select Your Route</h2>
       
+      {/* Rwanda City Dropdowns */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div>
+          <label htmlFor="origin" className="block text-sm font-medium text-gray-700 mb-1">
+            Origin City
+          </label>
+          <select
+            id="origin"
+            value={originCity}
+            onChange={(e) => setOriginCity(e.target.value)}
+            className="form-select block w-full"
+          >
+            <option value="">Select origin city</option>
+            {rwandaCities.map(city => (
+              <option key={`origin-${city}`} value={city}>{city}</option>
+            ))}
+          </select>
+        </div>
+        
+        <div>
+          <label htmlFor="destination" className="block text-sm font-medium text-gray-700 mb-1">
+            Destination City
+          </label>
+          <select
+            id="destination"
+            value={destinationCity}
+            onChange={(e) => setDestinationCity(e.target.value)}
+            className="form-select block w-full"
+          >
+            <option value="">Select destination city</option>
+            {rwandaCities.map(city => (
+              <option key={`dest-${city}`} value={city}>{city}</option>
+            ))}
+          </select>
+        </div>
+      </div>
+      
+      {/* Departure Bus Stop Selection */}
+      <div className="mb-6">
+        <label htmlFor="departure-stop" className="block text-sm font-medium text-gray-700 mb-1">
+          Departure Bus Stop
+        </label>
+        <select
+          id="departure-stop"
+          value={departureStop}
+          onChange={(e) => setDepartureStop(e.target.value)}
+          className="form-select block w-full"
+        >
+          <option value="">Select departure bus stop</option>
+          {popularBusStops.map(stop => (
+            <option key={stop} value={stop}>{stop}</option>
+          ))}
+        </select>
+      </div>
+      
+      {/* Pick Available Checkbox */}
+      <div className="mb-6">
+        <label className="inline-flex items-center cursor-pointer">
+          <input 
+            type="checkbox" 
+            className="sr-only peer" 
+            checked={pickAvailable}
+            onChange={() => setPickAvailable(!pickAvailable)}
+          />
+          <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-500"></div>
+          <span className="ms-3 text-sm font-medium text-gray-700">Show only available routes</span>
+        </label>
+      </div>
+      
       <div className="mb-6 relative">
         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
           <Search className="h-5 w-5 text-gray-400" />
@@ -90,11 +194,12 @@ const RouteSelection: React.FC = () => {
             <div
               key={route.id}
               className={`
-                p-4 rounded-lg cursor-pointer border transition-all
+                p-4 rounded-lg cursor-pointer border transition-all duration-200 ease-in-out 
+                transform hover:scale-[1.01] hover:shadow-md
                 ${
                   selectedRoute?.id === route.id
-                    ? 'border-primary-500 bg-primary-50'
-                    : 'border-gray-200 bg-white hover:bg-gray-50'
+                    ? 'border-primary-500 bg-primary-50 ring-2 ring-primary-200 shadow-lg scale-[1.01]' // Enhanced selected state
+                    : 'border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300' // Added hover effect
                 }
               `}
               onClick={() => handleRouteSelect(route.id)}

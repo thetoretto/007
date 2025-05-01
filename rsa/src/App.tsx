@@ -8,6 +8,9 @@ import RegisterPage from './pages/auth/RegisterPage';
 import BookingPage from './pages/booking/BookingPage';
 import TripsPage from './pages/passenger/TripsPage';
 import DriverDashboard from './pages/driver/DriverDashboard';
+import QRScanner from './pages/driver/QRScanner';
+import NewTrip from './pages/driver/NewTrip';
+import ManageVehicles from './pages/driver/ManageVehicles';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import useAuthStore from './store/authStore';
 import { useEffect } from 'react';
@@ -64,6 +67,18 @@ function App() {
             <Route 
               path="/driver/dashboard" 
               element={<ProtectedRoute element={<DriverDashboard />} allowedRoles={['driver']} />} 
+            />
+            <Route 
+              path="/driver/qr-scanner" 
+              element={<ProtectedRoute element={<QRScanner />} allowedRoles={['driver']} />} 
+            />
+            <Route 
+              path="/driver/trips/new" 
+              element={<ProtectedRoute element={<NewTrip />} allowedRoles={['driver']} />} 
+            />
+            <Route 
+              path="/driver/vehicles" 
+              element={<ProtectedRoute element={<ManageVehicles />} allowedRoles={['driver']} />} 
             />
             
             {/* Admin routes */}

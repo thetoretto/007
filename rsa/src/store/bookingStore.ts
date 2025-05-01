@@ -14,7 +14,6 @@ interface BookingState {
   availableSeats: Seat[];
   
   // Step 3: Schedule
-  selectedDate: string | null;
   selectedTimeSlot: TimeSlot | null;
   availableTimeSlots: TimeSlot[];
   
@@ -58,8 +57,7 @@ interface BookingActions {
   selectSeat: (seatId: string) => void;
   
   // Step 3: Schedule
-  selectDate: (date: string) => void;
-  fetchTimeSlots: (routeId: string, date: string) => Promise<void>;
+  fetchTimeSlots: (routeId: string) => Promise<void>;
   selectTimeSlot: (timeSlotId: string) => void;
   
   // Step 4: Pickup & Extras
@@ -90,7 +88,6 @@ const initialState: BookingState = {
   availableSeats: [],
   
   // Step 3: Schedule
-  selectedDate: null,
   selectedTimeSlot: null,
   availableTimeSlots: [],
   
@@ -201,6 +198,28 @@ const useBookingStore = create<BookingState & BookingActions>((set, get) => ({
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 800));
       
+      // Filter seats for the selected vehicle
+      const vehicleSeats = mockSeats.filter(seat => seat.vehicleId === vehicleId);
+      if (vehicleSeats.length === 0) {
+        // If no seats found, create default seats for the vehicle
+        const vehicle = mockVehicles.find(v => v.id === vehicleId);
+        if (vehicle) {
+          const defaultSeats = Array.from({ length: vehicle.capacity }, (_, i) => ({
+            id: `seat-${i + 1}-${vehicleId}`,
+            number: `${i + 1}`,
+            vehicleId,
+            isAvailable: true,
+            isHandicapAccessible: i < 2,
+            position: {
+              row: Math.floor(i / 4) + 1,
+              column: (i % 4) + 1
+            }
+          }));
+          set({ availableSeats: defaultSeats, loading: false });
+          return;
+        }
+      }
+      
       // Filter seats by vehicle ID
       const seats = mockSeats.filter(seat => seat.vehicleId === vehicleId);
       set({ availableSeats: seats, loading: false });
@@ -228,17 +247,28 @@ const useBookingStore = create<BookingState & BookingActions>((set, get) => ({
     }
   },
   
-  fetchTimeSlots: async (routeId, date) => {
+  fetchTimeSlots: async (routeId) => {
     set({ loading: true, error: null });
     try {
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 800));
       
-      // Filter time slots by route ID and date
-      const slots = mockTimeSlots.filter(
-        slot => slot.routeId === routeId && slot.date === date
-      );
-      set({ availableTimeSlots: slots, loading: false });
+      // Generate available time slots for the selected date
+      const today = new Date().toISOString().split('T')[0];
+      const times = ['08:00', '10:30', '13:00', '15:30', '18:00'];
+      const availableSlots = times.map((time, index) => ({
+        id: `ts${index + 1}_${today}`,
+        date: today,
+        time,
+        routeId,
+        vehicleId: 'v1',
+        driverId: '3',
+        availableSeats: 20, // Always set to maximum capacity
+        price: 25.99,
+        isActive: true
+      }));
+      
+      set({ availableTimeSlots: availableSlots, loading: false });
     } catch (error) {
       set({ loading: false, error: (error as Error).message });
     }

@@ -1,8 +1,15 @@
 import React from 'react';
 import { Check } from 'lucide-react';
 
+interface Step {
+  label: string;
+  numbered?: boolean;
+}
+
+type StepType = string | Step;
+
 interface ProgressBarProps {
-  steps: string[];
+  steps: StepType[];
   currentStep: number;
   onStepClick?: (step: number) => void;
 }
@@ -14,8 +21,8 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ steps, currentStep, onStepCli
         {steps.map((step, index) => (
           <div
             key={index}
-            className={`flex flex-col items-center ${
-              onStepClick ? 'cursor-pointer' : ''
+            className={`flex flex-col items-center group ${ // Added group for hover state
+              onStepClick && index < currentStep ? 'cursor-pointer' : 'cursor-default'
             }`}
             onClick={() => {
               if (onStepClick && index < currentStep) {
@@ -24,7 +31,9 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ steps, currentStep, onStepCli
             }}
           >
             <div
-              className={`flex items-center justify-center w-10 h-10 rounded-full mb-2 transition-colors ${
+              className={`flex items-center justify-center w-10 h-10 rounded-full mb-2 transition-all duration-200 ease-in-out ${ // Added transition
+                onStepClick && index < currentStep ? 'group-hover:scale-110 group-hover:shadow-md' : '' // Added hover effect for clickable steps
+              } ${
                 index + 1 < currentStep
                   ? 'bg-success-500 text-white'
                   : index + 1 === currentStep
@@ -39,11 +48,13 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ steps, currentStep, onStepCli
               )}
             </div>
             <span
-              className={`text-xs font-medium text-center ${
+              className={`text-xs font-medium text-center transition-colors duration-200 ${ // Added transition
+                onStepClick && index < currentStep ? 'group-hover:text-primary-600' : '' // Added hover effect for clickable steps
+              } ${
                 index + 1 <= currentStep ? 'text-gray-800' : 'text-gray-500'
               }`}
             >
-              {step}
+              {typeof step === 'string' ? step : step.label}
             </span>
           </div>
         ))}

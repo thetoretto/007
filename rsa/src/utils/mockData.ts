@@ -197,6 +197,15 @@ export const mockVehicles: Vehicle[] = [
     features: ['air_conditioning', 'wifi', 'entertainment', 'restroom'],
     isActive: true,
   },
+  {
+    id: 'v4',
+    model: 'Toyota Hiace',
+    licensePlate: 'DEF-9012',
+    capacity: 7,
+    type: 'coach',
+    features: ['air_conditioning', 'wifi', 'entertainment', 'restroom'],
+    isActive: true,
+  },
 ];
 
 // Mock Seats for Vehicle 1

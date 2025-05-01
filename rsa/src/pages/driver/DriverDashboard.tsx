@@ -1,62 +1,54 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { getBookingsWithDetails, mockRoutes, mockTimeSlots } from '../../utils/mockData';
-import { Calendar, Clock, Users, AlertCircle, Settings, Plus, CheckCircle, Info } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Calendar, Clock, Users, AlertCircle, Settings, Plus, Info } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
+import useDriverStore from '../../store/driverStore';
+import TripCard from '../../components/driver/TripCard';
+import SummaryMetric from '../../components/driver/SummaryMetric';
+import QuickActionButton from '../../components/driver/QuickActionButton';
+import CancelTripModal from '../../components/driver/modals/CancelTripModal';
+import PassengerListModal from '../../components/driver/modals/PassengerListModal';
 
 const DriverDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const { user } = useAuthStore();
-  const [selectedTrip, setSelectedTrip] = useState<string | null>(null);
-  
-  // Get all bookings with details
-  const allBookings = getBookingsWithDetails();
-  
-  // Group bookings by trip (timeSlotId)
-  const tripGroups = allBookings.reduce((groups: { [key: string]: typeof allBookings }, booking) => {
-    const key = booking.timeSlotId;
-    if (!groups[key]) {
-      groups[key] = [];
-    }
-    groups[key].push(booking);
-    return groups;
-  }, {});
-  
-  // Get trip details (combine time slot and route info)
-  const trips = mockTimeSlots.map(timeSlot => {
-    const route = mockRoutes.find(r => r.id === timeSlot.routeId);
-    const bookingsForTrip = tripGroups[timeSlot.id] || [];
-    
-    return {
-      ...timeSlot,
-      route,
-      bookings: bookingsForTrip,
-      pendingBookings: bookingsForTrip.filter(b => b.status === 'pending').length,
-      confirmedBookings: bookingsForTrip.filter(b => b.status === 'confirmed').length,
-      totalBookings: bookingsForTrip.length,
-    };
-  });
-  
-  // Filter for upcoming trips (future dates)
-  const upcomingTrips = trips.filter(trip => {
-    const tripDate = new Date(trip.date);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return tripDate >= today;
-  });
-  
-  // Sort upcoming trips by date and time
-  upcomingTrips.sort((a, b) => {
-    const dateA = new Date(`${a.date}T${a.time}`);
-    const dateB = new Date(`${b.date}T${b.time}`);
-    return dateA.getTime() - dateB.getTime();
-  });
+  const {
+    upcomingTrips,
+    selectedTripId,
+    dailySummary,
+    loading,
+    error,
+    fetchUpcomingTrips,
+    loadPreferences,
+  } = useDriverStore();
 
-  const handleCheckInPassenger = (bookingId: string) => {
-    alert(`Passenger with booking ${bookingId} would be checked in here. This is just a demo.`);
-  };
+  useEffect(() => {
+    fetchUpcomingTrips();
+    loadPreferences();
+  }, []);
 
-  const handleCancelTrip = (tripId: string) => {
-    alert(`Trip ${tripId} would be cancelled here. This is just a demo.`);
+  if (loading && upcomingTrips.length === 0) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-500 border-t-transparent" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="bg-error-50 text-error-700 p-4 rounded-lg">
+          <p>Error: {error}</p>
+          <button
+            onClick={() => fetchUpcomingTrips()}
+            className="mt-2 btn btn-primary"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -91,109 +83,12 @@ const DriverDashboard: React.FC = () => {
               {upcomingTrips.length > 0 ? (
                 <div className="divide-y divide-gray-200">
                   {upcomingTrips.map((trip) => (
-                    <div 
+                    <TripCard
                       key={trip.id}
-                      className={`hover:bg-gray-50 cursor-pointer p-4 sm:px-6 lg:px-8 transition-colors ${
-                        selectedTrip === trip.id ? 'bg-primary-50' : ''
-                      }`}
-                      onClick={() => setSelectedTrip(trip.id === selectedTrip ? null : trip.id)}
-                    >
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h3 className="text-base font-medium text-gray-900">
-                            {trip.route?.name}
-                          </h3>
-                          <div className="mt-1 flex items-center text-sm text-gray-500">
-                            <Calendar className="h-4 w-4 mr-1" />
-                            <span>{trip.date}</span>
-                            <span className="mx-2">•</span>
-                            <Clock className="h-4 w-4 mr-1" />
-                            <span>{trip.time}</span>
-                          </div>
-                        </div>
-                        
-                        <div className="flex flex-col items-end">
-                          <div className="flex items-center">
-                            <Users className="h-4 w-4 text-gray-400 mr-1" />
-                            <span className="text-sm">
-                              {trip.confirmedBookings} / {trip.availableSeats}
-                            </span>
-                          </div>
-                          {trip.pendingBookings > 0 && (
-                            <div className="mt-1 flex items-center text-xs text-warning-600">
-                              <AlertCircle className="h-3 w-3 mr-1" />
-                              <span>{trip.pendingBookings} pending bookings</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                      
-                      {selectedTrip === trip.id && (
-                        <div className="mt-4 pt-4 border-t border-gray-100 animate-fade-in">
-                          <div className="mb-4 flex justify-between items-center">
-                            <h4 className="font-medium text-gray-900">Passenger List</h4>
-                            <div className="flex space-x-2">
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleCancelTrip(trip.id);
-                                }}
-                                className="btn btn-danger py-1 px-3 text-xs"
-                              >
-                                Cancel Trip
-                              </button>
-                              <Link 
-                                to={`/driver/trips/${trip.id}`}
-                                onClick={(e) => e.stopPropagation()}
-                                className="btn btn-primary py-1 px-3 text-xs"
-                              >
-                                Trip Details
-                              </Link>
-                            </div>
-                          </div>
-                          
-                          {trip.bookings.length > 0 ? (
-                            <div className="divide-y divide-gray-100">
-                              {trip.bookings.map((booking) => (
-                                <div key={booking.id} className="py-2 flex items-center justify-between">
-                                  <div>
-                                    <p className="font-medium">
-                                      {booking.passenger?.firstName} {booking.passenger?.lastName}
-                                    </p>
-                                    <p className="text-xs text-gray-500">
-                                      Seat {booking.seatId.split('s')[1].split('v')[0]}
-                                      {booking.hasDoorstepPickup && ' • Doorstep Pickup'}
-                                    </p>
-                                  </div>
-                                  <div>
-                                    {booking.status === 'confirmed' ? (
-                                      <button
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          handleCheckInPassenger(booking.id);
-                                        }}
-                                        className="btn bg-success-500 hover:bg-success-600 text-white py-1 px-3 text-xs"
-                                      >
-                                        <CheckCircle className="h-3 w-3 mr-1" />
-                                        Check In
-                                      </button>
-                                    ) : booking.status === 'checked-in' ? (
-                                      <span className="badge badge-success text-xs">Checked In</span>
-                                    ) : (
-                                      <span className="badge badge-warning text-xs">{booking.status}</span>
-                                    )}
-                                  </div>
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <p className="text-sm text-gray-500 text-center py-4">
-                              No bookings for this trip yet.
-                            </p>
-                          )}
-                        </div>
-                      )}
-                    </div>
+                      trip={trip}
+                      expanded={selectedTripId === trip.id}
+                    />
+                    
                   ))}
                 </div>
               ) : (
@@ -223,22 +118,30 @@ const DriverDashboard: React.FC = () => {
             </div>
             <div className="p-4 sm:px-6">
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs text-gray-500 mb-1">Total Trips Today</p>
-                  <p className="text-2xl font-bold text-primary-600">3</p>
-                </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs text-gray-500 mb-1">Passengers</p>
-                  <p className="text-2xl font-bold text-primary-600">27</p>
-                </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs text-gray-500 mb-1">Completed</p>
-                  <p className="text-2xl font-bold text-success-600">1</p>
-                </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs text-gray-500 mb-1">Upcoming</p>
-                  <p className="text-2xl font-bold text-accent-600">2</p>
-                </div>
+                <SummaryMetric
+                  title="Total Trips Today"
+                  value={dailySummary.totalTrips}
+                  icon={Calendar}
+                  color="primary"
+                />
+                <SummaryMetric
+                  title="Passengers"
+                  value={dailySummary.totalPassengers}
+                  icon={Users}
+                  color="accent"
+                />
+                <SummaryMetric
+                  title="Completed"
+                  value={dailySummary.completedTrips}
+                  icon={Clock}
+                  color="success"
+                />
+                <SummaryMetric
+                  title="Upcoming"
+                  value={dailySummary.upcomingTrips}
+                  icon={AlertCircle}
+                  color="warning"
+                />
               </div>
             </div>
           </div>
@@ -249,32 +152,24 @@ const DriverDashboard: React.FC = () => {
             </div>
             <div className="p-4 sm:px-6">
               <div className="space-y-3">
-                <Link 
-                  to="/driver/scanner"
-                  className="btn btn-primary w-full flex items-center justify-center"
-                >
-                  <QRScannerIcon className="h-5 w-5 mr-2" />
-                  Open QR Scanner
-                </Link>
-                <Link 
-                  to="/driver/trips/new"
-                  className="btn btn-secondary w-full flex items-center justify-center"
-                >
-                  <Plus className="h-5 w-5 mr-2" />
-                  New Trip
-                </Link>
-                <Link 
-                  to="/driver/vehicles"
-                  className="btn btn-secondary w-full flex items-center justify-center"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 mr-2">
-                    <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.4 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.6-1.2-.9-1.9-1.7H4c-.9 0-1.6.7-1.6 1.6v7.3c0 .9.7 1.7 1.6 1.7h2"/>
-                    <circle cx="7" cy="17" r="2"/>
-                    <path d="M9 17h6"/>
-                    <circle cx="17" cy="17" r="2"/>
-                  </svg>
-                  Manage Vehicles
-                </Link>
+                <QuickActionButton
+                  icon={QRScannerIcon}
+                  label="Open QR Scanner"
+                  onClick={() => navigate('/driver/qr-scanner')}
+                  variant="primary"
+                />
+                <QuickActionButton
+                  icon={Plus}
+                  label="New Trip"
+                  onClick={() => navigate('/driver/trips/new')}
+                  variant="secondary"
+                />
+                <QuickActionButton
+                  icon={Settings}
+                  label="Manage Vehicles"
+                  onClick={() => navigate('/driver/vehicles')}
+                  variant="secondary"
+                />
               </div>
               
               <div className="mt-6 p-3 bg-primary-50 rounded-lg border border-primary-100 flex items-start">
@@ -295,7 +190,7 @@ const DriverDashboard: React.FC = () => {
 };
 
 // Custom QR Scanner Icon
-const QRScannerIcon = ({ className }: { className?: string }) => (
+const QRScannerIcon: React.FC<{ className?: string }> = ({ className }) => (
   <svg 
     xmlns="http://www.w3.org/2000/svg" 
     viewBox="0 0 24 24" 
