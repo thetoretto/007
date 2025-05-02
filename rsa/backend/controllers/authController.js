@@ -18,6 +18,13 @@ exports.register = async (req, res) => {
       });
     }
 
+    if (!password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password is required'
+      });
+    }
+
     // Check if user exists with either email or phone
     const existingUser = await User.findOne({
       $or: [
@@ -79,16 +86,24 @@ exports.register = async (req, res) => {
  * @access  Public
  */
 exports.login = async (req, res) => {
+  if (process.env.NODE_ENV === 'development') {
+    const creds = require('../devCredentials');
+    const { email, password } = req.body;
+    const user = Object.values(creds).find(u => u.username === email && u.password === password);
+    if (user) {
+      return res.status(200).json({ success: true, role: user.role });
+    } else {
+      return res.status(401).json({ success: false, message: 'Invalid credentials' });
+    }
+  }
   try {
     const { email, phoneNumber, password } = req.body;
-
     if (!email && !phoneNumber) {
       return res.status(400).json({
         success: false,
         message: 'Please provide either email or phone number'
       });
     }
-
     // Find user by email or phone number
     const user = await User.findOne({
       $or: [
@@ -96,15 +111,15 @@ exports.login = async (req, res) => {
         { phoneNumber }
       ].filter(Boolean)
     });
-
     if (!user) {
+      // Update existing error responses
       return res.status(401).json({
         success: false,
         message: 'Invalid credentials',
-        error: 'USER_NOT_FOUND'
+        errorCode: 'AUTH_FAILURE', // Unified error code
+        details: invalidField ? `Invalid ${invalidField}` : undefined
       });
     }
-
     // Validate password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
@@ -114,18 +129,15 @@ exports.login = async (req, res) => {
         error: 'INVALID_PASSWORD'
       });
     }
-
     // Generate JWT token (using details from the second login function)
     const token = jwt.sign(
       { id: user._id, role: user.role }, // Include role for consistency
       process.env.JWT_SECRET || 'your_jwt_secret', // Fallback secret
       { expiresIn: '30d' } // Use 30d expiry
     );
-
     // Return user data without password
     const userData = user.toObject();
     delete userData.password;
-
     res.status(200).json({
       success: true,
       token,
@@ -225,3 +237,9 @@ exports.updateMe = async (req, res) => {
     });
   }
 };
+if (!process.env.JWT_SECRET) {
+  return res.status(500).json({
+    success: false,
+    message: 'Server configuration error'
+  });
+}

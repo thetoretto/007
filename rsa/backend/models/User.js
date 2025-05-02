@@ -2,13 +2,6 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
-  phoneNumber: {
-    type: String,
-    unique: true,
-    sparse: true,
-    trim: true,
-    match: [/^\+?\d{7,15}$/, 'Please enter a valid international phone number (7–15 digits)']
-  },
   email: {
     type: String,
     unique: true,
@@ -16,6 +9,13 @@ const userSchema = new mongoose.Schema({
     trim: true,
     lowercase: true,
     match: [/^[^\s@]+@[^\s@]+\.[^\s@]+$/, 'Please enter a valid email address']
+  },
+  phoneNumber: {
+    type: String,
+    unique: true,
+    sparse: true,
+    trim: true,
+    match: [/^\+?\d{7,15}$/, 'Please enter a valid international phone number (7–15 digits)']
   },
   password: { 
     type: String, 
