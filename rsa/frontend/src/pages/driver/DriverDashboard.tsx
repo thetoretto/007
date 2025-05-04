@@ -1,30 +1,29 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getBookingsWithDetails, mockRoutes, mockTimeSlots } from '../../utils/mockData';
+import { getBookingsWithDetails, mockRoutes, mockTimeSlots, mockVehicles } from '../../utils/mockData';
 import { Calendar, Clock, Users, AlertCircle, Settings, Plus, CheckCircle, Info } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
-import { DashboardLayout, TripList, DailySummary, QuickActions } from '../../components/dashboard';
 import QRScannerIcon from '../../components/icons/QRScannerIcon';
-import { useTripStore } from '../../store/tripStore';
-import { useAuthStore } from '../../store/authStore';
-
 
 const DriverDashboard: React.FC = () => {
   const { user } = useAuthStore();
   const [selectedTrip, setSelectedTrip] = useState<string | null>(null);
 
-  // Mock data stores
+  // Use mockVehicles directly instead of maintaining a separate state
   const [trips, setTrips] = useState(mockTimeSlots.map(ts => ({
     ...ts,
-    vehicleId: 'vehicle-1',
+    id: ts.id || `trip-${Math.random().toString(36).substr(2, 9)}`,
+    vehicleId: ts.vehicleId || 'v1',
     passengers: 8,
-    status: 'upcoming'
+    status: 'upcoming',
+    availableSeats: mockVehicles.find(v => v.id === (ts.vehicleId || 'v1'))?.capacity || 16
   })));
-
-  const [vehicles, setVehicles] = useState([
-    { id: 'vehicle-1', type: 'Van', model: 'Mercedes Sprinter', seats: 16 },
-    { id: 'vehicle-2', type: 'SUV', model: 'Toyota Highlander', seats: 7 }
-  ]);
+  
+  // Create tripsWithDetails array that enhances each trip with its associated vehicle
+  const tripsWithDetails = trips.map((trip) => ({
+    ...trip,
+    vehicle: mockVehicles.find((v) => v.id === trip.vehicleId),
+  }));
 
   // Trip handlers
   const handleAddTrip = (newTrip: any) => {
@@ -39,10 +38,7 @@ const DriverDashboard: React.FC = () => {
     setTrips(trips.filter(t => t.id !== tripId));
   };
 
-  // Vehicle handlers
-  const handleAddVehicle = (newVehicle: any) => {
-    setVehicles([...vehicles, newVehicle]);
-  };
+  // No need for vehicle handlers as we're using mockVehicles directly
 
   // Calculate metrics
   const totalTripsToday = trips.filter(t => {
@@ -69,19 +65,24 @@ const DriverDashboard: React.FC = () => {
     return groups;
   }, {});
 
-  // Get trip details (combine time slot and route info)
-  const detailedTrips = mockTimeSlots.map(timeSlot => {
-    const route = mockRoutes.find(r => r.id === timeSlot.routeId);
-    const bookingsForTrip = tripGroups[timeSlot.id] || [];
+  // Get trip details from tripsWithDetails instead of trips
+  const detailedTrips = tripsWithDetails.map(trip => {
+    try {
+      const route = mockRoutes.find(r => r.id === trip.routeId);
+      const bookingsForTrip = tripGroups[trip.id] || [];
 
-    return {
-      ...timeSlot,
-      route,
-      bookings: bookingsForTrip,
-      pendingBookings: bookingsForTrip.filter(b => b.status === 'pending').length,
-      confirmedBookings: bookingsForTrip.filter(b => b.status === 'confirmed').length,
-      totalBookings: bookingsForTrip.length,
-    };
+      return {
+        ...trip,
+        route,
+        bookings: bookingsForTrip,
+        pendingBookings: bookingsForTrip.filter(b => b.status === 'pending').length,
+        confirmedBookings: bookingsForTrip.filter(b => b.status === 'confirmed').length,
+        totalBookings: bookingsForTrip.length,
+      };
+    } catch (error) {
+      console.error(`Error processing trip ${trip.id}:`, error);
+      return trip;
+    }
   });
 
   // Filter for upcoming trips (future dates)
@@ -208,7 +209,7 @@ const DriverDashboard: React.FC = () => {
                                       {booking.passenger?.firstName} {booking.passenger?.lastName}
                                     </p>
                                     <p className="text-xs text-gray-500">
-                                      Seat {booking.seatId.split('s')[1].split('v')[0]}
+                                      Seat {booking.seatId ? booking.seatId.split('s')[1]?.split('v')[0] || 'N/A' : 'N/A'}
                                       {booking.hasDoorstepPickup && ' • Doorstep Pickup'}
                                     </p>
                                   </div>
@@ -272,19 +273,19 @@ const DriverDashboard: React.FC = () => {
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-xs text-gray-500 mb-1">Total Trips Today</p>
-                  <p className="text-2xl font-bold text-primary-600">3</p>
+                  <p className="text-2xl font-bold text-primary-600">{totalTripsToday}</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-xs text-gray-500 mb-1">Passengers</p>
-                  <p className="text-2xl font-bold text-primary-600">27</p>
+                  <p className="text-2xl font-bold text-primary-600">{totalPassengers}</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-xs text-gray-500 mb-1">Completed</p>
-                  <p className="text-2xl font-bold text-success-600">1</p>
+                  <p className="text-2xl font-bold text-success-600">{completedTrips}</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-xs text-gray-500 mb-1">Upcoming</p>
-                  <p className="text-2xl font-bold text-accent-600">2</p>
+                  <p className="text-2xl font-bold text-accent-600">{upcomingTrips}</p>
                 </div>
               </div>
             </div>
@@ -341,421 +342,4 @@ const DriverDashboard: React.FC = () => {
   );
 };
 
-// Custom QR Scanner Icon
-const QRScannerIcon = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-    <rect x="7" y="7" width="3" height="3" />
-    <rect x="14" y="7" width="3" height="3" />
-    <rect x="7" y="14" width="3" height="3" />
-    <rect x="14" y="14" width="3" height="3" />
-    <line x1="12" y1="8" x2="12" y2="16" />
-    <line x1="8" y1="12" x2="16" y2="12" />
-  </svg>
-);
-export default DriverDashboard;
-          trips={trips}
-          onCancel={cancelTrip}
-          onCheckIn={checkInPassenger}
-          detailLinkBase="/driver/trips"
-          vehicles={vehicles}
-        />
-      }
-      sidebarContent={
-        <>
-          <DailySummary metrics={metrics} className="mb-8" />
-          <QuickActions
-            actions={[
-              { label: 'QR Scanner', to: '/driver/scanner', icon: <QRScannerIcon /> },
-              { label: 'Manage Vehicles', to: '/driver/vehicles', icon: <VehicleIcon /> }
-            ]}
-          />
-        </>
-      }
-    />
-  );
-};
-
-// Custom QR Scanner Icon
-const QRScannerIcon = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-    <rect x="7" y="7" width="3" height="3" />
-    <rect x="14" y="7" width="3" height="3" />
-    <rect x="7" y="14" width="3" height="3" />
-    <rect x="14" y="14" width="3" height="3" />
-    <line x1="12" y1="8" x2="12" y2="16" />
-    <line x1="8" y1="12" x2="16" y2="12" />
-  </svg>
-);
-export default DriverDashboard;
-          trips={trips}
-          onCancel={cancelTrip}
-          onCheckIn={checkInPassenger}
-          detailLinkBase="/driver/trips"
-          vehicles={vehicles}
-        />
-      }
-      sidebarContent={
-        <>
-          <DailySummary metrics={metrics} className="mb-8" />
-          <QuickActions
-            actions={[
-              { label: 'QR Scanner', to: '/driver/scanner', icon: <QRScannerIcon /> },
-              { label: 'Manage Vehicles', to: '/driver/vehicles', icon: <VehicleIcon /> }
-            ]}
-          />
-        </>
-      }
-    />
-  );
-};
-
-// Custom QR Scanner Icon
-const QRScannerIcon = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-    <rect x="7" y="7" width="3" height="3" />
-    <rect x="14" y="7" width="3" height="3" />
-    <rect x="7" y="14" width="3" height="3" />
-    <rect x="14" y="14" width="3" height="3" />
-    <line x1="12" y1="8" x2="12" y2="16" />
-    <line x1="8" y1="12" x2="16" y2="12" />
-  </svg>
-);
-export default DriverDashboard;
-          trips={trips}
-          onCancel={cancelTrip}
-          onCheckIn={checkInPassenger}
-          detailLinkBase="/driver/trips"
-          vehicles={vehicles}
-        />
-      }
-      sidebarContent={
-        <>
-          <DailySummary metrics={metrics} className="mb-8" />
-          <QuickActions
-            actions={[
-              { label: 'QR Scanner', to: '/driver/scanner', icon: <QRScannerIcon /> },
-              { label: 'Manage Vehicles', to: '/driver/vehicles', icon: <VehicleIcon /> }
-            ]}
-          />
-        </>
-      }
-    />
-  );
-};
-
-// Custom QR Scanner Icon
-const QRScannerIcon = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-    <rect x="7" y="7" width="3" height="3" />
-    <rect x="14" y="7" width="3" height="3" />
-    <rect x="7" y="14" width="3" height="3" />
-    <rect x="14" y="14" width="3" height="3" />
-    <line x1="12" y1="8" x2="12" y2="16" />
-    <line x1="8" y1="12" x2="16" y2="12" />
-  </svg>
-);
-export default DriverDashboard;
-          trips={trips}
-          onCancel={cancelTrip}
-          onCheckIn={checkInPassenger}
-          detailLinkBase="/driver/trips"
-          vehicles={vehicles}
-        />
-      }
-      sidebarContent={
-        <>
-          <DailySummary metrics={metrics} className="mb-8" />
-          <QuickActions
-            actions={[
-              { label: 'QR Scanner', to: '/driver/scanner', icon: <QRScannerIcon /> },
-              { label: 'Manage Vehicles', to: '/driver/vehicles', icon: <VehicleIcon /> }
-            ]}
-          />
-        </>
-      }
-    />
-  );
-};
-
-// Custom QR Scanner Icon
-const QRScannerIcon = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-    <rect x="7" y="7" width="3" height="3" />
-    <rect x="14" y="7" width="3" height="3" />
-    <rect x="7" y="14" width="3" height="3" />
-    <rect x="14" y="14" width="3" height="3" />
-    <line x1="12" y1="8" x2="12" y2="16" />
-    <line x1="8" y1="12" x2="16" y2="12" />
-  </svg>
-);
-export default DriverDashboard;
-          trips={trips}
-          onCancel={cancelTrip}
-          onCheckIn={checkInPassenger}
-          detailLinkBase="/driver/trips"
-          vehicles={vehicles}
-        />
-      }
-      sidebarContent={
-        <>
-          <DailySummary metrics={metrics} className="mb-8" />
-          <QuickActions
-            actions={[
-              { label: 'QR Scanner', to: '/driver/scanner', icon: <QRScannerIcon /> },
-              { label: 'Manage Vehicles', to: '/driver/vehicles', icon: <VehicleIcon /> }
-            ]}
-          />
-        </>
-      }
-    />
-  );
-};
-
-// Custom QR Scanner Icon
-const QRScannerIcon = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-    <rect x="7" y="7" width="3" height="3" />
-    <rect x="14" y="7" width="3" height="3" />
-    <rect x="7" y="14" width="3" height="3" />
-    <rect x="14" y="14" width="3" height="3" />
-    <line x1="12" y1="8" x2="12" y2="16" />
-    <line x1="8" y1="12" x2="16" y2="12" />
-  </svg>
-);
-export default DriverDashboard;
-          trips={trips}
-          onCancel={cancelTrip}
-          onCheckIn={checkInPassenger}
-          detailLinkBase="/driver/trips"
-          vehicles={vehicles}
-        />
-      }
-      sidebarContent={
-        <>
-          <DailySummary metrics={metrics} className="mb-8" />
-          <QuickActions
-            actions={[
-              { label: 'QR Scanner', to: '/driver/scanner', icon: <QRScannerIcon /> },
-              { label: 'Manage Vehicles', to: '/driver/vehicles', icon: <VehicleIcon /> }
-            ]}
-          />
-        </>
-      }
-    />
-  );
-};
-
-// Custom QR Scanner Icon
-const QRScannerIcon = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-    <rect x="7" y="7" width="3" height="3" />
-    <rect x="14" y="7" width="3" height="3" />
-    <rect x="7" y="14" width="3" height="3" />
-    <rect x="14" y="14" width="3" height="3" />
-    <line x1="12" y1="8" x2="12" y2="16" />
-    <line x1="8" y1="12" x2="16" y2="12" />
-  </svg>
-);
-export default DriverDashboard;
-          trips={trips}
-          onCancel={cancelTrip}
-          onCheckIn={checkInPassenger}
-          detailLinkBase="/driver/trips"
-          vehicles={vehicles}
-        />
-      }
-      sidebarContent={
-        <>
-          <DailySummary metrics={metrics} className="mb-8" />
-          <QuickActions
-            actions={[
-              { label: 'QR Scanner', to: '/driver/scanner', icon: <QRScannerIcon /> },
-              { label: 'Manage Vehicles', to: '/driver/vehicles', icon: <VehicleIcon /> }
-            ]}
-          />
-        </>
-      }
-    />
-  );
-};
-
-// Custom QR Scanner Icon
-const QRScannerIcon = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-    <rect x="7" y="7" width="3" height="3" />
-    <rect x="14" y="7" width="3" height="3" />
-    <rect x="7" y="14" width="3" height="3" />
-    <rect x="14" y="14" width="3" height="3" />
-    <line x1="12" y1="8" x2="12" y2="16" />
-    <line x1="8" y1="12" x2="16" y2="12" />
-  </svg>
-);
-export default DriverDashboard;
-          trips={trips}
-          onCancel={cancelTrip}
-          onCheckIn={checkInPassenger}
-          detailLinkBase="/driver/trips"
-          vehicles={vehicles}
-        />
-      }
-      sidebarContent={
-        <>
-          <DailySummary metrics={metrics} className="mb-8" />
-          <QuickActions
-            actions={[
-              { label: 'QR Scanner', to: '/driver/scanner', icon: <QRScannerIcon /> },
-              { label: 'Manage Vehicles', to: '/driver/vehicles', icon: <VehicleIcon /> }
-            ]}
-          />
-        </>
-      }
-    />
-  );
-};
-
-// Custom QR Scanner Icon
-const QRScannerIcon = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-    <rect x="7" y="7" width="3" height="3" />
-    <rect x="14" y="7" width="3" height="3" />
-    <rect x="7" y="14" width="3" height="3" />
-    <rect x="14" y="14" width="3" height="3" />
-    <line x1="12" y1="8" x2="12" y2="16" />
-    <line x1="8" y1="12" x2="16" y2="12" />
-  </svg>
-);
-export default DriverDashboard;
-          trips={trips}
-          onCancel={cancelTrip}
-          onCheckIn={checkInPassenger}
-          detailLinkBase="/driver/trips"
-          vehicles={vehicles}
-        />
-      }
-      sidebarContent={
-        <>
-          <DailySummary metrics={metrics} className="mb-8" />
-          <QuickActions
-            actions={[
-              { label: 'QR Scanner', to: '/driver/scanner', icon: <QRScannerIcon /> },
-              { label: 'Manage Vehicles', to: '/driver/vehicles', icon: <VehicleIcon /> }
-            ]}
-          />
-        </>
-      }
-    />
-  );
-};
-
-// Custom QR Scanner Icon
-const QRScannerIcon = ({ className }: { className?: string }) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className={className}
-  >
-    <rect x="3" y="3" width="18" height="18" rx="2" ry="2" />
-    <rect x="7" y="7" width="3" height="3" />
-    <rect x="14" y="7" width="3" height="3" />
-    <rect x="7" y="14" width="3" height="3" />
-    <rect x="14" y="14" width="3" height="3" />
-    <line x1="12" y1="8" x2="12" y2="16" />
-    <line x1="8" y1="12" x2="16" y2="12" />
-  </svg>
-);
 export default DriverDashboard;

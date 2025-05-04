@@ -9,6 +9,7 @@ import BookingPage from './pages/booking/BookingPage';
 import TripsPage from './pages/passenger/TripsPage';
 import DriverDashboard from './pages/driver/DriverDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import ComponentsGallery from './pages/ComponentsGallery';
 import useAuthStore from './store/authStore';
 import { useEffect } from 'react';
 
@@ -53,6 +54,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/book" element={<BookingPage />} />
+            <Route path="/components" element={<ComponentsGallery />} />
             
             {/* Passenger routes */}
             <Route 
