@@ -1,7 +1,5 @@
-import React from 'react';
+import React, { Suspense, useEffect, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Navbar from './components/common/Navbar';
-import Footer from './components/common/Footer';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
@@ -11,7 +9,14 @@ import DriverDashboard from './pages/driver/DriverDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import ComponentsGallery from './pages/ComponentsGallery';
 import useAuthStore from './store/authStore';
-import { useEffect } from 'react';
+
+// Lazy-loaded components
+const DriverTripManagement = lazy(() => import('./pages/driver/TripManagement'));
+const DriverStatistics = lazy(() => import('./pages/driver/Statistics'));
+const DriverUserManagement = lazy(() => import('./pages/driver/UserManagement'));
+const AdminTripManagement = lazy(() => import('./pages/admin/TripManagement'));
+const AdminStatistics = lazy(() => import('./pages/admin/Statistics'));
+const AdminUserManagement = lazy(() => import('./pages/admin/UserManagement'));
 
 interface ProtectedRouteProps {
   element: React.ReactNode;
@@ -46,7 +51,7 @@ function App() {
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
-        <Navbar />
+        {/* <Navbar /> */}
         <main className="flex-grow">
           <Routes>
             {/* Public routes */}
@@ -67,18 +72,95 @@ function App() {
               path="/driver/dashboard" 
               element={<ProtectedRoute element={<DriverDashboard />} allowedRoles={['driver']} />} 
             />
+            <Route 
+              path="/driver/trips" 
+              element={
+                <ProtectedRoute 
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <DriverTripManagement />
+                    </Suspense>
+                  } 
+                  allowedRoles={['driver']} 
+                />
+              } 
+            />
+            <Route 
+              path="/driver/statistics" 
+              element={
+                <ProtectedRoute 
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <DriverStatistics />
+                    </Suspense>
+                  } 
+                  allowedRoles={['driver']} 
+                />
+              } 
+            />
+            <Route 
+              path="/driver/users" 
+              element={
+                <ProtectedRoute 
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <DriverUserManagement />
+                    </Suspense>
+                  } 
+                  allowedRoles={['driver']} 
+                />
+              } 
+            />
             
             {/* Admin routes */}
             <Route 
               path="/admin/dashboard" 
               element={<ProtectedRoute element={<AdminDashboard />} allowedRoles={['admin']} />} 
             />
+            <Route 
+              path="/admin/trips" 
+              element={
+                <ProtectedRoute 
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <AdminTripManagement />
+                    </Suspense>
+                  } 
+                  allowedRoles={['admin']} 
+                />
+              } 
+            />
+            <Route 
+              path="/admin/statistics" 
+              element={
+                <ProtectedRoute 
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <AdminStatistics />
+                    </Suspense>
+                  } 
+                  allowedRoles={['admin']} 
+                />
+              } 
+            />
+            <Route 
+              path="/admin/users" 
+              element={
+                <ProtectedRoute 
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <AdminUserManagement />
+                    </Suspense>
+                  } 
+                  allowedRoles={['admin']} 
+                />
+              } 
+            />
             
             {/* Fallback route */}
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
-        <Footer />
       </div>
     </Router>
   );

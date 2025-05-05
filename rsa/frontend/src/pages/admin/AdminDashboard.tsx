@@ -8,8 +8,16 @@ import { Users, Calendar, TrendingUp, CreditCard, Settings, User, Map, Activity 
 const AdminDashboard: React.FC = () => {
   const { user } = useAuthStore();
   
+  // Import the DashboardNavbar component
+  const DashboardNavbar = React.lazy(() => import('../../components/dashboard/DashboardNavbar'));
+  
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Add the horizontal navigation bar */}
+      <React.Suspense fallback={<div>Loading...</div>}>
+        <DashboardNavbar userRole="admin" />
+      </React.Suspense>
+      
       <div className="md:flex md:items-center md:justify-between mb-6">
         <div className="flex-1 min-w-0">
           <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
@@ -18,10 +26,6 @@ const AdminDashboard: React.FC = () => {
           </p>
         </div>
         <div className="mt-4 flex md:mt-0 md:ml-4">
-          <Link to="/admin/settings" className="btn btn-secondary mr-3">
-            <Settings className="h-4 w-4 mr-2" />
-            System Settings
-          </Link>
           <Link to="/admin/reports" className="btn btn-primary">
             <Activity className="h-4 w-4 mr-2" />
             Generate Reports

@@ -2,7 +2,8 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProgressBar from '../../components/common/ProgressBar';
 import RouteSelection from '../../components/booking/RouteSelection';
-import VehicleAndSeat from '../../components/booking/VehicleAndSeat';
+import VehicleSelection from '../../components/booking/VehicleSelection';
+import SeatSelection from '../../components/booking/SeatSelection';
 import Schedule from '../../components/booking/Schedule';
 import PickupAndExtras from '../../components/booking/PickupAndExtras';
 import ReviewAndPayment from '../../components/booking/ReviewAndPayment';
@@ -16,22 +17,27 @@ const BookingPage: React.FC = () => {
 
   const steps = [
     'Route',
-    'Vehicle & Seat',
+    'Vehicle',
+    'Seat',
     'Schedule',
     'Pickup & Extras',
     'Review & Payment',
   ];
 
+  const totalSteps = steps.length;
+
   const canProceed = () => {
     switch (currentStep) {
-      case 1:
+      case 1: // Route
         return !!selectedRoute;
-      case 2:
-        return !!selectedVehicle && !!selectedSeat;
-      case 3:
+      case 2: // Vehicle
+        return !!selectedVehicle;
+      case 3: // Seat
+        return !!selectedSeat;
+      case 4: // Schedule
         return !!selectedTimeSlot;
-      case 4:
-        return true; // No required fields in step 4
+      case 5: // Pickup & Extras
+        return true; // No required fields in step 5
       default:
         return false;
     }
@@ -42,12 +48,14 @@ const BookingPage: React.FC = () => {
       case 1:
         return <RouteSelection />;
       case 2:
-        return <VehicleAndSeat />;
+        return <VehicleSelection />;
       case 3:
-        return <Schedule />;
+        return <SeatSelection />;
       case 4:
-        return <PickupAndExtras />;
+        return <Schedule />;
       case 5:
+        return <PickupAndExtras />;
+      case 6:
         return <ReviewAndPayment />;
       default:
         return <RouteSelection />;
@@ -55,7 +63,8 @@ const BookingPage: React.FC = () => {
   };
 
   const handleNext = () => {
-    if (currentStep === 5 && !user) {
+    // Check for login requirement at the step before payment (now step 6)
+    if (currentStep === totalSteps && !user) {
       // If trying to proceed to payment without being logged in
       navigate('/login', { state: { redirectTo: '/book' } });
       return;
@@ -98,7 +107,7 @@ const BookingPage: React.FC = () => {
           <div></div> // Empty div to maintain layout with flex justify-between
         )}
         
-        {currentStep < 5 && (
+        {currentStep < totalSteps && (
           <button
             onClick={handleNext}
             disabled={!canProceed()}

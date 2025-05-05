@@ -123,7 +123,8 @@ const useBookingStore = create<BookingState & BookingActions>((set, get) => ({
   // Step navigation
   nextStep: () => {
     const { currentStep } = get();
-    if (currentStep < 5) {
+    // Update total steps to 6
+    if (currentStep < 6) {
       set({ currentStep: currentStep + 1 });
     }
   },
@@ -136,7 +137,8 @@ const useBookingStore = create<BookingState & BookingActions>((set, get) => ({
   },
   
   goToStep: (step) => {
-    if (step >= 1 && step <= 5) {
+    // Update total steps to 6
+    if (step >= 1 && step <= 6) {
       set({ currentStep: step });
     }
   },

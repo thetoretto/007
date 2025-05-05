@@ -8,6 +8,9 @@ import QRScannerIcon from '../../components/icons/QRScannerIcon';
 const DriverDashboard: React.FC = () => {
   const { user } = useAuthStore();
   const [selectedTrip, setSelectedTrip] = useState<string | null>(null);
+  
+  // Import the DashboardNavbar component
+  const DashboardNavbar = React.lazy(() => import('../../components/dashboard/DashboardNavbar'));
 
   // Use mockVehicles directly instead of maintaining a separate state
   const [trips, setTrips] = useState(mockTimeSlots.map(ts => ({
@@ -110,6 +113,11 @@ const DriverDashboard: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Add the horizontal navigation bar */}
+      <React.Suspense fallback={<div>Loading...</div>}>
+        <DashboardNavbar userRole="driver" />
+      </React.Suspense>
+      
       <div className="md:flex md:items-center md:justify-between mb-6">
         <div className="flex-1 min-w-0">
           <h1 className="text-3xl font-bold text-gray-900">Driver Dashboard</h1>
@@ -118,10 +126,6 @@ const DriverDashboard: React.FC = () => {
           </p>
         </div>
         <div className="mt-4 flex md:mt-0 md:ml-4">
-          <Link to="/driver/profile" className="btn btn-secondary mr-3">
-            <Settings className="h-4 w-4 mr-2" />
-            Settings
-          </Link>
           <Link to="/driver/trips/new" className="btn btn-primary">
             <Plus className="h-4 w-4 mr-2" />
             New Trip
