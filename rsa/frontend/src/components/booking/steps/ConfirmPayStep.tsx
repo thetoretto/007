@@ -1,0 +1,171 @@
+// d:\007\rsa\frontend\src\components\booking\steps\ConfirmPayStep.tsx
+import React, { useState } from 'react';
+import { Route, Vehicle, Seat, PickupPoint, BookingState } from '../types';
+// Remove CSS module import
+// import styles from '../BookingWidget.module.css'; 
+import { MapPin, Calendar, Clock, Users, Truck, CreditCard, CheckCircle, AlertCircle } from 'lucide-react';
+
+interface ConfirmPayStepProps {
+  state: BookingState;
+  onTogglePickup: (needsPickup: boolean) => void;
+  onSelectPickupPoint: (pointId: string | null) => void;
+  onConfirmBooking: () => Promise<void>; // Async action
+  onPrev: () => void;
+}
+
+const ConfirmPayStep: React.FC<ConfirmPayStepProps> = ({
+  state,
+  onTogglePickup,
+  onSelectPickupPoint,
+  onConfirmBooking,
+  onPrev,
+}) => {
+  const { selectedRoute, selectedVehicle, selectedSeats, needsPickup, selectedPickupPoint, pickupPoints, loading, error } = state;
+  const [showPickupSelector, setShowPickupSelector] = useState(needsPickup);
+
+  // Basic validation - ensure required data exists
+  if (!selectedRoute || !selectedVehicle || selectedSeats.length === 0) {
+    return (
+      <div className="text-center text-red-600 bg-red-100 p-4 rounded-lg border border-red-300">
+        <AlertCircle className="inline-block mr-2" size={18} />
+        Booking details incomplete. Please go back and complete the previous steps.
+      </div>
+    );
+  }
+
+  const calculateTotal = () => {
+    const seatTotal = selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
+    const pickupFee = needsPickup ? 5.00 : 0; // Example fee
+    // Add other fees/taxes later
+    return seatTotal + pickupFee;
+  };
+
+  const handlePickupToggle = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = e.target.checked;
+    onTogglePickup(checked);
+    setShowPickupSelector(checked);
+    if (!checked) {
+      onSelectPickupPoint(null); // Clear selection if pickup is disabled
+    }
+  };
+
+  const handlePay = async () => {
+    // Add payment processing logic here if needed
+    // For now, just trigger the booking confirmation
+    await onConfirmBooking();
+    // The main widget reducer will handle moving to the Receipt step on success
+  };
+
+  const total = calculateTotal();
+
+  return (
+    <div className="space-y-6">
+      <h3 className="text-lg font-semibold text-gray-800">Confirm & Pay</h3>
+
+      {/* Booking Summary */}
+      <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-2">
+        <h4 className="text-base font-semibold text-gray-700 mb-2 pb-2 border-b">Booking Summary</h4>
+        <div className="flex items-center text-sm text-gray-600"><MapPin size={16} className="mr-2 text-blue-500" /> Route: {selectedRoute.origin.name} to {selectedRoute.destination.name}</div>
+        {/* Add Date/Time if available in state */}
+        <div className="flex items-center text-sm text-gray-600"><Users size={16} className="mr-2 text-purple-500" /> Vehicle: {selectedVehicle.model}</div>
+        <div className="flex items-center text-sm text-gray-600"><CheckCircle size={16} className="mr-2 text-green-500" /> Seats: {selectedSeats.map(s => s.number).join(', ')}</div>
+      </div>
+
+      {/* Pickup Option */}
+      <div className="bg-white p-4 rounded-lg border border-gray-200 space-y-3">
+        <label className="flex items-center space-x-3 cursor-pointer font-medium text-gray-700">
+          <input type="checkbox" checked={needsPickup} onChange={handlePickupToggle} className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+          <Truck size={18} className="text-orange-500" />
+          <span>I need pickup at a designated point (<span className="font-semibold">$5.00</span> extra)</span>
+        </label>
+
+        {showPickupSelector && (
+          <div className="pl-7 space-y-2 pt-2 border-t mt-3">
+            <h5 className="text-sm font-semibold text-gray-600 mb-1">Choose Pickup Point:</h5>
+            {pickupPoints.length > 0 ? (
+              pickupPoints.map(point => (
+                <label key={point.id} className={`flex items-center space-x-2 p-2 rounded-md border cursor-pointer transition-colors ${selectedPickupPoint?.id === point.id ? 'bg-blue-50 border-blue-300 ring-1 ring-blue-200' : 'border-gray-200 hover:bg-gray-50'}`}>
+                  <input
+                    type="radio"
+                    name="pickupPoint"
+                    value={point.id}
+                    checked={selectedPickupPoint?.id === point.id}
+                    onChange={() => onSelectPickupPoint(point.id)}
+                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                  />
+                  <span className="text-2xl mr-1">{point.icon}</span>
+                  <div className="text-sm">
+                    <span className="font-medium text-gray-800 block">{point.name}</span>
+                    <span className="text-xs text-gray-500">{point.address}</span>
+                  </div>
+                  {/* Optionally show map thumbnail: <img src={point.mapImageUrl} alt={point.name} className="w-16 h-16 object-cover rounded ml-auto" /> */}
+                </label>
+              ))
+            ) : (
+              <p className="text-sm text-gray-500">No pickup points available.</p>
+            )}
+            {needsPickup && !selectedPickupPoint && <p className="text-xs text-red-500 pt-1">Please select a pickup point.</p>}
+          </div>
+        )}
+      </div>
+
+      {/* Price Breakdown */}
+      <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 space-y-1 text-sm">
+        <h4 className="text-base font-semibold text-gray-700 mb-2 pb-2 border-b">Price</h4>
+        <div className="flex justify-between text-gray-600">
+          <span>Seats ({selectedSeats.length}):</span>
+          <span>${selectedSeats.reduce((sum, seat) => sum + seat.price, 0).toFixed(2)}</span>
+        </div>
+        {needsPickup && (
+          <div className="flex justify-between text-gray-600">
+            <span>Pickup Fee:</span>
+            <span>$5.00</span>
+          </div>
+        )}
+        <div className="flex justify-between font-semibold text-gray-800 pt-2 border-t mt-2">
+          <span>Total:</span>
+          <span>${total.toFixed(2)}</span>
+        </div>
+      </div>
+
+      {/* Payment Section (Placeholder) */}
+      <div className="bg-white p-4 rounded-lg border border-gray-200">
+        <h4 className="text-base font-semibold text-gray-700 mb-3">Payment</h4>
+        <div className="flex items-center gap-3 p-3 bg-blue-50 border border-dashed border-blue-300 rounded-md text-blue-700">
+          <CreditCard size={18} />
+          <div>
+            <p className="font-medium text-sm">Secure Payment (Demo)</p>
+            <p className="text-xs">Payment processing simulation. Click below to confirm.</p>
+          </div>
+        </div>
+      </div>
+
+      {error && <p className="text-sm text-red-600 bg-red-100 p-3 rounded border border-red-300 flex items-center"><AlertCircle size={16} className="mr-2"/>{error}</p>}
+
+      {/* Navigation is handled by the parent BookingWidget */}
+      {/* This component provides the final action button */}
+      <div className="flex justify-end pt-4 border-t mt-6">
+         {/* Back button is rendered by parent */}
+         <button
+           onClick={handlePay}
+           disabled={loading || (needsPickup && !selectedPickupPoint)}
+           className={`px-6 py-2.5 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center min-w-[150px] ${loading ? 'animate-pulse' : ''}`}
+         >
+           {loading ? (
+             <>
+               <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                 <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+               </svg>
+               Processing...
+             </>
+           ) : (
+             `Pay & Book $${total.toFixed(2)}`
+           )}
+         </button>
+      </div>
+    </div>
+  );
+};
+
+export default ConfirmPayStep;

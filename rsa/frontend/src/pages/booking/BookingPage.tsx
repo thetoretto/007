@@ -1,122 +1,60 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import ProgressBar from '../../components/common/ProgressBar';
-import RouteSelection from '../../components/booking/RouteSelection';
-import VehicleSelection from '../../components/booking/VehicleSelection';
-import SeatSelection from '../../components/booking/SeatSelection';
-import Schedule from '../../components/booking/Schedule';
-import PickupAndExtras from '../../components/booking/PickupAndExtras';
-import ReviewAndPayment from '../../components/booking/ReviewAndPayment';
-import useBookingStore from '../../store/bookingStore';
-import useAuthStore from '../../store/authStore';
+import React, { useState } from 'react';
+// import { useNavigate } from 'react-router-dom'; // Keep if needed for other navigation
+import { AppNavbar } from '../../components/common/AppNavbar';
+import BookingWidget from '../../components/booking/BookingWidget'; // Import the new widget
+// import useAuthStore from '../../store/authStore'; // Keep if needed for user info outside widget
+// import useBookingStore from '../../store/bookingStore'; // Store logic is now inside the widget
 
 const BookingPage: React.FC = () => {
-  const { user } = useAuthStore();
-  const { currentStep, nextStep, prevStep, goToStep, selectedRoute, selectedVehicle, selectedSeat, selectedTimeSlot } = useBookingStore();
-  const navigate = useNavigate();
+  // const { user } = useAuthStore(); // Get user if needed for other parts of the page
+  // const navigate = useNavigate();
+  const [isWidgetOpen, setIsWidgetOpen] = useState(false);
 
-  const steps = [
-    'Route',
-    'Vehicle',
-    'Seat',
-    'Schedule',
-    'Pickup & Extras',
-    'Review & Payment',
-  ];
-
-  const totalSteps = steps.length;
-
-  const canProceed = () => {
-    switch (currentStep) {
-      case 1: // Route
-        return !!selectedRoute;
-      case 2: // Vehicle
-        return !!selectedVehicle;
-      case 3: // Seat
-        return !!selectedSeat;
-      case 4: // Schedule
-        return !!selectedTimeSlot;
-      case 5: // Pickup & Extras
-        return true; // No required fields in step 5
-      default:
-        return false;
-    }
+  const openBookingWidget = () => {
+    setIsWidgetOpen(true);
   };
 
-  const renderStepContent = () => {
-    switch (currentStep) {
-      case 1:
-        return <RouteSelection />;
-      case 2:
-        return <VehicleSelection />;
-      case 3:
-        return <SeatSelection />;
-      case 4:
-        return <Schedule />;
-      case 5:
-        return <PickupAndExtras />;
-      case 6:
-        return <ReviewAndPayment />;
-      default:
-        return <RouteSelection />;
-    }
+  const closeBookingWidget = () => {
+    setIsWidgetOpen(false);
   };
 
-  const handleNext = () => {
-    // Check for login requirement at the step before payment (now step 6)
-    if (currentStep === totalSteps && !user) {
-      // If trying to proceed to payment without being logged in
-      navigate('/login', { state: { redirectTo: '/book' } });
-      return;
-    }
-    
-    if (canProceed()) {
-      nextStep();
-      window.scrollTo(0, 0);
-    }
-  };
-
-  const handlePrev = () => {
-    prevStep();
-    window.scrollTo(0, 0);
+  const handleBookingComplete = (bookingDetails: any) => {
+    console.log('Booking Complete:', bookingDetails);
+    // Optionally navigate or show a success message on the page
+    closeBookingWidget();
   };
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-6">Book Your Journey</h1>
+    <div className="min-h-screen bg-gray-100">
+      <AppNavbar />
       
-      <ProgressBar 
-        steps={steps} 
-        currentStep={currentStep} 
-        onStepClick={goToStep}
-      />
-      
-      <div className="mt-8 bg-white p-6 rounded-lg shadow-sm">
-        {renderStepContent()}
-      </div>
-      
-      <div className="mt-8 flex justify-between">
-        {currentStep > 1 ? (
-          <button
-            onClick={handlePrev}
-            className="btn btn-secondary"
-          >
-            Back
-          </button>
-        ) : (
-          <div></div> // Empty div to maintain layout with flex justify-between
-        )}
+      {/* Main page content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h1 className="text-3xl font-bold text-gray-900 mb-6">Ready for Your Next Trip?</h1>
+        <p className="text-lg text-gray-600 mb-8">Find and book your ride easily with our new booking system.</p>
         
-        {currentStep < totalSteps && (
+        <div className="bg-white p-8 rounded-lg shadow-md text-center">
+          <h2 className="text-2xl font-semibold text-gray-800 mb-4">Start Your Booking</h2>
+          <p className="text-gray-500 mb-6">Click the button below to launch the booking widget.</p>
           <button
-            onClick={handleNext}
-            disabled={!canProceed()}
-            className={`btn ${canProceed() ? 'btn-primary' : 'btn-disabled'}`}
+            onClick={openBookingWidget}
+            className="btn btn-primary btn-lg"
           >
-            Continue
+            Book Now
           </button>
-        )}
+        </div>
+        
+        {/* Add other page content here if needed */}
+        
       </div>
+
+      {/* Render the Booking Widget as a modal */}
+      {isWidgetOpen && (
+        <BookingWidget 
+          onComplete={handleBookingComplete} 
+          onCancel={closeBookingWidget} 
+        />
+      )}
     </div>
   );
 };
