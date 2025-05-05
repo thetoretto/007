@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Settings, Activity, Users, Clock, Menu, X } from "react-feather";
 import useAuthStore from '../../store/authStore';
+import ProfileDropdown from '../common/ProfileDropdown'; // Import the new component
 
 interface NavItem {
   path: string;
@@ -85,6 +86,10 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ userRole }) => {
               </Link>
             ))}
           </nav>
+          {/* Add ProfileDropdown to the desktop view */}
+          <div className="hidden md:flex items-center ml-4">
+            <ProfileDropdown />
+          </div>
         </div>
 
         {/* Mobile menu */}
@@ -105,48 +110,10 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ userRole }) => {
                 </Link>
               ))}
             </div>
-            {/* Mobile profile section */}
+            {/* Replace mobile profile section with ProfileDropdown */}
             <div className="pt-4 pb-3 border-t border-gray-200">
-              <div className="flex items-center px-4">
-                {user?.avatar ? (
-                  <div className="flex-shrink-0">
-                    <img
-                      className="h-10 w-10 rounded-full"
-                      src={user.avatar}
-                      alt={`${user.firstName} ${user.lastName}`}
-                    />
-                  </div>
-                ) : (
-                  <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center">
-                    <span className="text-primary-800 font-medium">
-                      {user?.firstName?.[0]}{user?.lastName?.[0]}
-                    </span>
-                  </div>
-                )}
-                <div className="ml-3">
-                  <div className="text-base font-medium text-gray-800">
-                    {user?.firstName} {user?.lastName}
-                  </div>
-                  <div className="text-sm font-medium text-gray-500">{user?.email}</div>
-                </div>
-              </div>
-              <div className="mt-3 space-y-1">
-                <Link
-                  to="/profile"
-                  className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Your Profile
-                </Link>
-                <button
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    handleLogout();
-                  }}
-                  className="block w-full text-left px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                >
-                  Sign out
-                </button>
+              <div className="px-4">
+                 <ProfileDropdown />
               </div>
             </div>
           </div>
