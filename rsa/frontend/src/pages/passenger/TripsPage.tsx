@@ -102,7 +102,57 @@ const TripsPage: React.FC = () => {
   };
 
   const handleCancelBooking = (bookingId: string) => {
-    alert(`Booking ${bookingId} would be cancelled here. This is just a demo.`);
+    const bookingToCancel = sortedUserBookings.find(b => b.id === bookingId);
+
+    if (!bookingToCancel || !bookingToCancel.timeSlot?.date || !bookingToCancel.timeSlot?.time) {
+      alert("Error: Booking details or time slot not found. Cannot proceed with cancellation.");
+      return;
+    }
+
+    const tripDateTimeStr = `${bookingToCancel.timeSlot.date} ${bookingToCancel.timeSlot.time}`;
+    let tripDateTime;
+    try {
+      // Attempt to parse the date and time
+      // Assuming date is YYYY-MM-DD and time is HH:MM (24-hour format)
+      const [year, month, day] = bookingToCancel.timeSlot.date.split('-').map(Number);
+      const [hours, minutes] = bookingToCancel.timeSlot.time.split(':').map(Number);
+      tripDateTime = new Date(year, month - 1, day, hours, minutes); // month is 0-indexed
+
+      if (isNaN(tripDateTime.getTime())) {
+        throw new Error('Invalid date/time format from timeslot');
+      }
+    } catch (error) {
+      console.error("Error parsing trip date/time:", error);
+      alert("Error: Could not determine the trip's departure time. Please check the booking details.");
+      return;
+    }
+    
+    const now = new Date();
+
+    const diffInMilliseconds = tripDateTime.getTime() - now.getTime();
+    const diffInMinutes = diffInMilliseconds / (1000 * 60);
+
+    if (diffInMinutes <= 30 && diffInMinutes > 0) { // also check if it's not in the past already for cancellation logic
+      alert("Cancellation is not allowed as the trip is within 30 minutes of departure.");
+      return;
+    }
+
+    if (tripDateTime.getTime() <= now.getTime()) {
+      alert("This trip has already departed or is in the past. Cancellation is not possible.");
+      return;
+    }
+
+    if (window.confirm("Are you sure you want to cancel this booking?")) {
+      // In a real app, you would call an API to cancel the booking
+      // and then update the local state or refetch bookings.
+      // For this demo, we'll simulate it with an alert and log.
+      console.log(`Booking ${bookingId} cancellation confirmed by user.`);
+      alert(`Booking ${bookingId} would be cancelled here. (This is a demo - state not updated yet)`);
+      // To actually update the UI, you'd need to modify the bookings array and trigger a re-render.
+      // This might involve lifting state up, using a global state manager (like Zustand here), 
+      // or passing a callback to update the bookings list.
+      // For now, the change won't persist visually after the alert.
+    }
   };
 
   return (

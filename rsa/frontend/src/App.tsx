@@ -6,10 +6,11 @@ import RegisterPage from './pages/auth/RegisterPage';
 import BookingPage from './pages/booking/BookingPage';
 import ContactPage from './pages/ContactPage';
 import LearnMorePage from './pages/LearnMorePage'; // Import the new page // Import the new contact page
+import BecomeMemberPage from './pages/BecomeMemberPage'; // Import the new become member page
 import TripsPage from './pages/passenger/TripsPage';
+import TripDetailsPage from './pages/passenger/TripDetailsPage'; // Import the new TripDetailsPage
 import DriverDashboard from './pages/driver/DriverDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
-import ComponentsGallery from './pages/ComponentsGallery';
 import useAuthStore from './store/authStore';
 
 // Lazy-loaded components
@@ -62,14 +63,18 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/register" element={<RegisterPage />} />
             <Route path="/book" element={<BookingPage />} />
-            <Route path="/components" element={<ComponentsGallery />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/learn-more" element={<LearnMorePage />} />
+            <Route path="/become-member" element={<BecomeMemberPage />} />
             
             {/* Passenger routes */}
             <Route 
               path="/passenger/trips" 
               element={<ProtectedRoute element={<TripsPage />} allowedRoles={['passenger']} />} 
+            />
+            <Route 
+              path="/trip/:tripId"
+              element={<ProtectedRoute element={<TripDetailsPage />} allowedRoles={['passenger', 'driver', 'admin']} />}
             />
             
             {/* Driver routes */}

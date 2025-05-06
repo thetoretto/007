@@ -440,8 +440,16 @@ export const mockBookings: Booking[] = [
   },
 ];
 
+// Define the type for bookings with details
+export interface BookingWithDetails extends Booking {
+  route?: Route;
+  vehicle?: Vehicle;
+  timeSlot?: TimeSlot;
+  passenger?: Passenger;
+}
+
 // Helper function to get bookings with related data
-export const getBookingsWithDetails = () => {
+export const getBookingsWithDetails = (): BookingWithDetails[] => {
   return mockBookings.map(booking => {
     const route = mockRoutes.find(r => r.id === booking.routeId);
     const vehicle = mockVehicles.find(v => v.id === booking.vehicleId);
