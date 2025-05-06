@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { AppNavbar } from '../../components/common/AppNavbar';
 import BookingWidget from '../../components/booking/BookingWidget'; // Import the new widget
 import { MapPin, CalendarCheck, Ticket, Info } from 'lucide-react'; // Import icons
+import { promoMessages } from '../../utils/mockData'; // Import promoMessages
 // import useAuthStore from '../../store/authStore'; // Keep if needed for user info outside widget
 // import useBookingStore from '../../store/bookingStore'; // Store logic is now inside the widget
 
@@ -12,13 +13,7 @@ const BookingPage: React.FC = () => {
   const [isWidgetOpen, setIsWidgetOpen] = useState(false);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
 
-  const promoMessages = [
-    "Book in seconds, ride in minutes!",
-    "Skip the calls, book online effortlessly.",
-    "Secure your seat with just a few clicks.",
-    "Real-time availability, instant confirmation.",
-    "Manage your bookings easily, anytime, anywhere."
-  ];
+  // promoMessages moved to mockData.ts
 
   useEffect(() => {
     const intervalId = setInterval(() => {

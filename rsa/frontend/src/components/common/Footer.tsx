@@ -4,120 +4,120 @@ import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from 'lucide-react'
 
 const Footer: React.FC = () => {
   return (
-    <footer className="bg-gray-900 text-white">
-      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div className="mb-8 md:mb-0">
-            <h2 className="text-lg font-semibold mb-4">RideBooker</h2>
-            <p className="text-gray-400 text-sm">
-              Providing safe, convenient, and affordable transportation services since 2023.
-              Book your next journey with us for a comfortable travel experience.
+    // Updated: Changed background, text color, padding
+    <footer className="bg-gray-50 border-t border-gray-200">
+      {/* Updated: Increased max-width, adjusted padding */}
+      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+        {/* Updated: Adjusted grid layout and gap */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 xl:col-span-2">
+          {/* Updated: Column span for logo/description, text styling */}
+          <div className="col-span-2 md:col-span-1 mb-8 md:mb-0">
+            <h2 className="text-lg font-semibold text-gray-900 mb-3">RideBooker</h2>
+            <p className="text-gray-500 text-sm leading-relaxed">
+              Providing safe, convenient, and affordable transportation services.
             </p>
-            <div className="flex space-x-4 mt-6">
-              <a href="#" className="text-gray-400 hover:text-white">
+            {/* Updated: Icon colors and hover states */}
+            <div className="flex space-x-5 mt-6">
+              <a href="#" className="text-gray-400 hover:text-gray-500">
+                <span className="sr-only">Facebook</span>
                 <Facebook className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white">
+              <a href="#" className="text-gray-400 hover:text-gray-500">
+                <span className="sr-only">Twitter</span>
                 <Twitter className="h-5 w-5" />
               </a>
-              <a href="#" className="text-gray-400 hover:text-white">
+              <a href="#" className="text-gray-400 hover:text-gray-500">
+                <span className="sr-only">Instagram</span>
                 <Instagram className="h-5 w-5" />
               </a>
             </div>
           </div>
           
+          {/* Updated: Heading and link styling */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">
+            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
               Company
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               <li>
-                <Link to="/about" className="text-gray-400 hover:text-white text-sm">
+                <Link to="/about" className="text-sm text-gray-600 hover:text-gray-900">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link to="/careers" className="text-gray-400 hover:text-white text-sm">
+                <Link to="/careers" className="text-sm text-gray-600 hover:text-gray-900">
                   Careers
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-gray-400 hover:text-white text-sm">
+                <Link to="/blog" className="text-sm text-gray-600 hover:text-gray-900">
                   Blog
                 </Link>
               </li>
               <li>
-                <Link to="/press" className="text-gray-400 hover:text-white text-sm">
+                <Link to="/press" className="text-sm text-gray-600 hover:text-gray-900">
                   Press
-                </Link>
-              </li>
-              <li>
-                <Link to="/partners" className="text-gray-400 hover:text-white text-sm">
-                  Partners
                 </Link>
               </li>
             </ul>
           </div>
           
+          {/* Updated: Heading and link styling */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">
+            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
               Information
             </h3>
-            <ul className="space-y-2">
+            <ul className="space-y-3">
               <li>
-                <Link to="/terms" className="text-gray-400 hover:text-white text-sm">
-                  Terms & Conditions
+                <Link to="/terms" className="text-sm text-gray-600 hover:text-gray-900">
+                  Terms
                 </Link>
               </li>
               <li>
-                <Link to="/privacy" className="text-gray-400 hover:text-white text-sm">
-                  Privacy Policy
+                <Link to="/privacy" className="text-sm text-gray-600 hover:text-gray-900">
+                  Privacy
                 </Link>
               </li>
               <li>
-                <Link to="/faq" className="text-gray-400 hover:text-white text-sm">
+                <Link to="/faq" className="text-sm text-gray-600 hover:text-gray-900">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link to="/help" className="text-gray-400 hover:text-white text-sm">
-                  Help Center
-                </Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-gray-400 hover:text-white text-sm">
+                <Link to="/contact" className="text-sm text-gray-600 hover:text-gray-900">
                   Contact Us
                 </Link>
               </li>
             </ul>
           </div>
           
+          {/* Updated: Heading and contact item styling */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-300 uppercase tracking-wider mb-4">
+            <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-4">
               Contact
             </h3>
             <ul className="space-y-3">
               <li className="flex items-start">
-                <MapPin className="h-5 w-5 text-gray-400 mr-2" />
-                <span className="text-gray-400 text-sm">
-                  123 Transport Avenue<br />
-                  Metropolis, MP 10001
+                <MapPin className="h-5 w-5 text-gray-400 mr-2 flex-shrink-0 mt-0.5" />
+                <span className="text-sm text-gray-600">
+                  123 Transport Ave, Metropolis, MP 10001
                 </span>
               </li>
               <li className="flex items-center">
-                <Phone className="h-5 w-5 text-gray-400 mr-2" />
-                <span className="text-gray-400 text-sm">+1 (555) 123-4567</span>
+                <Phone className="h-5 w-5 text-gray-400 mr-2 flex-shrink-0" />
+                <span className="text-sm text-gray-600">+1 (555) 123-4567</span>
               </li>
               <li className="flex items-center">
-                <Mail className="h-5 w-5 text-gray-400 mr-2" />
-                <span className="text-gray-400 text-sm">info@ridebooker.com</span>
+                <Mail className="h-5 w-5 text-gray-400 mr-2 flex-shrink-0" />
+                <span className="text-sm text-gray-600">info@ridebooker.com</span>
               </li>
             </ul>
           </div>
         </div>
         
-        <div className="mt-12 pt-8 border-t border-gray-800">
-          <p className="text-gray-400 text-sm text-center">
+        {/* Updated: Copyright text styling and spacing */}
+        <div className="mt-12 border-t border-gray-200 pt-8">
+          <p className="text-sm text-gray-500 text-center">
             &copy; {new Date().getFullYear()} RideBooker. All rights reserved.
           </p>
         </div>

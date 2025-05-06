@@ -1,5 +1,14 @@
 import { User, Passenger, Driver, Admin, Route, Vehicle, Seat, TimeSlot, Booking, Location, BookingExtra, PaymentMethod } from '../types';
 
+// Static Content (can be moved elsewhere if needed)
+export const promoMessages = [
+  "Book in seconds, ride in minutes!",
+  "Skip the calls, book online effortlessly.",
+  "Secure your seat with just a few clicks.",
+  "Real-time availability, instant confirmation.",
+  "Manage your bookings easily, anytime, anywhere."
+];
+
 // Mock Users
 export const mockUsers: User[] = [
   {

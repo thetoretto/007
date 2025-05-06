@@ -3,7 +3,7 @@ import useTripStore, { Trip } from '../../store/tripStore';
 import useVehicleStore from '../../store/vehicleStore'; // Import vehicle store
 import useAuthStore from '../../store/authStore'; // Import auth store
 import { mockRoutes } from '../../utils/mockData'; // Keep mock routes for now
-import { X, Save, MapPin } from 'lucide-react';
+import { X, Save, MapPin, Calendar, Clock, DollarSign, FileText } from 'lucide-react'; // Added icons
 
 interface TripFormProps {
   isOpen: boolean;
@@ -78,7 +78,7 @@ const TripForm: React.FC<TripFormProps> = ({ isOpen, onClose, tripToEdit }) => {
     e.preventDefault();
     // Add price validation
     if (!formData.fromLocation || !formData.toLocation || !formData.vehicleId || !formData.date || !formData.time || !formData.price) {
-      alert('Please fill in all fields, including From, To, and Price.'); // Simple validation
+      alert('Please fill in all required fields, including From, To, and Price.'); // Simple validation
       return;
     }
 
@@ -116,23 +116,34 @@ const TripForm: React.FC<TripFormProps> = ({ isOpen, onClose, tripToEdit }) => {
   console.log('TripForm Render: Vehicles from store:', vehicles);
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex items-center justify-center">
-      <div className="relative mx-auto p-6 border w-full max-w-md shadow-lg rounded-md bg-white">
-        <div className="flex justify-between items-center border-b pb-3 mb-4">
-          <h3 className="text-lg font-medium text-gray-900">
-            {tripToEdit ? 'Edit Trip' : 'Create New Trip'}
+    // Updated: Modal overlay and centering
+    <div className="fixed inset-0 bg-gray-600 bg-opacity-75 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
+      {/* Updated: Modal container styling */}
+      <div className="relative mx-auto p-6 border w-full max-w-lg shadow-xl rounded-lg bg-white">
+        {/* Updated: Header styling */}
+        <div className="flex justify-between items-center border-b border-gray-200 pb-4 mb-5">
+          <h3 className="text-lg font-semibold text-gray-900">
+            {tripToEdit ? 'Edit Trip Details' : 'Create New Trip'}
           </h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
+          {/* Updated: Close button styling */}
+          <button 
+            onClick={onClose} 
+            className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center"
+            aria-label="Close modal"
+          >
             <X size={20} />
           </button>
         </div>
+        {/* Updated: Form spacing */}
         <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Updated: Input group styling */}
           <div>
-            <label htmlFor="fromLocation" className="block text-sm font-medium text-gray-700">From</label>
-            <div className="mt-1 relative rounded-md shadow-sm">
+            <label htmlFor="fromLocation" className="block text-sm font-medium text-gray-700 mb-1">From Location</label>
+            <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <MapPin className="h-5 w-5 text-gray-400" aria-hidden="true" />
               </div>
+              {/* Updated: Input styling */}
               <input
                 type="text"
                 id="fromLocation"
@@ -140,18 +151,20 @@ const TripForm: React.FC<TripFormProps> = ({ isOpen, onClose, tripToEdit }) => {
                 value={formData.fromLocation}
                 onChange={handleChange}
                 required
-                className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 px-3"
-                placeholder="Enter starting location"
+                className="form-input w-full pl-10 border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                placeholder="Enter starting point"
               />
             </div>
           </div>
 
+          {/* Updated: Input group styling */}
           <div>
-            <label htmlFor="toLocation" className="block text-sm font-medium text-gray-700">To</label>
-            <div className="mt-1 relative rounded-md shadow-sm">
+            <label htmlFor="toLocation" className="block text-sm font-medium text-gray-700 mb-1">To Location</label>
+            <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <MapPin className="h-5 w-5 text-gray-400" aria-hidden="true" />
               </div>
+              {/* Updated: Input styling */}
               <input
                 type="text"
                 id="toLocation"
@@ -159,24 +172,25 @@ const TripForm: React.FC<TripFormProps> = ({ isOpen, onClose, tripToEdit }) => {
                 value={formData.toLocation}
                 onChange={handleChange}
                 required
-                className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 px-3"
-                placeholder="Enter destination location"
+                className="form-input w-full pl-10 border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                placeholder="Enter destination point"
               />
             </div>
           </div>
 
+          {/* Updated: Select styling */}
           <div>
-            <label htmlFor="vehicleId" className="block text-sm font-medium text-gray-700">Vehicle</label>
+            <label htmlFor="vehicleId" className="block text-sm font-medium text-gray-700 mb-1">Vehicle</label>
             <select
               id="vehicleId"
               name="vehicleId"
               value={formData.vehicleId}
               onChange={handleChange}
               required
-              className="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm rounded-md"
+              className="form-select w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition duration-150 ease-in-out"
             >
               <option value="" disabled>Select a vehicle</option>
-              {/* Use vehicles from the store */}
+              {vehicles.length === 0 && <option disabled>Loading vehicles...</option>} 
               {vehicles.map(vehicle => (
                 <option key={vehicle.id} value={vehicle.id}>
                   {vehicle.brand} {vehicle.model} ({vehicle.licensePlate}) - {vehicle.capacity} seats
@@ -185,77 +199,98 @@ const TripForm: React.FC<TripFormProps> = ({ isOpen, onClose, tripToEdit }) => {
             </select>
           </div>
 
-          <div>
-            <label htmlFor="date" className="block text-sm font-medium text-gray-700">Date</label>
-            <input
-              type="date"
-              id="date"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-            />
+          {/* Updated: Grid for Date/Time/Price */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Calendar className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                </div>
+                <input
+                  type="date"
+                  id="date"
+                  name="date"
+                  value={formData.date}
+                  onChange={handleChange}
+                  required
+                  className="form-input w-full pl-10 border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="time" className="block text-sm font-medium text-gray-700 mb-1">Time</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Clock className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                </div>
+                <input
+                  type="time"
+                  id="time"
+                  name="time"
+                  value={formData.time}
+                  onChange={handleChange}
+                  required
+                  className="form-input w-full pl-10 border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">Price</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <DollarSign className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                </div>
+                <input
+                  type="number"
+                  id="price"
+                  name="price"
+                  value={formData.price}
+                  onChange={handleChange}
+                  required
+                  min="0"
+                  step="0.01"
+                  className="form-input w-full pl-10 border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                  placeholder="0.00"
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Add Notes Textarea */}
+          {/* Updated: Textarea styling */}
           <div>
-            <label htmlFor="notes" className="block text-sm font-medium text-gray-700">Notes (Optional)</label>
-            <textarea
-              id="notes"
-              name="notes"
-              rows={3}
-              value={formData.notes}
-              onChange={handleChange}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-              placeholder="Add any relevant notes for this trip..."
-            />
+            <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">Notes (Optional)</label>
+            <div className="relative">
+              <div className="absolute top-3 left-0 pl-3 flex items-center pointer-events-none">
+                 <FileText className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              </div>
+              <textarea
+                id="notes"
+                name="notes"
+                rows={3}
+                value={formData.notes}
+                onChange={handleChange}
+                className="form-textarea w-full pl-10 border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                placeholder="Any additional details for the trip..."
+              ></textarea>
+            </div>
           </div>
 
-          {/* Add Price Input */}
-          <div>
-            <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price ($)</label>
-            <input
-              type="number"
-              id="price"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-              required
-              min="0"
-              step="0.01"
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-              placeholder="e.g., 25.50"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="time" className="block text-sm font-medium text-gray-700">Time</label>
-            <input
-              type="time"
-              id="time"
-              name="time"
-              value={formData.time}
-              onChange={handleChange}
-              required
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
-            />
-          </div>
-
-          <div className="flex justify-end space-x-3 pt-4 border-t mt-6">
-            <button
-              type="button"
-              onClick={onClose}
-              className="btn btn-secondary"
+          {/* Updated: Button group styling */}
+          <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 mt-6">
+            <button 
+              type="button" 
+              onClick={onClose} 
+              className="btn bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300 px-4 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="btn btn-primary flex items-center"
+            <button 
+              type="submit" 
+              className="btn btn-primary inline-flex items-center px-4 py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out"
             >
-              <Save size={16} className="mr-2" />
-              {tripToEdit ? 'Save Changes' : 'Create Trip'}
+              <Save className="h-4 w-4 mr-2" />
+              {tripToEdit ? 'Update Trip' : 'Create Trip'}
             </button>
           </div>
         </form>
