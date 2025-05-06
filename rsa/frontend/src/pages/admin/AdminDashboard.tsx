@@ -1,23 +1,65 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react'; // Added useState, useEffect
 import { Link } from 'react-router-dom';
 import useAuthStore from '../../store/authStore';
-import { mockDashboardStats, mockBookingStats, mockRoutePopularity } from '../../utils/mockData';
+import useTripStore, { Trip } from '../../store/tripStore'; // Import trip store and Trip type
+import { mockDashboardStats, mockBookingStats, mockRoutePopularity } from '../../utils/mockData'; // Keep mock data for now
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { Users, Calendar, TrendingUp, CreditCard, Settings, User, Map, Activity } from 'lucide-react';
+import { Users, Calendar, TrendingUp, CreditCard, Settings, User, Map, Activity, Plus, Edit, Trash2, Clock } from 'lucide-react'; // Added Clock
+import TripForm from '../../components/trips/TripForm'; // Import TripForm
 
 const AdminDashboard: React.FC = () => {
   const { user } = useAuthStore();
-  
+  const { trips, fetchTrips, removeTrip } = useTripStore(); // Use trip store
+  const [isTripModalOpen, setIsTripModalOpen] = useState(false);
+  const [tripToEdit, setTripToEdit] = useState<Trip | null>(null);
+  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null); // For displaying details
+
   // Import the DashboardNavbar component
   const DashboardNavbar = React.lazy(() => import('../../components/dashboard/DashboardNavbar'));
-  
+
+  useEffect(() => {
+    fetchTrips(); // Fetch trips on component mount
+  }, [fetchTrips]);
+
+  const openCreateModal = () => {
+    setTripToEdit(null);
+    setIsTripModalOpen(true);
+  };
+
+  const openEditModal = (trip: Trip) => {
+    setTripToEdit(trip);
+    setIsTripModalOpen(true);
+  };
+
+  const handleDeleteTrip = (tripId: string) => {
+    if (window.confirm('Are you sure you want to delete this trip? This action cannot be undone.')) {
+      removeTrip(tripId);
+      alert(`Trip ${tripId} deleted (simulated).`);
+      setSelectedTrip(null); // Close details view if open
+    }
+  };
+
+  // Calculate upcoming trips count from the store
+  const upcomingTripsCount = trips.filter(trip => {
+    const tripDateTime = new Date(`${trip.date}T${trip.time}`);
+    const now = new Date();
+    return trip.status === 'upcoming' && tripDateTime >= now;
+  }).length;
+
+  // Filter and sort trips for display (e.g., all trips sorted by date)
+  const sortedTrips = [...trips].sort((a, b) => {
+    const dateA = new Date(`${a.date}T${a.time}`);
+    const dateB = new Date(`${b.date}T${b.time}`);
+    return dateB.getTime() - dateA.getTime(); // Sort descending (newest first)
+  });
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Add the horizontal navigation bar */}
       <React.Suspense fallback={<div>Loading...</div>}>
         <DashboardNavbar userRole="admin" />
       </React.Suspense>
-      
+
       <div className="md:flex md:items-center md:justify-between mb-6">
         <div className="flex-1 min-w-0">
           <h1 className="text-3xl font-bold text-gray-900">Admin Dashboard</h1>
@@ -25,16 +67,22 @@ const AdminDashboard: React.FC = () => {
             {user && `Welcome back, ${user.firstName} ${user.lastName}`}
           </p>
         </div>
-        <div className="mt-4 flex md:mt-0 md:ml-4">
-          <Link to="/admin/reports" className="btn btn-primary">
+        <div className="mt-4 flex md:mt-0 md:ml-4 space-x-3">
+          {/* Changed Generate Reports to Create New Trip */}
+          <button onClick={openCreateModal} className="btn btn-primary">
+            <Plus className="h-4 w-4 mr-2" />
+            Create New Trip
+          </button>
+          <Link to="/admin/reports" className="btn btn-secondary">
             <Activity className="h-4 w-4 mr-2" />
             Generate Reports
           </Link>
         </div>
       </div>
-      
+
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        {/* ... (Total Users card) ... */}
         <div className="bg-white overflow-hidden shadow-sm rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
@@ -45,6 +93,7 @@ const AdminDashboard: React.FC = () => {
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">Total Users</dt>
                   <dd>
+                    {/* Keep mock data for now, replace with real data later */}
                     <div className="text-lg font-medium text-gray-900">{mockDashboardStats.totalUsers}</div>
                   </dd>
                 </dl>
@@ -60,6 +109,7 @@ const AdminDashboard: React.FC = () => {
           </div>
         </div>
 
+        {/* ... (Active Drivers card) ... */}
         <div className="bg-white overflow-hidden shadow-sm rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
@@ -85,6 +135,7 @@ const AdminDashboard: React.FC = () => {
           </div>
         </div>
 
+        {/* Upcoming Trips Card - Updated */}
         <div className="bg-white overflow-hidden shadow-sm rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
@@ -95,7 +146,8 @@ const AdminDashboard: React.FC = () => {
                 <dl>
                   <dt className="text-sm font-medium text-gray-500 truncate">Upcoming Trips</dt>
                   <dd>
-                    <div className="text-lg font-medium text-gray-900">{mockDashboardStats.upcomingTrips}</div>
+                    {/* Use data from store */}
+                    <div className="text-lg font-medium text-gray-900">{upcomingTripsCount}</div>
                   </dd>
                 </dl>
               </div>
@@ -110,6 +162,7 @@ const AdminDashboard: React.FC = () => {
           </div>
         </div>
 
+        {/* ... (Total Revenue card) ... */}
         <div className="bg-white overflow-hidden shadow-sm rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
@@ -135,8 +188,77 @@ const AdminDashboard: React.FC = () => {
           </div>
         </div>
       </div>
-      
-      {/* Charts Section */}
+
+      {/* Trip List Section - Added */}
+      <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
+        <div className="px-4 sm:px-6 lg:px-8 py-4 border-b border-gray-200 flex justify-between items-center">
+          <h2 className="text-lg font-medium text-gray-900">Recent Trips</h2>
+          <Link to="/admin/trips" className="text-sm font-medium text-primary-600 hover:text-primary-700">
+            View All
+          </Link>
+        </div>
+        <div className="overflow-hidden">
+          {sortedTrips.length > 0 ? (
+            <div className="divide-y divide-gray-200">
+              {/* Displaying only the first 5 recent trips for brevity */}
+              {sortedTrips.slice(0, 5).map((trip) => (
+                <div
+                  key={trip.id}
+                  className={`hover:bg-gray-50 cursor-pointer p-4 sm:px-6 lg:px-8 transition-colors ${selectedTrip?.id === trip.id ? 'bg-primary-50' : ''}`}
+                  onClick={() => setSelectedTrip(trip.id === selectedTrip?.id ? null : trip)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-base font-medium text-gray-900">
+                        {/* {trip.route?.name || 'Unknown Route'} */} {/* Removed route name */}
+                        {trip.fromLocation} to {trip.toLocation} {/* Added from/to location */}
+                      </h3>
+                      <div className="mt-1 flex items-center text-sm text-gray-500">
+                        <Calendar className="h-4 w-4 mr-1" />
+                        <span>{trip.date}</span>
+                        <span className="mx-2">•</span>
+                        <Clock className="h-4 w-4 mr-1" />
+                        <span>{trip.time}</span>
+                        <span className="mx-2">•</span>
+                        <span className={`capitalize badge badge-${trip.status === 'upcoming' ? 'info' : trip.status === 'completed' ? 'success' : 'secondary'} text-xs`}>{trip.status}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                       <button
+                          onClick={(e) => { e.stopPropagation(); openEditModal(trip); }}
+                          className="p-1 text-gray-400 hover:text-primary-600"
+                          title="Edit Trip"
+                       >
+                          <Edit size={16} />
+                       </button>
+                       <button
+                          onClick={(e) => { e.stopPropagation(); handleDeleteTrip(trip.id); }}
+                          className="p-1 text-gray-400 hover:text-danger-600"
+                          title="Delete Trip"
+                       >
+                          <Trash2 size={16} />
+                       </button>
+                    </div>
+                  </div>
+                  {/* Optional: Add expandable details like in DriverDashboard if needed */}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <div className="mx-auto h-12 w-12 bg-gray-100 rounded-full flex items-center justify-center">
+                <Calendar className="h-6 w-6 text-gray-400" />
+              </div>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">No trips found</h3>
+              <p className="mt-1 text-sm text-gray-500">
+                Create the first trip using the button above.
+              </p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Charts Section - Kept as is for now */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="mb-4 flex items-center justify-between">
@@ -171,7 +293,7 @@ const AdminDashboard: React.FC = () => {
             </ResponsiveContainer>
           </div>
         </div>
-        
+
         <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-medium text-gray-900">Popular Routes</h2>
@@ -193,142 +315,20 @@ const AdminDashboard: React.FC = () => {
                   width={150}
                   tick={{ fontSize: 12 }}
                 />
-                <Tooltip formatter={(value) => [`${value}%`, 'Percentage']} />
-                <Bar dataKey="percentage" fill="#3b82f6" radius={[0, 4, 4, 0]} />
+                <Tooltip />
+                <Bar dataKey="percentage" fill="#3b82f6" barSize={20} />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
       </div>
-      
-      {/* Quick Actions & Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900">Quick Actions</h2>
-            </div>
-            <div className="px-4 py-5 sm:p-6">
-              <div className="space-y-3">
-                <Link 
-                  to="/admin/users/new"
-                  className="btn btn-primary w-full flex items-center justify-center"
-                >
-                  <User className="h-4 w-4 mr-2" />
-                  Add New User
-                </Link>
-                <Link 
-                  to="/admin/trips/new"
-                  className="btn btn-secondary w-full flex items-center justify-center"
-                >
-                  <Calendar className="h-4 w-4 mr-2" />
-                  Create New Trip
-                </Link>
-                <Link 
-                  to="/admin/routes"
-                  className="btn btn-secondary w-full flex items-center justify-center"
-                >
-                  <Map className="h-4 w-4 mr-2" />
-                  Manage Routes
-                </Link>
-                <Link 
-                  to="/admin/reports/generate"
-                  className="btn btn-secondary w-full flex items-center justify-center"
-                >
-                  <Activity className="h-4 w-4 mr-2" />
-                  Generate Reports
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-            <div className="px-4 py-5 sm:px-6 border-b border-gray-200">
-              <h2 className="text-lg font-medium text-gray-900">Recent Activity</h2>
-            </div>
-            <div className="px-4 sm:px-6">
-              <ul className="divide-y divide-gray-200">
-                <li className="py-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="flex-shrink-0">
-                      <div className="h-10 w-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600">
-                        <User className="h-5 w-5" />
-                      </div>
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-gray-900">New user registered</p>
-                      <p className="text-sm text-gray-500">
-                        Jane Smith created a new account as a passenger.
-                      </p>
-                      <p className="mt-1 text-xs text-gray-400">15 minutes ago</p>
-                    </div>
-                  </div>
-                </li>
-                <li className="py-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="flex-shrink-0">
-                      <div className="h-10 w-10 rounded-full bg-accent-100 flex items-center justify-center text-accent-600">
-                        <CreditCard className="h-5 w-5" />
-                      </div>
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-gray-900">New booking confirmed</p>
-                      <p className="text-sm text-gray-500">
-                        John Doe booked a trip from Downtown to Airport.
-                      </p>
-                      <p className="mt-1 text-xs text-gray-400">1 hour ago</p>
-                    </div>
-                  </div>
-                </li>
-                <li className="py-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="flex-shrink-0">
-                      <div className="h-10 w-10 rounded-full bg-success-100 flex items-center justify-center text-success-600">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
-                          <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.4 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.6-1.2-.9-1.9-1.7H4c-.9 0-1.6.7-1.6 1.6v7.3c0 .9.7 1.7 1.6 1.7h2"/>
-                          <circle cx="7" cy="17" r="2"/>
-                          <path d="M9 17h6"/>
-                          <circle cx="17" cy="17" r="2"/>
-                        </svg>
-                      </div>
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-gray-900">New vehicle added</p>
-                      <p className="text-sm text-gray-500">
-                        Robert Johnson added a new Toyota Coaster to the fleet.
-                      </p>
-                      <p className="mt-1 text-xs text-gray-400">3 hours ago</p>
-                    </div>
-                  </div>
-                </li>
-                <li className="py-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="flex-shrink-0">
-                      <div className="h-10 w-10 rounded-full bg-warning-100 flex items-center justify-center text-warning-600">
-                        <Calendar className="h-5 w-5" />
-                      </div>
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium text-gray-900">Trip cancelled</p>
-                      <p className="text-sm text-gray-500">
-                        Trip #TS1089 from Airport to Downtown was cancelled.
-                      </p>
-                      <p className="mt-1 text-xs text-gray-400">5 hours ago</p>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-              <div className="py-4 text-center border-t border-gray-200">
-                <Link to="/admin/activity" className="text-sm font-medium text-primary-600 hover:text-primary-700">
-                  View all activity
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
+      {/* Trip Form Modal */}
+      <TripForm
+        isOpen={isTripModalOpen}
+        onClose={() => setIsTripModalOpen(false)}
+        tripToEdit={tripToEdit}
+      />
     </div>
   );
 };

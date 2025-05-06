@@ -112,7 +112,8 @@ const TripManagement: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-base font-medium text-gray-900">
-                        {trip.route?.name}
+                        {/* {trip.route?.name} */} {/* Removed route name */}
+                        {trip.fromLocation} to {trip.toLocation} {/* Added from/to location */}
                       </h3>
                       <div className="mt-1 flex items-center text-sm text-gray-500">
                         <Calendar className="h-4 w-4 mr-1" />
@@ -168,7 +169,8 @@ const TripManagement: React.FC = () => {
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
                           <h5 className="text-sm font-medium text-gray-500 mb-1">Route</h5>
-                          <p className="text-sm">{trip.route?.name}</p>
+                          {/* <p className="text-sm">{trip.route?.name}</p> */} {/* Removed route name */}
+                          <p className="text-sm">{trip.fromLocation} to {trip.toLocation}</p> {/* Added from/to location */}
                         </div>
                         <div>
                           <h5 className="text-sm font-medium text-gray-500 mb-1">Vehicle</h5>

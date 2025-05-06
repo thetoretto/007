@@ -17,6 +17,7 @@ const DriverUserManagement = lazy(() => import('./pages/driver/UserManagement'))
 const AdminTripManagement = lazy(() => import('./pages/admin/TripManagement'));
 const AdminStatistics = lazy(() => import('./pages/admin/Statistics'));
 const AdminUserManagement = lazy(() => import('./pages/admin/UserManagement'));
+const DriverVehiclePage = lazy(() => import('./pages/driver/VehiclePage')); // Import the new vehicle page
 
 interface ProtectedRouteProps {
   element: React.ReactNode;
@@ -110,6 +111,20 @@ function App() {
                   allowedRoles={['driver']} 
                 />
               } 
+            />
+            {/* Add Driver Vehicle Management Route */}
+            <Route 
+              path="/driver/vehicles"
+              element={
+                <ProtectedRoute 
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <DriverVehiclePage />
+                    </Suspense>
+                  } 
+                  allowedRoles={['driver']} 
+                />
+              }
             />
             
             {/* Admin routes */}

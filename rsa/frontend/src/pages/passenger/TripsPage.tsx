@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Calendar, Clock, CreditCard, CheckCircle, XCircle, AlertCircle, QrCode } from 'lucide-react';
+import { MapPin, Calendar, Clock, CreditCard, CheckCircle, XCircle, AlertCircle, QrCode, ArrowUpDown } from 'lucide-react';
 import { getBookingsWithDetails } from '../../utils/mockData';
 import useAuthStore from '../../store/authStore';
+import Navbar from '../../components/common/Navbar';
 
 enum TripFilter {
   ALL = 'all',
@@ -11,9 +12,21 @@ enum TripFilter {
   CANCELLED = 'cancelled',
 }
 
+enum SortKey {
+  DATE = 'date',
+  PRICE = 'price',
+}
+
+enum SortOrder {
+  ASC = 'asc',
+  DESC = 'desc',
+}
+
 const TripsPage: React.FC = () => {
   const { user } = useAuthStore();
   const [activeFilter, setActiveFilter] = useState<TripFilter>(TripFilter.ALL);
+  const [sortKey, setSortKey] = useState<SortKey>(SortKey.DATE);
+  const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.DESC);
   
   // In a real app, we would fetch the bookings from the API
   const bookingsWithDetails = getBookingsWithDetails();
@@ -29,6 +42,22 @@ const TripsPage: React.FC = () => {
 
   // Only show bookings for the current user
   const userBookings = user ? filteredBookings.filter(booking => booking.passengerId === user.id) : [];
+
+  // Sort the bookings
+  const sortedUserBookings = useMemo(() => {
+    return [...userBookings].sort((a, b) => {
+      let comparison = 0;
+      if (sortKey === SortKey.DATE) {
+        const dateA = new Date(`${a.timeSlot?.date} ${a.timeSlot?.time}`);
+        const dateB = new Date(`${b.timeSlot?.date} ${b.timeSlot?.time}`);
+        comparison = dateA.getTime() - dateB.getTime();
+      } else if (sortKey === SortKey.PRICE) {
+        comparison = a.fare.total - b.fare.total;
+      }
+
+      return sortOrder === SortOrder.ASC ? comparison : -comparison;
+    });
+  }, [userBookings, sortKey, sortOrder]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -77,14 +106,20 @@ const TripsPage: React.FC = () => {
   };
 
   return (
+    
+    
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className='mb-6' >
+      <Navbar/>
+      </div>
       <h1 className="text-3xl font-bold text-gray-900 mb-6">My Trips</h1>
-      
+
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-        <div className="border-b border-gray-200">
-          <div className="px-4 sm:px-6 lg:px-8 flex overflow-x-auto py-3 space-x-4">
+        <div className="border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
+          {/* Filters */}
+          <div className="flex overflow-x-auto space-x-2 sm:space-x-4">
             <button
-              className={`px-4 py-2 text-sm font-medium rounded-md ${
+              className={`px-3 py-1.5 text-sm font-medium rounded-md whitespace-nowrap ${
                 activeFilter === TripFilter.ALL
                   ? 'bg-primary-100 text-primary-700'
                   : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
@@ -94,7 +129,7 @@ const TripsPage: React.FC = () => {
               All Trips
             </button>
             <button
-              className={`px-4 py-2 text-sm font-medium rounded-md ${
+              className={`px-3 py-1.5 text-sm font-medium rounded-md whitespace-nowrap ${
                 activeFilter === TripFilter.UPCOMING
                   ? 'bg-primary-100 text-primary-700'
                   : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
@@ -104,7 +139,7 @@ const TripsPage: React.FC = () => {
               Upcoming
             </button>
             <button
-              className={`px-4 py-2 text-sm font-medium rounded-md ${
+              className={`px-3 py-1.5 text-sm font-medium rounded-md whitespace-nowrap ${
                 activeFilter === TripFilter.COMPLETED
                   ? 'bg-primary-100 text-primary-700'
                   : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
@@ -114,7 +149,7 @@ const TripsPage: React.FC = () => {
               Completed
             </button>
             <button
-              className={`px-4 py-2 text-sm font-medium rounded-md ${
+              className={`px-3 py-1.5 text-sm font-medium rounded-md whitespace-nowrap ${
                 activeFilter === TripFilter.CANCELLED
                   ? 'bg-primary-100 text-primary-700'
                   : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
@@ -124,137 +159,124 @@ const TripsPage: React.FC = () => {
               Cancelled
             </button>
           </div>
+
+          {/* Sorting */}
+          <div className="flex items-center space-x-2">
+            <span className="text-sm text-gray-500">Sort by:</span>
+            <select
+              value={sortKey}
+              onChange={(e) => setSortKey(e.target.value as SortKey)}
+              className="text-sm border-gray-300 rounded-md shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50"
+            >
+              <option value={SortKey.DATE}>Date</option>
+              <option value={SortKey.PRICE}>Price</option>
+            </select>
+            <button
+              onClick={() => setSortOrder(sortOrder === SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC)}
+              className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md"
+            >
+              <ArrowUpDown className="h-4 w-4" />
+              <span className="sr-only">Toggle Sort Order ({sortOrder === SortOrder.ASC ? 'Ascending' : 'Descending'})</span>
+            </button>
+          </div>
         </div>
-        
+
         <div className="px-4 sm:px-6 lg:px-8 py-4">
-          {userBookings.length > 0 ? (
-            <div className="space-y-6">
-              {userBookings.map((booking) => (
-                <div key={booking.id} className="border border-gray-200 rounded-lg overflow-hidden">
-                  <div className="flex flex-col md:flex-row">
-                    <div className="p-4 md:p-6 flex-1">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-medium text-gray-900">
-                          {booking.route?.name}
-                        </h3>
+          {sortedUserBookings.length > 0 ? (
+            <div className="space-y-4"> {/* Reduced space-y */} 
+              {sortedUserBookings.map((booking) => (
+                <div key={booking.id} className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
+                  <div className="flex flex-col sm:flex-row">
+                    {/* Main Content Area - More Compact */}
+                    <div className="p-4 flex-1">
+                      <div className="flex items-start justify-between mb-3">
+                        <div>
+                          <h3 className="text-base font-semibold text-gray-900 leading-tight">
+                            {booking.route?.origin.name} to {booking.route?.destination.name}
+                          </h3>
+                          <p className="text-xs text-gray-500 mt-0.5">Route: {booking.route?.name}</p>
+                        </div>
                         {getStatusBadge(booking.status)}
                       </div>
-                      
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div className="space-y-3">
-                          <div className="flex items-start">
-                            <MapPin className="h-5 w-5 text-gray-400 mt-0.5 mr-2" />
-                            <div>
-                              <p className="text-sm text-gray-500">Route</p>
-                              <p className="font-medium">
-                                {booking.route?.origin.name} to {booking.route?.destination.name}
-                              </p>
-                            </div>
-                          </div>
-                          
-                          <div className="flex items-start">
-                            <Calendar className="h-5 w-5 text-gray-400 mt-0.5 mr-2" />
-                            <div>
-                              <p className="text-sm text-gray-500">Date</p>
-                              <p className="font-medium">{booking.timeSlot?.date}</p>
-                            </div>
-                          </div>
-                          
-                          <div className="flex items-start">
-                            <Clock className="h-5 w-5 text-gray-400 mt-0.5 mr-2" />
-                            <div>
-                              <p className="text-sm text-gray-500">Time</p>
-                              <p className="font-medium">{booking.timeSlot?.time}</p>
-                            </div>
-                          </div>
+
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 text-sm">
+                        {/* Date & Time */}
+                        <div className="flex items-center text-gray-600">
+                          <Calendar className="h-4 w-4 text-gray-400 mr-1.5 flex-shrink-0" />
+                          <span>{booking.timeSlot?.date}</span>
+                        </div>
+                        <div className="flex items-center text-gray-600">
+                          <Clock className="h-4 w-4 text-gray-400 mr-1.5 flex-shrink-0" />
+                          <span>{booking.timeSlot?.time}</span>
                         </div>
                         
-                        <div className="space-y-3">
-                          <div className="flex items-start">
-                            <CreditCard className="h-5 w-5 text-gray-400 mt-0.5 mr-2" />
-                            <div>
-                              <p className="text-sm text-gray-500">Payment</p>
-                              <p className="font-medium">${booking.fare.total.toFixed(2)}</p>
-                              <p className="text-xs text-gray-500">
-                                {booking.paymentStatus === 'paid' ? 'Paid' : 'Payment pending'}
-                              </p>
-                            </div>
-                          </div>
-                          
-                          <div className="flex items-start">
-                            <div className="h-5 w-5 flex items-center justify-center text-gray-400 mr-2">
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-armchair">
-                                <path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3"/>
-                                <path d="M3 11v5a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H7v-2a2 2 0 0 0-4 0Z"/>
-                                <path d="M5 18v2"/>
-                                <path d="M19 18v2"/>
-                              </svg>
-                            </div>
-                            <div>
-                              <p className="text-sm text-gray-500">Seat</p>
-                              <p className="font-medium">
-                                {booking.vehicle?.model} - Seat {booking.seatId.split('s')[1].split('v')[0]}
-                              </p>
-                            </div>
-                          </div>
-                          
-                          {booking.hasDoorstepPickup && (
-                            <div className="flex items-start">
-                              <MapPin className="h-5 w-5 text-gray-400 mt-0.5 mr-2" />
-                              <div>
-                                <p className="text-sm text-gray-500">Pickup Address</p>
-                                <p className="font-medium">{booking.pickupAddress}</p>
-                              </div>
-                            </div>
-                          )}
+                        {/* Payment */}
+                        <div className="flex items-center text-gray-600">
+                          <CreditCard className="h-4 w-4 text-gray-400 mr-1.5 flex-shrink-0" />
+                          <span>${booking.fare.total.toFixed(2)}</span>
+                          <span className={`ml-1.5 text-xs ${booking.paymentStatus === 'paid' ? 'text-success-600' : 'text-warning-600'}`}>
+                            ({booking.paymentStatus === 'paid' ? 'Paid' : 'Pending'})
+                          </span>
                         </div>
+
+                        {/* Seat */}
+                        <div className="flex items-center text-gray-600 col-span-2 sm:col-span-1">
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-gray-400 mr-1.5 flex-shrink-0 lucide lucide-armchair">
+                            <path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3"/><path d="M3 11v5a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H7v-2a2 2 0 0 0-4 0Z"/><path d="M5 18v2"/><path d="M19 18v2"/>
+                          </svg>
+                          <span>{booking.vehicle?.model} - Seat {booking.seatId.split('s')[1].split('v')[0]}</span>
+                        </div>
+
+                        {/* Pickup Address (if applicable) */}
+                        {booking.hasDoorstepPickup && (
+                          <div className="flex items-start text-gray-600 col-span-2 sm:col-span-3">
+                            <MapPin className="h-4 w-4 text-gray-400 mr-1.5 mt-0.5 flex-shrink-0" />
+                            <span className="text-xs">Pickup: {booking.pickupAddress}</span>
+                          </div>
+                        )}
                       </div>
                     </div>
-                    
-                    <div className="bg-gray-50 p-4 md:p-6 md:border-l border-gray-200 flex flex-col items-center justify-center md:w-64">
+
+                    {/* Action Area - More Compact */}
+                    <div className="bg-gray-50 p-3 sm:border-l border-gray-200 flex flex-col items-center justify-center sm:w-48">
                       {['pending', 'confirmed'].includes(booking.status) ? (
                         <>
-                          <div className="mb-4 flex flex-col items-center">
-                            <QrCode className="h-32 w-32 text-gray-900 mb-2" />
-                            <p className="text-sm text-gray-500">Booking Reference</p>
-                            <p className="font-medium">{booking.id}</p>
+                          <div className="mb-2 flex flex-col items-center">
+                            <QrCode className="h-20 w-20 text-gray-800 mb-1" /> {/* Smaller QR */} 
+                            <p className="text-xs text-gray-500">Ref: {booking.id}</p>
                           </div>
-                          
-                          <div className="flex flex-col w-full space-y-2">
+                          <div className="flex flex-col w-full space-y-1.5">
                             <button
                               onClick={() => handleCancelBooking(booking.id)}
-                              className="btn btn-danger py-2 px-4 text-sm"
+                              className="btn btn-danger btn-xs py-1 px-2 text-xs" /* Smaller button */
                             >
                               Cancel Booking
                             </button>
-                            <Link to={`/trip/${booking.id}`} className="btn btn-primary py-2 px-4 text-sm">
+                            <Link to={`/trip/${booking.id}`} className="btn btn-primary btn-xs py-1 px-2 text-center text-xs"> {/* Smaller button */} 
                               View Details
                             </Link>
                           </div>
                         </>
                       ) : (
                         <>
-                          <div className="mb-4 text-center">
+                          <div className="mb-2 text-center">
                             {booking.status === 'cancelled' ? (
-                              <XCircle className="h-16 w-16 text-error-500 mx-auto mb-2" />
+                              <XCircle className="h-10 w-10 text-error-500 mx-auto mb-1" /> /* Smaller icon */
                             ) : (
-                              <CheckCircle className="h-16 w-16 text-success-500 mx-auto mb-2" />
+                              <CheckCircle className="h-10 w-10 text-success-500 mx-auto mb-1" /> /* Smaller icon */
                             )}
-                            <p className="font-medium">
-                              {booking.status === 'cancelled'
-                                ? 'Booking Cancelled'
-                                : 'Trip Completed'}
+                            <p className="text-sm font-medium">
+                              {booking.status === 'cancelled' ? 'Cancelled' : 'Completed'}
                             </p>
-                            <p className="text-xs text-gray-500">
+                            <p className="text-xs text-gray-500 mt-0.5">
                               {booking.status === 'cancelled'
-                                ? 'This booking has been cancelled'
+                                ? 'This booking was cancelled'
                                 : booking.checkedInAt
-                                  ? `Checked in at ${new Date(booking.checkedInAt).toLocaleTimeString()}`
-                                  : 'Thank you for traveling with us'}
+                                  ? `Checked in: ${new Date(booking.checkedInAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+                                  : 'Trip finished'}
                             </p>
                           </div>
-                          
-                          <Link to={`/trip/${booking.id}`} className="btn btn-primary py-2 px-4 text-sm">
+                          <Link to={`/trip/${booking.id}`} className="btn btn-primary btn-xs py-1 px-2 text-center text-xs"> {/* Smaller button */} 
                             View Details
                           </Link>
                         </>

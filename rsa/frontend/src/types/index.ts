@@ -67,6 +67,7 @@ export interface Location {
   latitude: number;
   longitude: number;
 }
+// Removed the incorrect Trip interface definition here
 
 export interface Route {
   id: string;
@@ -100,6 +101,28 @@ export interface Seat {
   };
 }
 
+// Define the correct Trip interface here, based on tripStore.ts
+export interface Trip {
+  id: string;
+  fromLocation: string; // Added
+  toLocation: string;   // Added
+  vehicleId?: string;
+  driverId: string;
+  date: string;
+  time: string;
+  status: 'upcoming' | 'completed' | 'cancelled' | 'in-progress';
+  passengers?: number;
+  availableSeats?: number;
+  price?: number;
+  vehicle?: Vehicle; // Keep related vehicle object
+  // Add bookings array if needed elsewhere, but keep interface clean based on store
+  // bookings?: Booking[];
+  // pendingBookings?: number;
+  // confirmedBookings?: number;
+  // totalBookings?: number;
+  notes?: string; // Added notes field
+}
+
 export interface TimeSlot {
   id: string;
   date: string;
@@ -126,6 +149,49 @@ export interface PaymentMethod {
   last4: string;
   expiryDate?: string;
   isDefault: boolean;
+}
+
+export interface Trip {
+  id: string;
+  // routeId?: string; // Removed
+  fromLocation: string; // Added
+  toLocation: string;   // Added
+  vehicleId?: string;
+  driverId: string;
+  timeSlotId: string;
+  seatId: string;
+  status: 'pending' | 'confirmed' | 'cancelled' | 'completed' | 'checked-in';
+  hasDoorstepPickup: boolean;
+  pickupAddress?: string;
+  extras: {
+    extraId: string;
+    quantity: number;
+  }[];
+  fare: {
+    baseFare: number;
+    fees: number;
+    extras: number;
+    discount: number;
+    total: number;
+  };
+  paymentStatus: 'pending' | 'paid' | 'refunded';
+  paymentMethod?: PaymentMethod;
+  createdAt: string;
+  updatedAt: string;
+  checkedInAt?: string;
+  // route?: Route; // Removed
+  vehicle?: Vehicle;
+  timeSlot?: TimeSlot;
+  passenger?: Passenger;
+  availableSeats?: number;
+  price?: number;
+  vehicle?: Vehicle;
+  // route?: Route; // Removed
+  bookings: Booking[]; // Added bookings array
+  pendingBookings: number; // Added for convenience
+  confirmedBookings: number; // Added for convenience
+  totalBookings: number; // Added for convenience
+  notes?: string; // Added notes field
 }
 
 export interface Booking {

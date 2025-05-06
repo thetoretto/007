@@ -1,5 +1,5 @@
-import React from 'react';
-import { useAuthStore } from '../../store/authStore';
+import React, { useState, useMemo } from 'react';
+import useAuthStore from '../../store/authStore';
 import { Activity, TrendingUp, BarChart2, Users } from 'react-feather';
 import { mockTimeSlots, mockVehicles, mockRoutes, getBookingsWithDetails } from '../../utils/mockData';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar } from 'recharts';
@@ -25,6 +25,9 @@ const mockRouteStats = [
   { routeName: 'East Side to West Side', trips: 6, passengers: 48 },
 ];
 
+type SortKey = 'routeName' | 'trips';
+type SortDirection = 'asc' | 'desc';
+
 const Statistics: React.FC = () => {
   const { user } = useAuthStore();
   
@@ -32,6 +35,38 @@ const Statistics: React.FC = () => {
   const totalTrips = mockTripStats.reduce((sum, day) => sum + day.trips, 0);
   const totalPassengers = mockTripStats.reduce((sum, day) => sum + day.passengers, 0);
   const avgPassengersPerTrip = totalTrips > 0 ? (totalPassengers / totalTrips).toFixed(1) : '0';
+
+  // State for sorting route performance
+  const [sortKey, setSortKey] = useState<SortKey>('trips');
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+
+  // Sort route data
+  const sortedRouteStats = useMemo(() => {
+    return [...mockRouteStats].sort((a, b) => {
+      const valA = a[sortKey];
+      const valB = b[sortKey];
+
+      let comparison = 0;
+      if (valA > valB) {
+        comparison = 1;
+      } else if (valA < valB) {
+        comparison = -1;
+      }
+
+      return sortDirection === 'desc' ? comparison * -1 : comparison;
+    });
+  }, [sortKey, sortDirection]);
+
+  const handleSort = (key: SortKey) => {
+    if (key === sortKey) {
+      // Toggle direction if same key is clicked
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      // Set new key and default to descending for trips, ascending for name
+      setSortKey(key);
+      setSortDirection(key === 'trips' ? 'desc' : 'asc');
+    }
+  };
   
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -109,9 +144,24 @@ const Statistics: React.FC = () => {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="mb-4 flex items-center justify-between">
+          <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between">
             <h2 className="text-lg font-medium text-gray-900">Daily Trip Statistics</h2>
             <div className="flex items-center space-x-2">
+              <span className="text-xs text-gray-500 mr-2">Sort by:</span>
+              <button
+                onClick={() => handleSort('routeName')}
+                className={`btn btn-xs ${sortKey === 'routeName' ? 'btn-primary' : 'btn-ghost'}`}
+              >
+                Name {sortKey === 'routeName' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </button>
+              <button
+                onClick={() => handleSort('trips')}
+                className={`btn btn-xs ${sortKey === 'trips' ? 'btn-primary' : 'btn-ghost'}`}
+              >
+                Trips {sortKey === 'trips' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </button>
+              {/* <BarChart2 className="h-4 w-4 text-gray-400" /> */}
+            </div>
               <span className="text-xs text-gray-500">Last 7 days</span>
               <TrendingUp className="h-4 w-4 text-gray-400" />
             </div>
@@ -151,16 +201,31 @@ const Statistics: React.FC = () => {
         </div>
         
         <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-medium text-gray-900">Route Performance</h2>
+          <div className="mb-4 flex flex-col sm:flex-row items-start sm:items-center justify-between">
+            <h2 className="text-lg font-medium text-gray-900 mb-2 sm:mb-0">Route Performance</h2>
             <div className="flex items-center space-x-2">
+              <span className="text-xs text-gray-500 mr-2">Sort by:</span>
+              <button
+                onClick={() => handleSort('routeName')}
+                className={`btn btn-xs ${sortKey === 'routeName' ? 'btn-primary' : 'btn-ghost'}`}
+              >
+                Name {sortKey === 'routeName' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </button>
+              <button
+                onClick={() => handleSort('trips')}
+                className={`btn btn-xs ${sortKey === 'trips' ? 'btn-primary' : 'btn-ghost'}`}
+              >
+                Trips {sortKey === 'trips' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </button>
+              {/* <BarChart2 className="h-4 w-4 text-gray-400" /> */}
+            </div>
               <span className="text-xs text-gray-500">By number of trips</span>
               <BarChart2 className="h-4 w-4 text-gray-400" />
             </div>
           </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={mockRouteStats} layout="vertical">
+              <BarChart data={sortedRouteStats} layout="vertical">
                 <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
                 <XAxis type="number" axisLine={false} tickLine={false} />
                 <YAxis

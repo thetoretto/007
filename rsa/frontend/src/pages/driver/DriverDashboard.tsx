@@ -1,66 +1,53 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { getBookingsWithDetails, mockRoutes, mockTimeSlots, mockVehicles } from '../../utils/mockData';
-import { Calendar, Clock, Users, AlertCircle, Settings, Plus, CheckCircle, Info } from 'lucide-react';
+import { getBookingsWithDetails, mockRoutes, mockVehicles } from '../../utils/mockData';
+import { Calendar, Clock, Users, AlertCircle, Settings, Plus, CheckCircle, Info, Edit, Trash2 } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
+import useTripStore, { Trip } from '../../store/tripStore'; // Ensure Trip type is imported
 import QRScannerIcon from '../../components/icons/QRScannerIcon';
+import TripForm from '../../components/trips/TripForm';
 
 const DriverDashboard: React.FC = () => {
   const { user } = useAuthStore();
-  const [selectedTrip, setSelectedTrip] = useState<string | null>(null);
-  
+  const { trips, fetchTrips, removeTrip } = useTripStore();
+  const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
+  const [isTripModalOpen, setIsTripModalOpen] = useState(false);
+  const [tripToEdit, setTripToEdit] = useState<Trip | null>(null);
+
   // Import the DashboardNavbar component
   const DashboardNavbar = React.lazy(() => import('../../components/dashboard/DashboardNavbar'));
 
-  // Use mockVehicles directly instead of maintaining a separate state
-  const [trips, setTrips] = useState(mockTimeSlots.map(ts => ({
-    ...ts,
-    id: ts.id || `trip-${Math.random().toString(36).substr(2, 9)}`,
-    vehicleId: ts.vehicleId || 'v1',
-    passengers: 8,
-    status: 'upcoming',
-    availableSeats: mockVehicles.find(v => v.id === (ts.vehicleId || 'v1'))?.capacity || 16
-  })));
-  
-  // Create tripsWithDetails array that enhances each trip with its associated vehicle
-  const tripsWithDetails = trips.map((trip) => ({
-    ...trip,
-    vehicle: mockVehicles.find((v) => v.id === trip.vehicleId),
-  }));
+  useEffect(() => {
+    fetchTrips(); // Fetch trips on component mount
+  }, [fetchTrips]);
 
-  // Trip handlers
-  const handleAddTrip = (newTrip: any) => {
-    setTrips([...trips, newTrip]);
-  };
+  // Remove local state and handlers for trips
+  // const [trips, setTrips] = useState(...);
+  // const handleAddTrip = ...;
+  // const handleEditTrip = ...;
+  // const handleDeleteTrip = ...;
 
-  const handleEditTrip = (tripId: string, updatedTrip: any) => {
-    setTrips(trips.map(t => t.id === tripId ? { ...t, ...updatedTrip } : t));
-  };
-
-  const handleDeleteTrip = (tripId: string) => {
-    setTrips(trips.filter(t => t.id !== tripId));
-  };
-
-  // No need for vehicle handlers as we're using mockVehicles directly
-
-  // Calculate metrics
+  // Calculate metrics based on trips from the store
   const totalTripsToday = trips.filter(t => {
     const tripDate = new Date(t.date);
     const today = new Date();
     return tripDate.toDateString() === today.toDateString();
   }).length;
 
-  const totalPassengers = trips.reduce((sum, trip) => sum + trip.passengers, 0);
-  // Added real-time calculations
-  const completedTrips = trips.filter(t => t.status === 'completed').length;
-  const upcomingTrips = trips.filter(t => t.status === 'upcoming').length;
+  // Note: 'passengers' might not be directly on the trip object from the store
+  // Adjust calculation if needed based on booking data or trip details
+  // Let's assume 'totalPassengers' should represent completed trips for now
+  const totalPassengers = trips.filter(t => t.status === 'completed').length;
+  const upcomingTripsCount = trips.filter(t => t.status === 'upcoming').length;
+  // Calculate completed trips count - REMOVED FROM HERE
+  // const completedTrips = trips.filter(t => t.status === 'completed').length;
 
-  // Get all bookings with details
+  // Get all bookings with details (assuming this function remains relevant)
   const allBookings = getBookingsWithDetails();
 
-  // Group bookings by trip (timeSlotId)
+  // Group bookings by trip (timeSlotId which is now trip.id)
   const tripGroups = allBookings.reduce((groups: { [key: string]: typeof allBookings }, booking) => {
-    const key = booking.timeSlotId;
+    const key = booking.timeSlotId; // Assuming booking still uses timeSlotId, map to trip.id if needed
     if (!groups[key]) {
       groups[key] = [];
     }
@@ -68,32 +55,27 @@ const DriverDashboard: React.FC = () => {
     return groups;
   }, {});
 
-  // Get trip details from tripsWithDetails instead of trips
-  const detailedTrips = tripsWithDetails.map(trip => {
-    try {
-      const route = mockRoutes.find(r => r.id === trip.routeId);
-      const bookingsForTrip = tripGroups[trip.id] || [];
-
-      return {
-        ...trip,
-        route,
-        bookings: bookingsForTrip,
-        pendingBookings: bookingsForTrip.filter(b => b.status === 'pending').length,
-        confirmedBookings: bookingsForTrip.filter(b => b.status === 'confirmed').length,
-        totalBookings: bookingsForTrip.length,
-      };
-    } catch (error) {
-      console.error(`Error processing trip ${trip.id}:`, error);
-      return trip;
-    }
+  // Enhance trips from the store with booking details
+  const detailedTrips = trips.map(trip => {
+    const bookingsForTrip = tripGroups[trip.id] || [];
+    const confirmedBookingsCount = bookingsForTrip.filter(b => b.status === 'confirmed').length;
+    return {
+      ...trip,
+      bookings: bookingsForTrip,
+      pendingBookings: bookingsForTrip.filter(b => b.status === 'pending').length,
+      confirmedBookings: confirmedBookingsCount,
+      totalBookings: bookingsForTrip.length,
+      // Ensure availableSeats is calculated correctly (e.g., capacity - confirmed bookings)
+      // availableSeats: trip.vehicle?.capacity ? trip.vehicle.capacity - confirmedBookingsCount : 0,
+    };
   });
 
-  // Filter for upcoming trips (future dates)
+  // Filter for upcoming trips (future dates or today)
   const upcomingDetailedTrips = detailedTrips.filter(trip => {
-    const tripDate = new Date(trip.date);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return tripDate >= today;
+    const tripDateTime = new Date(`${trip.date}T${trip.time}`);
+    const now = new Date();
+    // Consider trips starting from now onwards as upcoming
+    return trip.status === 'upcoming' && tripDateTime >= now;
   });
 
   // Sort upcoming trips by date and time
@@ -105,11 +87,32 @@ const DriverDashboard: React.FC = () => {
 
   const handleCheckInPassenger = (bookingId: string) => {
     alert(`Passenger with booking ${bookingId} would be checked in here. This is just a demo.`);
+    // Future: Update booking status via API/store
   };
 
   const handleCancelTrip = (tripId: string) => {
-    alert(`Trip ${tripId} would be cancelled here. This is just a demo.`);
+    if (window.confirm('Are you sure you want to cancel this trip?')) {
+      // In a real app, you'd likely call an API endpoint first
+      // For now, just update the status in the store (or remove if cancellation means deletion)
+      // updateTrip(tripId, { status: 'cancelled' });
+      removeTrip(tripId); // Or removeTrip(tripId) depending on business logic
+      alert(`Trip ${tripId} cancelled (simulated).`);
+      setSelectedTrip(null); // Close details view
+    }
   };
+
+  const openEditModal = (trip: Trip) => {
+    setTripToEdit(trip);
+    setIsTripModalOpen(true);
+  };
+
+  const openCreateModal = () => {
+    setTripToEdit(null); // Ensure we are creating, not editing
+    setIsTripModalOpen(true);
+  };
+
+  // Define completedTrips just before the return statement
+  const completedTrips = trips.filter(t => t.status === 'completed').length;
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -117,7 +120,7 @@ const DriverDashboard: React.FC = () => {
       <React.Suspense fallback={<div>Loading...</div>}>
         <DashboardNavbar userRole="driver" />
       </React.Suspense>
-      
+
       <div className="md:flex md:items-center md:justify-between mb-6">
         <div className="flex-1 min-w-0">
           <h1 className="text-3xl font-bold text-gray-900">Driver Dashboard</h1>
@@ -126,10 +129,11 @@ const DriverDashboard: React.FC = () => {
           </p>
         </div>
         <div className="mt-4 flex md:mt-0 md:ml-4">
-          <Link to="/driver/trips/new" className="btn btn-primary">
+          {/* Changed Link to button to open modal */}
+          <button onClick={openCreateModal} className="btn btn-primary">
             <Plus className="h-4 w-4 mr-2" />
             New Trip
-          </Link>
+          </button>
         </div>
       </div>
 
@@ -141,19 +145,20 @@ const DriverDashboard: React.FC = () => {
             </div>
 
             <div className="overflow-hidden">
-              {upcomingTrips.length > 0 ? (
+              {upcomingDetailedTrips.length > 0 ? (
                 <div className="divide-y divide-gray-200">
-                  {upcomingTrips.map((trip) => (
+                  {upcomingDetailedTrips.map((trip) => (
                     <div
                       key={trip.id}
-                      className={`hover:bg-gray-50 cursor-pointer p-4 sm:px-6 lg:px-8 transition-colors ${selectedTrip === trip.id ? 'bg-primary-50' : ''
+                      className={`hover:bg-gray-50 cursor-pointer p-4 sm:px-6 lg:px-8 transition-colors ${selectedTrip?.id === trip.id ? 'bg-primary-50' : ''
                         }`}
-                      onClick={() => setSelectedTrip(trip.id === selectedTrip ? null : trip.id)}
+                      onClick={() => setSelectedTrip(trip.id === selectedTrip?.id ? null : trip)}
                     >
                       <div className="flex items-center justify-between">
                         <div>
                           <h3 className="text-base font-medium text-gray-900">
-                            {trip.route?.name}
+                            {/* {trip.route?.name || 'Unknown Route'} */} {/* Removed route name */}
+                            {trip.fromLocation} to {trip.toLocation} {/* Added from/to location */}
                           </h3>
                           <div className="mt-1 flex items-center text-sm text-gray-500">
                             <Calendar className="h-4 w-4 mr-1" />
@@ -168,48 +173,59 @@ const DriverDashboard: React.FC = () => {
                           <div className="flex items-center">
                             <Users className="h-4 w-4 text-gray-400 mr-1" />
                             <span className="text-sm">
-                              {trip.confirmedBookings} / {trip.availableSeats}
+                              {trip.confirmedBookings} / {trip.vehicle?.capacity || 'N/A'}
                             </span>
                           </div>
                           {trip.pendingBookings > 0 && (
                             <div className="mt-1 flex items-center text-xs text-warning-600">
                               <AlertCircle className="h-3 w-3 mr-1" />
-                              <span>{trip.pendingBookings} pending bookings</span>
+                              <span>{trip.pendingBookings} pending</span>
                             </div>
                           )}
                         </div>
                       </div>
 
-                      {selectedTrip === trip.id && (
+                      {selectedTrip?.id === trip.id && (
                         <div className="mt-4 pt-4 border-t border-gray-100 animate-fade-in">
                           <div className="mb-4 flex justify-between items-center">
-                            <h4 className="font-medium text-gray-900">Passenger List</h4>
+                            <h4 className="font-medium text-gray-900">Passenger List & Actions</h4>
                             <div className="flex space-x-2">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  openEditModal(trip);
+                                }}
+                                className="btn btn-secondary py-1 px-3 text-xs flex items-center"
+                              >
+                                <Edit size={12} className="mr-1" /> Edit
+                              </button>
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   handleCancelTrip(trip.id);
                                 }}
-                                className="btn btn-danger py-1 px-3 text-xs"
+                                className="btn btn-danger py-1 px-3 text-xs flex items-center"
                               >
-                                Cancel Trip
+                                <Trash2 size={12} className="mr-1" /> Cancel Trip
                               </button>
-                              <Link
+                              {/* Link to a dedicated Trip Details page might still be useful */}
+                              {/* <Link
                                 to={`/driver/trips/${trip.id}`}
                                 onClick={(e) => e.stopPropagation()}
                                 className="btn btn-primary py-1 px-3 text-xs"
                               >
                                 Trip Details
-                              </Link>
+                              </Link> */}
                             </div>
                           </div>
 
+                          {/* Passenger List */}
                           {trip.bookings.length > 0 ? (
-                            <div className="divide-y divide-gray-100">
+                            <div className="divide-y divide-gray-100 max-h-60 overflow-y-auto pr-2">
                               {trip.bookings.map((booking) => (
                                 <div key={booking.id} className="py-2 flex items-center justify-between">
                                   <div>
-                                    <p className="font-medium">
+                                    <p className="font-medium text-sm">
                                       {booking.passenger?.firstName} {booking.passenger?.lastName}
                                     </p>
                                     <p className="text-xs text-gray-500">
@@ -232,7 +248,7 @@ const DriverDashboard: React.FC = () => {
                                     ) : booking.status === 'checked-in' ? (
                                       <span className="badge badge-success text-xs">Checked In</span>
                                     ) : (
-                                      <span className="badge badge-warning text-xs">{booking.status}</span>
+                                      <span className={`badge badge-${booking.status === 'pending' ? 'warning' : 'secondary'} text-xs`}>{booking.status}</span>
                                     )}
                                   </div>
                                 </div>
@@ -255,12 +271,13 @@ const DriverDashboard: React.FC = () => {
                   </div>
                   <h3 className="mt-2 text-sm font-medium text-gray-900">No upcoming trips</h3>
                   <p className="mt-1 text-sm text-gray-500">
-                    You don't have any scheduled trips at the moment.
+                    You don't have any scheduled trips starting soon.
                   </p>
                   <div className="mt-6">
-                    <Link to="/driver/trips/new" className="btn btn-primary">
+                    {/* Changed Link to button */}
+                    <button onClick={openCreateModal} className="btn btn-primary">
                       Create New Trip
-                    </Link>
+                    </button>
                   </div>
                 </div>
               )}
@@ -268,6 +285,7 @@ const DriverDashboard: React.FC = () => {
           </div>
         </div>
 
+        {/* Right Sidebar */}
         <div>
           <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
             <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
@@ -276,11 +294,11 @@ const DriverDashboard: React.FC = () => {
             <div className="p-4 sm:px-6">
               <div className="grid grid-cols-2 gap-4">
                 <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs text-gray-500 mb-1">Total Trips Today</p>
+                  <p className="text-xs text-gray-500 mb-1">Trips Today</p>
                   <p className="text-2xl font-bold text-primary-600">{totalTripsToday}</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-xs text-gray-500 mb-1">Passengers</p>
+                  <p className="text-xs text-gray-500 mb-1">Passengers (Est.)</p>
                   <p className="text-2xl font-bold text-primary-600">{totalPassengers}</p>
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg">
@@ -289,7 +307,7 @@ const DriverDashboard: React.FC = () => {
                 </div>
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <p className="text-xs text-gray-500 mb-1">Upcoming</p>
-                  <p className="text-2xl font-bold text-accent-600">{upcomingTrips}</p>
+                  <p className="text-2xl font-bold text-accent-600">{upcomingTripsCount}</p>
                 </div>
               </div>
             </div>
@@ -302,21 +320,22 @@ const DriverDashboard: React.FC = () => {
             <div className="p-4 sm:px-6">
               <div className="space-y-3">
                 <Link
-                  to="/driver/scanner"
+                  to="/driver/scanner" // Keep as Link for navigation
                   className="btn btn-primary w-full flex items-center justify-center"
                 >
                   <QRScannerIcon className="h-5 w-5 mr-2" />
                   Open QR Scanner
                 </Link>
-                <Link
-                  to="/driver/trips/new"
+                {/* Changed Link to button */}
+                <button
+                  onClick={openCreateModal}
                   className="btn btn-secondary w-full flex items-center justify-center"
                 >
                   <Plus className="h-5 w-5 mr-2" />
                   New Trip
-                </Link>
+                </button>
                 <Link
-                  to="/driver/vehicles"
+                  to="/driver/vehicles" // Ensure this is a Link for navigation
                   className="btn btn-secondary w-full flex items-center justify-center"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5 mr-2">
@@ -342,6 +361,13 @@ const DriverDashboard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Trip Form Modal */}
+      <TripForm
+        isOpen={isTripModalOpen}
+        onClose={() => setIsTripModalOpen(false)}
+        tripToEdit={tripToEdit}
+      />
     </div>
   );
 };

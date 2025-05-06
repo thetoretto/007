@@ -50,7 +50,8 @@ export const TripList = ({
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="text-base font-medium text-gray-900">
-                      {trip.route?.name}
+                      {/* {trip.route?.name} */} {/* Removed route name */}
+                      {trip.fromLocation} to {trip.toLocation} {/* Added from/to location */}
                       <span className="text-sm text-gray-500 ml-2">
                         ({vehicles.find(v => v.id === trip.vehicleId)?.type})
                       </span>

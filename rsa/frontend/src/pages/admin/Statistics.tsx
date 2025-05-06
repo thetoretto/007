@@ -1,5 +1,5 @@
 import React from 'react';
-import { useAuthStore } from '../../store/authStore';
+import useAuthStore from '../../store/authStore';
 import { Activity, TrendingUp, BarChart2, Users, DollarSign } from 'react-feather';
 import { mockTimeSlots, mockVehicles, mockRoutes, getBookingsWithDetails, mockDashboardStats } from '../../utils/mockData';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
