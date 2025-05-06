@@ -33,7 +33,7 @@ const HomePage: React.FC = () => {
               Book Now
             </Link>
             <Link
-              to="/about"
+              to="/learn-more"
               className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-500 bg-opacity-60 hover:bg-opacity-75 transition-opacity duration-300" /* Secondary button style */
             >
               Learn More

@@ -1,0 +1,150 @@
+import React from 'react';
+import Navbar from '../components/common/Navbar';
+import Footer from '../components/common/Footer';
+import { ShieldCheck, DollarSign, Users, Leaf, Clock, UserCheck } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { fadeInUp, staggerContainer } from '../utils/animations';
+
+// Define benefit data
+const passengerBenefits = [
+  {
+    icon: ShieldCheck,
+    title: 'Enhanced Safety',
+    description: "Travel with peace of mind knowing you're not alone. Our platform includes safety features and verified drivers.",
+  },
+  {
+    icon: DollarSign,
+    title: 'Convenience & Affordability',
+    description: 'Find rides easily along your route, often at a lower cost than traditional options. Share the ride, share the cost.',
+  },
+  {
+    icon: Leaf,
+    title: 'Eco-Friendly',
+    description: 'Reduce traffic congestion and your carbon footprint by sharing rides.',
+  },
+];
+
+const driverBenefits = [
+  {
+    icon: DollarSign,
+    title: 'Earn Extra Income',
+    description: "Turn your empty seats into cash. Cover fuel costs, vehicle maintenance, or simply make extra money on routes you're already driving.",
+  },
+  {
+    icon: Clock,
+    title: 'Flexibility & Control',
+    description: 'Drive when you want, where you want. Set your own schedule and choose the trips that work best for you.',
+  },
+  {
+    icon: UserCheck,
+    title: 'Increased Safety',
+    description: 'Share your journey with verified passengers. Having company on the road can enhance your personal safety, especially on long or late-night drives.',
+  },
+];
+
+// Reusable Benefit Card Component (defined inline for simplicity)
+interface BenefitCardProps {
+  icon: React.ElementType;
+  title: string;
+  description: string;
+  iconBgColor?: string;
+  iconTextColor?: string;
+}
+
+const BenefitCard: React.FC<BenefitCardProps> = ({ icon: Icon, title, description, iconBgColor = 'bg-green-100', iconTextColor = 'text-green-600' }) => (
+  <motion.div variants={fadeInUp} className="bg-white p-6 rounded-lg shadow-md border border-gray-200 flex items-start space-x-4">
+    <div className={`w-10 h-10 ${iconBgColor} rounded-md flex items-center justify-center ${iconTextColor} flex-shrink-0 mt-1`}>
+      <Icon className="h-5 w-5" />
+    </div>
+    <div>
+      <h3 className="text-lg font-semibold text-gray-900 mb-1">{title}</h3>
+      <p className="text-sm text-gray-600">{description}</p>
+    </div>
+  </motion.div>
+);
+
+const LearnMorePage: React.FC = () => {
+  return (
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      <Navbar />
+      <main className="flex-grow py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
+        <motion.div
+          initial="hidden"
+          animate="show"
+          variants={staggerContainer}
+          className="max-w-7xl mx-auto"
+        >
+          <motion.div variants={fadeInUp} className="text-center mb-12 lg:mb-16">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight">Unlock the Benefits of Ride Sharing</h1>
+            <p className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto">
+              Discover how RideBooker makes travel better for everyone involved – safer journeys for passengers and great opportunities for drivers.
+            </p>
+          </motion.div>
+
+          {/* Updated: Grid layout for sections */}
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16">
+            {/* Section for Passengers */}
+            <motion.div variants={fadeInUp} className="space-y-8">
+              <div className="flex items-center mb-6">
+                <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 mr-4">
+                  <Users className="h-6 w-6" />
+                </div>
+                <h2 className="text-2xl font-semibold text-gray-900">For Passengers: Travel Smarter, Safer</h2>
+              </div>
+              <div className="space-y-6">
+                {passengerBenefits.map((benefit, index) => (
+                  <BenefitCard
+                    key={index}
+                    icon={benefit.icon}
+                    title={benefit.title}
+                    description={benefit.description}
+                    iconBgColor="bg-indigo-100"
+                    iconTextColor="text-indigo-600"
+                  />
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Section for Drivers */}
+            <motion.div variants={fadeInUp} className="space-y-8">
+              <div className="flex items-center mb-6">
+                <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center text-purple-600 mr-4">
+                  <DollarSign className="h-6 w-6" />
+                </div>
+                <h2 className="text-2xl font-semibold text-gray-900">For Drivers: Earn More, Drive Securely</h2>
+              </div>
+              <div className="space-y-6">
+                {driverBenefits.map((benefit, index) => (
+                  <BenefitCard
+                    key={index}
+                    icon={benefit.icon}
+                    title={benefit.title}
+                    description={benefit.description}
+                    iconBgColor="bg-purple-100"
+                    iconTextColor="text-purple-600"
+                  />
+                ))}
+              </div>
+            </motion.div>
+          </div>
+
+          {/* CTA Section */}
+          <motion.div variants={fadeInUp} className="text-center mt-16 lg:mt-20">
+            <p className="text-xl text-gray-700 mb-6">Ready to experience the benefits?</p>
+            <motion.div whileTap={{ scale: 0.95 }}>
+              <a
+                href="/register"
+                className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-300 shadow-md"
+              >
+                Join Our Community Today!
+              </a>
+            </motion.div>
+          </motion.div>
+        </motion.div>
+      </main>
+      <Footer />
+    </div>
+  );
+};
+
+export default LearnMorePage;

@@ -4,7 +4,8 @@ import HomePage from './pages/HomePage';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import BookingPage from './pages/booking/BookingPage';
-import ContactPage from './pages/ContactPage'; // Import the new contact page
+import ContactPage from './pages/ContactPage';
+import LearnMorePage from './pages/LearnMorePage'; // Import the new page // Import the new contact page
 import TripsPage from './pages/passenger/TripsPage';
 import DriverDashboard from './pages/driver/DriverDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -63,6 +64,7 @@ function App() {
             <Route path="/book" element={<BookingPage />} />
             <Route path="/components" element={<ComponentsGallery />} />
             <Route path="/contact" element={<ContactPage />} />
+            <Route path="/learn-more" element={<LearnMorePage />} />
             
             {/* Passenger routes */}
             <Route 
