@@ -1,9 +1,14 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { MapPin, Calendar, Clock, CreditCard, CheckCircle, XCircle, AlertCircle, QrCode, ArrowUpDown } from 'lucide-react';
-import { getBookingsWithDetails } from '../../utils/mockData';
-import useAuthStore from '../../store/authStore';
+import useBookingStore, { BookingWithDetails } from '../../store/bookingStore';
 import Navbar from '../../components/common/Navbar';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { ChevronDown, Filter, CalendarDays, Clock, MapPin, Users, Tag, Inbox, AlertCircle, CheckCircle, XCircle, Info, ListFilter, Search } from 'lucide-react'; // Added Users, Tag, Inbox
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import useAuthStore from '../../store/authStore';
 
 enum TripFilter {
   ALL = 'all',
@@ -14,7 +19,8 @@ enum TripFilter {
 
 enum SortKey {
   DATE = 'date',
-  PRICE = 'price',
+  ROUTE = 'route',
+  STATUS = 'status',
 }
 
 enum SortOrder {
@@ -24,40 +30,102 @@ enum SortOrder {
 
 const TripsPage: React.FC = () => {
   const { user } = useAuthStore();
+  const { bookings, fetchBookingsByUserId, isLoading, error } = useBookingStore(); // Use booking store
   const [activeFilter, setActiveFilter] = useState<TripFilter>(TripFilter.ALL);
   const [sortKey, setSortKey] = useState<SortKey>(SortKey.DATE);
   const [sortOrder, setSortOrder] = useState<SortOrder>(SortOrder.DESC);
-  
-  // In a real app, we would fetch the bookings from the API
-  const bookingsWithDetails = getBookingsWithDetails();
+  const [filterStatus, setFilterStatus] = useState<string>('all'); // Added state
+  const [searchTerm, setSearchTerm] = useState<string>(''); // Added state
+
+  useEffect(() => {
+    if (user?.id) {
+      fetchBookingsByUserId(user.id);
+    }
+  }, [user?.id, fetchBookingsByUserId]);
+
+  const getCurrentSortValue = (): string => {
+    if (sortKey === SortKey.STATUS) {
+      return 'status';
+    }
+    return `${sortKey}${sortOrder.charAt(0).toUpperCase() + sortOrder.slice(1)}`;
+  };
+
+  const handleSortChange = (value: string) => {
+    if (value === 'status') {
+      setSortKey(SortKey.STATUS);
+      // Optionally set a default order or maintain current for status
+      // setSortOrder(SortOrder.ASC); 
+    } else if (value.endsWith('Asc')) {
+      setSortKey(value.replace('Asc', '') as SortKey);
+      setSortOrder(SortOrder.ASC);
+    } else if (value.endsWith('Desc')) {
+      setSortKey(value.replace('Desc', '') as SortKey);
+      setSortOrder(SortOrder.DESC);
+    }
+  };
   
   // Filter the bookings based on the active filter
-  const filteredBookings = bookingsWithDetails.filter(booking => {
+  const filteredBookings = bookings.filter(booking => {
     if (activeFilter === TripFilter.ALL) return true;
-    if (activeFilter === TripFilter.UPCOMING && ['pending', 'confirmed'].includes(booking.status)) return true;
+    if (activeFilter === TripFilter.UPCOMING && ['pending', 'confirmed', 'booked', 'checked-in', 'validated'].includes(booking.status as string)) return true; // Added new statuses for upcoming
     if (activeFilter === TripFilter.COMPLETED && booking.status === 'completed') return true;
     if (activeFilter === TripFilter.CANCELLED && booking.status === 'cancelled') return true;
     return false;
   });
 
-  // Only show bookings for the current user
-  const userBookings = user ? filteredBookings.filter(booking => booking.passengerId === user.id) : [];
+  // Bookings are already filtered by userId in the store hook, so userBookings is directly filteredBookings
+  const userBookings = filteredBookings;
+
+  // Helper function to get sortable value
+  const getValueForSortKey = (booking: BookingWithDetails, key: SortKey): string | number | Date => {
+    switch (key) {
+      case SortKey.DATE:
+        // Ensure timeSlot and its properties exist
+        if (booking.timeSlot?.date && booking.timeSlot?.time) {
+          return new Date(`${booking.timeSlot.date}T${booking.timeSlot.time}`);
+        }
+        return new Date(0); // Fallback for invalid date
+      case SortKey.ROUTE:
+        return `${booking.route?.origin?.name || ''} - ${booking.route?.destination?.name || ''}`;
+      case SortKey.STATUS:
+        return booking.status;
+      default:
+        // Exhaustive check for unhandled SortKey cases
+        const _exhaustiveCheck: never = key;
+        return ''; 
+    }
+  };
 
   // Sort the bookings
   const sortedUserBookings = useMemo(() => {
-    return [...userBookings].sort((a, b) => {
+    let filtered = userBookings;
+    if (filterStatus !== 'all') {
+      filtered = filtered.filter(booking => booking.status === filterStatus);
+    }
+    if (searchTerm) {
+      filtered = filtered.filter(booking =>
+        booking.route.origin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        booking.route.destination.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        booking.id.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+
+    return [...filtered].sort((a, b) => {
       let comparison = 0;
-      if (sortKey === SortKey.DATE) {
-        const dateA = new Date(`${a.timeSlot?.date} ${a.timeSlot?.time}`);
-        const dateB = new Date(`${b.timeSlot?.date} ${b.timeSlot?.time}`);
-        comparison = dateA.getTime() - dateB.getTime();
-      } else if (sortKey === SortKey.PRICE) {
-        comparison = a.fare.total - b.fare.total;
+      const valA = getValueForSortKey(a, sortKey);
+      const valB = getValueForSortKey(b, sortKey);
+
+      if (typeof valA === 'string' && typeof valB === 'string') {
+        comparison = valA.localeCompare(valB);
+      } else if (typeof valA === 'number' && typeof valB === 'number') {
+        comparison = valA - valB;
+      } else if (valA instanceof Date && valB instanceof Date) {
+        comparison = valA.getTime() - valB.getTime();
       }
 
-      return sortOrder === SortOrder.ASC ? comparison : -comparison;
+      return sortOrder === 'asc' ? comparison : -comparison;
     });
-  }, [userBookings, sortKey, sortOrder]);
+  }, [userBookings, filterStatus, searchTerm, sortKey, sortOrder]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -91,9 +159,23 @@ const TripsPage: React.FC = () => {
         );
       case 'checked-in':
         return (
-          <span className="badge badge-primary flex items-center">
+          <span className="badge bg-indigo-100 text-indigo-700 flex items-center">
             <CheckCircle className="h-3 w-3 mr-1" />
             Checked In
+          </span>
+        );
+      case 'validated': // Added validated status
+        return (
+          <span className="badge bg-teal-100 text-teal-700 flex items-center">
+            <CheckCircle className="h-3 w-3 mr-1" />
+            Validated
+          </span>
+        );
+      case 'booked': // Added booked status
+        return (
+          <span className="badge bg-blue-100 text-blue-700 flex items-center">
+            <AlertCircle className="h-3 w-3 mr-1" /> {/* Or Info icon */}
+            Booked
           </span>
         );
       default:
@@ -109,7 +191,11 @@ const TripsPage: React.FC = () => {
       return;
     }
 
-    const tripDateTimeStr = `${bookingToCancel.timeSlot.date} ${bookingToCancel.timeSlot.time}`;
+    const tripDateTimeStr = bookingToCancel.timeSlot?.date && bookingToCancel.timeSlot?.time ? `${bookingToCancel.timeSlot.date} ${bookingToCancel.timeSlot.time}` : '';
+    if (!tripDateTimeStr) {
+        alert("Error: Booking time slot details are missing. Cannot proceed with cancellation.");
+        return;
+    }
     let tripDateTime;
     try {
       // Attempt to parse the date and time
@@ -145,23 +231,24 @@ const TripsPage: React.FC = () => {
     if (window.confirm("Are you sure you want to cancel this booking?")) {
       // In a real app, you would call an API to cancel the booking
       // and then update the local state or refetch bookings.
-      // For this demo, we'll simulate it with an alert and log.
+      // TODO: Implement cancellation with bookingStore
       console.log(`Booking ${bookingId} cancellation confirmed by user.`);
-      alert(`Booking ${bookingId} would be cancelled here. (This is a demo - state not updated yet)`);
-      // To actually update the UI, you'd need to modify the bookings array and trigger a re-render.
-      // This might involve lifting state up, using a global state manager (like Zustand here), 
-      // or passing a callback to update the bookings list.
-      // For now, the change won't persist visually after the alert.
+      alert(`Booking ${bookingId} cancellation needs to be implemented with the booking store.`);
     }
   };
 
   return (
     
     
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div className='mb-6' >
-      <Navbar/>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      {/* Navbar is already part of the layout, ensure it's not duplicated if App.tsx handles global layout */}
+      {/* <Navbar/> */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {/* Loading and error states from bookingStore */}
+      {isLoading && <p className="text-center py-10">Loading your trips...</p>}
+      {error && <p className="text-center py-10 text-red-500">Error loading trips: {error}</p>}
+      {!isLoading && !error && (
+      <>
       <h1 className="text-3xl font-bold text-gray-900 mb-6">My Trips</h1>
 
       <div className="bg-white rounded-lg shadow-sm overflow-hidden">
@@ -210,153 +297,100 @@ const TripsPage: React.FC = () => {
             </button>
           </div>
 
-          {/* Sorting */}
+          {/* Sort By - Simple for now, can be expanded */}
           <div className="flex items-center space-x-2">
-            <span className="text-sm text-gray-500">Sort by:</span>
-            <select
-              value={sortKey}
-              onChange={(e) => setSortKey(e.target.value as SortKey)}
-              className="text-sm border-gray-300 rounded-md shadow-sm focus:border-primary-300 focus:ring focus:ring-primary-200 focus:ring-opacity-50"
+            <ListFilter className="h-4 w-4 text-gray-400" />
+            <select 
+              value={getCurrentSortValue()}
+              onChange={(e) => handleSortChange(e.target.value)}
+              className="select select-bordered select-xs focus:ring-primary-500 focus:border-primary-500 text-xs"
             >
-              <option value={SortKey.DATE}>Date</option>
-              <option value={SortKey.PRICE}>Price</option>
+              <option value="dateDesc">Newest First</option>
+              <option value="dateAsc">Oldest First</option>
+              <option value="status">By Status</option>
             </select>
-            <button
-              onClick={() => setSortOrder(sortOrder === SortOrder.ASC ? SortOrder.DESC : SortOrder.ASC)}
-              className="p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md"
-            >
-              <ArrowUpDown className="h-4 w-4" />
-              <span className="sr-only">Toggle Sort Order ({sortOrder === SortOrder.ASC ? 'Ascending' : 'Descending'})</span>
-            </button>
           </div>
         </div>
 
-        <div className="px-4 sm:px-6 lg:px-8 py-4">
-          {sortedUserBookings.length > 0 ? (
-            <div className="space-y-4"> {/* Reduced space-y */} 
-              {sortedUserBookings.map((booking) => (
-                <div key={booking.id} className="border border-gray-200 rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200">
-                  <div className="flex flex-col sm:flex-row">
-                    {/* Main Content Area - More Compact */}
-                    <div className="p-4 flex-1">
-                      <div className="flex items-start justify-between mb-3">
-                        <div>
-                          <h3 className="text-base font-semibold text-gray-900 leading-tight">
-                            {booking.route?.origin.name} to {booking.route?.destination.name}
-                          </h3>
-                          <p className="text-xs text-gray-500 mt-0.5">Route: {booking.route?.name}</p>
-                        </div>
+        {/* Trips List or Empty State */}
+        {sortedUserBookings.length > 0 ? (
+          <ul role="list" className="divide-y divide-gray-200">
+            {sortedUserBookings.map((booking) => (
+              <li key={booking.id} className="hover:bg-gray-50 transition-colors">
+                <Link to={`/passenger/trips/${booking.id}`} className="block">
+                  <div className="px-4 py-4 sm:px-6 lg:px-8">
+                    <div className="flex items-center justify-between">
+                      <p className="truncate text-md font-semibold text-primary-600">
+                        {booking.route?.origin.name} to {booking.route?.destination.name}
+                      </p>
+                      <div className="ml-2 flex flex-shrink-0">
                         {getStatusBadge(booking.status)}
                       </div>
-
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-2 text-sm">
-                        {/* Date & Time */}
-                        <div className="flex items-center text-gray-600">
-                          <Calendar className="h-4 w-4 text-gray-400 mr-1.5 flex-shrink-0" />
-                          <span>{booking.timeSlot?.date}</span>
-                        </div>
-                        <div className="flex items-center text-gray-600">
-                          <Clock className="h-4 w-4 text-gray-400 mr-1.5 flex-shrink-0" />
-                          <span>{booking.timeSlot?.time}</span>
-                        </div>
-                        
-                        {/* Payment */}
-                        <div className="flex items-center text-gray-600">
-                          <CreditCard className="h-4 w-4 text-gray-400 mr-1.5 flex-shrink-0" />
-                          <span>${booking.fare.total.toFixed(2)}</span>
-                          <span className={`ml-1.5 text-xs ${booking.paymentStatus === 'paid' ? 'text-success-600' : 'text-warning-600'}`}>
-                            ({booking.paymentStatus === 'paid' ? 'Paid' : 'Pending'})
-                          </span>
-                        </div>
-
-                        {/* Seat */}
-                        <div className="flex items-center text-gray-600 col-span-2 sm:col-span-1">
-                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4 text-gray-400 mr-1.5 flex-shrink-0 lucide lucide-armchair">
-                            <path d="M19 9V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v3"/><path d="M3 11v5a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-5a2 2 0 0 0-4 0v2H7v-2a2 2 0 0 0-4 0Z"/><path d="M5 18v2"/><path d="M19 18v2"/>
-                          </svg>
-                          <span>{booking.vehicle?.model} - Seat {booking.seatId.split('s')[1].split('v')[0]}</span>
-                        </div>
-
-                        {/* Pickup Address (if applicable) */}
-                        {booking.hasDoorstepPickup && (
-                          <div className="flex items-start text-gray-600 col-span-2 sm:col-span-3">
-                            <MapPin className="h-4 w-4 text-gray-400 mr-1.5 mt-0.5 flex-shrink-0" />
-                            <span className="text-xs">Pickup: {booking.pickupAddress}</span>
-                          </div>
-                        )}
+                    </div>
+                    <div className="mt-2 sm:flex sm:justify-between">
+                      <div className="sm:flex">
+                        <p className="flex items-center text-sm text-gray-500">
+                          <CalendarDays className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                          {booking.timeSlot?.date && booking.timeSlot?.time ? 
+                            new Date(booking.timeSlot.date + 'T' + booking.timeSlot.time).toLocaleDateString([], {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                          }) : 'Date N/A'} at {booking.timeSlot?.time || 'Time N/A'}
+                        </p>
+                        <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-4">
+                          <Users className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                          {booking.passenger?.firstName} {booking.passenger?.lastName}
+                        </p>
+                      </div>
+                      <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                        <Tag className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                        Booking ID: {booking.id}
                       </div>
                     </div>
-
-                    {/* Action Area - More Compact */}
-                    <div className="bg-gray-50 p-3 sm:border-l border-gray-200 flex flex-col items-center justify-center sm:w-48">
-                      {['pending', 'confirmed'].includes(booking.status) ? (
-                        <>
-                          <div className="mb-2 flex flex-col items-center">
-                            <QrCode className="h-20 w-20 text-gray-800 mb-1" /> {/* Smaller QR */} 
-                            <p className="text-xs text-gray-500">Ref: {booking.id}</p>
-                          </div>
-                          <div className="flex flex-col w-full space-y-1.5">
-                            <button
-                              onClick={() => handleCancelBooking(booking.id)}
-                              className="btn btn-danger btn-xs py-1 px-2 text-xs" /* Smaller button */
+                    {/* Action buttons for upcoming trips */}
+                    {(booking.status === 'confirmed' || booking.status === 'booked') && (
+                        <div className="mt-3 flex space-x-3">
+                            <button 
+                                onClick={(e) => { 
+                                    e.preventDefault(); 
+                                    e.stopPropagation(); 
+                                    handleCancelBooking(booking.id); 
+                                }}
+                                className="btn btn-error btn-xs"
                             >
-                              Cancel Booking
+                                <XCircle className="h-4 w-4 mr-1" /> Cancel Booking
                             </button>
-                            <Link to={`/trip/${booking.id}`} className="btn btn-primary btn-xs py-1 px-2 text-center text-xs"> {/* Smaller button */} 
-                              View Details
-                            </Link>
-                          </div>
-                        </>
-                      ) : (
-                        <>
-                          <div className="mb-2 text-center">
-                            {booking.status === 'cancelled' ? (
-                              <XCircle className="h-10 w-10 text-error-500 mx-auto mb-1" /> /* Smaller icon */
-                            ) : (
-                              <CheckCircle className="h-10 w-10 text-success-500 mx-auto mb-1" /> /* Smaller icon */
-                            )}
-                            <p className="text-sm font-medium">
-                              {booking.status === 'cancelled' ? 'Cancelled' : 'Completed'}
-                            </p>
-                            <p className="text-xs text-gray-500 mt-0.5">
-                              {booking.status === 'cancelled'
-                                ? 'This booking was cancelled'
-                                : booking.checkedInAt
-                                  ? `Checked in: ${new Date(booking.checkedInAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
-                                  : 'Trip finished'}
-                            </p>
-                          </div>
-                          <Link to={`/trip/${booking.id}`} className="btn btn-primary btn-xs py-1 px-2 text-center text-xs"> {/* Smaller button */} 
-                            View Details
-                          </Link>
-                        </>
-                      )}
-                    </div>
+                            {/* Add more actions if needed, e.g., Reschedule */}
+                        </div>
+                    )}
                   </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <div className="mx-auto h-16 w-16 bg-gray-100 rounded-full flex items-center justify-center">
-                <MapPin className="h-8 w-8 text-gray-400" />
-              </div>
-              <h3 className="mt-4 text-lg font-medium text-gray-900">No trips found</h3>
-              <p className="mt-2 text-sm text-gray-500">
-                {!user
-                  ? "You need to be logged in to view your trips"
-                  : `You don't have any ${
-                      activeFilter !== TripFilter.ALL ? activeFilter.toLowerCase() : ''
-                    } trips yet.`}
-              </p>
-              <div className="mt-6">
-                <Link to="/book" className="btn btn-primary">
-                  Book a Trip
                 </Link>
-              </div>
-            </div>
-          )}
-        </div>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <div className="text-center py-12 px-4 sm:px-6 lg:px-8">
+            <Inbox className="mx-auto h-12 w-12 text-gray-400" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900">No trips found</h3>
+            <p className="mt-1 text-sm text-gray-500">
+              {activeFilter === TripFilter.ALL
+                ? 'You have no trips scheduled yet.'
+                : `You have no ${activeFilter.toLowerCase()} trips.`}
+            </p>
+            {activeFilter !== TripFilter.ALL && (
+              <button 
+                onClick={() => setActiveFilter(TripFilter.ALL)}
+                className="mt-4 btn btn-sm btn-outline-primary"
+              >
+                Show All Trips
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+      </>
+      )}
       </div>
     </div>
   );

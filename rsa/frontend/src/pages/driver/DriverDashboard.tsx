@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { getBookingsWithDetails, mockRoutes, mockVehicles } from '../../utils/mockData';
-import { Calendar, Clock, Users, AlertCircle, Settings, Plus, CheckCircle, Info, Edit, Trash2 } from 'lucide-react';
+import { getBookingsWithDetails, mockRoutes, mockVehicles, mockDriverIncome } from '../../utils/mockData'; // Added mockDriverIncome
+import { Calendar, Clock, Users, AlertCircle, Settings, Plus, CheckCircle, Info, Edit, Trash2, DollarSign, Eye, EyeOff, Filter } from 'lucide-react'; // Added DollarSign, Eye, EyeOff, Filter
 import useAuthStore from '../../store/authStore';
 import useTripStore, { Trip } from '../../store/tripStore'; // Ensure Trip type is imported
 import QRScannerIcon from '../../components/icons/QRScannerIcon';
 import TripForm from '../../components/trips/TripForm';
+import PasswordConfirmationModal from '../../components/common/PasswordConfirmationModal'; // To be created
 
 const DriverDashboard: React.FC = () => {
   const { user } = useAuthStore();
@@ -13,6 +14,9 @@ const DriverDashboard: React.FC = () => {
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
   const [isTripModalOpen, setIsTripModalOpen] = useState(false);
   const [tripToEdit, setTripToEdit] = useState<Trip | null>(null);
+  const [showIncome, setShowIncome] = useState(false);
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [timePeriod, setTimePeriod] = useState<'daily' | 'weekly' | 'monthly' | 'yearly'>('daily');
 
   // Import the DashboardNavbar component
   const DashboardNavbar = React.lazy(() => import('../../components/dashboard/DashboardNavbar'));
@@ -85,6 +89,56 @@ const DriverDashboard: React.FC = () => {
     return dateA.getTime() - dateB.getTime();
   });
 
+  const filterTripsByTimePeriod = (tripsToFilter: Trip[], period: 'daily' | 'weekly' | 'monthly' | 'yearly') => {
+    const now = new Date();
+    return tripsToFilter.filter(trip => {
+      const tripDate = new Date(trip.date);
+      if (period === 'daily') {
+        return tripDate.toDateString() === now.toDateString();
+      }
+      if (period === 'weekly') {
+        const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay()));
+        const endOfWeek = new Date(now.setDate(now.getDate() - now.getDay() + 6));
+        startOfWeek.setHours(0, 0, 0, 0);
+        endOfWeek.setHours(23, 59, 59, 999);
+        return tripDate >= startOfWeek && tripDate <= endOfWeek;
+      }
+      if (period === 'monthly') {
+        return tripDate.getFullYear() === now.getFullYear() && tripDate.getMonth() === now.getMonth();
+      }
+      if (period === 'yearly') {
+        return tripDate.getFullYear() === now.getFullYear();
+      }
+      return true;
+    });
+  };
+
+  const tripsForPeriod = useMemo(() => filterTripsByTimePeriod(trips, timePeriod), [trips, timePeriod]);
+
+  const completedTripsForPeriod = useMemo(() => tripsForPeriod.filter(t => t.status === 'completed').length, [tripsForPeriod]);
+  const cancelledTripsForPeriod = useMemo(() => tripsForPeriod.filter(t => t.status === 'cancelled').length, [tripsForPeriod]);
+  const scheduledTripsForPeriod = useMemo(() => tripsForPeriod.filter(t => t.status === 'upcoming' || t.status === 'scheduled').length, [tripsForPeriod]); // Assuming 'upcoming' can also mean scheduled
+
+  const driverIncome = useMemo(() => mockDriverIncome(user?.id || '', timePeriod), [user?.id, timePeriod]);
+
+  const handlePasswordConfirm = (password: string) => {
+    // Simulate password check
+    if (password === 'password123') { // Replace with actual password check logic
+      setShowIncome(true);
+      setIsPasswordModalOpen(false);
+    } else {
+      alert('Incorrect password');
+    }
+  };
+
+  const toggleShowIncome = () => {
+    if (showIncome) {
+      setShowIncome(false);
+    } else {
+      setIsPasswordModalOpen(true);
+    }
+  };
+
   const handleCheckInPassenger = (bookingId: string) => {
     alert(`Passenger with booking ${bookingId} would be checked in here. This is just a demo.`);
     // Future: Update booking status via API/store
@@ -134,7 +188,69 @@ const DriverDashboard: React.FC = () => {
             <Plus className="h-4 w-4 mr-2" />
             New Trip
           </button>
+          <Link to="/driver/check-in" className="btn btn-secondary ml-2">
+            <QRScannerIcon className="h-4 w-4 mr-2" /> 
+            Validate Ticket
+          </Link>
         </div>
+      </div>
+
+      {/* Trip Statistics Section */}
+      <div className="mb-8 bg-white rounded-lg shadow-sm p-4 sm:p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-gray-800">Trip Statistics</h2>
+          <div className="flex items-center space-x-2">
+            <Filter className="h-5 w-5 text-gray-500" />
+            <select
+              value={timePeriod}
+              onChange={(e) => setTimePeriod(e.target.value as 'daily' | 'weekly' | 'monthly' | 'yearly')}
+              className="select select-bordered select-sm"
+            >
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+          </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          <div className="bg-blue-50 p-4 rounded-lg">
+            <p className="text-sm text-blue-700 mb-1">Scheduled Trips</p>
+            <p className="text-3xl font-bold text-blue-600">{scheduledTripsForPeriod}</p>
+          </div>
+          <div className="bg-green-50 p-4 rounded-lg">
+            <p className="text-sm text-green-700 mb-1">Completed Trips</p>
+            <p className="text-3xl font-bold text-green-600">{completedTripsForPeriod}</p>
+          </div>
+          <div className="bg-red-50 p-4 rounded-lg">
+            <p className="text-sm text-red-700 mb-1">Cancelled Trips</p>
+            <p className="text-3xl font-bold text-red-600">{cancelledTripsForPeriod}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Income Section */}
+      <div className="mb-8 bg-white rounded-lg shadow-sm p-4 sm:p-6">
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-xl font-semibold text-gray-800">Income ({timePeriod.charAt(0).toUpperCase() + timePeriod.slice(1)})</h2>
+          <button onClick={toggleShowIncome} className="btn btn-ghost btn-sm">
+            {showIncome ? <EyeOff className="h-5 w-5 mr-1" /> : <Eye className="h-5 w-5 mr-1" />}
+            {showIncome ? 'Hide' : 'Show'} Income
+          </button>
+        </div>
+        {showIncome ? (
+          <div className="bg-yellow-50 p-4 rounded-lg">
+            <p className="text-sm text-yellow-700 mb-1">Total Earnings</p>
+            <p className="text-3xl font-bold text-yellow-600">
+              <DollarSign className="inline h-7 w-7 mr-1" />
+              {driverIncome.toFixed(2)}
+            </p>
+          </div>
+        ) : (
+          <div className="text-center py-6 bg-gray-50 rounded-lg">
+            <p className="text-gray-500">Income is hidden. Click 'Show Income' and enter password to view.</p>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -367,6 +483,13 @@ const DriverDashboard: React.FC = () => {
         isOpen={isTripModalOpen}
         onClose={() => setIsTripModalOpen(false)}
         tripToEdit={tripToEdit}
+      />
+      <PasswordConfirmationModal
+        isOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
+        onConfirm={handlePasswordConfirm}
+        title="Confirm Password to View Income"
+        message="Please enter your password to view your income details."
       />
     </div>
   );

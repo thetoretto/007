@@ -8,10 +8,11 @@ import { X, Save, MapPin, Calendar, Clock, DollarSign, FileText } from 'lucide-r
 interface TripFormProps {
   isOpen: boolean;
   onClose: () => void;
-  tripToEdit?: Trip | null; // Optional prop for editing existing trips
+  tripToEdit?: Trip | null;
+  onSubmit?: (data: Trip | Omit<Trip, 'id' | 'createdAt' | 'updatedAt' | 'status'>) => void; // Added onSubmit prop
 }
 
-const TripForm: React.FC<TripFormProps> = ({ isOpen, onClose, tripToEdit }) => {
+const TripForm: React.FC<TripFormProps> = ({ isOpen, onClose, tripToEdit, onSubmit }) => {
   const { addTrip, updateTrip } = useTripStore();
   const { user } = useAuthStore(); // Get user for driverId
   const { vehicles, fetchVehicles } = useVehicleStore(); // Get vehicles and fetch action
@@ -76,9 +77,8 @@ const TripForm: React.FC<TripFormProps> = ({ isOpen, onClose, tripToEdit }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Add price validation
     if (!formData.fromLocation || !formData.toLocation || !formData.vehicleId || !formData.date || !formData.time || !formData.price) {
-      alert('Please fill in all required fields, including From, To, and Price.'); // Simple validation
+      alert('Please fill in all required fields, including From, To, and Price.');
       return;
     }
 
@@ -88,26 +88,53 @@ const TripForm: React.FC<TripFormProps> = ({ isOpen, onClose, tripToEdit }) => {
         return;
     }
 
-    const tripData = {
-        fromLocation: formData.fromLocation, // Changed from routeId
-        toLocation: formData.toLocation,   // Added toLocation
+    // Define baseTripData with a more precise type
+    const baseTripData: Omit<Trip, 'id' | 'status' | 'createdAt' | 'updatedAt' | 'driverId'> & { driverId?: string } = {
+        fromLocation: formData.fromLocation,
+        toLocation: formData.toLocation,
         vehicleId: formData.vehicleId,
         date: formData.date,
         time: formData.time,
-        price: priceValue, // Add price to trip data
-        driverId: user?.id || '', // Add driverId from logged-in user
-        notes: formData.notes, // Added notes field
-        // status will be set in the store
+        price: priceValue,
+        notes: formData.notes,
+        driverId: user?.role === 'driver' ? user.id : (tripToEdit?.driverId || undefined),
     };
 
-    if (tripToEdit) {
-      updateTrip(tripToEdit.id, tripData);
-      console.log('Updating trip:', tripToEdit.id, tripData);
+    if (onSubmit) { // If onSubmit is provided (e.g., from AdminDashboard)
+        let dataToSubmit: Trip | Omit<Trip, 'id' | 'createdAt' | 'updatedAt' | 'status'>;
+        if (tripToEdit) {
+            // For editing, merge existing trip data with form data
+            dataToSubmit = {
+                ...tripToEdit,
+                ...baseTripData,
+                // Ensure driverId is correctly set if admin is editing and it was part of tripToEdit
+                driverId: user?.role === 'admin' && tripToEdit.driverId ? tripToEdit.driverId : baseTripData.driverId,
+            };
+        } else {
+            // For creating, use baseTripData. Admin might not set driverId here.
+            dataToSubmit = {
+                ...baseTripData,
+                driverId: user?.role === 'driver' ? user.id : undefined, // Explicitly undefined if admin and new trip
+            };
+        }
+        onSubmit(dataToSubmit as Trip | Omit<Trip, 'id' | 'createdAt' | 'updatedAt' | 'status'>);
+        // onClose is typically handled by the parent component that provided onSubmit
     } else {
-      addTrip(tripData);
-      console.log('Adding new trip:', tripData);
+        // Default behavior (e.g., for DriverDashboard or if onSubmit is not provided)
+        const finalTripData = {
+            ...baseTripData,
+            driverId: user?.id || '', // Fallback for driverId if not set by role logic above
+        };
+
+        if (tripToEdit) {
+            updateTrip(tripToEdit.id, finalTripData);
+            console.log('Updating trip (internal):', tripToEdit.id, finalTripData);
+        } else {
+            addTrip(finalTripData);
+            console.log('Adding new trip (internal):', finalTripData);
+        }
+        onClose(); // Close modal after submission
     }
-    onClose(); // Close modal after submission
   };
 
   if (!isOpen) return null;

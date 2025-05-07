@@ -21,6 +21,8 @@ const AdminTripManagement = lazy(() => import('./pages/admin/TripManagement'));
 const AdminStatistics = lazy(() => import('./pages/admin/Statistics'));
 const AdminUserManagement = lazy(() => import('./pages/admin/UserManagement'));
 const DriverVehiclePage = lazy(() => import('./pages/driver/VehiclePage')); // Import the new vehicle page
+const ProfilePage = lazy(() => import('./pages/ProfilePage')); // Import the ProfilePage
+const DriverCheckInPage = lazy(() => import('./pages/DriverCheckInPage')); // Import the DriverCheckInPage
 
 interface ProtectedRouteProps {
   element: React.ReactNode;
@@ -66,6 +68,20 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/learn-more" element={<LearnMorePage />} />
             <Route path="/become-member" element={<BecomeMemberPage />} />
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute 
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <ProfilePage />
+                    </Suspense>
+                  } 
+                  // Allow all authenticated users to access their profile
+                  allowedRoles={['passenger', 'driver', 'admin']} 
+                />
+              }
+            />
             
             {/* Passenger routes */}
             <Route 
@@ -129,6 +145,19 @@ function App() {
                   element={
                     <Suspense fallback={<div>Loading...</div>}>
                       <DriverVehiclePage />
+                    </Suspense>
+                  } 
+                  allowedRoles={['driver']} 
+                />
+              }
+            />
+            <Route 
+              path="/driver/check-in"
+              element={
+                <ProtectedRoute 
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <DriverCheckInPage />
                     </Suspense>
                   } 
                   allowedRoles={['driver']} 

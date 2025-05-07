@@ -14,9 +14,12 @@ export const mockUsers: User[] = [
   {
     id: '1',
     email: 'john.doe@example.com',
+    password: 'password123', // Added for mock password change/login
     firstName: 'John',
     lastName: 'Doe',
+    phoneNumber: '+15551234567',
     role: 'passenger',
+    status: 'active',
     avatar: 'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2',
     createdAt: new Date(2023, 1, 15).toISOString(),
     updatedAt: new Date(2023, 1, 15).toISOString(),
@@ -24,27 +27,36 @@ export const mockUsers: User[] = [
   {
     id: '2',
     email: 'jane.smith@example.com',
+    password: 'password123',
     firstName: 'Jane',
     lastName: 'Smith',
+    phoneNumber: '+15559876543',
     role: 'passenger',
+    status: 'active',
     createdAt: new Date(2023, 2, 20).toISOString(),
     updatedAt: new Date(2023, 2, 20).toISOString(),
   },
   {
     id: '3',
     email: 'driver@example.com',
+    password: 'password123',
     firstName: 'Robert',
     lastName: 'Johnson',
+    phoneNumber: '+15555550003',
     role: 'driver',
+    status: 'active',
     createdAt: new Date(2023, 0, 10).toISOString(),
     updatedAt: new Date(2023, 0, 10).toISOString(),
   },
   {
     id: '4',
     email: 'admin@example.com',
+    password: 'password123',
     firstName: 'Admin',
     lastName: 'User',
+    phoneNumber: '+15555550004',
     role: 'admin',
+    status: 'active',
     createdAt: new Date(2022, 11, 5).toISOString(),
     updatedAt: new Date(2022, 11, 5).toISOString(),
   },
@@ -53,8 +65,7 @@ export const mockUsers: User[] = [
 // Mock Passengers
 export const mockPassengers: Passenger[] = [
   {
-    ...mockUsers[0] as Passenger,
-    phoneNumber: '555-123-4567',
+    ...(mockUsers.find(u => u.id === '1') as User & { role: 'passenger' }), // Ensure correct user is spread
     address: '123 Main St, Anytown, USA',
     paymentMethods: [
       {
@@ -65,32 +76,31 @@ export const mockPassengers: Passenger[] = [
         isDefault: true,
       },
     ],
-  },
+  } as Passenger,
   {
-    ...mockUsers[1] as Passenger,
-    phoneNumber: '555-987-6543',
+    ...(mockUsers.find(u => u.id === '2') as User & { role: 'passenger' }),
     address: '456 Oak Ave, Somewhere, USA',
-  },
+  } as Passenger,
 ];
 
 // Mock Drivers
 export const mockDrivers: Driver[] = [
   {
-    ...mockUsers[2] as Driver,
+    ...(mockUsers.find(u => u.id === '3') as User & { role: 'driver' }),
     licenseNumber: 'DL123456',
     vehicleId: 'v1',
     rating: 4.8,
-    isActive: true,
-  },
+    isActive: true, // This might be driver-specific status, separate from User.status
+  } as Driver,
 ];
 
 // Mock Admins
 export const mockAdmins: Admin[] = [
   {
-    ...mockUsers[3] as Admin,
+    ...(mockUsers.find(u => u.id === '4') as User & { role: 'admin' }),
     department: 'Operations',
     permissions: ['manage_users', 'manage_trips', 'view_analytics'],
-  },
+  } as Admin,
 ];
 
 // Mock Locations
@@ -236,6 +246,65 @@ export const mockSeatsV2: Seat[] = Array.from({ length: 15 }, (_, i) => ({
 
 // All mock seats
 export const mockSeats: Seat[] = [...mockSeatsV1, ...mockSeatsV2];
+
+// Mock Trips
+export const mockTrips: Trip[] = [
+  {
+    id: 'trip1',
+    driverId: '3', // Corresponds to mockDrivers Robert Johnson
+    vehicleId: 'v1', // Corresponds to mockVehicles Mercedes Sprinter
+    routeId: 'r1', // Corresponds to mockRoutes Downtown to Airport
+    departureTime: new Date(2025, 5, 15, 8, 0, 0).toISOString(), // June 15, 2025, 08:00 AM
+    arrivalTime: new Date(2025, 5, 15, 8, 25, 0).toISOString(), // June 15, 2025, 08:25 AM (based on r1 duration)
+    availableSeats: 15, // From mockTimeSlots ts1
+    pricePerSeat: 25.99, // From mockTimeSlots ts1
+    status: 'scheduled',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    passengers: ['1'], // Passenger John Doe
+  },
+  {
+    id: 'trip2',
+    driverId: '3',
+    vehicleId: 'v1',
+    routeId: 'r1',
+    departureTime: new Date(2025, 5, 15, 10, 30, 0).toISOString(), // June 15, 2025, 10:30 AM
+    arrivalTime: new Date(2025, 5, 15, 10, 55, 0).toISOString(),
+    availableSeats: 12, // From mockTimeSlots ts2
+    pricePerSeat: 25.99,
+    status: 'scheduled',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+  {
+    id: 'trip3',
+    driverId: '3',
+    vehicleId: 'v2', // Ford Transit
+    routeId: 'r3', // Downtown to Mall
+    departureTime: new Date(2025, 5, 15, 9, 0, 0).toISOString(), // June 15, 2025, 09:00 AM (based on ts5)
+    arrivalTime: new Date(2025, 5, 15, 9, 15, 0).toISOString(), // (based on r3 duration)
+    availableSeats: 10, // From mockTimeSlots ts5
+    pricePerSeat: 25.99,
+    status: 'completed',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    passengers: ['2'], // Passenger Jane Smith
+  },
+  {
+    id: 'trip4',
+    driverId: '3',
+    vehicleId: 'v1',
+    routeId: 'r4', // University to Airport
+    departureTime: new Date(2025, 5, 16, 14, 0, 0).toISOString(), // June 16, 2025, 02:00 PM
+    arrivalTime: new Date(2025, 5, 16, 14, 35, 0).toISOString(),
+    availableSeats: 20,
+    pricePerSeat: 29.99,
+    status: 'cancelled',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  },
+];
+
 
 // Mock Time Slots
 export const mockTimeSlots: TimeSlot[] = [
@@ -449,6 +518,8 @@ export interface BookingWithDetails extends Booking {
 }
 
 // Helper function to get bookings with related data
+// This function might need to be updated if Booking type changes significantly
+// or if it's intended to use the new mockTrips instead of deriving trip-like info from bookings.
 export const getBookingsWithDetails = (): BookingWithDetails[] => {
   return mockBookings.map(booking => {
     const route = mockRoutes.find(r => r.id === booking.routeId);
@@ -489,11 +560,28 @@ export const mockBookingStats = [
   { date: '2025-05-10', bookings: 8, revenue: 265.92 },
   { date: '2025-05-11', bookings: 6, revenue: 198.94 },
   { date: '2025-05-12', bookings: 5, revenue: 165.95 },
-  { date: '2025-05-13', bookings: 7, revenue: 230.93 },
-  { date: '2025-05-14', bookings: 9, revenue: 298.91 },
-  { date: '2025-05-15', bookings: 11, revenue: 364.89 },
 ];
 
+// Mock Driver Income function
+export const mockDriverIncome = (driverId: string, period: 'daily' | 'weekly' | 'monthly' | 'yearly'): number => {
+  // This is a very simplified mock. In a real app, this would involve complex calculations
+  // based on completed trips, fares, commissions, etc., for the specific driver and period.
+  console.log(`Fetching mock income for driver ${driverId} for period ${period}`);
+  switch (period) {
+    case 'daily':
+      return Math.random() * 100 + 50; // Random daily income between 50 and 150
+    case 'weekly':
+      return Math.random() * 700 + 350; // Random weekly income
+    case 'monthly':
+      return Math.random() * 3000 + 1500; // Random monthly income
+    case 'yearly':
+      return Math.random() * 36000 + 18000; // Random yearly income
+    default:
+      return 0;
+  }
+};
+
+// You can add more mock data or helper functions below as needed
 // Route popularity
 export const mockRoutePopularity = [
   { routeId: 'r1', routeName: 'Downtown to Airport', bookings: 42, percentage: 35 },

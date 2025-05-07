@@ -1,18 +1,126 @@
-import React, { useState, useEffect } from 'react'; // Added useState, useEffect
+import React, { useState, useEffect, useMemo } from 'react'; // Added useMemo
 import { Link } from 'react-router-dom';
 import useAuthStore from '../../store/authStore';
 import useTripStore, { Trip } from '../../store/tripStore'; // Import trip store and Trip type
-import { mockDashboardStats, mockBookingStats, mockRoutePopularity } from '../../utils/mockData'; // Keep mock data for now
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { Users, Calendar, TrendingUp, CreditCard, Settings, User, Map, Activity, Plus, Edit, Trash2, Clock } from 'lucide-react'; // Added Clock
+import { mockDashboardStats, mockBookingStats, mockRoutePopularity } from '../../utils/mockData'; // Keep mock data for now - Will be replaced by more specific mock data
+import { mockUsers, mockRoutes as allMockRoutes, mockVehicles } from '../../utils/mockData'; // Using more specific mock data
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts'; // Added PieChart, Pie, Cell
+import { Users, Calendar, TrendingUp, CreditCard, Settings, User, Map, Activity, Plus, Edit, Trash2, Clock, Filter, Star, MapPin, Navigation } from 'lucide-react'; // Added Filter, Star, MapPin, Navigation
 import TripForm from '../../components/trips/TripForm'; // Import TripForm
+
+// Enhanced mock data generation for Admin Dashboard
+const generateAdminMockData = (period: 'daily' | 'weekly' | 'monthly' | 'yearly', allTrips: Trip[]) => {
+  const now = new Date();
+
+  const filterTripsByTimePeriod = (tripsToFilter: Trip[], currentPeriod: 'daily' | 'weekly' | 'monthly' | 'yearly') => {
+    return tripsToFilter.filter(trip => {
+      const tripDate = new Date(trip.date);
+      const currentYear = now.getFullYear();
+      const currentMonth = now.getMonth();
+      const currentDate = now.getDate();
+      const currentDay = now.getDay(); // 0 (Sun) - 6 (Sat)
+
+      if (currentPeriod === 'daily') {
+        return tripDate.getFullYear() === currentYear && tripDate.getMonth() === currentMonth && tripDate.getDate() === currentDate;
+      }
+      if (currentPeriod === 'weekly') {
+        const firstDayOfWeek = new Date(now);
+        firstDayOfWeek.setDate(currentDate - currentDay + (currentDay === 0 ? -6 : 1)); // Adjust to Monday as start of week
+        firstDayOfWeek.setHours(0, 0, 0, 0);
+        const lastDayOfWeek = new Date(firstDayOfWeek);
+        lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6);
+        lastDayOfWeek.setHours(23, 59, 59, 999);
+        return tripDate >= firstDayOfWeek && tripDate <= lastDayOfWeek;
+      }
+      if (currentPeriod === 'monthly') {
+        return tripDate.getFullYear() === currentYear && tripDate.getMonth() === currentMonth;
+      }
+      if (currentPeriod === 'yearly') {
+        return tripDate.getFullYear() === currentYear;
+      }
+      return true;
+    });
+  };
+
+  const tripsForPeriod = filterTripsByTimePeriod(allTrips, period);
+
+  // Simulate passenger count: assume each completed trip has 10-20 passengers
+  const totalPassengers = tripsForPeriod
+    .filter(t => t.status === 'completed')
+    .reduce((sum) => sum + (Math.floor(Math.random() * 11) + 10), 0);
+
+  // Mock best performing drivers (needs more sophisticated logic with actual driver data)
+  const mockDriversData = [
+    { id: 'd1', name: 'Alice Wonderland', completedTrips: 0, rating: 4.9, avatar: mockUsers[0]?.avatar },
+    { id: 'd2', name: 'Bob The Builder', completedTrips: 0, rating: 4.7, avatar: mockUsers[1]?.avatar },
+    { id: 'd3', name: 'Charlie Chaplin', completedTrips: 0, rating: 4.6, avatar: mockUsers[2]?.avatar },
+    { id: 'd4', name: 'Diana Prince', completedTrips: 0, rating: 4.8, avatar: mockUsers[3]?.avatar },
+  ];
+
+  tripsForPeriod.forEach(trip => {
+    if (trip.status === 'completed' && trip.driverId) {
+      const driver = mockDriversData.find(d => d.id === trip.driverId); // This won't work well without actual driver IDs in trips
+      // For demo, assign randomly
+      const randomDriverIndex = Math.floor(Math.random() * mockDriversData.length);
+      mockDriversData[randomDriverIndex].completedTrips++;
+    }
+  });
+
+  const bestPerformingDrivers = [...mockDriversData]
+    .sort((a, b) => b.completedTrips - a.completedTrips || b.rating - a.rating)
+    .slice(0, 3);
+
+  // Mock active routes
+  const routeFrequency: { [key: string]: { name: string, count: number, origin: string, destination: string } } = {};
+  tripsForPeriod.forEach(trip => {
+    const routeKey = `${trip.fromLocation}-${trip.toLocation}`;
+    if (!routeFrequency[routeKey]) {
+      routeFrequency[routeKey] = { name: `${trip.fromLocation} to ${trip.toLocation}`, count: 0, origin: trip.fromLocation, destination: trip.toLocation };
+    }
+    routeFrequency[routeKey].count++;
+  });
+  const activeRoutes = Object.values(routeFrequency)
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 5);
+
+  // Mock driver origins and destinations (simplified)
+  const driverOrigins = { 'City A': 0, 'City B': 0, 'Suburb X': 0, 'Town Y': 0 };
+  const popularDestinations = { 'Airport': 0, 'Downtown': 0, 'Mall': 0, 'Business Park': 0 };
+
+  tripsForPeriod.forEach(trip => {
+    const origins = Object.keys(driverOrigins);
+    const destinations = Object.keys(popularDestinations);
+    driverOrigins[origins[Math.floor(Math.random() * origins.length)]]++;
+    popularDestinations[destinations[Math.floor(Math.random() * destinations.length)]]++;
+  });
+
+  return {
+    totalTrips: tripsForPeriod.length,
+    totalPassengers,
+    bestPerformingDrivers,
+    activeRoutes,
+    driverOriginData: Object.entries(driverOrigins).map(([name, value]) => ({ name, value })),
+    destinationData: Object.entries(popularDestinations).map(([name, value]) => ({ name, value })),
+    // Placeholder for payment simulation
+    simulatedPayments: {
+      totalTransactions: Math.floor(Math.random() * 100) + 50,
+      totalValue: (Math.random() * 5000 + 1000).toFixed(2),
+      successful: Math.floor(Math.random() * 40) + 45,
+      failed: Math.floor(Math.random() * 10) + 5,
+    }
+  };
+};
+
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
 const AdminDashboard: React.FC = () => {
   const { user } = useAuthStore();
-  const { trips, fetchTrips, removeTrip } = useTripStore(); // Use trip store
+  const { trips, fetchTrips, removeTrip, addTrip, updateTrip } = useTripStore(); // Use trip store, added add/update
   const [isTripModalOpen, setIsTripModalOpen] = useState(false);
   const [tripToEdit, setTripToEdit] = useState<Trip | null>(null);
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null); // For displaying details
+  const [timePeriod, setTimePeriod] = useState<'daily' | 'weekly' | 'monthly' | 'yearly'>('daily');
+  const [adminData, setAdminData] = useState(generateAdminMockData(timePeriod, trips));
 
   // Import the DashboardNavbar component
   const DashboardNavbar = React.lazy(() => import('../../components/dashboard/DashboardNavbar'));
@@ -20,6 +128,10 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => {
     fetchTrips(); // Fetch trips on component mount
   }, [fetchTrips]);
+
+  useEffect(() => {
+    setAdminData(generateAdminMockData(timePeriod, trips));
+  }, [timePeriod, trips]);
 
   const openCreateModal = () => {
     setTripToEdit(null);
@@ -53,6 +165,16 @@ const AdminDashboard: React.FC = () => {
     return dateB.getTime() - dateA.getTime(); // Sort descending (newest first)
   });
 
+  const handleTripFormSubmit = async (tripData: Omit<Trip, 'id' | 'createdAt' | 'updatedAt'> | Trip) => {
+    if ('id' in tripData) {
+      await updateTrip(tripData.id, tripData);
+    } else {
+      await addTrip(tripData);
+    }
+    fetchTrips(); // Re-fetch to update list
+    setIsTripModalOpen(false);
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Add the horizontal navigation bar */}
@@ -67,266 +189,232 @@ const AdminDashboard: React.FC = () => {
             {user && `Welcome back, ${user.firstName} ${user.lastName}`}
           </p>
         </div>
-        <div className="mt-4 flex md:mt-0 md:ml-4 space-x-3">
-          {/* Changed Generate Reports to Create New Trip */}
+        <div className="mt-4 flex md:mt-0 md:ml-4 space-x-3 items-center">
           <button onClick={openCreateModal} className="btn btn-primary">
             <Plus className="h-4 w-4 mr-2" />
-            Create New Trip
+            New Trip
           </button>
-          <Link to="/admin/reports" className="btn btn-secondary">
+          {/* <Link to="/admin/reports" className="btn btn-secondary">
             <Activity className="h-4 w-4 mr-2" />
             Generate Reports
-          </Link>
-        </div>
-      </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {/* ... (Total Users card) ... */}
-        <div className="bg-white overflow-hidden shadow-sm rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 bg-primary-100 rounded-md p-3">
-                <Users className="h-6 w-6 text-primary-600" />
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Total Users</dt>
-                  <dd>
-                    {/* Keep mock data for now, replace with real data later */}
-                    <div className="text-lg font-medium text-gray-900">{mockDashboardStats.totalUsers}</div>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-50 px-5 py-3">
-            <div className="text-sm">
-              <Link to="/admin/users" className="font-medium text-primary-600 hover:text-primary-700">
-                View all users
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* ... (Active Drivers card) ... */}
-        <div className="bg-white overflow-hidden shadow-sm rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 bg-primary-100 rounded-md p-3">
-                <User className="h-6 w-6 text-primary-600" />
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Active Drivers</dt>
-                  <dd>
-                    <div className="text-lg font-medium text-gray-900">{mockDashboardStats.activeDrivers}</div>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-50 px-5 py-3">
-            <div className="text-sm">
-              <Link to="/admin/drivers" className="font-medium text-primary-600 hover:text-primary-700">
-                View all drivers
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* Upcoming Trips Card - Updated */}
-        <div className="bg-white overflow-hidden shadow-sm rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 bg-primary-100 rounded-md p-3">
-                <Calendar className="h-6 w-6 text-primary-600" />
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Upcoming Trips</dt>
-                  <dd>
-                    {/* Use data from store */}
-                    <div className="text-lg font-medium text-gray-900">{upcomingTripsCount}</div>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-50 px-5 py-3">
-            <div className="text-sm">
-              <Link to="/admin/trips" className="font-medium text-primary-600 hover:text-primary-700">
-                View all trips
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        {/* ... (Total Revenue card) ... */}
-        <div className="bg-white overflow-hidden shadow-sm rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 bg-primary-100 rounded-md p-3">
-                <CreditCard className="h-6 w-6 text-primary-600" />
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Total Revenue</dt>
-                  <dd>
-                    <div className="text-lg font-medium text-gray-900">${mockDashboardStats.totalRevenue.toFixed(2)}</div>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-          <div className="bg-gray-50 px-5 py-3">
-            <div className="text-sm">
-              <Link to="/admin/finances" className="font-medium text-primary-600 hover:text-primary-700">
-                View details
-              </Link>
-            </div>
+          </Link> */}
+          <div className="flex items-center space-x-1">
+            <Filter className="h-5 w-5 text-gray-500" />
+            <select
+              value={timePeriod}
+              onChange={(e) => setTimePeriod(e.target.value as 'daily' | 'weekly' | 'monthly' | 'yearly')}
+              className="select select-bordered select-sm focus:ring-primary-500 focus:border-primary-500"
+            >
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+            </select>
           </div>
         </div>
       </div>
 
-      {/* Trip List Section - Added */}
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
-        <div className="px-4 sm:px-6 lg:px-8 py-4 border-b border-gray-200 flex justify-between items-center">
-          <h2 className="text-lg font-medium text-gray-900">Recent Trips</h2>
-          <Link to="/admin/trips" className="text-sm font-medium text-primary-600 hover:text-primary-700">
-            View All
-          </Link>
+      {/* Stats Cards - Updated */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+        <div className="bg-white p-6 rounded-lg shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm font-medium text-gray-500">Total Trips</p>
+            <Calendar className="h-6 w-6 text-primary-500" />
+          </div>
+          <p className="text-3xl font-semibold text-gray-900">{adminData.totalTrips}</p>
+          <p className="text-xs text-gray-400 capitalize">For {timePeriod} Period</p>
         </div>
-        <div className="overflow-hidden">
-          {sortedTrips.length > 0 ? (
-            <div className="divide-y divide-gray-200">
-              {/* Displaying only the first 5 recent trips for brevity */}
-              {sortedTrips.slice(0, 5).map((trip) => (
-                <div
-                  key={trip.id}
-                  className={`hover:bg-gray-50 cursor-pointer p-4 sm:px-6 lg:px-8 transition-colors ${selectedTrip?.id === trip.id ? 'bg-primary-50' : ''}`}
-                  onClick={() => setSelectedTrip(trip.id === selectedTrip?.id ? null : trip)}
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-base font-medium text-gray-900">
-                        {/* {trip.route?.name || 'Unknown Route'} */} {/* Removed route name */}
-                        {trip.fromLocation} to {trip.toLocation} {/* Added from/to location */}
-                      </h3>
-                      <div className="mt-1 flex items-center text-sm text-gray-500">
-                        <Calendar className="h-4 w-4 mr-1" />
-                        <span>{trip.date}</span>
-                        <span className="mx-2">•</span>
-                        <Clock className="h-4 w-4 mr-1" />
-                        <span>{trip.time}</span>
-                        <span className="mx-2">•</span>
-                        <span className={`capitalize badge badge-${trip.status === 'upcoming' ? 'info' : trip.status === 'completed' ? 'success' : 'secondary'} text-xs`}>{trip.status}</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                       <button
-                          onClick={(e) => { e.stopPropagation(); openEditModal(trip); }}
-                          className="p-1 text-gray-400 hover:text-primary-600"
-                          title="Edit Trip"
-                       >
-                          <Edit size={16} />
-                       </button>
-                       <button
-                          onClick={(e) => { e.stopPropagation(); handleDeleteTrip(trip.id); }}
-                          className="p-1 text-gray-400 hover:text-danger-600"
-                          title="Delete Trip"
-                       >
-                          <Trash2 size={16} />
-                       </button>
+
+        <div className="bg-white p-6 rounded-lg shadow-sm">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-sm font-medium text-gray-500">Total Passengers</p>
+            <Users className="h-6 w-6 text-green-500" />
+          </div>
+          <p className="text-3xl font-semibold text-gray-900">{adminData.totalPassengers}</p>
+          <p className="text-xs text-gray-400 capitalize">For {timePeriod} Period</p>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        {/* Best Performing Drivers */}
+        <div className="lg:col-span-1 bg-white p-6 rounded-lg shadow-sm">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Top Drivers</h2>
+          {adminData.bestPerformingDrivers.length > 0 ? (
+            <ul className="space-y-4">
+              {adminData.bestPerformingDrivers.map((driver, index) => (
+                <li key={driver.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors">
+                  <img src={driver.avatar || `https://ui-avatars.com/api/?name=${driver.name.replace(' ', '+')}&background=random`} alt={driver.name} className="h-10 w-10 rounded-full object-cover"/>
+                  <div>
+                    <p className="font-medium text-gray-700 text-sm">{driver.name}</p>
+                    <div className="flex items-center text-xs text-gray-500">
+                      <Star className="h-3 w-3 text-yellow-400 mr-1" /> {driver.rating.toFixed(1)}
+                      <span className="mx-1.5">•</span>
+                      {driver.completedTrips} trips
                     </div>
                   </div>
-                  {/* Optional: Add expandable details like in DriverDashboard if needed */}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-gray-500 text-center py-4">No driver performance data for this period.</p>
+          )}
+        </div>
+
+        {/* Active Routes */}
+        <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow-sm">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Most Active Routes</h2>
+          {adminData.activeRoutes.length > 0 ? (
+            <div className="space-y-3">
+              {adminData.activeRoutes.map(route => (
+                <div key={route.name} className="p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors">
+                  <div className="flex items-center justify-between">
+                    <p className="font-medium text-gray-700 text-sm truncate max-w-[70%]">{route.name}</p>
+                    <span className="text-sm font-semibold text-indigo-600 whitespace-nowrap">{route.count} trips</span>
+                  </div>
+                  <div className="text-xs text-gray-500 mt-0.5">
+                    <Navigation size={12} className="inline mr-1"/> {route.origin} <TrendingUp size={12} className="inline mx-1"/> {route.destination}
+                  </div>
                 </div>
               ))}
             </div>
           ) : (
+            <p className="text-sm text-gray-500 text-center py-4">No active route data for this period.</p>
+          )}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        {/* Driver Origins Pie Chart */}
+        <div className="bg-white p-6 rounded-lg shadow-sm">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Driver Origins (Mock)</h2>
+          <div className="h-72 md:h-80">
+            {adminData.driverOriginData.some(d => d.value > 0) ? (
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={adminData.driverOriginData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
+                  >
+                    {adminData.driverOriginData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            ) : (
+              <p className="text-center text-gray-500 pt-10">No origin data to display for this period.</p>
+            )}
+          </div>
+        </div>
+
+        {/* Popular Destinations Bar Chart */}
+        <div className="bg-white p-6 rounded-lg shadow-sm">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Popular Destinations (Mock)</h2>
+          <div className="h-72 md:h-80">
+            {adminData.destinationData.some(d => d.value > 0) ? (
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={adminData.destinationData} layout="vertical" margin={{ top: 5, right: 20, left: 50, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false}/>
+                <XAxis type="number" />
+                <YAxis dataKey="name" type="category" width={100} tick={{fontSize: 12}}/>
+                <Tooltip />
+                <Bar dataKey="value" fill="#82ca9d" barSize={20}/>
+              </BarChart>
+            </ResponsiveContainer>
+            ) : (
+              <p className="text-center text-gray-500 pt-10">No destination data to display for this period.</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Recent Trips List - (Existing, can be kept or modified) */}
+      <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
+        <div className="px-4 sm:px-6 lg:px-8 py-4 border-b border-gray-200 flex justify-between items-center">
+          <h2 className="text-lg font-medium text-gray-900">Manage Trips</h2>
+          <span className="text-sm text-gray-500">Displaying {sortedTrips.slice(0,5).length} of {sortedTrips.length} trips</span>
+        </div>
+        <div className="overflow-x-auto">
+          {sortedTrips.length > 0 ? (
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Route</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Time</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Driver</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehicle</th>
+                  <th scope="col" className="relative px-6 py-3">
+                    <span className="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {sortedTrips.slice(0, 10).map((trip) => (
+                  <tr key={trip.id} className={`hover:bg-gray-50 ${selectedTrip?.id === trip.id ? 'bg-primary-50' : ''}`} onClick={() => setSelectedTrip(trip.id === selectedTrip?.id ? null : trip)}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{trip.fromLocation} to {trip.toLocation}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{trip.date} at {trip.time}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${trip.status === 'completed' ? 'bg-green-100 text-green-800' : trip.status === 'upcoming' ? 'bg-blue-100 text-blue-800' : trip.status === 'cancelled' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'}`}>
+                        {trip.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{trip.driverId || 'N/A'}</td>{/* Replace with driver name later */}
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{mockVehicles.find(v => v.id === trip.vehicleId)?.model || 'N/A'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                      <button onClick={(e) => { e.stopPropagation(); openEditModal(trip); }} className="text-primary-600 hover:text-primary-900"><Edit size={16}/></button>
+                      <button onClick={(e) => { e.stopPropagation(); handleDeleteTrip(trip.id); }} className="text-red-600 hover:text-red-900"><Trash2 size={16}/></button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
             <div className="text-center py-12">
-              <div className="mx-auto h-12 w-12 bg-gray-100 rounded-full flex items-center justify-center">
-                <Calendar className="h-6 w-6 text-gray-400" />
-              </div>
+              <Calendar className="mx-auto h-12 w-12 text-gray-400" />
               <h3 className="mt-2 text-sm font-medium text-gray-900">No trips found</h3>
-              <p className="mt-1 text-sm text-gray-500">
-                Create the first trip using the button above.
-              </p>
+              <p className="mt-1 text-sm text-gray-500">Create the first trip using the button above.</p>
             </div>
           )}
         </div>
       </div>
 
-      {/* Charts Section - Kept as is for now */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-medium text-gray-900">Booking Trends</h2>
-            <div className="flex items-center space-x-2">
-              <span className="text-xs text-gray-500">Last 15 days</span>
-              <TrendingUp className="h-4 w-4 text-gray-400" />
+      {/* Simulated Payment Method Overview */}
+      <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">Simulated Payment Overview ({timePeriod})</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+            <div>
+                <p className="text-2xl font-bold text-blue-600">{adminData.simulatedPayments.totalTransactions}</p>
+                <p className="text-sm text-gray-500">Total Transactions</p>
             </div>
-          </div>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={mockBookingStats}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis
-                  dataKey="date"
-                  axisLine={false}
-                  tickLine={false}
-                  tickFormatter={(value) => value.split('-')[2]}
-                  dy={10}
-                />
-                <YAxis axisLine={false} tickLine={false} width={30} />
-                <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="bookings"
-                  stroke="#3b82f6"
-                  strokeWidth={2}
-                  dot={false}
-                  activeDot={{ r: 6 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-medium text-gray-900">Popular Routes</h2>
-            <div className="flex items-center space-x-2">
-              <span className="text-xs text-gray-500">By booking percentage</span>
-              <Map className="h-4 w-4 text-gray-400" />
+            <div>
+                <p className="text-2xl font-bold text-green-600">${adminData.simulatedPayments.totalValue}</p>
+                <p className="text-sm text-gray-500">Total Value</p>
             </div>
-          </div>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={mockRoutePopularity} layout="vertical">
-                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
-                <XAxis type="number" axisLine={false} tickLine={false} />
-                <YAxis
-                  dataKey="routeName"
-                  type="category"
-                  axisLine={false}
-                  tickLine={false}
-                  width={150}
-                  tick={{ fontSize: 12 }}
-                />
-                <Tooltip />
-                <Bar dataKey="percentage" fill="#3b82f6" barSize={20} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
+            <div>
+                <p className="text-2xl font-bold text-green-500">{adminData.simulatedPayments.successful}</p>
+                <p className="text-sm text-gray-500">Successful</p>
+            </div>
+            <div>
+                <p className="text-2xl font-bold text-red-500">{adminData.simulatedPayments.failed}</p>
+                <p className="text-sm text-gray-500">Failed</p>
+            </div>
         </div>
+        <p className="text-xs text-gray-400 mt-4 text-center">This is a simulated overview of payment activities.</p>
       </div>
 
-      {/* Trip Form Modal */}
+      {/* Trip Form Modal - Updated to use handleTripFormSubmit */}
       <TripForm
         isOpen={isTripModalOpen}
         onClose={() => setIsTripModalOpen(false)}
+        onSubmit={handleTripFormSubmit} // Changed from onSave
         tripToEdit={tripToEdit}
       />
     </div>

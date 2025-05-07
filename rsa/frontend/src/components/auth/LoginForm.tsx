@@ -11,23 +11,51 @@ interface LoginFormProps {
 }
 
 const LoginSchema = Yup.object().shape({
-  email: Yup.string().email('Invalid email address').required('Email is required'),
+  emailOrPhone: Yup.string()
+    .required('Email or Phone Number is required')
+    .test('emailOrPhone', 'Invalid email or phone number format', value => {
+      if (!value) return false;
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const phoneRegex = /^\+?[1-9]\d{1,14}$/; // E.164 format
+      return emailRegex.test(value) || phoneRegex.test(value);
+    }),
   password: Yup.string().required('Password is required'),
 });
 
-const LoginForm: React.FC<LoginFormProps> = ({ redirectTo = '/' }) => {
+const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed default redirectTo
   const navigate = useNavigate();
-  const { login, loading, error } = useAuthStore();
+  const { login, loading, error, user } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = async (values: { email: string; password: string; rememberMe: boolean }) => {
+  const handleSubmit = async (values: { emailOrPhone: string; password: string; rememberMe: boolean }) => {
     try {
       await login({
-        email: values.email,
+        emailOrPhone: values.emailOrPhone,
         password: values.password,
         rememberMe: values.rememberMe,
       });
-      navigate(redirectTo);
+      // User object should be updated in the store after login
+      // We access the updated user from the store directly
+      const loggedInUser = useAuthStore.getState().user;
+      if (loggedInUser) {
+        switch (loggedInUser.role) {
+          case 'admin':
+            navigate('/admin/dashboard');
+            break;
+          case 'driver':
+            navigate('/driver/dashboard');
+            break;
+          case 'passenger':
+            navigate(redirectTo || '/'); // Default to '/' or provided redirectTo for passengers
+            break;
+          default:
+            navigate(redirectTo || '/'); // Fallback to default
+        }
+      } else {
+        // Fallback if user is not available for some reason
+        navigate(redirectTo || '/');
+      }
+
     } catch (error) {
       // Error is handled by the store
     }
@@ -51,7 +79,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo = '/' }) => {
       )}
       
       <Formik
-        initialValues={{ email: '', password: '', rememberMe: false }}
+        initialValues={{ emailOrPhone: '', password: '', rememberMe: false }}
         validationSchema={LoginSchema}
         onSubmit={handleSubmit}
       >
@@ -60,22 +88,22 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo = '/' }) => {
           <Form className="space-y-5">
             <div>
               {/* Updated: Label style */}
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email address
+              <label htmlFor="emailOrPhone" className="block text-sm font-medium text-gray-700 mb-1">
+                Email or Phone Number
               </label>
               {/* Updated: Input style */}
               <Field
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
+                id="emailOrPhone"
+                name="emailOrPhone"
+                type="text" // Changed to text to allow phone numbers
+                autoComplete="username" // More general for email or phone
                 className="form-input w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition duration-150 ease-in-out"
                 disabled={loading}
-                placeholder="you@example.com"
+                placeholder="you@example.com or +1234567890"
               />
               {/* Updated: Error message style */}
               <ErrorMessage
-                name="email"
+                name="emailOrPhone"
                 component="div"
                 className="mt-1 text-xs text-red-600"
               />

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookingWithDetails } from '../../utils/mockData'; // Ensure this type is correctly defined and exported
+import { BookingWithDetails } from '../../store/bookingStore'; // Updated import path
 import { MapPin, Calendar, Clock, CreditCard, Users, Tag, QrCode, AlertTriangle, CheckCircle, XCircle, Info } from 'lucide-react';
 
 interface TripTicketProps {
@@ -21,6 +21,10 @@ const TripTicket: React.FC<TripTicketProps> = ({ booking }) => {
         return { icon: <XCircle className="h-5 w-5 text-error-500" />, text: 'Cancelled', color: 'text-error-700 bg-error-100' };
       case 'checked-in':
         return { icon: <CheckCircle className="h-5 w-5 text-indigo-500" />, text: 'Checked In', color: 'text-indigo-700 bg-indigo-100' };
+      case 'validated': // Added validated status
+        return { icon: <CheckCircle className="h-5 w-5 text-teal-500" />, text: 'Validated', color: 'text-teal-700 bg-teal-100' };
+      case 'booked': // Added booked status
+        return { icon: <Info className="h-5 w-5 text-blue-500" />, text: 'Booked', color: 'text-blue-700 bg-blue-100' };
       default:
         return { icon: <Info className="h-5 w-5 text-gray-500" />, text: status, color: 'text-gray-700 bg-gray-100' };
     }
@@ -130,7 +134,7 @@ const TripTicket: React.FC<TripTicketProps> = ({ booking }) => {
       {/* Footer Notes */}
       {checkedInAt && (
         <p className="mt-6 text-center text-sm text-green-600 font-medium">
-          Checked in at: {new Date(checkedInAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+          Checked in at: {new Date(checkedInAt).toLocaleString([], { dateStyle: 'short', timeStyle: 'short' })}
         </p>
       )}
       <p className="mt-4 text-center text-xs text-gray-500">

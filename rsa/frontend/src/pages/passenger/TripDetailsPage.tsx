@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getBookingsWithDetails, BookingWithDetails } from '../../utils/mockData'; // Assuming BookingWithDetails is exported
+import useBookingStore, { BookingWithDetails } from '../../store/bookingStore'; // Updated import
 import Navbar from '../../components/common/Navbar';
 import TripTicket from '../../components/trips/TripTicket'; // We'll create this next
 import { ArrowLeft, Printer, Share2 } from 'lucide-react';
@@ -8,7 +8,9 @@ import { ArrowLeft, Printer, Share2 } from 'lucide-react';
 const TripDetailsPage: React.FC = () => {
   const { tripId } = useParams<{ tripId: string }>();
   const navigate = useNavigate();
+  const { fetchBookingById, isLoading: storeLoading, error: storeError } = useBookingStore();
   const [booking, setBooking] = useState<BookingWithDetails | null>(null);
+  // Use local loading/error states or combine with store's, for simplicity using local for initial fetch effect
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -19,17 +21,20 @@ const TripDetailsPage: React.FC = () => {
       return;
     }
 
-    // In a real app, fetch this from an API
-    const allBookings = getBookingsWithDetails();
-    const foundBooking = allBookings.find(b => b.id === tripId);
+    const loadBooking = async () => {
+      setLoading(true);
+      setError(null);
+      const fetchedBooking = await fetchBookingById(tripId);
+      if (fetchedBooking) {
+        setBooking(fetchedBooking);
+      } else {
+        setError(storeError || 'Trip not found.'); // Use storeError if available
+      }
+      setLoading(false);
+    };
 
-    if (foundBooking) {
-      setBooking(foundBooking);
-    } else {
-      setError('Trip not found.');
-    }
-    setLoading(false);
-  }, [tripId]);
+    loadBooking();
+  }, [tripId, fetchBookingById, storeError]);
 
   const handlePrint = () => {
     window.print();

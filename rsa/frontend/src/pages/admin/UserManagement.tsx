@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from 'react';
 import useAuthStore from '../../store/authStore';
 import { Users, Search, Edit, Trash2, UserPlus, Filter, X, Save, PlusCircle } from 'react-feather';
-import { mockUsers as initialMockUsers } from '../../utils/mockData'; // Assuming mockData provides the initial list
-import { User } from '../../types'; // Assuming a User type exists
+import { mockUsers as initialMockUsers } from '../../utils/mockData'; 
+import { User, UserStatus, UserRole } from '../../types'; // Updated import
 
 // Import the DashboardNavbar component
 const DashboardNavbar = React.lazy(() => import('../../components/dashboard/DashboardNavbar'));
@@ -26,16 +26,25 @@ const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: string; chi
 };
 
 const UserManagement: React.FC = () => {
-  const { user: adminUser } = useAuthStore(); // Renamed to avoid conflict
+  const { user: adminUser, updateUserStatus, register, updateUser, deleteUser } = useAuthStore(); // Added updateUser and deleteUser
   const [searchTerm, setSearchTerm] = useState('');
-  const [users, setUsers] = useState<User[]>(initialMockUsers); // Use User type
-  const [roleFilter, setRoleFilter] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<string>('all'); // Assuming status exists or will be added
+  const [users, setUsers] = useState<User[]>(() => 
+    initialMockUsers.map(u => ({ ...u, status: u.status || 'active' }))
+  ); 
+  const [roleFilter, setRoleFilter] = useState<UserRole | 'all'>('all'); // Use UserRole type
+  const [statusFilter, setStatusFilter] = useState<UserStatus | 'all'>('all'); // Use UserStatus type
 
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingUser, setEditingUser] = useState<User | null>(null);
-  const [newUser, setNewUser] = useState<Partial<User>>({ role: 'passenger', status: 'active' }); // Default values
+  const [newUser, setNewUser] = useState<Partial<User> & { password?: string }>({ 
+    firstName: '', 
+    lastName: '', 
+    email: '', 
+    role: 'passenger', 
+    status: 'active', 
+    password: '' 
+  }); // Ensure all fields for new user, including status
 
   // Calculate dashboard stats
   const userStats = useMemo(() => {
@@ -43,10 +52,9 @@ const UserManagement: React.FC = () => {
     const passengers = users.filter(u => u.role === 'passenger').length;
     const drivers = users.filter(u => u.role === 'driver').length;
     const admins = users.filter(u => u.role === 'admin').length;
-    // Add status counts if needed
-    // const active = users.filter(u => u.status === 'active').length;
-    // const inactive = users.filter(u => u.status === 'inactive').length;
-    return { total, passengers, drivers, admins };
+    const active = users.filter(u => u.status === 'active').length;
+    const inactive = users.filter(u => u.status === 'inactive').length;
+    return { total, passengers, drivers, admins, active, inactive };
   }, [users]);
 
   // Filter users based on search term and filters
@@ -57,9 +65,9 @@ const UserManagement: React.FC = () => {
 
     const matchesSearch = fullName.includes(term) || email.includes(term);
     const matchesRole = roleFilter === 'all' || u.role === roleFilter;
-    // const matchesStatus = statusFilter === 'all' || u.status === statusFilter;
+    const matchesStatus = statusFilter === 'all' || u.status === statusFilter; // Added status filter logic
 
-    return matchesSearch && matchesRole; // && matchesStatus;
+    return matchesSearch && matchesRole && matchesStatus; // Include status in filtering
   }), [users, searchTerm, roleFilter, statusFilter]);
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,7 +84,7 @@ const UserManagement: React.FC = () => {
 
   // --- CRUD Handlers ---
   const openAddModal = () => {
-    setNewUser({ firstName: '', lastName: '', email: '', role: 'passenger', status: 'active' }); // Reset form
+    setNewUser({ firstName: '', lastName: '', email: '', role: 'passenger', status: 'active', password: '' }); // Reset form, including password
     setIsAddModalOpen(true);
   };
 
@@ -84,21 +92,28 @@ const UserManagement: React.FC = () => {
     setIsAddModalOpen(false);
   };
 
-  const handleAddUser = (e: React.FormEvent) => {
+  const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Basic validation (add more robust validation as needed)
-    if (!newUser.firstName || !newUser.lastName || !newUser.email) {
-        alert('Please fill in all required fields.');
+    if (!newUser.firstName || !newUser.lastName || !newUser.email || !newUser.password || !newUser.role) {
+        alert('Please fill in all required fields including password and role.');
         return;
     }
-    const userToAdd: User = {
-      id: `user-${Date.now()}-${Math.random().toString(16).slice(2)}`, // Simple unique ID generation
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      ...newUser,
-    } as User;
-    setUsers([...users, userToAdd]);
-    closeAddModal();
+    try {
+      await register({
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        email: newUser.email,
+        password: newUser.password, // Make sure password is included
+        role: newUser.role as UserRole, // Cast to UserRole
+        // Status is handled by the register function in authStore, defaults to 'active'
+      });
+      // Re-fetch or update users list. For now, let's assume register updates mockData and we can re-init.
+      // A more robust solution would be to get the new user from register's response or fetch all users.
+      setUsers(initialMockUsers.map(u => ({ ...u, status: u.status || 'active' }))); 
+      closeAddModal();
+    } catch (error) {
+      alert(`Failed to add user: ${(error as Error).message}`);
+    }
   };
 
   const openEditModal = (userToEdit: User) => {
@@ -111,30 +126,61 @@ const UserManagement: React.FC = () => {
     setIsEditModalOpen(false);
   };
 
-  const handleEditUser = (e: React.FormEvent) => {
+  const handleEditUser = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingUser) return;
-    // Basic validation
     if (!editingUser.firstName || !editingUser.lastName || !editingUser.email) {
         alert('Please fill in all required fields.');
         return;
     }
-    setUsers(users.map(u => u.id === editingUser.id ? { ...editingUser, updatedAt: new Date().toISOString() } : u));
-    closeEditModal();
+    try {
+      // Exclude id and other non-updatable fields if necessary, or let the store handle it.
+      const { id, createdAt, ...updatableData } = editingUser;
+      await updateUser(editingUser.id, updatableData as Partial<User>); // Pass only updatable fields
+      // Update local state. Since mockUsers is updated in the store, we can re-initialize or map.
+      // For simplicity, let's re-map from the (potentially modified) initialMockUsers
+      // A better approach in a real app would be to fetch users or get the updated user from the store.
+      setUsers(initialMockUsers.map(u => ({ ...u, status: u.status || 'active' })));
+      closeEditModal();
+      alert('User updated successfully.');
+    } catch (error) {
+      alert(`Failed to update user: ${(error as Error).message}`);
+    }
   };
 
-  const handleDeleteUser = (userId: string) => {
+  const handleDeleteUser = async (userId: string) => {
     if (window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
-      setUsers(users.filter(user => user.id !== userId));
+      try {
+        await deleteUser(userId);
+        // Update local state. Similar to edit, re-map from the modified initialMockUsers.
+        setUsers(initialMockUsers.map(u => ({ ...u, status: u.status || 'active' })));
+        alert('User deleted successfully.');
+      } catch (error) {
+        alert(`Failed to delete user: ${(error as Error).message}`);
+      }
     }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, isEditing: boolean) => {
     const { name, value } = e.target;
     if (isEditing && editingUser) {
-      setEditingUser({ ...editingUser, [name]: value });
+      setEditingUser({ ...editingUser, [name]: value as any }); // Added 'as any' to allow for UserStatus/UserRole types
     } else {
       setNewUser({ ...newUser, [name]: value });
+    }
+  };
+
+  const handleToggleUserStatus = async (userId: string, currentStatus: UserStatus) => {
+    const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
+    try {
+      await updateUserStatus(userId, newStatus);
+      // Update local state
+      setUsers(prevUsers => 
+        prevUsers.map(u => u.id === userId ? { ...u, status: newStatus, updatedAt: new Date().toISOString() } : u)
+      );
+      alert(`User status updated to ${newStatus}`);
+    } catch (error) {
+      alert(`Failed to update user status: ${(error as Error).message}`);
     }
   };
 
@@ -164,6 +210,14 @@ const UserManagement: React.FC = () => {
           <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
             <h3 className="text-sm font-medium text-gray-500">Admins</h3>
             <p className="mt-1 text-3xl font-semibold text-purple-600">{userStats.admins}</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <h3 className="text-sm font-medium text-gray-500">Active Users</h3>
+            <p className="mt-1 text-3xl font-semibold text-teal-600">{userStats.active}</p>
+          </div>
+          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+            <h3 className="text-sm font-medium text-gray-500">Inactive Users</h3>
+            <p className="mt-1 text-3xl font-semibold text-red-600">{userStats.inactive}</p>
           </div>
         </div>
       </div>
@@ -206,8 +260,8 @@ const UserManagement: React.FC = () => {
                 </select>
               </div>
 
-              {/* Status Filter (Optional - uncomment if status is added to User type and mock data) */}
-              {/* <div className="flex items-center space-x-2">
+              {/* Status Filter */}
+              <div className="flex items-center space-x-2">
                 <label htmlFor="status-filter" className="text-sm text-gray-500">Status:</label>
                 <select
                   id="status-filter"
@@ -215,11 +269,11 @@ const UserManagement: React.FC = () => {
                   value={statusFilter}
                   onChange={handleStatusFilterChange}
                 >
-                  <option value="all">All Status</option>
+                  <option value="all">All Statuses</option>
                   <option value="active">Active</option>
                   <option value="inactive">Inactive</option>
                 </select>
-              </div> */}
+              </div>
 
               {/* Search Input */}
               <div className="relative">
@@ -338,11 +392,10 @@ const UserManagement: React.FC = () => {
               <option value="admin">Admin</option>
             </select>
           </div>
-          {/* Add password field if needed for creation */}
-          {/* <div>
-            <label htmlFor="password">Password</label>
-            <input type="password" name="password" id="password" onChange={(e) => handleInputChange(e, false)} required />
-          </div> */}
+          <div>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+            <input type="password" name="password" id="password" value={newUser.password || ''} onChange={(e) => handleInputChange(e, false)} className="mt-1 form-input block w-full border-gray-300 rounded-md shadow-sm" required />
+          </div>
           <div className="flex justify-end space-x-3 pt-4">
             <button type="button" onClick={closeAddModal} className="btn btn-secondary">Cancel</button>
             <button type="submit" className="btn btn-primary inline-flex items-center">
