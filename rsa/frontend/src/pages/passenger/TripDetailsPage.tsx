@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import useBookingStore, { BookingWithDetails } from '../../store/bookingStore'; // Updated import
+import { useBookingStore, BookingWithDetails } from '../../store/bookingStore'; // Corrected import
 import Navbar from '../../components/common/Navbar';
 import TripTicket from '../../components/trips/TripTicket'; // We'll create this next
 import { ArrowLeft, Printer, Share2 } from 'lucide-react';

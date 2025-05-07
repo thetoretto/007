@@ -43,7 +43,7 @@ const UserManagement: React.FC = () => {
   };
   
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="container-app py-8"> {/* Updated class for main container */}
       {/* Add the horizontal navigation bar */}
       <React.Suspense fallback={<div>Loading...</div>}>
         <DashboardNavbar userRole="driver" />
@@ -64,8 +64,8 @@ const UserManagement: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
-        <div className="px-4 sm:px-6 lg:px-8 py-4 border-b border-gray-200 flex justify-between items-center">
+      <div className="panel mb-8"> {/* Updated class for content card */}
+        <div className="panel-header flex justify-between items-center"> {/* Updated class for card header */}
           <h2 className="text-lg font-medium text-gray-900">Users</h2>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -73,7 +73,7 @@ const UserManagement: React.FC = () => {
             </div>
             <input
               type="text"
-              className="form-input pl-10 pr-4 py-2 border-gray-300 focus:ring-primary-500 focus:border-primary-500 block w-full sm:text-sm rounded-md"
+              className="form-input input-sm pl-10 pr-4 py-2" /* Updated class for search input */
               placeholder="Search users..."
               value={searchTerm}
               onChange={handleSearch}
@@ -134,13 +134,13 @@ const UserManagement: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                       <button
                         onClick={() => handleEditUser(user.id)}
-                        className="text-primary-600 hover:text-primary-900 mr-3"
+                        className="btn btn-icon btn-secondary btn-sm mr-2" // Updated class for edit button
                       >
                         <Edit className="h-4 w-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteUser(user.id)}
-                        className="text-red-600 hover:text-red-900"
+                        className="btn btn-icon btn-danger btn-sm" // Updated class for delete button
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>

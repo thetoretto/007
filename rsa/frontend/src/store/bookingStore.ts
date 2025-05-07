@@ -1,14 +1,15 @@
 // d:\007\rsa\frontend\src\store\bookingStore.ts
 import { create } from 'zustand';
 import { Booking, BookingStatus } from '../types';
-import { mockBookings, mockUsers, mockTrips, mockVehicles, mockRoutes, mockTimeSlots } from '../utils/mockData'; // Assuming mockBookings is available
+import { mockBookings, mockUsers, mockVehicles, mockRoutes, mockTimeSlots } from '../utils/mockData'; // Assuming mockBookings is available
+import useTripStore, { Trip as StoreTrip } from './tripStore'; // Import from tripStore
 
 export interface BookingWithDetails extends Booking {
   passenger?: typeof mockUsers[0];
-  trip?: typeof mockTrips[0];
-  vehicle?: typeof mockVehicles[0];
-  route?: typeof mockRoutes[0];
-  timeSlot?: typeof mockTimeSlots[0]; // Assuming mockTimeSlots is the correct type for timeSlot
+  trip?: StoreTrip; // Use Trip from tripStore for consistency
+  vehicle?: StoreTrip['vehicle']; // Use vehicle type from StoreTrip
+  route?: StoreTrip['route']; // Use route type from StoreTrip
+  // timeSlot is implicitly part of StoreTrip (date, time)
   // Add other details as needed
 }
 
@@ -19,27 +20,22 @@ interface BookingState {
   fetchBookingsByUserId: (userId: string) => Promise<void>;
   fetchBookingById: (bookingId: string) => Promise<BookingWithDetails | undefined>;
   checkInBooking: (bookingId: string) => Promise<{ success: boolean; message?: string; booking?: BookingWithDetails }>;
+  getAvailableTripsForBooking: (criteria?: { originName?: string; destinationName?: string; date?: string }) => StoreTrip[];
   // Add other actions like cancelBooking, updateBookingStatus, etc.
 }
 
 // Helper to enrich booking data (simulates backend joins)
 const enrichBookingDetails = (booking: Booking): BookingWithDetails => {
   const passenger = mockUsers.find(u => u.id === booking.userId);
-  const trip = mockTrips.find(t => t.id === booking.tripId);
-  const vehicle = trip ? mockVehicles.find(v => v.id === trip.vehicleId) : undefined;
-  const route = trip ? mockRoutes.find(r => r.id === trip.routeId) : undefined;
-  // Assuming timeSlot is part of the trip or booking, adjust as necessary
-  // For now, let's assume timeSlot might be directly on booking or trip, or needs a different lookup
-  // This part might need refinement based on actual data structure for time slots
-  const timeSlot = mockTimeSlots.find(ts => ts.id === (trip as any)?.timeSlotId || (booking as any)?.timeSlotId); 
+  // Fetch the specific trip from tripStore for the most up-to-date details
+  const tripFromStore = useTripStore.getState().trips.find(t => t.id === booking.tripId);
 
   return {
     ...booking,
     passenger,
-    trip,
-    vehicle,
-    route,
-    timeSlot,
+    trip: tripFromStore,
+    vehicle: tripFromStore?.vehicle,
+    route: tripFromStore?.route,
   };
 };
 
@@ -127,6 +123,22 @@ const useBookingStore = create<BookingState>((set, get) => ({
       return { success: false, message: (err as Error).message };
     }
   },
+
+  getAvailableTripsForBooking: (criteria?: { originName?: string; destinationName?: string; date?: string }) => {
+    const bookableTrips = useTripStore.getState().getBookableTrips();
+    if (!criteria) {
+      return bookableTrips;
+    }
+    return bookableTrips.filter(trip => {
+      const matchOrigin = criteria.originName ? trip.fromLocation?.toLowerCase().includes(criteria.originName.toLowerCase()) : true;
+      const matchDestination = criteria.destinationName ? trip.toLocation?.toLowerCase().includes(criteria.destinationName.toLowerCase()) : true;
+      const matchDate = criteria.date ? trip.date === criteria.date : true;
+      // Ensure trip.route exists for origin/destination checks if using trip.route.origin.name etc.
+      // Current tripStore.Trip has fromLocation and toLocation directly.
+      return matchOrigin && matchDestination && matchDate;
+    });
+  },
+
 }));
 
-export default useBookingStore;
+export { useBookingStore };

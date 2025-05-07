@@ -110,6 +110,8 @@ export interface Trip {
   availableSeats: number;
   pricePerSeat: number;
   status: 'scheduled' | 'active' | 'completed' | 'cancelled' | 'pending_approval';
+  offersPickup?: boolean; // New field for hot point pickup
+  pickupHotPointIds?: string[]; // New field for selected hot point IDs
   createdAt: string;
   updatedAt: string;
   passengers?: string[]; // list of passenger IDs booked on this trip

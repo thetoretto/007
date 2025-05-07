@@ -165,7 +165,6 @@ const Statistics: React.FC = () => {
               <span className="text-xs text-gray-500">Last 7 days</span>
               <TrendingUp className="h-4 w-4 text-gray-400" />
             </div>
-          </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={mockTripStats}>
@@ -222,7 +221,6 @@ const Statistics: React.FC = () => {
               <span className="text-xs text-gray-500">By number of trips</span>
               <BarChart2 className="h-4 w-4 text-gray-400" />
             </div>
-          </div>
           <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={sortedRouteStats} layout="vertical">

@@ -11,13 +11,13 @@ const HomePage: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-gray-50"> {/* Changed bg to gray-50 for consistency */}
       <Navbar />
       {/* Hero Section - Refined Styling */}
-      <section className="relative bg-gradient-to-br from-indigo-700 via-purple-700 to-pink-600 text-white overflow-hidden"> {/* Pocket-like gradient */}
+      <section className="relative bg-gradient-to-br from-primary-700 via-purple-700 to-pink-600 text-white overflow-hidden"> {/* Pocket-like gradient */}
         {/* Removed extra overlay div */}
         <motion.div
           initial="hidden"
           animate="show"
           variants={staggerContainer}
-          className="relative max-w-7xl mx-auto px-4 py-28 sm:py-36 sm:px-6 lg:px-8 flex flex-col items-center text-center" /* Increased padding */
+          className="relative container-app py-28 sm:py-36 flex flex-col items-center text-center"
         >
           <motion.h1 variants={fadeInUp} className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-5"> {/* Bolder font */}
             Your Journey, Simplified
@@ -28,13 +28,13 @@ const HomePage: React.FC = () => {
           <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4">
             <Link
               to="/book"
-              className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-indigo-700 bg-white hover:bg-indigo-50 transition-colors duration-300" /* Pocket-like button */
+              className="btn bg-white text-primary-700 hover:bg-primary-50 text-base px-6 py-3"
             >
               Book Now
             </Link>
             <Link
               to="/learn-more"
-              className="inline-flex items-center justify-center px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-500 bg-opacity-60 hover:bg-opacity-75 transition-opacity duration-300" /* Secondary button style */
+              className="btn text-white bg-primary-500 bg-opacity-80 hover:bg-opacity-100 text-base px-6 py-3"
             >
               Learn More
             </Link>
@@ -49,7 +49,7 @@ const HomePage: React.FC = () => {
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
           variants={staggerContainer}
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+          className="container-app"
         >
           <motion.div variants={fadeInUp} className="text-center mb-12 lg:mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">How It Works</h2> {/* Added tracking-tight */}
@@ -65,7 +65,7 @@ const HomePage: React.FC = () => {
                 variants={fadeInUp}
                 className="flex flex-col items-center text-center p-6 lg:p-8 rounded-xl bg-gray-50 border border-gray-200 hover:shadow-lg transition-shadow duration-300" /* Rounded-xl, hover effect */
               >
-                <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center text-indigo-600 mb-5"> {/* Adjusted icon bg/color/size */}
+                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center text-primary-600 mb-5"> {/* Adjusted icon bg/color/size */}
                   <Icon className="h-6 w-6" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
@@ -91,7 +91,7 @@ const HomePage: React.FC = () => {
           whileInView="show"
           viewport={{ once: true, amount: 0.2 }}
           variants={staggerContainer}
-          className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+          className="container-app"
         >
           <motion.div variants={fadeInUp} className="text-center mb-12 lg:mb-16">
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">Why Travel With Us?</h2> {/* Added tracking-tight */}
@@ -107,7 +107,7 @@ const HomePage: React.FC = () => {
                 variants={fadeInUp}
                 className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm" /* Rounded-xl, white bg, shadow-sm */
               >
-                <div className="w-10 h-10 bg-indigo-100 rounded-md flex items-center justify-center text-indigo-600 mb-4"> {/* Adjusted icon bg/color/size/shape */}
+                <div className="w-10 h-10 bg-primary-100 rounded-md flex items-center justify-center text-primary-600 mb-4"> {/* Adjusted icon bg/color/size/shape */}
                   <Icon className="h-5 w-5" />
                 </div>
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">
@@ -128,7 +128,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* CTA Section - Refined Styling */}
-      <section className="py-16 lg:py-24 bg-indigo-700"> {/* Changed bg to indigo */}
+      <section className="py-16 lg:py-24 bg-primary-700"> {/* Changed bg to indigo */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -136,7 +136,7 @@ const HomePage: React.FC = () => {
           className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Ready for Your Next Adventure?</h2> {/* Added tracking-tight */}
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-indigo-100"> {/* Adjusted text color */}
+          <p className="mt-4 max-w-2xl mx-auto text-lg text-primary-100"> {/* Adjusted text color */}
             Don't wait! Book your seat today and experience seamless travel with RideBooker.
           </p>
           <motion.div
@@ -145,7 +145,7 @@ const HomePage: React.FC = () => {
           >
             <Link 
               to="/book" 
-              className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-50 transition-colors duration-300 shadow-lg" /* Pocket-like button */
+              className="btn bg-white text-primary-700 hover:bg-primary-50 text-base px-8 py-3 shadow-lg"
             >
               Book Your Ride Now
             </Link>

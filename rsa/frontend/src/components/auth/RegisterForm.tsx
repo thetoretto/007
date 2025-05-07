@@ -81,7 +81,7 @@ const RegisterForm: React.FC = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 {/* Updated: Label style */}
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="firstName" className="form-label">
                   First name
                 </label>
                 {/* Updated: Input style */}
@@ -90,20 +90,20 @@ const RegisterForm: React.FC = () => {
                   name="firstName"
                   type="text"
                   autoComplete="given-name"
-                  className="form-input w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                  className="form-input"
                   disabled={loading}
                 />
                 {/* Updated: Error message style */}
                 <ErrorMessage
                   name="firstName"
                   component="div"
-                  className="mt-1 text-xs text-red-600"
+                  className="form-error"
                 />
               </div>
 
               <div>
                 {/* Updated: Label style */}
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">
+                <label htmlFor="lastName" className="form-label">
                   Last name
                 </label>
                 {/* Updated: Input style */}
@@ -112,21 +112,21 @@ const RegisterForm: React.FC = () => {
                   name="lastName"
                   type="text"
                   autoComplete="family-name"
-                  className="form-input w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                  className="form-input"
                   disabled={loading}
                 />
                 {/* Updated: Error message style */}
                 <ErrorMessage
                   name="lastName"
                   component="div"
-                  className="mt-1 text-xs text-red-600"
+                  className="form-error"
                 />
               </div>
             </div>
 
             <div>
               {/* Updated: Label style */}
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="email" className="form-label">
                 Email address
               </label>
               {/* Updated: Input style */}
@@ -135,7 +135,7 @@ const RegisterForm: React.FC = () => {
                 name="email"
                 type="email"
                 autoComplete="email"
-                className="form-input w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                className="form-input"
                 disabled={loading}
                 placeholder="you@example.com"
               />
@@ -143,13 +143,13 @@ const RegisterForm: React.FC = () => {
               <ErrorMessage
                 name="email"
                 component="div"
-                className="mt-1 text-xs text-red-600"
+                className="form-error"
               />
             </div>
 
             <div>
               {/* Updated: Label style */}
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="password" className="form-label">
                 Password
               </label>
               <div className="relative">
@@ -159,7 +159,7 @@ const RegisterForm: React.FC = () => {
                   name="password"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="new-password"
-                  className="form-input w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition duration-150 ease-in-out pr-10"
+                  className="form-input pr-10"
                   disabled={loading}
                   placeholder="Create a password"
                 />
@@ -181,13 +181,13 @@ const RegisterForm: React.FC = () => {
               <ErrorMessage
                 name="password"
                 component="div"
-                className="mt-1 text-xs text-red-600"
+                className="form-error"
               />
             </div>
 
             <div>
               {/* Updated: Label style */}
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="confirmPassword" className="form-label">
                 Confirm password
               </label>
               <div className="relative">
@@ -197,7 +197,7 @@ const RegisterForm: React.FC = () => {
                   name="confirmPassword"
                   type={showConfirmPassword ? 'text' : 'password'}
                   autoComplete="new-password"
-                  className="form-input w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition duration-150 ease-in-out pr-10"
+                  className="form-input pr-10"
                   disabled={loading}
                   placeholder="Confirm your password"
                 />
@@ -219,7 +219,7 @@ const RegisterForm: React.FC = () => {
               <ErrorMessage
                 name="confirmPassword"
                 component="div"
-                className="mt-1 text-xs text-red-600"
+                className="form-error"
               />
             </div>
 
@@ -243,7 +243,7 @@ const RegisterForm: React.FC = () => {
                 <ErrorMessage
                   name="termsAccepted"
                   component="div"
-                  className="mt-1 text-xs text-red-600"
+                  className="form-error"
                 />
               </div>
             </div>
@@ -253,11 +253,7 @@ const RegisterForm: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading || !(isValid && dirty)}
-                className={`w-full inline-flex items-center justify-center px-4 py-2.5 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-150 ease-in-out ${ 
-                  loading || !(isValid && dirty)
-                    ? 'bg-primary-400 cursor-not-allowed'
-                    : 'bg-primary-600 hover:bg-primary-700'
-                }`}
+                className={`btn btn-primary w-full ${ (loading || !(isValid && dirty)) ? 'opacity-50 cursor-not-allowed !bg-primary-600' : '' }`}
               >
                 {loading ? <LoadingSpinner size="small" color="white" /> : <><UserPlus className="h-4 w-4 mr-2" /> Create account</>}
               </button>

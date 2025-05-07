@@ -107,12 +107,12 @@ const LearnMorePage: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <Navbar />
-      <main className="flex-grow py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
+      <main className="flex-grow container-app py-16 sm:py-24">
         <motion.div
           initial="hidden"
           animate="show"
           variants={staggerContainer}
-          className="max-w-7xl mx-auto"
+          className="container-app"
         >
           <motion.div variants={fadeInUp} className="text-center mb-12 lg:mb-16">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 tracking-tight">Unlock the Benefits of Ride Sharing</h1>
@@ -176,7 +176,7 @@ const LearnMorePage: React.FC = () => {
             <motion.div whileTap={{ scale: 0.95 }}>
               <a
                 href="/become-member"
-                className="inline-flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition-colors duration-300 shadow-md"
+                className="btn btn-primary"
               >
                 Become a Member
               </a>

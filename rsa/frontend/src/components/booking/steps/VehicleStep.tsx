@@ -1,12 +1,10 @@
 // d:\007\rsa\frontend\src\components\booking\steps\VehicleStep.tsx
 import React from 'react';
-import { Vehicle } from '../types';
-// Remove CSS module import
-// import styles from '../BookingWidget.module.css'; 
-import { Check, Truck } from 'lucide-react'; // Assuming Truck icon might be useful
+import { Vehicle as GlobalVehicle } from '../../../types'; // Import GlobalVehicle from global types
+import { Check, Truck, Info } from 'lucide-react'; 
 
 interface VehicleStepProps {
-  vehicles: Vehicle[];
+  vehicles: GlobalVehicle[]; // Use GlobalVehicle
   selectedVehicleId: string | null | undefined;
   onSelectVehicle: (vehicleId: string) => void;
   onNext: () => void;
@@ -38,18 +36,19 @@ const VehicleStep: React.FC<VehicleStepProps> = ({ vehicles, selectedVehicleId, 
             >
               <div className="flex items-center space-x-3">
                 {/* Placeholder for vehicle icon based on type */} 
-                <Truck size={24} className="text-gray-500 flex-shrink-0" /> 
+                <Truck size={24} className="text-primary-500 flex-shrink-0" /> 
                 <div>
                   <span className="font-semibold text-gray-800 block">{vehicle.model}</span>
                   <span className="text-sm text-gray-600">{vehicle.type} - {vehicle.capacity} seats</span>
-                  {/* Add amenities display later if needed */}
-                  {/* <p className="text-xs text-gray-500 mt-1">{vehicle.amenities.join(', ')}</p> */}
+                  {vehicle.features && vehicle.features.length > 0 && (
+                    <p className="text-xs text-gray-500 mt-1 capitalize">
+                      Features: {vehicle.features.join(', ').replace(/_/g, ' ')}
+                    </p>
+                  )}
                 </div>
               </div>
-              <div className="text-right ml-4 flex-shrink-0">
-                <span className="font-semibold text-gray-800 block">${vehicle.basePrice.toFixed(2)}</span>
-                <span className="text-xs text-gray-500">Est. Price</span>
-              </div>
+              {/* Price is now associated with the Trip, not displayed per vehicle here */}
+              {/* If needed, pass trip price or other info for display */}
               {selectedVehicleId === vehicle.id && (
                 <Check size={20} className="text-blue-600 ml-3 flex-shrink-0 absolute top-2 right-2" />
               )}

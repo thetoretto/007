@@ -1,12 +1,13 @@
 // d:\007\rsa\frontend\src\components\booking\steps\ConfirmPayStep.tsx
 import React, { useState } from 'react';
-import { Route, Vehicle, Seat, PickupPoint, BookingState } from '../types';
+import { Route, Vehicle, Seat, BookingPickupPoint, BookingState } from '../types'; // Changed PickupPoint to BookingPickupPoint
 // Remove CSS module import
 // import styles from '../BookingWidget.module.css'; 
-import { MapPin, Calendar, Clock, Users, Truck, CreditCard, CheckCircle, AlertCircle } from 'lucide-react';
+import { MapPin, Calendar, Clock, Users, Truck, CreditCard, CheckCircle, AlertCircle, Map } from 'lucide-react'; // Added Map icon
 
 interface ConfirmPayStepProps {
   state: BookingState;
+  availableHotPoints: BookingPickupPoint[]; // Added to receive filtered hot points for the current trip
   onTogglePickup: (needsPickup: boolean) => void;
   onSelectPickupPoint: (pointId: string | null) => void;
   onConfirmBooking: () => Promise<void>; // Async action
@@ -15,12 +16,14 @@ interface ConfirmPayStepProps {
 
 const ConfirmPayStep: React.FC<ConfirmPayStepProps> = ({
   state,
+  availableHotPoints, // Use this prop for displaying pickup points
   onTogglePickup,
   onSelectPickupPoint,
   onConfirmBooking,
   onPrev,
 }) => {
-  const { selectedRoute, selectedVehicle, selectedSeats, needsPickup, selectedPickupPoint, pickupPoints, loading, error } = state;
+  // Use availableHotPoints passed from BookingWidget, which are already filtered for the current trip
+  const { selectedRoute, selectedVehicle, selectedSeats, needsPickup, selectedPickupPoint, loading, error } = state;
   const [showPickupSelector, setShowPickupSelector] = useState(needsPickup);
 
   // Basic validation - ensure required data exists
@@ -79,11 +82,11 @@ const ConfirmPayStep: React.FC<ConfirmPayStepProps> = ({
           <span>I need pickup at a designated point (<span className="font-semibold">$5.00</span> extra)</span>
         </label>
 
-        {showPickupSelector && (
+        {showPickupSelector && selectedRoute?.offersPickup && (
           <div className="pl-7 space-y-2 pt-2 border-t mt-3">
             <h5 className="text-sm font-semibold text-gray-600 mb-1">Choose Pickup Point:</h5>
-            {pickupPoints.length > 0 ? (
-              pickupPoints.map(point => (
+            {availableHotPoints.length > 0 ? (
+              availableHotPoints.map(point => (
                 <label key={point.id} className={`flex items-center space-x-2 p-2 rounded-md border cursor-pointer transition-colors ${selectedPickupPoint?.id === point.id ? 'bg-blue-50 border-blue-300 ring-1 ring-blue-200' : 'border-gray-200 hover:bg-gray-50'}`}>
                   <input
                     type="radio"
@@ -93,7 +96,7 @@ const ConfirmPayStep: React.FC<ConfirmPayStepProps> = ({
                     onChange={() => onSelectPickupPoint(point.id)}
                     className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                   />
-                  <span className="text-2xl mr-1">{point.icon}</span>
+                  <Map size={18} className="mr-2 text-gray-500 flex-shrink-0" />
                   <div className="text-sm">
                     <span className="font-medium text-gray-800 block">{point.name}</span>
                     <span className="text-xs text-gray-500">{point.address}</span>
@@ -102,9 +105,9 @@ const ConfirmPayStep: React.FC<ConfirmPayStepProps> = ({
                 </label>
               ))
             ) : (
-              <p className="text-sm text-gray-500">No pickup points available.</p>
+              <p className="text-sm text-gray-500">No pickup points available for this trip or they are all inactive.</p>
             )}
-            {needsPickup && !selectedPickupPoint && <p className="text-xs text-red-500 pt-1">Please select a pickup point.</p>}
+            {needsPickup && !selectedPickupPoint && selectedRoute?.offersPickup && availableHotPoints.length > 0 && <p className="text-xs text-red-500 pt-1">Please select a pickup point.</p>}
           </div>
         )}
       </div>

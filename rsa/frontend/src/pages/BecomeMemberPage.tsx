@@ -37,7 +37,7 @@ const BecomeMemberPage: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
       <Navbar />
-      <main className="flex-grow py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
+      <main className="flex-grow container-app py-16 sm:py-24">
         <motion.div
           initial="hidden"
           animate="show"
@@ -80,7 +80,7 @@ const BecomeMemberPage: React.FC = () => {
                       value={formData.name}
                       onChange={handleChange}
                       required
-                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5"
+                      className="form-input pl-10"
                       placeholder="e.g., John Doe"
                     />
                   </div>
@@ -101,7 +101,7 @@ const BecomeMemberPage: React.FC = () => {
                       value={formData.location}
                       onChange={handleChange}
                       required
-                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5"
+                      className="form-input pl-10"
                       placeholder="e.g., New York City"
                     />
                   </div>
@@ -122,7 +122,7 @@ const BecomeMemberPage: React.FC = () => {
                       value={formData.drivingLicense}
                       onChange={handleChange}
                       required
-                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5"
+                      className="form-input pl-10"
                       placeholder="e.g., X123456789"
                     />
                   </div>
@@ -142,7 +142,7 @@ const BecomeMemberPage: React.FC = () => {
                       value={formData.sex}
                       onChange={handleChange}
                       required
-                      className="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2.5 pr-10"
+                      className="form-input pl-10 pr-10"
                     >
                       <option value="" disabled>Select your sex</option>
                       <option value="male">Male</option>
@@ -157,7 +157,7 @@ const BecomeMemberPage: React.FC = () => {
                   <motion.button
                     type="submit"
                     whileTap={{ scale: 0.98 }}
-                    className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors duration-300"
+                    className="btn btn-primary w-full"
                   >
                     Register as a Driver
                   </motion.button>

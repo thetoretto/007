@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import useBookingStore, { BookingWithDetails } from '../../store/bookingStore';
+import { useBookingStore, type BookingWithDetails } from '../../store/bookingStore';
 import Navbar from '../../components/common/Navbar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';

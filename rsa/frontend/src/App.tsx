@@ -20,9 +20,11 @@ const DriverUserManagement = lazy(() => import('./pages/driver/UserManagement'))
 const AdminTripManagement = lazy(() => import('./pages/admin/TripManagement'));
 const AdminStatistics = lazy(() => import('./pages/admin/Statistics'));
 const AdminUserManagement = lazy(() => import('./pages/admin/UserManagement'));
+const AdminHotPointManagement = lazy(() => import('./pages/admin/AdminHotPointManagement')); // Import the new Hot Point Management page
 const DriverVehiclePage = lazy(() => import('./pages/driver/VehiclePage')); // Import the new vehicle page
 const ProfilePage = lazy(() => import('./pages/ProfilePage')); // Import the ProfilePage
 const DriverCheckInPage = lazy(() => import('./pages/DriverCheckInPage')); // Import the DriverCheckInPage
+const CreateTripPage = lazy(() => import('./pages/driver/CreateTripPage')); // Import the CreateTripPage
 
 interface ProtectedRouteProps {
   element: React.ReactNode;
@@ -152,6 +154,19 @@ function App() {
               }
             />
             <Route 
+              path="/driver/trips/new" 
+              element={
+                <ProtectedRoute 
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <CreateTripPage />
+                    </Suspense>
+                  } 
+                  allowedRoles={['driver']} 
+                />
+              }
+            />
+            <Route 
               path="/driver/check-in"
               element={
                 <ProtectedRoute 
@@ -208,6 +223,19 @@ function App() {
                   allowedRoles={['admin']} 
                 />
               } 
+            />
+            <Route 
+              path="/admin/hotpoints"
+              element={
+                <ProtectedRoute 
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <AdminHotPointManagement />
+                    </Suspense>
+                  } 
+                  allowedRoles={['admin']} 
+                />
+              }
             />
             
             {/* Fallback route */}

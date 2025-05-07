@@ -74,7 +74,7 @@ const TripManagement: React.FC = () => {
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="container-app py-8">
       {/* Add the horizontal navigation bar */}
       <React.Suspense fallback={<div>Loading...</div>}>
         <DashboardNavbar userRole="admin" />
@@ -95,8 +95,8 @@ const TripManagement: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
-        <div className="px-4 sm:px-6 lg:px-8 py-4 border-b border-gray-200">
+      <div className="panel mb-8"> {/* Updated class for main content card */}
+        <div className="panel-header"> {/* Updated class for card header */}
           <h2 className="text-lg font-medium text-gray-900">All Trips</h2>
         </div>
 
@@ -150,7 +150,7 @@ const TripManagement: React.FC = () => {
                               e.stopPropagation();
                               handleDeleteTrip(trip.id);
                             }}
-                            className="btn btn-danger py-1 px-3 text-xs"
+                            className="btn btn-danger btn-sm" // Updated class for delete button
                           >
                             Delete Trip
                           </button>
@@ -159,7 +159,7 @@ const TripManagement: React.FC = () => {
                               e.stopPropagation();
                               // Open edit modal or navigate to edit page
                             }}
-                            className="btn btn-secondary py-1 px-3 text-xs"
+                            className="btn btn-secondary btn-sm" // Updated class for edit button
                           >
                             Edit Trip
                           </button>

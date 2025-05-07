@@ -1,4 +1,5 @@
 // d:\007\rsa\frontend\src\components\booking\types.ts
+import { HotPoint } from '../../store/hotPointStore'; // Import the global HotPoint type
 
 export interface Station {
   id: string;
@@ -42,12 +43,15 @@ export interface PickupPoint {
   mapImageUrl: string; // Path to static map image
 }
 
+// Use global HotPoint for pickup points within the booking component context
+export type BookingPickupPoint = HotPoint;
+
 export interface BookingDetails {
   bookingId: string;
   route: Route;
   vehicle: Vehicle;
   seats: Seat[];
-  pickupPoint: PickupPoint | null;
+  pickupPoint: BookingPickupPoint | null; // Use the aliased/imported HotPoint
   totalPrice: number;
   bookingTime: Date;
   // Add other relevant details like QR code data
@@ -60,13 +64,14 @@ export interface BookingState {
   selectedVehicle: Vehicle | null;
   selectedSeats: Seat[];
   needsPickup: boolean;
-  selectedPickupPoint: PickupPoint | null;
+  selectedPickupPoint: BookingPickupPoint | null; // Use the aliased/imported HotPoint
   bookingDetails: BookingDetails | null;
   // Data fetched or passed as props
   routes: Route[];
   vehicles: Vehicle[]; // Filtered based on selectedRoute
   seats: Seat[]; // Fetched based on selectedVehicle
-  pickupPoints: PickupPoint[];
+  pickupPoints: BookingPickupPoint[]; // Use the aliased/imported HotPoint
+  allHotPoints?: HotPoint[]; // To store all fetched hot points, used by BookingWidget
   // UI State
   error: string | null;
   loading: boolean;

@@ -33,7 +33,7 @@ const Statistics: React.FC = () => {
   const avgRevenuePerTrip = totalTrips > 0 ? (totalRevenue / totalTrips).toFixed(2) : '0';
   
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="container-app py-8">
       {/* Add the horizontal navigation bar */}
       <React.Suspense fallback={<div>Loading...</div>}>
         <DashboardNavbar userRole="admin" />

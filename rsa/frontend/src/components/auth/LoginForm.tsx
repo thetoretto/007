@@ -88,7 +88,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
           <Form className="space-y-5">
             <div>
               {/* Updated: Label style */}
-              <label htmlFor="emailOrPhone" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="emailOrPhone" className="form-label">
                 Email or Phone Number
               </label>
               {/* Updated: Input style */}
@@ -97,7 +97,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
                 name="emailOrPhone"
                 type="text" // Changed to text to allow phone numbers
                 autoComplete="username" // More general for email or phone
-                className="form-input w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                className="form-input"
                 disabled={loading}
                 placeholder="you@example.com or +1234567890"
               />
@@ -105,13 +105,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
               <ErrorMessage
                 name="emailOrPhone"
                 component="div"
-                className="mt-1 text-xs text-red-600"
+                className="form-error"
               />
             </div>
 
             <div>
               {/* Updated: Label style */}
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="password" className="form-label">
                 Password
               </label>
               <div className="relative">
@@ -121,7 +121,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
                   name="password"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
-                  className="form-input w-full border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition duration-150 ease-in-out pr-10"
+                  className="form-input pr-10"
                   disabled={loading}
                   placeholder="Enter your password"
                 />
@@ -143,7 +143,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
               <ErrorMessage
                 name="password"
                 component="div"
-                className="mt-1 text-xs text-red-600"
+                className="form-error"
               />
             </div>
 
@@ -158,7 +158,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
                   disabled={loading}
                 />
                 {/* Updated: Label style */}
-                <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-700">
+                <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-700"> /* Keeping this specific style for now as form-label might add mb-1 */
                   Remember me
                 </label>
               </div>
@@ -176,11 +176,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
               <button
                 type="submit"
                 disabled={loading || !(isValid && dirty)}
-                className={`w-full inline-flex items-center justify-center px-4 py-2.5 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 transition duration-150 ease-in-out ${ 
-                  loading || !(isValid && dirty)
-                    ? 'bg-primary-400 cursor-not-allowed'
-                    : 'bg-primary-600 hover:bg-primary-700'
-                }`}
+                className={`btn btn-primary w-full ${ (loading || !(isValid && dirty)) ? 'opacity-50 cursor-not-allowed !bg-primary-600' : '' }`}
               >
                 {loading ? <LoadingSpinner size="small" color="white" /> : <><LogIn className="h-4 w-4 mr-2" /> Sign in</>}
               </button>

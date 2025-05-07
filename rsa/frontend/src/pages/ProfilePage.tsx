@@ -110,7 +110,7 @@ const ProfilePage: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Navbar />
-      <main className="flex-grow container mx-auto px-4 py-8 sm:py-12">
+      <main className="flex-grow container-app py-8 sm:py-12">
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-8 text-center">Your Profile</h1>
 
         {successMessage && (
@@ -157,29 +157,29 @@ const ProfilePage: React.FC = () => {
                 <Form className="space-y-4">
                   <div>
                     <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name</label>
-                    <Field name="firstName" type="text" className="mt-1 form-input w-full" />
+                    <Field name="firstName" type="text" className="form-input" />
                     <ErrorMessage name="firstName" component="div" className="text-red-500 text-xs mt-1" />
                   </div>
                   <div>
                     <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name</label>
-                    <Field name="lastName" type="text" className="mt-1 form-input w-full" />
+                    <Field name="lastName" type="text" className="form-input" />
                     <ErrorMessage name="lastName" component="div" className="text-red-500 text-xs mt-1" />
                   </div>
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
-                    <Field name="email" type="email" className="mt-1 form-input w-full" />
+                    <Field name="email" type="email" className="form-input" />
                     <ErrorMessage name="email" component="div" className="text-red-500 text-xs mt-1" />
                   </div>
                   <div>
                     <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">Phone Number (Optional)</label>
-                    <Field name="phoneNumber" type="tel" className="mt-1 form-input w-full" placeholder="+1234567890" />
+                    <Field name="phoneNumber" type="tel" className="form-input" placeholder="+1234567890" />
                     <ErrorMessage name="phoneNumber" component="div" className="text-red-500 text-xs mt-1" />
                   </div>
                   <div className="flex gap-4 pt-2">
                     <button
                       type="submit"
                       disabled={loading}
-                      className="btn-primary w-full sm:w-auto flex items-center justify-center"
+                      className="btn btn-primary w-full sm:w-auto flex items-center justify-center"
                     >
                       {loading ? <LoadingSpinner size="small" /> : <><CheckCircle className="h-5 w-5 mr-2" /> Save Changes</>}
                     </button>
@@ -187,7 +187,7 @@ const ProfilePage: React.FC = () => {
                       type="button"
                       onClick={() => setEditMode(false)}
                       disabled={loading}
-                      className="btn-secondary w-full sm:w-auto"
+                      className="btn btn-secondary w-full sm:w-auto"
                     >
                       Cancel
                     </button>
@@ -224,24 +224,24 @@ const ProfilePage: React.FC = () => {
                     <Form className="space-y-4">
                       <div>
                         <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700">Current Password</label>
-                        <Field name="currentPassword" type="password" className="mt-1 form-input w-full" />
+                        <Field name="currentPassword" type="password" className="form-input" />
                         <ErrorMessage name="currentPassword" component="div" className="text-red-500 text-xs mt-1" />
                       </div>
                       <div>
                         <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700">New Password</label>
-                        <Field name="newPassword" type="password" className="mt-1 form-input w-full" />
+                        <Field name="newPassword" type="password" className="form-input" />
                         <ErrorMessage name="newPassword" component="div" className="text-red-500 text-xs mt-1" />
                       </div>
                       <div>
                         <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm New Password</label>
-                        <Field name="confirmPassword" type="password" className="mt-1 form-input w-full" />
+                        <Field name="confirmPassword" type="password" className="form-input" />
                         <ErrorMessage name="confirmPassword" component="div" className="text-red-500 text-xs mt-1" />
                       </div>
                       <div className="flex gap-4 pt-2">
                         <button
                           type="submit"
                           disabled={loading}
-                          className="btn-primary w-full sm:w-auto flex items-center justify-center"
+                          className="btn btn-primary w-full sm:w-auto flex items-center justify-center"
                         >
                           {loading ? <LoadingSpinner size="small" /> : <><CheckCircle className="h-5 w-5 mr-2" /> Update Password</>}
                         </button>
@@ -249,7 +249,7 @@ const ProfilePage: React.FC = () => {
                           type="button"
                           onClick={() => setShowPasswordForm(false)}
                           disabled={loading}
-                          className="btn-secondary w-full sm:w-auto"
+                          className="btn btn-secondary w-full sm:w-auto"
                         >
                           Cancel
                         </button>
@@ -277,14 +277,14 @@ const ProfilePage: React.FC = () => {
                   <button
                     onClick={handleDeactivate}
                     disabled={loading}
-                    className="btn-danger w-full sm:w-auto flex items-center justify-center"
+                    className="btn btn-danger w-full sm:w-auto flex items-center justify-center"
                   >
                     {loading ? <LoadingSpinner size="small" color="white" /> : <><AlertTriangle className="h-5 w-5 mr-2" /> Yes, Deactivate</>}
                   </button>
                   <button
                     onClick={() => setShowDeactivateConfirm(false)}
                     disabled={loading}
-                    className="btn-secondary w-full sm:w-auto"
+                    className="btn btn-secondary w-full sm:w-auto"
                   >
                     Cancel
                   </button>

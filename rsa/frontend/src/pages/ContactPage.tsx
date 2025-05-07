@@ -52,7 +52,7 @@ const ContactPage: React.FC = () => {
                       name="full-name"
                       id="full-name"
                       autoComplete="name"
-                      className="block w-full shadow-sm py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md transition duration-150 ease-in-out" /* Updated focus ring */
+                      className="form-input" 
                       placeholder="Full name"
                       required
                     />
@@ -64,7 +64,7 @@ const ContactPage: React.FC = () => {
                       name="email"
                       type="email"
                       autoComplete="email"
-                      className="block w-full shadow-sm py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md transition duration-150 ease-in-out" /* Updated focus ring */
+                      className="form-input"
                       placeholder="Email address"
                       required
                     />
@@ -76,7 +76,7 @@ const ContactPage: React.FC = () => {
                       name="phone"
                       id="phone"
                       autoComplete="tel"
-                      className="block w-full shadow-sm py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md transition duration-150 ease-in-out" /* Updated focus ring */
+                      className="form-input"
                       placeholder="Phone number (Optional)"
                     />
                   </div>
@@ -86,7 +86,7 @@ const ContactPage: React.FC = () => {
                       id="message"
                       name="message"
                       rows={4}
-                      className="block w-full shadow-sm py-3 px-4 placeholder-gray-500 focus:ring-indigo-500 focus:border-indigo-500 border border-gray-300 rounded-md transition duration-150 ease-in-out" /* Updated focus ring */
+                      className="form-input"
                       placeholder="Your message"
                       required
                     ></textarea>
@@ -94,7 +94,7 @@ const ContactPage: React.FC = () => {
                   <div>
                     <button
                       type="submit"
-                      className="w-full inline-flex items-center justify-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out" /* Updated button style */
+                      className="btn btn-primary w-full"
                     >
                       Send Message
                     </button>

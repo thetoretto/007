@@ -1,73 +1,74 @@
 // d:\007\rsa\frontend\src\components\booking\steps\RouteStep.tsx
 import React from 'react';
-import { Route } from '../types';
-// Remove CSS module import
-// import styles from '../BookingWidget.module.css'; 
-import { MapPin, ArrowRight, Check } from 'lucide-react';
+import { Trip as StoreTrip } from '../../../store/tripStore'; // Import StoreTrip
+import { MapPin, ArrowRight, Check, Calendar, Clock, DollarSign } from 'lucide-react';
 
 interface RouteStepProps {
-  routes: Route[];
-  selectedRouteId: string | null | undefined;
-  onSelectRoute: (routeId: string) => void;
-  onNext: () => void; // To proceed to the next step
+  trips: StoreTrip[]; // Changed from routes: Route[]
+  selectedTripId: string | null | undefined; // Changed from selectedRouteId
+  onSelectTrip: (tripId: string) => void; // Changed from onSelectRoute
+  onNext: () => void;
 }
 
-const RouteStep: React.FC<RouteStepProps> = ({ routes, selectedRouteId, onSelectRoute, onNext }) => {
+const RouteStep: React.FC<RouteStepProps> = ({ trips, selectedTripId, onSelectTrip, onNext }) => {
 
-  const handleSelect = (routeId: string) => {
-    onSelectRoute(routeId);
-    // Optionally call onNext() immediately after selection, or rely on a separate 'Continue' button
-    // For now, let's assume selection implies moving next if a separate button isn't added in the main widget
-    // onNext();
+  const handleSelect = (tripId: string) => {
+    onSelectTrip(tripId);
+    // onNext(); // Consider if auto-next is desired or if user clicks a separate button
   };
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-gray-800 mb-4">Select Your Route</h3>
-      {/* Add Search/Filter later if needed */}
-      <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
-        {routes.length > 0 ? (
-          routes.map(route => (
+      <h3 className="text-lg font-semibold text-gray-800 mb-4">Select Your Trip</h3>
+      <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
+        {trips.length > 0 ? (
+          trips.map(trip => (
             <div
-              key={route.id}
+              key={trip.id}
               className={`
                 p-4 border rounded-lg cursor-pointer transition-all duration-200 ease-in-out 
-                flex justify-between items-center hover:shadow-md hover:border-blue-400
-                ${selectedRouteId === route.id ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-300' : 'border-gray-200 bg-white'}
+                flex flex-col sm:flex-row justify-between items-start sm:items-center hover:shadow-lg hover:border-primary-400
+                ${selectedTripId === trip.id ? 'border-primary-500 bg-primary-50 ring-2 ring-primary-300' : 'border-gray-200 bg-white'}
               `}
-              onClick={() => handleSelect(route.id)}
+              onClick={() => handleSelect(trip.id)}
             >
-              <div className="flex-grow flex items-center space-x-4">
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <MapPin size={18} className="text-blue-500 flex-shrink-0" />
+              <div className="flex-grow mb-3 sm:mb-0">
+                <div className="flex items-center space-x-3 mb-2">
+                  <MapPin size={20} className="text-primary-500 flex-shrink-0" />
                   <div>
-                    <span className="font-medium text-gray-800 block">{route.origin.name}</span>
-                    <span className="text-xs text-gray-500">{route.origin.city}</span>
+                    <span className="font-semibold text-gray-800 block text-md">{trip.fromLocation || trip.route?.origin.name}</span>
+                    <span className="text-xs text-gray-500">{trip.route?.origin.city}</span>
+                  </div>
+                  <ArrowRight size={18} className="text-gray-400 flex-shrink-0 mx-1 sm:mx-2" />
+                  <MapPin size={20} className="text-success-500 flex-shrink-0" />
+                  <div>
+                    <span className="font-semibold text-gray-800 block text-md">{trip.toLocation || trip.route?.destination.name}</span>
+                    <span className="text-xs text-gray-500">{trip.route?.destination.city}</span>
                   </div>
                 </div>
-                <ArrowRight size={16} className="text-gray-400 flex-shrink-0" />
-                <div className="flex items-center space-x-2 text-sm text-gray-600">
-                  <MapPin size={18} className="text-green-500 flex-shrink-0" />
-                  <div>
-                    <span className="font-medium text-gray-800 block">{route.destination.name}</span>
-                    <span className="text-xs text-gray-500">{route.destination.city}</span>
-                  </div>
+                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-gray-600">
+                  <span className="flex items-center"><Calendar size={14} className="mr-1 text-gray-500" /> {trip.date}</span>
+                  <span className="flex items-center"><Clock size={14} className="mr-1 text-gray-500" /> {trip.time}</span>
+                  {trip.price !== undefined && (
+                    <span className="flex items-center font-medium text-primary-600"><DollarSign size={14} className="mr-0.5" /> {trip.price.toFixed(2)}</span>
+                  )}
                 </div>
+                 {trip.vehicle && (
+                  <p className="text-xs text-gray-500 mt-1">Vehicle: {trip.vehicle.model} ({trip.vehicle.type}) - Seats: {trip.availableSeats}/{trip.vehicle.capacity}</p>
+                )}
               </div>
-              <div className="text-right text-sm text-gray-500 ml-4 flex-shrink-0 space-x-2">
-                <span>{route.distance} mi</span>
-                <span>~{route.duration} min</span>
-              </div>
-              {selectedRouteId === route.id && (
-                <Check size={20} className="text-blue-600 ml-3 flex-shrink-0" />
+              
+              {selectedTripId === trip.id && (
+                <div className="flex-shrink-0 sm:ml-4 mt-2 sm:mt-0">
+                  <Check size={24} className="text-primary-600" />
+                </div>
               )}
             </div>
           ))
         ) : (
-          <p className="text-gray-500 text-center py-4">No routes available.</p>
+          <p className="text-gray-500 text-center py-6">No trips available for the selected criteria. Please try adjusting your search.</p>
         )}
       </div>
-      {/* The 'Continue' button lives in the main BookingWidget component */}
     </div>
   );
 };
