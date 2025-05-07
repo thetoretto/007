@@ -1,3 +1,4 @@
+import '../../index.css';
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
@@ -10,6 +11,9 @@ const RegisterSchema = Yup.object().shape({
   firstName: Yup.string().required('First name is required'),
   lastName: Yup.string().required('Last name is required'),
   email: Yup.string().email('Invalid email address').required('Email is required'),
+  phoneNumber: Yup.string()
+    .matches(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number format (E.164 expected)')
+    .required('Phone number is required'),
   password: Yup.string()
     .min(8, 'Password must be at least 8 characters')
     .required('Password is required')
@@ -33,6 +37,7 @@ const RegisterForm: React.FC = () => {
     firstName: string;
     lastName: string;
     email: string;
+    phoneNumber: string; // Changed from phone
     password: string;
   }) => {
     try {
@@ -40,6 +45,7 @@ const RegisterForm: React.FC = () => {
         firstName: values.firstName,
         lastName: values.lastName,
         email: values.email,
+        phoneNumber: values.phoneNumber, // Changed from phone
         password: values.password,
         role: 'passenger', // Default role for registration
       });
@@ -67,6 +73,7 @@ const RegisterForm: React.FC = () => {
           firstName: '',
           lastName: '',
           email: '',
+          phoneNumber: '', // Changed from phone
           password: '',
           confirmPassword: '',
           termsAccepted: false,
@@ -149,6 +156,29 @@ const RegisterForm: React.FC = () => {
 
             <div>
               {/* Updated: Label style */}
+              <label htmlFor="phoneNumber" className="form-label">
+                Phone Number
+              </label>
+              {/* Updated: Input style */}
+              <Field
+                id="phoneNumber"
+                name="phoneNumber"
+                type="tel" // Use tel type for phone numbers
+                autoComplete="tel"
+                className="form-input"
+                disabled={loading}
+                placeholder="+1234567890"
+              />
+              {/* Updated: Error message style */}
+              <ErrorMessage
+                name="phoneNumber"
+                component="div"
+                className="form-error"
+              />
+            </div>
+
+            <div>
+              {/* Updated: Label style */}
               <label htmlFor="password" className="form-label">
                 Password
               </label>
@@ -180,6 +210,29 @@ const RegisterForm: React.FC = () => {
               {/* Updated: Error message style */}
               <ErrorMessage
                 name="password"
+                component="div"
+                className="form-error"
+              />
+            </div>
+
+            <div>
+              {/* Updated: Label style */}
+              <label htmlFor="phoneNumber" className="form-label">
+                Phone Number
+              </label>
+              {/* Updated: Input style */}
+              <Field
+                id="phoneNumber"
+                name="phoneNumber"
+                type="tel" // Use tel type for phone numbers
+                autoComplete="tel"
+                className="form-input"
+                disabled={loading}
+                placeholder="+1234567890"
+              />
+              {/* Updated: Error message style */}
+              <ErrorMessage
+                name="phoneNumber"
                 component="div"
                 className="form-error"
               />

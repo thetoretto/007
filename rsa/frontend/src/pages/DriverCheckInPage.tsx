@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBookingStore } from '../store/bookingStore';
+import '../index.css';
 
 const DriverCheckInPage: React.FC = () => {
   const [bookingId, setBookingId] = useState('');

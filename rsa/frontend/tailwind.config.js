@@ -8,70 +8,68 @@ export default {
       },
       colors: {
         primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
+          50: '#f7fafc', // very light gray
+          100: '#edf2f7', // light gray
+          200: '#e2e8f0', // light gray
+          300: '#cbd5e0', // gray
+          400: '#a0aec0', // gray
+          500: '#718096', // medium gray
+          600: '#4a5568', // dark gray
+          700: '#2d3748', // very dark gray
+          800: '#1a202c', // almost black
+          900: '#171923', // near black
         },
         accent: {
-          50: '#fff7ed',
-          100: '#ffedd5',
-          200: '#fed7aa',
-          300: '#fdba74',
-          400: '#fb923c',
-          500: '#f97316',
-          600: '#ea580c',
-          700: '#c2410c',
-          800: '#9a3412',
-          900: '#7c2d12',
+          50: '#f7fafc',
+          100: '#edf2f7',
+          200: '#e2e8f0',
+          300: '#cbd5e0',
+          400: '#a0aec0',
+          500: '#718096',
+          600: '#4a5568',
+          700: '#2d3748',
+          800: '#1a202c',
+          900: '#171923',
         },
         success: {
-          50: '#ecfdf5',
-          100: '#d1fae5',
-          200: '#a7f3d0',
-          300: '#6ee7b7',
-          400: '#34d399',
-          500: '#10b981',
-          600: '#059669',
-          700: '#047857',
-          800: '#065f46',
-          900: '#064e3b',
+          50: '#f7fafc', // very light gray
+          100: '#edf2f7', // light gray
+          200: '#e2e8f0', // light gray
+          300: '#cbd5e0', // gray
+          400: '#a0aec0', // gray
+          500: '#718096', // medium gray
+          600: '#4a5568', // dark gray
+          700: '#2d3748', // very dark gray
+          800: '#1a202c', // almost black
+          900: '#171923', // near black
         },
         warning: {
-          50: '#fffbeb',
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#fbbf24',
-          500: '#f59e0b',
-          600: '#d97706',
-          700: '#b45309',
-          800: '#92400e',
-          900: '#78350f',
+          50: '#f7fafc', // very light gray
+          100: '#edf2f7', // light gray
+          200: '#e2e8f0', // light gray
+          300: '#cbd5e0', // gray
+          400: '#a0aec0', // gray
+          500: '#718096', // medium gray
+          600: '#4a5568', // dark gray
+          700: '#2d3748', // very dark gray
+          800: '#1a202c', // almost black
+          900: '#171923', // near black
         },
         error: {
-          50: '#fef2f2',
-          100: '#fee2e2',
-          200: '#fecaca',
-          300: '#fca5a5',
-          400: '#f87171',
-          500: '#ef4444',
-          600: '#dc2626',
-          700: '#b91c1c',
-          800: '#991b1b',
-          900: '#7f1d1d',
+          50: '#f7fafc', // very light gray
+          100: '#edf2f7', // light gray
+          200: '#e2e8f0', // light gray
+          300: '#cbd5e0', // gray
+          400: '#a0aec0', // gray
+          500: '#718096', // medium gray
+          600: '#4a5568', // dark gray
+          700: '#2d3748', // very dark gray
+          800: '#1a202c', // almost black
+          900: '#171923', // near black
         },
-      },
-      animation: {
-        'fade-in': 'fadeIn 0.3s ease-in-out',
-        'slide-up': 'slideUp 0.3s ease-in-out',
-        'slide-right': 'slideRight 0.3s ease-in-out',
+        // Add black and white explicitly if needed, though Tailwind includes them by default
+        black: '#000000',
+        white: '#ffffff',
       },
       keyframes: {
         fadeIn: {
@@ -85,6 +83,10 @@ export default {
         slideRight: {
           '0%': { transform: 'translateX(-10px)', opacity: '0' },
           '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        'bg-pulse-slow': {
+          '0%, 100%': { 'background-color': '#1d4ed8' },
+          '50%': { 'background-color': '#2563eb' },
         },
       },
     },

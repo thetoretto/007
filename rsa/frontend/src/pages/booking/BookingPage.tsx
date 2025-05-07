@@ -4,6 +4,7 @@ import { AppNavbar } from '../../components/common/AppNavbar';
 import BookingWidget from '../../components/booking/BookingWidget'; // Import the new widget
 import { MapPin, CalendarCheck, Ticket, Info } from 'lucide-react'; // Import icons
 import { promoMessages } from '../../utils/mockData'; // Import promoMessages
+import '../../index.css';
 // import useAuthStore from '../../store/authStore'; // Keep if needed for user info outside widget
 // import useBookingStore from '../../store/bookingStore'; // Store logic is now inside the widget
 

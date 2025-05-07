@@ -1,3 +1,4 @@
+import '../../../index.css';
 // d:\007\rsa\frontend\src\components\booking\steps\RouteStep.tsx
 import React from 'react';
 import { Trip as StoreTrip } from '../../../store/tripStore'; // Import StoreTrip

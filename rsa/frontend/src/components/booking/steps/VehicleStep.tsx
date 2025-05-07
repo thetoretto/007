@@ -1,3 +1,4 @@
+import '../../../index.css';
 // d:\007\rsa\frontend\src\components\booking\steps\VehicleStep.tsx
 import React from 'react';
 import { Vehicle as GlobalVehicle } from '../../../types'; // Import GlobalVehicle from global types

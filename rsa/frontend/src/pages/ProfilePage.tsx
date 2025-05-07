@@ -7,6 +7,7 @@ import { User, Edit3, Shield, Phone, Mail, LogOut, AlertTriangle, CheckCircle } 
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import LoadingSpinner from '../components/common/LoadingSpinner';
+import '../index.css';
 
 const ProfileSchema = Yup.object().shape({
   firstName: Yup.string().required('First name is required'),

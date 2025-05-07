@@ -2,11 +2,11 @@ import React, { useState, useEffect, useMemo } from 'react'; // Added useMemo
 import { Link } from 'react-router-dom';
 import useAuthStore from '../../store/authStore';
 import useTripStore, { Trip } from '../../store/tripStore'; // Import trip store and Trip type
-import { mockDashboardStats, mockBookingStats, mockRoutePopularity } from '../../utils/mockData'; // Keep mock data for now - Will be replaced by more specific mock data
 import { mockUsers, mockRoutes as allMockRoutes, mockVehicles } from '../../utils/mockData'; // Using more specific mock data
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts'; // Added PieChart, Pie, Cell
+import {  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts'; // Added PieChart, Pie, Cell
 import { Users, Calendar, TrendingUp, CreditCard, Settings, User, Map, Activity, Plus, Edit, Trash2, Clock, Filter, Star, MapPin, Navigation } from 'lucide-react'; // Added Filter, Star, MapPin, Navigation
 import TripForm from '../../components/trips/TripForm'; // Import TripForm
+import '../../index.css';
 
 // Enhanced mock data generation for Admin Dashboard
 const generateAdminMockData = (period: 'daily' | 'weekly' | 'monthly' | 'yearly', allTrips: Trip[]) => {

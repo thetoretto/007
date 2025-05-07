@@ -4,6 +4,7 @@ import Footer from '../components/common/Footer';
 import { motion } from 'framer-motion';
 import { fadeInUp, staggerContainer } from '../utils/animations';
 import { User, MapPin, FileText, Users } from 'lucide-react'; // Added Users for sex
+import '../index.css';
 
 const BecomeMemberPage: React.FC = () => {
   const [formData, setFormData] = useState({

@@ -1,3 +1,4 @@
+import '../../index.css';
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { getBookingsWithDetails, mockRoutes, mockVehicles, mockDriverIncome } from '../../utils/mockData'; // Added mockDriverIncome

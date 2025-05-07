@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { AuthState, LoginCredentials, RegisterData, User, UserStatus, UserRole } from '../types'; // Updated import
+// Make sure RegisterData in types.ts includes the phone field
 import { mockUsers, mockPassengers, mockDrivers, mockAdmins } from '../utils/mockData'; // Assuming mockUsers have phoneNumbers added
 
 import { jwtDecode } from 'jwt-decode';
@@ -129,7 +130,7 @@ const useAuthStore = create<AuthState & {
     }
   },
   
-  register: async (data) => {
+  register: async (data: RegisterData) => { // Ensure RegisterData type is used
     set({ loading: true, error: null });
     try {
       // Simulate API call delay
@@ -144,6 +145,7 @@ const useAuthStore = create<AuthState & {
       const newUser: User = {
         id: `user${mockUsers.length + 1}`,
         email: data.email,
+        phoneNumber: data.phoneNumber, // Changed from phone to phoneNumber
         firstName: data.firstName,
         lastName: data.lastName,
         role: data.role,
@@ -151,6 +153,15 @@ const useAuthStore = create<AuthState & {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
+
+      // Add to mockUsers array as well
+      mockUsers.push(newUser);
+      // If you have role-specific arrays like mockPassengers, add there too if applicable
+      if (newUser.role === 'passenger') {
+        // Assuming mockPassengers is an array of User objects or compatible
+        // You might need to adjust this based on the actual structure of mockPassengers
+        (mockPassengers as User[]).push(newUser);
+      }
       
       // Generate token
       const token = generateFakeToken(newUser.id, newUser.role);

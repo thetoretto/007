@@ -1,13 +1,12 @@
 import React from 'react';
 import RegisterForm from '../../components/auth/RegisterForm';
-import Navbar from '../../components/common/Navbar'; // Assuming Navbar is updated
 import Footer from '../../components/common/Footer'; // Assuming Footer is updated
+import '../../index.css';
 
 const RegisterPage: React.FC = () => {
   return (
     // Updated: Full page layout with min-height and background
     <div className="flex flex-col min-h-screen bg-gray-50">
-      <Navbar />
       {/* Updated: Main content area with padding and centering */}
       <main className="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-lg space-y-8"> {/* Increased max-width for register form */}
@@ -21,7 +20,6 @@ const RegisterPage: React.FC = () => {
           <RegisterForm />
         </div>
       </main>
-      <Footer />
     </div>
   );
 };

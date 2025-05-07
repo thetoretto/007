@@ -1,3 +1,4 @@
+import '../../index.css';
 import React, { useState, useEffect } from 'react';
 import useTripStore, { Trip } from '../../store/tripStore';
 import useVehicleStore from '../../store/vehicleStore'; // Import vehicle store

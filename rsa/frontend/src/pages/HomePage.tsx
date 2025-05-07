@@ -1,74 +1,67 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Map, Calendar, CreditCard, Users, Clock, Star } from 'lucide-react';
-import Navbar from '../components/common/Navbar'; // Assuming Navbar is already updated
-import { motion } from 'framer-motion';
-import { fadeInUp, staggerContainer } from '../utils/animations';
-import Footer from '../components/common/Footer'; // Assuming Footer is already updated
+import Navbar from '../components/common/Navbar';
+import Footer from '../components/common/Footer';
+import '../index.css';
 
 const HomePage: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50"> {/* Changed bg to gray-50 for consistency */}
+    <div className="min-h-screen flex flex-col bg-gray-50">
       <Navbar />
-      {/* Hero Section - Refined Styling */}
-      <section className="relative bg-gradient-to-br from-primary-700 via-purple-700 to-pink-600 text-white overflow-hidden"> {/* Pocket-like gradient */}
-        {/* Removed extra overlay div */}
-        <motion.div
-          initial="hidden"
-          animate="show"
-          variants={staggerContainer}
-          className="relative container-app py-28 sm:py-36 flex flex-col items-center text-center"
-        >
-          <motion.h1 variants={fadeInUp} className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-5"> {/* Bolder font */}
+
+      {/* Hero Section - Modernized Styling */}
+      <section className="bg-gradient-to-br from-primary-50 via-white to-secondary-50 text-gray-800 overflow-hidden">
+        <div className="container-app py-24 sm:py-32 md:py-40 flex flex-col items-center text-center">
+          <h1 
+            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6 text-primary-700"
+          >
             Your Journey, Simplified
-          </motion.h1>
-          <motion.p variants={fadeInUp} className="text-lg sm:text-xl text-indigo-100 max-w-3xl mb-10"> {/* Adjusted text color and margin */}
+          </h1>
+          <p 
+            className="text-lg sm:text-xl text-gray-600 max-w-2xl lg:max-w-3xl mb-10"
+          >
             Effortless booking for comfortable and reliable transportation. Find your route, book your seat, and travel with ease.
-          </motion.p>
-          <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row gap-4">
+          </p>
+          <div 
+            className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6"
+          >
             <Link
               to="/book"
-              className="btn bg-white text-primary-700 hover:bg-primary-50 text-base px-6 py-3"
+              className="btn btn-primary text-base px-8 py-3 shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
               Book Now
             </Link>
             <Link
               to="/learn-more"
-              className="btn text-white bg-primary-500 bg-opacity-80 hover:bg-opacity-100 text-base px-6 py-3"
+              className="btn btn-outline text-primary-600 border-primary-600 hover:bg-primary-50 text-base px-8 py-3 transition-colors duration-300"
             >
               Learn More
             </Link>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </section>
 
-      {/* How It Works Section - Refined Styling */}
-      <section className="py-16 lg:py-24 bg-white"> {/* Changed bg to white */}
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={staggerContainer}
-          className="container-app"
-        >
-          <motion.div variants={fadeInUp} className="text-center mb-12 lg:mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">How It Works</h2> {/* Added tracking-tight */}
+      {/* How It Works Section - Modernized Styling */}
+      <section className="py-16 lg:py-24 bg-white">
+        <div className="container-app">
+          <div className="text-center mb-12 lg:mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">How It Works</h2>
             <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
               Booking your ride takes just a few simple steps.
             </p>
-          </motion.div>
+          </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10"> {/* Adjusted gap */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
             {[Map, Calendar, CreditCard].map((Icon, index) => (
-              <motion.div
+              <div
                 key={index}
-                variants={fadeInUp}
-                className="flex flex-col items-center text-center p-6 lg:p-8 rounded-xl bg-gray-50 border border-gray-200 hover:shadow-lg transition-shadow duration-300" /* Rounded-xl, hover effect */
+                className="bg-gray-50 p-6 lg:p-8 rounded-xl hover:shadow-lg transition-shadow duration-300 ease-in-out flex flex-col items-center text-center border border-gray-200"
               >
-                <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center text-primary-600 mb-5"> {/* Adjusted icon bg/color/size */}
-                  <Icon className="h-6 w-6" />
+                <div className="bg-primary-100 text-primary-600 p-4 rounded-full mb-6 inline-flex items-center justify-center ring-4 ring-primary-50">
+                  <Icon className="h-8 w-8" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                <h3 className="text-xl font-semibold text-gray-800 mb-3">
                   {['Select Route', 'Choose Date & Time', 'Book & Pay Securely'][index]}
                 </h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
@@ -78,39 +71,32 @@ const HomePage: React.FC = () => {
                     'Complete your booking with our secure payment system and get instant confirmation.'
                   ][index]}
                 </p>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </section>
 
-      {/* Features Section - Refined Styling */}
-      <section className="py-16 lg:py-24 bg-gray-50"> {/* Changed bg to gray-50 */}
-        <motion.div
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, amount: 0.2 }}
-          variants={staggerContainer}
-          className="container-app"
-        >
-          <motion.div variants={fadeInUp} className="text-center mb-12 lg:mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">Why Travel With Us?</h2> {/* Added tracking-tight */}
+      {/* Features Section - Modernized Styling */}
+      <section className="py-16 lg:py-24 bg-gray-50">
+        <div className="container-app">
+          <div className="text-center mb-12 lg:mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">Why Travel With Us?</h2>
             <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
               Experience the difference with our commitment to quality and service.
             </p>
-          </motion.div>
+          </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"> {/* Adjusted gap */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             {[Users, Clock, CreditCard, Star].map((Icon, index) => (
-              <motion.div
+              <div
                 key={index}
-                variants={fadeInUp}
-                className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm" /* Rounded-xl, white bg, shadow-sm */
+                className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out border border-gray-200 flex flex-col items-start"
               >
-                <div className="w-10 h-10 bg-primary-100 rounded-md flex items-center justify-center text-primary-600 mb-4"> {/* Adjusted icon bg/color/size/shape */}
-                  <Icon className="h-5 w-5" />
+                <div className="bg-secondary-100 text-secondary-600 p-3 rounded-lg mb-5 inline-flex items-center justify-center ring-4 ring-secondary-50">
+                  <Icon className="h-7 w-7" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   {['Modern Fleet', 'Punctual Service', 'Affordable Fares', 'Top-Rated Experience'][index]}
                 </h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
@@ -121,36 +107,28 @@ const HomePage: React.FC = () => {
                     'Join thousands of satisfied passengers who rate our service highly.'
                   ][index]}
                 </p>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </section>
 
-      {/* CTA Section - Refined Styling */}
-      <section className="py-16 lg:py-24 bg-primary-700"> {/* Changed bg to indigo */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
-        >
-          <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">Ready for Your Next Adventure?</h2> {/* Added tracking-tight */}
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-primary-100"> {/* Adjusted text color */}
+      {/* CTA Section - Modernized Styling */}
+      <section className="py-16 lg:py-24 bg-gradient-to-r from-primary-600 to-primary-700 text-white">
+        <div className="container-app max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Ready for Your Next Adventure?</h2>
+          <p className="mt-4 max-w-2xl mx-auto text-lg text-primary-100">
             Don't wait! Book your seat today and experience seamless travel with RideBooker.
           </p>
-          <motion.div
-            whileTap={{ scale: 0.95 }}
-            className="mt-10"
-          >
+          <div className="mt-10">
             <Link 
               to="/book" 
-              className="btn bg-white text-primary-700 hover:bg-primary-50 text-base px-8 py-3 shadow-lg"
+              className="btn btn-secondary text-base px-10 py-4 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out"
             >
               Book Your Ride Now
             </Link>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </section>
       <Footer />
     </div>

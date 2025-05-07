@@ -6,6 +6,7 @@ import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tool
 
 // Import the DashboardNavbar component
 const DashboardNavbar = React.lazy(() => import('../../components/dashboard/DashboardNavbar'));
+import '../../index.css';
 
 // Mock data for statistics
 const mockTripStats = [

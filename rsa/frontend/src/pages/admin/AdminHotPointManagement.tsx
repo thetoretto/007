@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import useHotPointStore, { HotPoint } from '../../store/hotPointStore';
 import DashboardNavbar from '../../components/dashboard/DashboardNavbar';
 import { PlusCircle, Edit, Trash2, Search, Filter, X, Save, MapPin, ToggleLeft, ToggleRight } from 'lucide-react';
+import '../../index.css';
 
 // Basic Modal Component (can be replaced with a more sophisticated one)
 const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: string; children: React.ReactNode }> = ({ isOpen, onClose, title, children }) => {

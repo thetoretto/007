@@ -6,6 +6,7 @@ import { User, UserStatus, UserRole } from '../../types'; // Updated import
 
 // Import the DashboardNavbar component
 const DashboardNavbar = React.lazy(() => import('../../components/dashboard/DashboardNavbar'));
+import '../../index.css';
 
 // Basic Modal Component (Replace with your actual Modal component if available)
 const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: string; children: React.ReactNode }> = ({ isOpen, onClose, title, children }) => {

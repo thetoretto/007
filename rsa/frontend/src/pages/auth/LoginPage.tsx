@@ -1,10 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import LoginForm from '../../components/auth/LoginForm';
+import '../../index.css';
 
 const LoginPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Link to="/" className="flex justify-center">
           <span className="sr-only">RideBooker</span>
@@ -16,7 +17,7 @@ const LoginPage: React.FC = () => {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className="h-12 w-12 text-primary-600"
+            className="icon-3xl text-primary-600"
           >
             <path d="M6 17L6 3" />
             <path d="M18 17L18 3" />

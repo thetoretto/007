@@ -1,3 +1,4 @@
+import '../../index.css';
 import React from 'react';
 import { BookingWithDetails } from '../../store/bookingStore'; // Updated import path
 import { MapPin, Calendar, Clock, CreditCard, Users, Tag, QrCode, AlertTriangle, CheckCircle, XCircle, Info } from 'lucide-react';

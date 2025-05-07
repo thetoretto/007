@@ -1,3 +1,4 @@
+import '../../index.css';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../store/authStore';
@@ -8,6 +9,7 @@ import { mockRoutes, Route as AppRoute } from '../../utils/mockData'; // Assumin
 import DashboardNavbar from '../../components/dashboard/DashboardNavbar';
 import Footer from '../../components/common/Footer';
 import { Calendar, Clock, MapPinIcon, Truck, Save, CheckSquare, Square } from 'lucide-react'; // Added CheckSquare, Square
+import '../../index.css';
 
 const CreateTripPage: React.FC = () => {
   const navigate = useNavigate();

@@ -45,6 +45,7 @@ export interface LoginCredentials {
 
 export interface RegisterData {
   email: string;
+  phoneNumber: string; // Changed from phone to phoneNumber
   password?: string;
   firstName: string;
   lastName: string;

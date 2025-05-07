@@ -1,5 +1,6 @@
 import React from 'react';
 import { Mail, Phone, MapPin } from 'lucide-react';
+import '../index.css';
 import Navbar from '../components/common/Navbar'; // Assuming Navbar is updated
 import Footer from '../components/common/Footer'; // Assuming Footer is updated
 

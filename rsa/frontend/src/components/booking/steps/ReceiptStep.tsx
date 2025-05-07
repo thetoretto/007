@@ -1,3 +1,4 @@
+import '../../../index.css';
 // d:\007\rsa\frontend\src\components\booking\steps\ReceiptStep.tsx
 import React from 'react';
 import { BookingDetails } from '../types';
@@ -19,7 +20,7 @@ const ReceiptStep: React.FC<ReceiptStepProps> = ({ details, onBookAnother, onClo
         <p className="text-yellow-700 mb-4">Booking details are not available. Please try again.</p>
         <button 
           onClick={onClose} 
-          className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition-colors flex items-center justify-center mx-auto"
+          className="btn bg-gray-500 hover:bg-gray-600 text-white focus:ring-gray-500 flex items-center justify-center mx-auto"
         >
           <X size={16} className="mr-1" /> Close
         </button>
@@ -65,13 +66,13 @@ const ReceiptStep: React.FC<ReceiptStepProps> = ({ details, onBookAnother, onClo
 
       {/* Action Buttons */}
       <div className="flex flex-wrap justify-center gap-3 pt-4 border-t mt-6">
-        <button onClick={handlePrint} className="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors text-sm">
+        <button onClick={handlePrint} className="btn bg-gray-100 hover:bg-gray-200 text-gray-700 focus:ring-gray-300">
           <Printer size={16} className="mr-1.5" /> Print Receipt
         </button>
-        <button onClick={handleDownload} className="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors text-sm">
+        <button onClick={handleDownload} className="btn bg-gray-100 hover:bg-gray-200 text-gray-700 focus:ring-gray-300">
           <Download size={16} className="mr-1.5" /> Download PDF
         </button>
-        <button onClick={onBookAnother} className="flex items-center px-4 py-2 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition-colors text-sm font-medium">
+        <button onClick={onBookAnother} className="btn bg-blue-100 hover:bg-blue-200 text-blue-700 focus:ring-blue-300 font-medium">
           <RotateCcw size={16} className="mr-1.5" /> Book Another
         </button>
       </div>

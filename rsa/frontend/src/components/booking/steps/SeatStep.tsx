@@ -1,3 +1,4 @@
+import '../../../index.css';
 // d:\007\rsa\frontend\src\components\booking\steps\SeatStep.tsx
 import React from 'react';
 import { Seat, Vehicle } from '../types';

@@ -13,7 +13,7 @@
   }
 
   body {
-    @apply bg-gray-50 text-gray-900 antialiased;
+    @apply bg-white text-black antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -44,12 +44,12 @@
   }
 
   a {
-    @apply text-primary-600 hover:text-primary-700 transition-colors duration-150;
+    @apply text-primary-700 hover:text-primary-900 transition-colors duration-150;
   }
 
   /* Ensure consistent focus styles for accessibility */
   *:focus-visible {
-    @apply outline-none ring-2 ring-primary-500 ring-offset-2;
+    @apply outline-none ring-2 ring-primary-600 ring-offset-2;
   }
 }
 
@@ -60,23 +60,23 @@
   }
 
   .btn-primary {
-    @apply bg-primary-600 text-white hover:bg-primary-700 focus:ring-primary-500;
+    @apply bg-primary-800 text-white hover:bg-primary-900 focus:ring-primary-600;
   }
 
   .btn-secondary {
-    @apply bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 focus:ring-primary-500;
+    @apply bg-primary-200 text-primary-800 border border-primary-400 hover:bg-primary-300 focus:ring-primary-600;
   }
 
   .btn-accent {
-    @apply bg-accent-500 text-white hover:bg-accent-600 focus:ring-accent-500;
+    @apply bg-primary-700 text-white hover:bg-primary-800 focus:ring-primary-500; /* Using primary as accent is now grayscale */
   }
 
   .btn-success {
-    @apply bg-success-500 text-white hover:bg-success-600 focus:ring-success-500;
+    @apply bg-gray-700 text-white hover:bg-gray-800 focus:ring-gray-500; /* Grayscale success */
   }
 
   .btn-danger {
-    @apply bg-error-500 text-white hover:bg-error-600 focus:ring-error-500;
+    @apply bg-gray-700 text-white hover:bg-gray-800 focus:ring-gray-500; /* Grayscale error */
   }
 
   .btn-disabled {
@@ -84,7 +84,7 @@
   }
 
   .input {
-    @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500 sm:text-sm;
+    @apply block w-full rounded-md border-primary-400 shadow-sm focus:border-primary-600 focus:ring-primary-600 sm:text-sm;
   }
 
   .card {
@@ -100,8 +100,8 @@
   }
 
   .input, .form-input, input[type='text'], input[type='email'], input[type='password'], input[type='number'], input[type='search'], input[type='tel'], input[type='url'], textarea, select {
-    @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 sm:text-sm py-2 px-3;
-    @apply placeholder-gray-400;
+    @apply block w-full rounded-md border-primary-400 shadow-sm focus:border-primary-600 focus:ring-1 focus:ring-primary-600 sm:text-sm py-2 px-3;
+    @apply placeholder-primary-500;
   }
 
   select {
@@ -115,21 +115,21 @@
   /* Custom checkbox and radio styles for better consistency */
   .form-checkbox,
   input[type='checkbox'] {
-    @apply rounded text-primary-600 border-gray-300 focus:ring-primary-500 h-4 w-4;
+    @apply rounded text-primary-700 border-primary-400 focus:ring-primary-600 h-4 w-4;
   }
 
   .form-radio,
   input[type='radio'] {
-    @apply rounded-full text-primary-600 border-gray-300 focus:ring-primary-500 h-4 w-4;
+    @apply rounded-full text-primary-700 border-primary-400 focus:ring-primary-600 h-4 w-4;
   }
 
   .form-input {
     /* This class is already covered by the general input styling above, but kept for compatibility if used specifically */
-    @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-primary-500 focus:ring-1 focus:ring-primary-500 sm:text-sm py-2 px-3;
+    @apply block w-full rounded-md border-primary-400 shadow-sm focus:border-primary-600 focus:ring-1 focus:ring-primary-600 sm:text-sm py-2 px-3;
   }
 
   .form-error {
-    @apply mt-1 text-sm text-error-600;
+    @apply mt-1 text-sm text-primary-700; /* Grayscale error text */
   }
 
   .badge {
@@ -137,23 +137,23 @@
   }
 
   .badge-primary {
-    @apply bg-primary-100 text-primary-800;
+    @apply bg-primary-300 text-primary-900;
   }
 
   .badge-success {
-    @apply bg-success-100 text-success-800;
+    @apply bg-gray-300 text-gray-800; /* Grayscale success */
   }
 
   .badge-warning {
-    @apply bg-warning-100 text-warning-800;
+    @apply bg-gray-300 text-gray-800; /* Grayscale warning */
   }
 
   .badge-error {
-    @apply bg-error-100 text-error-800;
+    @apply bg-gray-400 text-white; /* Grayscale error */
   }
 
   .badge-gray {
-    @apply bg-gray-100 text-gray-800;
+    @apply bg-primary-300 text-primary-800;
   }
 
   /* General container for consistent padding and max-width */
@@ -170,5 +170,77 @@
   }
   .icon-lg {
     @apply h-6 w-6;
+  }
+  .icon-xl {
+    @apply h-7 w-7;
+  }
+  .icon-2xl {
+    @apply h-8 w-8;
+  }
+  .icon-3xl {
+    @apply h-12 w-12;
+  }
+
+  /* Alert Boxes */
+  .alert {
+    @apply p-4 rounded-md text-sm mb-4; /* Added mb-4 for spacing */
+  }
+  .alert-danger {
+    @apply bg-primary-200 text-primary-800 border border-primary-400; /* Grayscale danger */
+  }
+  .alert-success {
+    @apply bg-primary-200 text-primary-800 border border-primary-400; /* Grayscale success */
+  }
+  .alert-warning {
+    @apply bg-primary-200 text-primary-800 border border-primary-400; /* Grayscale warning */
+  }
+  .alert-info {
+    @apply bg-primary-200 text-primary-800 border border-primary-400;
+  }
+
+  /* Card Variants */
+  .card-alt {
+    @apply bg-primary-100 border border-primary-300 rounded-lg shadow-sm p-6;
+  }
+  .card-interactive {
+    @apply hover:shadow-lg transition-shadow duration-300;
+  }
+  .form-card { /* For forms like login/register */
+     @apply bg-white p-6 sm:p-8 border border-primary-300 rounded-lg shadow-sm w-full;
+  }
+
+  /* Icon Backgrounds */
+  .icon-background {
+    @apply flex items-center justify-center rounded-md mb-4; /* Added mb-4 for spacing */
+  }
+  .icon-background-primary {
+    @apply bg-primary-300 text-primary-700;
+  }
+  .icon-background-lg {
+    @apply w-12 h-12;
+  }
+  .icon-background-md {
+    @apply w-10 h-10;
+  }
+
+  /* Button Variants (Extending existing .btn) */
+  .btn-secondary-inverted {
+    @apply bg-white text-primary-800 border border-primary-400 hover:bg-primary-100 focus:ring-primary-600;
+  }
+  .btn-primary-outline {
+    @apply bg-transparent text-primary-700 border border-primary-700 hover:bg-primary-100 focus:ring-primary-600;
+  }
+  .btn-primary-ghost {
+    @apply bg-transparent text-primary-700 hover:bg-primary-200 focus:ring-primary-600;
+  }
+
+  /* Input Adornments */
+  .input-adornment-button {
+    @apply absolute inset-y-0 right-0 px-3 flex items-center text-primary-500 hover:text-primary-700 focus:outline-none;
+  }
+
+  /* Text with Divider Line - basic label part */
+  .divider-text-label {
+     @apply px-2 bg-white text-primary-600; /* Assumes parent card/page is white */
   }
 }

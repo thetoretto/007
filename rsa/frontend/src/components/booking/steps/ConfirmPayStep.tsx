@@ -1,3 +1,4 @@
+import '../../../index.css';
 // d:\007\rsa\frontend\src\components\booking\steps\ConfirmPayStep.tsx
 import React, { useState } from 'react';
 import { Route, Vehicle, Seat, BookingPickupPoint, BookingState } from '../types'; // Changed PickupPoint to BookingPickupPoint
@@ -77,7 +78,7 @@ const ConfirmPayStep: React.FC<ConfirmPayStepProps> = ({
       {/* Pickup Option */}
       <div className="bg-white p-4 rounded-lg border border-gray-200 space-y-3">
         <label className="flex items-center space-x-3 cursor-pointer font-medium text-gray-700">
-          <input type="checkbox" checked={needsPickup} onChange={handlePickupToggle} className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500" />
+          <input type="checkbox" checked={needsPickup} onChange={handlePickupToggle} className="form-checkbox" />
           <Truck size={18} className="text-orange-500" />
           <span>I need pickup at a designated point (<span className="font-semibold">$5.00</span> extra)</span>
         </label>
@@ -94,7 +95,7 @@ const ConfirmPayStep: React.FC<ConfirmPayStepProps> = ({
                     value={point.id}
                     checked={selectedPickupPoint?.id === point.id}
                     onChange={() => onSelectPickupPoint(point.id)}
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                    className="form-radio"
                   />
                   <Map size={18} className="mr-2 text-gray-500 flex-shrink-0" />
                   <div className="text-sm">
@@ -152,7 +153,7 @@ const ConfirmPayStep: React.FC<ConfirmPayStepProps> = ({
          <button
            onClick={handlePay}
            disabled={loading || (needsPickup && !selectedPickupPoint)}
-           className={`px-6 py-2.5 bg-green-600 text-white rounded-md font-semibold hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center min-w-[150px] ${loading ? 'animate-pulse' : ''}`}
+           className={`btn bg-green-600 hover:bg-green-700 text-white focus:ring-green-500 px-6 py-2.5 min-w-[150px] ${loading ? 'animate-pulse' : ''}`}
          >
            {loading ? (
              <>

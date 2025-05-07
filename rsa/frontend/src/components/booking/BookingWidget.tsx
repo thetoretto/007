@@ -1,3 +1,4 @@
+import '../../index.css';
 import React, { useReducer, useCallback, useEffect, useMemo } from 'react';
 import { Route, Vehicle, Seat, /* PickupPoint, */ BookingState, BookingAction, BookingDetails } from './types'; // Keep local types for widget's internal structure
 import { useBookingStore } from '@/store/bookingStore'; // Import bookingStore

@@ -4,6 +4,7 @@ import Footer from '../components/common/Footer';
 import { ShieldCheck, DollarSign, Users, Leaf, Clock, UserCheck, ChevronDown, ChevronUp } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { fadeInUp, staggerContainer } from '../utils/animations';
+import '../index.css';
 
 // Define benefit data
 interface Benefit {

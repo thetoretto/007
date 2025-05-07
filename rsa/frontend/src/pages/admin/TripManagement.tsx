@@ -6,6 +6,7 @@ import { mockTimeSlots, mockVehicles, mockRoutes, getBookingsWithDetails } from 
 
 // Import the DashboardNavbar component
 const DashboardNavbar = React.lazy(() => import('../../components/dashboard/DashboardNavbar'));
+import '../../index.css';
 
 const TripManagement: React.FC = () => {
   const { user } = useAuthStore();
