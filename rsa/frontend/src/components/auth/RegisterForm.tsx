@@ -308,7 +308,7 @@ const RegisterForm: React.FC = () => {
                 disabled={loading || !(isValid && dirty)}
                 className={`btn btn-primary w-full ${ (loading || !(isValid && dirty)) ? 'opacity-50 cursor-not-allowed !bg-primary-600' : '' }`}
               >
-                {loading ? <LoadingSpinner size="small" color="white" /> : <><UserPlus className="h-4 w-4 mr-2" /> Create account</>}
+                {loading ? <LoadingSpinner size="small" color="black" /> : <><UserPlus className="h-4 w-4 mr-2" /> Create account</>}
               </button>
             </div>
           </Form>
@@ -327,7 +327,7 @@ const RegisterForm: React.FC = () => {
         </div>
 
         <div className="mt-6 text-center text-sm">
-          <Link to="/login" className="font-medium text-primary-600 hover:text-primary-700 hover:underline">
+          <Link to="/login" className="font-medium text-base hover:text-accent hover:underline">
             Sign in
           </Link>
         </div>

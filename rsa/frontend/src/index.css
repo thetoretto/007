@@ -13,11 +13,14 @@
   }
 
   body {
-    @apply bg-white text-black antialiased;
+    @apply bg-white text-[#333333] antialiased;
+  }
+  section{
+    
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-medium leading-tight;
+    @apply font-medium leading-tight text-[#000000];
   }
 
   h1 {
@@ -35,19 +38,15 @@
   h4 {
     @apply text-lg sm:text-xl;
   }
-}
 
-@layer base {
-  /* Add more specific base styles for common HTML elements */
   p {
-    @apply mb-4 leading-relaxed;
+    @apply mb-4 leading-relaxed text-[#333333];
   }
 
   a {
-    @apply text-primary-700 hover:text-primary-900 transition-colors duration-150;
+    @apply text-primary-800 hover:text-primary-900 transition-colors duration-150;
   }
 
-  /* Ensure consistent focus styles for accessibility */
   *:focus-visible {
     @apply outline-none ring-2 ring-primary-600 ring-offset-2;
   }
@@ -60,76 +59,68 @@
   }
 
   .btn-primary {
-    @apply bg-primary-800 text-white hover:bg-primary-900 focus:ring-primary-600;
+    @apply bg-[#AEFFDE] text-[#333333] hover:bg-[#AEFFDE] focus:ring-[#333333];
   }
 
   .btn-secondary {
-    @apply bg-primary-200 text-primary-800 border border-primary-400 hover:bg-primary-300 focus:ring-primary-600;
+    @apply bg-[#E4F1FF] text-[#333333] border border-[#bcdcff] hover:bg-[#cce5ff] focus:ring-[#E4F1FF];
   }
 
   .btn-accent {
-    @apply bg-primary-700 text-white hover:bg-primary-800 focus:ring-primary-500; /* Using primary as accent is now grayscale */
+    @apply bg-[#E4F1FF] text-[#000000] hover:bg-[#d4ecff] focus:ring-[#AEFFDE];
   }
 
   .btn-success {
-    @apply bg-gray-700 text-white hover:bg-gray-800 focus:ring-gray-500; /* Grayscale success */
+    @apply bg-[#AEFFDE] text-[#000000] hover:bg-[#92f2cb] focus:ring-[#AEFFDE];
   }
 
   .btn-danger {
-    @apply bg-gray-700 text-white hover:bg-gray-800 focus:ring-gray-500; /* Grayscale error */
+    @apply bg-[#f87171] text-white hover:bg-[#ef4444] focus:ring-[#ef4444];
   }
 
   .btn-disabled {
     @apply bg-gray-300 text-gray-500 cursor-not-allowed;
   }
 
-  .input {
-    @apply block w-full rounded-md border-primary-400 shadow-sm focus:border-primary-600 focus:ring-primary-600 sm:text-sm;
-  }
-
-  .card {
-    @apply bg-white shadow rounded-lg overflow-hidden;
-  }
-
-  .form-group {
-    @apply mb-4;
-  }
-
-  .form-label {
-    @apply block text-sm font-medium text-gray-700 mb-1;
-  }
-
   .input, .form-input, input[type='text'], input[type='email'], input[type='password'], input[type='number'], input[type='search'], input[type='tel'], input[type='url'], textarea, select {
-    @apply block w-full rounded-md border-primary-400 shadow-sm focus:border-primary-600 focus:ring-1 focus:ring-primary-600 sm:text-sm py-2 px-3;
-    @apply placeholder-primary-500;
+    @apply block w-full rounded-md border-[#AEFFDE] shadow-sm focus:border-[#92f2cb] focus:ring-1 focus:ring-[#92f2cb] sm:text-sm py-2 px-3 placeholder-[#b8e7d7];
   }
 
   select {
-    @apply pr-10; /* Add space for the arrow */
+    @apply pr-10;
   }
 
   textarea {
     @apply min-h-[80px];
   }
 
-  /* Custom checkbox and radio styles for better consistency */
-  .form-checkbox,
-  input[type='checkbox'] {
-    @apply rounded text-primary-700 border-primary-400 focus:ring-primary-600 h-4 w-4;
+  .form-checkbox, input[type='checkbox'],
+  .form-radio, input[type='radio'] {
+    @apply rounded border-[#AEFFDE] text-[#333333] focus:ring-[#AEFFDE] h-4 w-4;
   }
 
-  .form-radio,
-  input[type='radio'] {
-    @apply rounded-full text-primary-700 border-primary-400 focus:ring-primary-600 h-4 w-4;
-  }
-
-  .form-input {
-    /* This class is already covered by the general input styling above, but kept for compatibility if used specifically */
-    @apply block w-full rounded-md border-primary-400 shadow-sm focus:border-primary-600 focus:ring-1 focus:ring-primary-600 sm:text-sm py-2 px-3;
+  .form-label {
+    @apply block text-sm font-medium text-[#333333] mb-1;
   }
 
   .form-error {
-    @apply mt-1 text-sm text-primary-700; /* Grayscale error text */
+    @apply mt-1 text-sm text-[#f87171];
+  }
+
+  .card {
+    @apply bg-white shadow rounded-lg overflow-hidden;
+  }
+
+  .card-alt {
+    @apply bg-[#E4F1FF] border border-[#bcdcff] rounded-lg shadow-sm p-6;
+  }
+
+  .card-interactive {
+    @apply hover:shadow-lg transition-shadow duration-300;
+  }
+
+  .form-card {
+    @apply bg-white p-6 sm:p-8 border border-[#AEFFDE] rounded-lg shadow-sm w-full;
   }
 
   .badge {
@@ -137,31 +128,29 @@
   }
 
   .badge-primary {
-    @apply bg-primary-300 text-primary-900;
+    @apply bg-[#AEFFDE] text-[#333333];
   }
 
   .badge-success {
-    @apply bg-gray-300 text-gray-800; /* Grayscale success */
+    @apply bg-[#AEFFDE] text-[#333333];
   }
 
   .badge-warning {
-    @apply bg-gray-300 text-gray-800; /* Grayscale warning */
+    @apply bg-yellow-200 text-yellow-800;
   }
 
   .badge-error {
-    @apply bg-gray-400 text-white; /* Grayscale error */
+    @apply bg-[#f87171] text-white;
   }
 
   .badge-gray {
-    @apply bg-primary-300 text-primary-800;
+    @apply bg-gray-200 text-gray-800;
   }
 
-  /* General container for consistent padding and max-width */
   .container-app {
     @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
   }
 
-  /* Utility for icon sizing */
   .icon-sm {
     @apply h-4 w-4;
   }
@@ -181,41 +170,22 @@
     @apply h-12 w-12;
   }
 
-  /* Alert Boxes */
   .alert {
-    @apply p-4 rounded-md text-sm mb-4; /* Added mb-4 for spacing */
-  }
-  .alert-danger {
-    @apply bg-primary-200 text-primary-800 border border-primary-400; /* Grayscale danger */
-  }
-  .alert-success {
-    @apply bg-primary-200 text-primary-800 border border-primary-400; /* Grayscale success */
-  }
-  .alert-warning {
-    @apply bg-primary-200 text-primary-800 border border-primary-400; /* Grayscale warning */
-  }
-  .alert-info {
-    @apply bg-primary-200 text-primary-800 border border-primary-400;
+    @apply p-4 rounded-md text-sm mb-4;
   }
 
-  /* Card Variants */
-  .card-alt {
-    @apply bg-primary-100 border border-primary-300 rounded-lg shadow-sm p-6;
-  }
-  .card-interactive {
-    @apply hover:shadow-lg transition-shadow duration-300;
-  }
-  .form-card { /* For forms like login/register */
-     @apply bg-white p-6 sm:p-8 border border-primary-300 rounded-lg shadow-sm w-full;
+  .alert-danger, .alert-success, .alert-warning, .alert-info {
+    @apply bg-[#E4F1FF] text-[#333333] border border-[#bcdcff];
   }
 
-  /* Icon Backgrounds */
   .icon-background {
-    @apply flex items-center justify-center rounded-md mb-4; /* Added mb-4 for spacing */
+    @apply flex items-center justify-center rounded-md mb-4;
   }
+
   .icon-background-primary {
-    @apply bg-primary-300 text-primary-700;
+    @apply bg-[#AEFFDE] text-[#333333];
   }
+
   .icon-background-lg {
     @apply w-12 h-12;
   }
@@ -223,24 +193,23 @@
     @apply w-10 h-10;
   }
 
-  /* Button Variants (Extending existing .btn) */
   .btn-secondary-inverted {
-    @apply bg-white text-primary-800 border border-primary-400 hover:bg-primary-100 focus:ring-primary-600;
+    @apply bg-white text-[#333333] border border-[#AEFFDE] hover:bg-[#E4F1FF] focus:ring-[#AEFFDE];
   }
+
   .btn-primary-outline {
-    @apply bg-transparent text-primary-700 border border-primary-700 hover:bg-primary-100 focus:ring-primary-600;
+    @apply bg-transparent text-[#333333] border border-[#AEFFDE] hover:bg-[#E4F1FF] focus:ring-[#AEFFDE];
   }
+
   .btn-primary-ghost {
-    @apply bg-transparent text-primary-700 hover:bg-primary-200 focus:ring-primary-600;
+    @apply bg-transparent text-[#333333] hover:bg-[#E4F1FF] focus:ring-[#AEFFDE];
   }
 
-  /* Input Adornments */
   .input-adornment-button {
-    @apply absolute inset-y-0 right-0 px-3 flex items-center text-primary-500 hover:text-primary-700 focus:outline-none;
+    @apply absolute inset-y-0 right-0 px-3 flex items-center text-[#92f2cb] hover:text-[#65e6b4] focus:outline-none;
   }
 
-  /* Text with Divider Line - basic label part */
   .divider-text-label {
-     @apply px-2 bg-white text-primary-600; /* Assumes parent card/page is white */
+    @apply px-2 bg-white text-[#333333];
   }
 }

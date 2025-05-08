@@ -2,11 +2,26 @@ import { User, Passenger, Driver, Admin, Route, Vehicle, Seat, TimeSlot, Booking
 
 // Static Content (can be moved elsewhere if needed)
 export const promoMessages = [
-  "Book in seconds, ride in minutes!",
-  "Skip the calls, book online effortlessly.",
-  "Secure your seat with just a few clicks.",
-  "Real-time availability, instant confirmation.",
-  "Manage your bookings easily, anytime, anywhere."
+"Ufata moto? Oya, mfite app! Iyo mpise, imodoka nayo irampitaho!",
+  "Kera wasabaga lift, noneho usaba ‘link’!",
+  "Abasaza baracyahamagara chauffeurs, twe turabavugisha code!",
+  "Kwicara imbere ntibigicibwa mu maso, ahubwo bicibwa mu clicks!",
+  "Na booking ibonetse imbere y’umugati!",
+  "Imodoka yawe iruhuka? Twifashishe itangire kugutunga!",
+  "Nta kazi? Nta kibazo! RideBooker yagushyiriye abagenzi kuri dashboard.",
+  "Ushaka amafranga ya weekend? Shyira imodoka ku kazi, RideBooker ihageze.",
+  "Ucyeneye boss? Oya. Imodoka yawe niyo business.",
+  "Amafaranga yihishe mu byicaro by’imodoka yawe — fata RideBooker uyashyire ahagaragara!",
+  "Kera warindaga ko umukire atanga ‘lifti’, none RideBooker iratanga 'yes' ako kanya!",
+  "Ukoresheje RideBooker ntuba uri ku rugendo, uba uri ku experience!",
+  "Kuva i Kigali ujya mu mugi? Ntuzasigare inyuma — buka kuri RideBooker!",
+  "Buka i Kigali, ugere i Rubavu utuje nk’uwari yateze kajugujugu.",
+  "Gusubira i Huye? RideBooker niyo nzira ituje, yizewe kandi yihuse.",
+  "Ukeneye imodoka igukura i Kigali ijya i Musanze? RideBooker irahari.",
+  "I Kigali ni hatoya — hitamo urugendo rusohoka cyangwa rugaruka utuje!",
+  "Gusiba bus ni ukwiburira! Click gusa, ubuzima burakomeza.",
+  "Kera twatindaga kuri terminus, ubu ni terminus itindira kuri app!",
+  "Muzika ni optional, ariko kugenda neza ni default ya RideBooker!"
 ];
 
 // Mock Users

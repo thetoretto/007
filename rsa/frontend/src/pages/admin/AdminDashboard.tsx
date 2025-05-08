@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom';
 import useAuthStore from '../../store/authStore';
 import useTripStore, { Trip } from '../../store/tripStore'; // Import trip store and Trip type
 import { mockUsers, mockRoutes as allMockRoutes, mockVehicles } from '../../utils/mockData'; // Using more specific mock data
-import {  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar, PieChart, Pie, Cell } from 'recharts'; // Added PieChart, Pie, Cell
-import { Users, Calendar, TrendingUp, CreditCard, Settings, User, Map, Activity, Plus, Edit, Trash2, Clock, Filter, Star, MapPin, Navigation } from 'lucide-react'; // Added Filter, Star, MapPin, Navigation
+import {  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
+import { Users, Calendar, TrendingUp, Settings, User, Map, Activity, Plus, Edit, Trash2, Clock, Filter, Star, MapMarker } from 'lucide-react'; // Added MapMarker for Hotpoints, removed CreditCard, MapPin, Navigation
 import TripForm from '../../components/trips/TripForm'; // Import TripForm
 import '../../index.css';
 
@@ -83,35 +83,16 @@ const generateAdminMockData = (period: 'daily' | 'weekly' | 'monthly' | 'yearly'
     .sort((a, b) => b.count - a.count)
     .slice(0, 5);
 
-  // Mock driver origins and destinations (simplified)
-  const driverOrigins = { 'City A': 0, 'City B': 0, 'Suburb X': 0, 'Town Y': 0 };
-  const popularDestinations = { 'Airport': 0, 'Downtown': 0, 'Mall': 0, 'Business Park': 0 };
-
-  tripsForPeriod.forEach(trip => {
-    const origins = Object.keys(driverOrigins);
-    const destinations = Object.keys(popularDestinations);
-    driverOrigins[origins[Math.floor(Math.random() * origins.length)]]++;
-    popularDestinations[destinations[Math.floor(Math.random() * destinations.length)]]++;
-  });
-
   return {
     totalTrips: tripsForPeriod.length,
     totalPassengers,
     bestPerformingDrivers,
     activeRoutes,
-    driverOriginData: Object.entries(driverOrigins).map(([name, value]) => ({ name, value })),
-    destinationData: Object.entries(popularDestinations).map(([name, value]) => ({ name, value })),
-    // Placeholder for payment simulation
-    simulatedPayments: {
-      totalTransactions: Math.floor(Math.random() * 100) + 50,
-      totalValue: (Math.random() * 5000 + 1000).toFixed(2),
-      successful: Math.floor(Math.random() * 40) + 45,
-      failed: Math.floor(Math.random() * 10) + 5,
-    }
+    // Removed driverOriginData, destinationData, simulatedPayments
   };
 };
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
+// const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8']; // Removed as Pie charts are moved
 
 const AdminDashboard: React.FC = () => {
   const { user } = useAuthStore();
@@ -283,57 +264,7 @@ const AdminDashboard: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        {/* Driver Origins Pie Chart */}
-        <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Driver Origins (Mock)</h2>
-          <div className="h-72 md:h-80">
-            {adminData.driverOriginData.some(d => d.value > 0) ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={adminData.driverOriginData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={100}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-                  >
-                    {adminData.driverOriginData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            ) : (
-              <p className="text-center text-gray-500 pt-10">No origin data to display for this period.</p>
-            )}
-          </div>
-        </div>
 
-        {/* Popular Destinations Bar Chart */}
-        <div className="bg-white p-6 rounded-lg shadow-sm">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Popular Destinations (Mock)</h2>
-          <div className="h-72 md:h-80">
-            {adminData.destinationData.some(d => d.value > 0) ? (
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={adminData.destinationData} layout="vertical" margin={{ top: 5, right: 20, left: 50, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false}/>
-                <XAxis type="number" />
-                <YAxis dataKey="name" type="category" width={100} tick={{fontSize: 12}}/>
-                <Tooltip />
-                <Bar dataKey="value" fill="#82ca9d" barSize={20}/>
-              </BarChart>
-            </ResponsiveContainer>
-            ) : (
-              <p className="text-center text-gray-500 pt-10">No destination data to display for this period.</p>
-            )}
-          </div>
-        </div>
-      </div>
 
       {/* Recent Trips List - (Existing, can be kept or modified) */}
       <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
@@ -391,19 +322,19 @@ const AdminDashboard: React.FC = () => {
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Simulated Payment Overview ({timePeriod})</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div>
-                <p className="text-2xl font-bold text-blue-600">{adminData.simulatedPayments.totalTransactions}</p>
+                <p className="text-2xl font-bold text-blue-600">{adminData?.simulatedPayments?.totalTransactions}</p>
                 <p className="text-sm text-gray-500">Total Transactions</p>
             </div>
             <div>
-                <p className="text-2xl font-bold text-green-600">${adminData.simulatedPayments.totalValue}</p>
+                <p className="text-2xl font-bold text-green-600">${adminData?.simulatedPayments?.totalValue}</p>
                 <p className="text-sm text-gray-500">Total Value</p>
             </div>
             <div>
-                <p className="text-2xl font-bold text-green-500">{adminData.simulatedPayments.successful}</p>
+                <p className="text-2xl font-bold text-green-500">{adminData?.simulatedPayments?.successful}</p>
                 <p className="text-sm text-gray-500">Successful</p>
             </div>
             <div>
-                <p className="text-2xl font-bold text-red-500">{adminData.simulatedPayments.failed}</p>
+                <p className="text-2xl font-bold text-red-500">{adminData?.simulatedPayments?.failed}</p>
                 <p className="text-sm text-gray-500">Failed</p>
             </div>
         </div>

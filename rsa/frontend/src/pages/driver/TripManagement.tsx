@@ -106,7 +106,7 @@ const TripManagement: React.FC = () => {
               {detailedTrips.map((trip) => (
                 <div
                   key={trip.id}
-                  className={`hover:bg-gray-50 cursor-pointer p-4 sm:px-6 lg:px-8 transition-colors ${selectedTrip === trip.id ? 'bg-primary-50' : ''}`}
+                  className={`hover:bg-gray-50 cursor-pointer p-4 sm:px-6 lg:px-8 transition-colors ${selectedTrip === trip.id ? 'bg-primary-100' : ''}`}
                   onClick={() => setSelectedTrip(trip.id === selectedTrip ? null : trip.id)}
                 >
                   <div className="flex items-center justify-between">
@@ -132,7 +132,7 @@ const TripManagement: React.FC = () => {
                         </span>
                       </div>
                       {trip.pendingBookings > 0 && (
-                        <div className="mt-1 flex items-center text-xs text-warning-600">
+                        <div className="mt-1 flex items-center text-xs text-warning-DEFAULT">
                           <AlertCircle className="h-3 w-3 mr-1" />
                           <span>{trip.pendingBookings} pending bookings</span>
                         </div>

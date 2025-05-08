@@ -312,7 +312,7 @@ const BookingWidget: React.FC<BookingWidgetProps> = ({ onComplete, onCancel }) =
           <div className="flex mb-1">
             {steps.map((label, index) => (
               <div key={label} className="text-xs text-center w-1/5">
-                <span className={`${state.currentStep === index + 1 ? 'font-bold text-primary-600' : state.currentStep > index + 1 ? 'text-green-600' : 'text-gray-500'}`}>
+                <span className={`${state.currentStep === index + 1 ? 'font-bold text-base' : state.currentStep > index + 1 ? 'text-green-600' : 'text-gray-500'}`}>
                   {label}
                 </span>
               </div>

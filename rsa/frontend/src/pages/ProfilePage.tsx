@@ -115,7 +115,7 @@ const ProfilePage: React.FC = () => {
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-8 text-center">Your Profile</h1>
 
         {successMessage && (
-          <div className="mb-6 p-4 bg-green-100 text-green-700 border border-green-300 rounded-md flex items-center">
+          <div className="mb-6 p-4 bg-green-100 text-success-DEFAULT border border-green-300 rounded-md flex items-center">
             <CheckCircle className="h-5 w-5 mr-2" /> {successMessage}
           </div>
         )}
@@ -159,22 +159,22 @@ const ProfilePage: React.FC = () => {
                   <div>
                     <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">First Name</label>
                     <Field name="firstName" type="text" className="form-input" />
-                    <ErrorMessage name="firstName" component="div" className="text-red-500 text-xs mt-1" />
+                    <ErrorMessage name="firstName" component="div" className="text-error-DEFAULT text-xs mt-1" />
                   </div>
                   <div>
                     <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">Last Name</label>
                     <Field name="lastName" type="text" className="form-input" />
-                    <ErrorMessage name="lastName" component="div" className="text-red-500 text-xs mt-1" />
+                    <ErrorMessage name="lastName" component="div" className="text-error-DEFAULT text-xs mt-1" />
                   </div>
                   <div>
                     <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
                     <Field name="email" type="email" className="form-input" />
-                    <ErrorMessage name="email" component="div" className="text-red-500 text-xs mt-1" />
+                    <ErrorMessage name="email" component="div" className="text-error-DEFAULT text-xs mt-1" />
                   </div>
                   <div>
                     <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">Phone Number (Optional)</label>
                     <Field name="phoneNumber" type="tel" className="form-input" placeholder="+1234567890" />
-                    <ErrorMessage name="phoneNumber" component="div" className="text-red-500 text-xs mt-1" />
+                    <ErrorMessage name="phoneNumber" component="div" className="text-error-DEFAULT text-xs mt-1" />
                   </div>
                   <div className="flex gap-4 pt-2">
                     <button
@@ -201,7 +201,7 @@ const ProfilePage: React.FC = () => {
               <p><Mail className="inline h-5 w-5 mr-2 text-gray-500" />Email: {user.email}</p>
               <p><Phone className="inline h-5 w-5 mr-2 text-gray-500" />Phone: {user.phoneNumber || 'Not set'}</p>
               <p>Role: <span className="capitalize">{user.role}</span></p>
-              <p>Status: <span className={`capitalize px-2 py-0.5 rounded-full text-xs font-medium ${user.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'}`}>{user.status}</span></p>
+              <p>Status: <span className={`capitalize px-2 py-0.5 rounded-full text-xs font-medium ${user.status === 'active' ? 'bg-green-100 text-success-DEFAULT' : 'bg-yellow-100 text-warning-DEFAULT'}`}>{user.status}</span></p>
             </div>
           )}
 
@@ -226,17 +226,17 @@ const ProfilePage: React.FC = () => {
                       <div>
                         <label htmlFor="currentPassword" className="block text-sm font-medium text-gray-700">Current Password</label>
                         <Field name="currentPassword" type="password" className="form-input" />
-                        <ErrorMessage name="currentPassword" component="div" className="text-red-500 text-xs mt-1" />
+                        <ErrorMessage name="currentPassword" component="div" className="text-error-DEFAULT text-xs mt-1" />
                       </div>
                       <div>
                         <label htmlFor="newPassword" className="block text-sm font-medium text-gray-700">New Password</label>
                         <Field name="newPassword" type="password" className="form-input" />
-                        <ErrorMessage name="newPassword" component="div" className="text-red-500 text-xs mt-1" />
+                        <ErrorMessage name="newPassword" component="div" className="text-error-DEFAULT text-xs mt-1" />
                       </div>
                       <div>
                         <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm New Password</label>
                         <Field name="confirmPassword" type="password" className="form-input" />
-                        <ErrorMessage name="confirmPassword" component="div" className="text-red-500 text-xs mt-1" />
+                        <ErrorMessage name="confirmPassword" component="div" className="text-error-DEFAULT text-xs mt-1" />
                       </div>
                       <div className="flex gap-4 pt-2">
                         <button

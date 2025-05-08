@@ -22,21 +22,21 @@ const ContactPage: React.FC = () => {
           {/* Updated: Card styling, grid layout, rounded-xl */}
           <div className="bg-white rounded-xl shadow-lg overflow-hidden lg:grid lg:grid-cols-2 lg:gap-px"> {/* Added rounded-xl */}
             {/* Contact Information - Refined Styling */}
-            <div className="relative p-8 lg:p-10 bg-gradient-to-br from-indigo-600 to-purple-600 text-white"> {/* Pocket-like gradient */}
+            <div className="relative p-8 lg:p-10 bg-primary-900 text-white"> {/* Pocket-like gradient */}
               <h2 className="text-2xl font-semibold mb-6">Contact Information</h2>
-              <p className="mb-6 text-indigo-100">Reach out directly or use the form. We're here to help!</p> {/* Adjusted text color */}
+              <p className="mb-6 text-primary-100">Reach out directly or use the form. We're here to help!</p> {/* Adjusted text color */}
               <div className="space-y-5">
                 <div className="flex items-center">
-                  <Phone className="h-5 w-5 mr-3 text-indigo-200 flex-shrink-0" /> {/* Adjusted icon color */}
-                  <span className="text-indigo-50">+1 (555) 123-4567</span> {/* Adjusted text color */}
+                  <Phone className="h-5 w-5 mr-3 text-primary-100 flex-shrink-0" /> {/* Adjusted icon color */}
+                  <span className="text-white">+1 (555) 123-4567</span> {/* Adjusted text color */}
                 </div>
                 <div className="flex items-center">
-                  <Mail className="h-5 w-5 mr-3 text-indigo-200 flex-shrink-0" /> {/* Adjusted icon color */}
-                  <span className="text-indigo-50">support@ridebooker.com</span> {/* Adjusted text color */}
+                  <Mail className="h-5 w-5 mr-3 text-primary-100 flex-shrink-0" /> {/* Adjusted icon color */}
+                  <span className="text-white">support@ridebooker.com</span> {/* Adjusted text color */}
                 </div>
                 <div className="flex items-start">
-                  <MapPin className="h-5 w-5 mr-3 text-indigo-200 mt-1 flex-shrink-0" /> {/* Adjusted icon color */}
-                  <span className="text-indigo-50">123 Transport Ave, Metropolis, MP 10001</span> {/* Adjusted text color */}
+                  <MapPin className="h-5 w-5 mr-3 text-primary-100 mt-1 flex-shrink-0" /> {/* Adjusted icon color */}
+                  <span className="text-white">123 Transport Ave, Metropolis, MP 10001</span> {/* Adjusted text color */}
                 </div>
               </div>
             </div>

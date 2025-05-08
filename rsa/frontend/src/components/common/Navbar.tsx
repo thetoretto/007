@@ -18,15 +18,15 @@ const Navbar: React.FC = () => {
     // Updated: Added border-b, adjusted padding, background to white
     <nav className="bg-white border-b border-gray-200">
       {/* Updated: Increased max-width, adjusted padding */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container-app">
         {/* Updated: Adjusted height */}
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
               {/* Updated: Adjusted logo size and text */}
-              <Link to="/" className="flex items-center gap-2 text-gray-900 hover:text-primary-600 transition-colors">
-                <Bus className="h-7 w-7 text-primary-600" />
-                <span className="ml-2 text-xl font-semibold">RideBooker</span>
+              <Link to="/" className="flex items-center gap-2 text-gray-900 transition-colors">
+                <Bus className="icon-xl text-primary-600" />
+                <span className="text-xl font-semibold">RideBooker</span>
               </Link>
             </div>
             {/* Updated: Adjusted spacing and link styling */}

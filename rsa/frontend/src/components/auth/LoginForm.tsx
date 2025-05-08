@@ -70,7 +70,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
     // Updated: Removed max-width, added padding/border/shadow for consistency with page layout
     <div className="form-card">
       {/* Updated: Heading style */}
-      <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-6">Log in to your account</h2>
+      <h2 className="text-xl sm:text-2xl font-semibold text-base mb-6">Log in to your account</h2>
       
       {error && (
         // Updated: Error message styling
@@ -179,7 +179,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
                 disabled={loading || !(isValid && dirty)}
                 className="btn btn-primary w-full"
               >
-                {loading ? <LoadingSpinner size="small" color="white" /> : <><LogIn className="h-4 w-4 mr-2" /> Sign in</>}
+                {loading ? <LoadingSpinner size="small" color="dark" /> : <><LogIn className="h-4 w-4 mr-2" /> Sign in</>}
               </button>
             </div>
           </Form>
@@ -198,7 +198,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
         </div>
 
         <div className="mt-6 text-center text-sm">
-          <p className="text-gray-600">
+          <p className="text-base">
             Don't have an account?{' '}
             <Link to="/register" className="font-medium hover:underline">
               Sign up

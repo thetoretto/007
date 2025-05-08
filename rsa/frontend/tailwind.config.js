@@ -8,68 +8,41 @@ export default {
       },
       colors: {
         primary: {
-          50: '#f7fafc', // very light gray
-          100: '#edf2f7', // light gray
-          200: '#e2e8f0', // light gray
-          300: '#cbd5e0', // gray
-          400: '#a0aec0', // gray
-          500: '#718096', // medium gray
-          600: '#4a5568', // dark gray
-          700: '#2d3748', // very dark gray
-          800: '#1a202c', // almost black
-          900: '#171923', // near black
+          DEFAULT: '#AEFFDE', // Mint green
+          100: '#E4F1FF',      // Light sky blue
+          200: '#AEFFDE',      // Mint green
+          900: '#333333',      // Deep dark gray
         },
         accent: {
-          50: '#f7fafc',
-          100: '#edf2f7',
-          200: '#e2e8f0',
-          300: '#cbd5e0',
-          400: '#a0aec0',
-          500: '#718096',
-          600: '#4a5568',
-          700: '#2d3748',
-          800: '#1a202c',
-          900: '#171923',
+          light: '#E4F1FF',
+          mint: '#AEFFDE',
+          dark: '#333333',
+          black: '#000000',
+        },
+        section: {
+          light: '#E4F1FF',
+          mint: '#AEFFDE',
+          dark: '#333333',
+        },
+        background: {
+          light: '#ffffff',
+          dark: '#333333',
+          lelo:'#AEFFDE',
+        },
+        text: {
+          base: '#333333',
+          inverse: '#ffffff',
+          accent: '#AEFFDE',
         },
         success: {
-          50: '#f7fafc', // very light gray
-          100: '#edf2f7', // light gray
-          200: '#e2e8f0', // light gray
-          300: '#cbd5e0', // gray
-          400: '#a0aec0', // gray
-          500: '#718096', // medium gray
-          600: '#4a5568', // dark gray
-          700: '#2d3748', // very dark gray
-          800: '#1a202c', // almost black
-          900: '#171923', // near black
+          DEFAULT: '#AEFFDE',
         },
         warning: {
-          50: '#f7fafc', // very light gray
-          100: '#edf2f7', // light gray
-          200: '#e2e8f0', // light gray
-          300: '#cbd5e0', // gray
-          400: '#a0aec0', // gray
-          500: '#718096', // medium gray
-          600: '#4a5568', // dark gray
-          700: '#2d3748', // very dark gray
-          800: '#1a202c', // almost black
-          900: '#171923', // near black
+          DEFAULT: '#FFD166', // Optional: custom yellow for alerts
         },
         error: {
-          50: '#f7fafc', // very light gray
-          100: '#edf2f7', // light gray
-          200: '#e2e8f0', // light gray
-          300: '#cbd5e0', // gray
-          400: '#a0aec0', // gray
-          500: '#718096', // medium gray
-          600: '#4a5568', // dark gray
-          700: '#2d3748', // very dark gray
-          800: '#1a202c', // almost black
-          900: '#171923', // near black
+          DEFAULT: '#FF6B6B', // Optional: red for errors
         },
-        // Add black and white explicitly if needed, though Tailwind includes them by default
-        black: '#000000',
-        white: '#ffffff',
       },
       keyframes: {
         fadeIn: {
@@ -85,11 +58,12 @@ export default {
           '100%': { transform: 'translateX(0)', opacity: '1' },
         },
         'bg-pulse-slow': {
-          '0%, 100%': { 'background-color': '#1d4ed8' },
-          '50%': { 'background-color': '#2563eb' },
+          '0%, 100%': { 'background-color': '#AEFFDE' },
+          '50%': { 'background-color': '#E4F1FF' },
         },
       },
     },
   },
+  darkMode: 'class', // Enables dark theme toggling with .dark class
   plugins: [],
 };

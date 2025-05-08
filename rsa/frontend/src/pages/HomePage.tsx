@@ -11,10 +11,10 @@ const HomePage: React.FC = () => {
       <Navbar />
 
       {/* Hero Section - Modernized Styling */}
-      <section className="bg-gradient-to-br from-primary-50 via-white to-secondary-50 text-gray-800 overflow-hidden">
+      <section className="bg-background-dark">
         <div className="container-app py-24 sm:py-32 md:py-40 flex flex-col items-center text-center">
           <h1 
-            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6 text-primary-700"
+            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6 text-accent-mint"
           >
             Your Journey, Simplified
           </h1>
@@ -114,16 +114,16 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* CTA Section - Modernized Styling */}
-      <section className="py-16 lg:py-24 bg-gradient-to-r from-primary-600 to-primary-700 text-white">
+      <section className="py-16 lg:py-24 bg-gradient-to-r from-primary-100 to-primary-DEFAULT text-base">
         <div className="container-app max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Ready for Your Next Adventure?</h2>
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-primary-100">
+          <p className="mt-4 max-w-2xl mx-auto text-lg text-base">
             Don't wait! Book your seat today and experience seamless travel with RideBooker.
           </p>
           <div className="mt-10">
             <Link 
               to="/book" 
-              className="btn btn-secondary text-base px-10 py-4 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out"
+              className="btn btn-primary text-base px-10 py-4 shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 ease-in-out"
             >
               Book Your Ride Now
             </Link>
