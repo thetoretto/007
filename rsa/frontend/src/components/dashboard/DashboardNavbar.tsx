@@ -20,21 +20,38 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ userRole }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const basePath = userRole === 'driver' ? '/driver' : '/admin';
 
-  const navItems: NavItem[] = [
-    { path: `${basePath}/dashboard`, label: 'Dashboard', icon: <Activity className="h-4 w-4 mr-2" /> },
-    { path: `${basePath}/trips`, label: 'Trip Management', icon: <Clock className="h-4 w-4 mr-2" /> },
-    { path: `${basePath}/statistics`, label: 'Statistics', icon: <Activity className="h-4 w-4 mr-2" /> },
-    {
-      path: `${basePath}/users`,
-      label: 'Users',
-      icon: <Users className="h-4 w-4 mr-2" />,
-      submenu: [
-        { path: `${basePath}/users`, label: 'User Management' },
-        { path: `${basePath}/users/registered`, label: 'Registered Users' }
-      ]
-    },
-    { path: `${basePath}/settings`, label: 'Settings', icon: <Settings className="h-4 w-4 mr-2" /> },
-  ];
+  const getNavItems = (): NavItem[] => {
+    const commonItems = [
+      { path: `${basePath}/dashboard`, label: 'Dashboard', icon: <Activity className="h-4 w-4 mr-2" /> },
+    ];
+
+    if (userRole === 'admin') {
+      return [
+        ...commonItems,
+        { path: `${basePath}/trips`, label: 'Trip Management', icon: <Clock className="h-4 w-4 mr-2" /> },
+        { path: `${basePath}/statistics`, label: 'Statistics', icon: <Activity className="h-4 w-4 mr-2" /> },
+        {
+          path: `${basePath}/users`,
+          label: 'Users',
+          icon: <Users className="h-4 w-4 mr-2" />,
+          submenu: [
+            { path: `${basePath}/users`, label: 'User Management' },
+            { path: `${basePath}/users/registered`, label: 'Registered Users' }
+          ]
+        },
+        { path: `${basePath}/settings`, label: 'Settings', icon: <Settings className="h-4 w-4 mr-2" /> },
+      ];
+    }
+
+    // Driver-specific navigation items
+    return [
+      ...commonItems,
+      { path: `${basePath}/trips`, label: 'Trip Management', icon: <Clock className="h-4 w-4 mr-2" /> },
+      { path: `${basePath}/settings`, label: 'Settings', icon: <Settings className="h-4 w-4 mr-2" /> },
+    ];
+  };
+
+  const navItems = getNavItems();
   
   const isActive = (path: string) => {
     return location.pathname === path;

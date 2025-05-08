@@ -11,6 +11,7 @@ export default {
           DEFAULT: '#AEFFDE', // Mint green
           100: '#E4F1FF',      // Light sky blue
           200: '#AEFFDE',      // Mint green
+          800: '#8CD9B9',      // Medium mint green
           900: '#333333',      // Deep dark gray
         },
         accent: {

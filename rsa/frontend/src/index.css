@@ -44,11 +44,11 @@
   }
 
   a {
-    @apply text-primary-800 hover:text-primary-900 transition-colors duration-150;
+    @apply text-[#8CD9B9] hover:text-[#333333] transition-colors duration-150;
   }
 
   *:focus-visible {
-    @apply outline-none ring-2 ring-primary-600 ring-offset-2;
+    @apply outline-none ring-2 ring-[#AEFFDE] ring-offset-2;
   }
 }
 

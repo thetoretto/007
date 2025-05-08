@@ -60,7 +60,7 @@ const generateFakeToken = (userId: string, role: UserRole): string => { // Use U
   return `${header}.${payload}.${signature}`;
 };
 
-const useAuthStore = create<AuthState & {
+export const useAuthStore = create<AuthState & {
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (data: RegisterData) => Promise<void>;
   logout: () => void;
