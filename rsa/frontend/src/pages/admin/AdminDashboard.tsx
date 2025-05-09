@@ -4,7 +4,7 @@ import useAuthStore from '../../store/authStore';
 import useTripStore, { Trip } from '../../store/tripStore'; // Import trip store and Trip type
 import { mockUsers, mockRoutes as allMockRoutes, mockVehicles } from '../../utils/mockData'; // Using more specific mock data
 import {  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { Users, Calendar, TrendingUp, Settings, User, Map, Activity, Plus, Edit, Trash2, Clock, Filter, Star, MapMarker } from 'lucide-react'; // Added MapMarker for Hotpoints, removed CreditCard, MapPin, Navigation
+import { Users, Calendar, TrendingUp, Settings, User, Map, Activity, Plus, Edit, Trash2, Clock, Filter, Star, MapPin } from 'lucide-react'; // Added MapPin for Hotpoints, removed CreditCard, MapMarker, Navigation
 import TripForm from '../../components/trips/TripForm'; // Import TripForm
 import '../../index.css';
 
@@ -175,6 +175,10 @@ const AdminDashboard: React.FC = () => {
             <Plus className="h-4 w-4 mr-2" />
             New Trip
           </button>
+          <Link to="/admin/hotpoints" className="btn btn-info">
+            <MapPin className="h-4 w-4 mr-2" />
+            Manage Hotpoints
+          </Link>
           {/* <Link to="/admin/reports" className="btn btn-secondary">
             <Activity className="h-4 w-4 mr-2" />
             Generate Reports

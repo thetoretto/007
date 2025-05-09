@@ -18,6 +18,8 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ userRole }) => {
   const location = useLocation();
   const { user } = useAuthStore();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [openDesktopSubmenu, setOpenDesktopSubmenu] = useState<string | null>(null);
+  const [openMobileSubmenu, setOpenMobileSubmenu] = useState<string | null>(null);
   const basePath = userRole === 'driver' ? '/driver' : '/admin';
 
   const getNavItems = (): NavItem[] => {
@@ -39,7 +41,18 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ userRole }) => {
             { path: `${basePath}/users/registered`, label: 'Registered Users' }
           ]
         },
-        { path: `${basePath}/settings`, label: 'Settings', icon: <Settings className="h-4 w-4 mr-2" /> },
+        {
+          path: `${basePath}/settings`, // This can be a general settings page or the first submenu item by default
+          label: 'Settings',
+          icon: <Settings className="h-4 w-4 mr-2" />,
+          submenu: [
+            { path: `${basePath}/hotpoints`, label: 'Hot Points Management' },
+            { path: `${basePath}/routes`, label: 'Route Management' },
+            { path: `${basePath}/vehicle`, label: 'Vehicle Management' }
+            // Add other general settings links here if needed, e.g.:
+            // { path: `${basePath}/settings/general`, label: 'General Settings' }
+          ]
+        },
       ];
     }
 
@@ -47,7 +60,15 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ userRole }) => {
     return [
       ...commonItems,
       { path: `${basePath}/trips`, label: 'Trip Management', icon: <Clock className="h-4 w-4 mr-2" /> },
-      { path: `${basePath}/settings`, label: 'Settings', icon: <Settings className="h-4 w-4 mr-2" /> },
+      {
+        path: `${basePath}/settings`, // This can be a general settings page or the first submenu item by default
+        label: 'Settings',
+        icon: <Settings className="h-4 w-4 mr-2" />,
+        submenu: [
+          { path: `${basePath}/vehicle`, label: 'Vehicle Management' }
+          // Add other general settings links here if needed
+        ]
+      },
     ];
   };
 
@@ -61,6 +82,7 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ userRole }) => {
     const handleResize = () => {
       if (window.innerWidth >= 768) {
         setIsMobileMenuOpen(false);
+        setOpenMobileSubmenu(null); // Close mobile submenus on resize to desktop view
       }
     };
 
@@ -96,27 +118,48 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ userRole }) => {
           {/* Desktop navigation */}
           <nav className="hidden md:flex space-x-8">
             {navItems.map((item) => (
-              <div key={item.path} className="relative group">
-                <Link
-                  to={item.path}
-                  className={`inline-flex items-center px-1 pt-1 border-b-2 ${isActive(item.path) ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} text-sm font-medium`}
-                >
-                  {item.icon}
-                  {item.label}
-                  {item.submenu && <ChevronDown className="h-4 w-4 ml-1" />}
-                </Link>
-                {item.submenu && (
-                  <div className="absolute hidden group-hover:block bg-white shadow-lg rounded-md mt-1 py-1 w-48">
-                    {item.submenu.map((sub) => (
-                      <Link
-                        key={sub.path}
-                        to={sub.path}
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                      >
-                        {sub.label}
-                      </Link>
-                    ))}
-                  </div>
+              <div key={item.label} className="relative"> {/* Using item.label for key if paths might not be unique for toggles */}
+                {item.submenu ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setOpenDesktopSubmenu(openDesktopSubmenu === item.path ? null : item.path)}
+                      className={`inline-flex items-center px-1 pt-1 border-b-2 ${ 
+                        item.submenu.some(sub => isActive(sub.path)) || openDesktopSubmenu === item.path
+                          ? 'border-primary-500 text-gray-900' 
+                          : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                      } text-sm font-medium cursor-pointer focus:outline-none`}
+                    >
+                      {item.icon}
+                      {item.label}
+                      <ChevronDown className={`h-4 w-4 ml-1 transition-transform duration-200 ${openDesktopSubmenu === item.path ? 'transform rotate-180' : ''}`} />
+                    </button>
+                    {openDesktopSubmenu === item.path && (
+                      <div className="absolute z-20 bg-white shadow-lg rounded-md mt-2 py-1 w-56 origin-top-right ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        {item.submenu.map((sub) => (
+                          <Link
+                            key={sub.path}
+                            to={sub.path}
+                            onClick={() => {
+                              setOpenDesktopSubmenu(null); // Close submenu on item click
+                            }}
+                            className={`block px-4 py-2 text-sm ${isActive(sub.path) ? 'font-semibold text-primary-600 bg-primary-50' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-800'}`}
+                          >
+                            {sub.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <Link
+                    to={item.path}
+                    onClick={() => setOpenDesktopSubmenu(null)} // Close any open submenu when clicking a direct link
+                    className={`inline-flex items-center px-1 pt-1 border-b-2 ${isActive(item.path) ? 'border-primary-500 text-gray-900' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'} text-sm font-medium`}
+                  >
+                    {item.icon}
+                    {item.label}
+                  </Link>
                 )}
               </div>
             ))}
@@ -132,31 +175,61 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ userRole }) => {
           <div className="md:hidden">
             <div className="pt-2 pb-3 space-y-1">
               {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  to={item.path}
-                  className={`${isActive(item.path) ? 'bg-primary-50 border-primary-500 text-primary-700' : 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  <div className="flex items-center">
-                    {item.icon}
-                    {item.label}
-                  </div>
-                  {item.submenu && (
-                    <div className="ml-4 mt-1 space-y-1">
-                      {item.submenu.map((sub) => (
-                        <Link
-                          key={sub.path}
-                          to={sub.path}
-                          className="block pl-6 py-1 text-sm text-gray-700 hover:bg-gray-100 rounded"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {sub.label}
-                        </Link>
-                      ))}
-                    </div>
+                <div key={item.label} className="py-1"> {/* Using item.label for key */}
+                  {item.submenu ? (
+                    <>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setOpenMobileSubmenu(openMobileSubmenu === item.path ? null : item.path);
+                        }}
+                        className={`w-full flex items-center justify-between pl-3 pr-4 py-2 border-l-4 ${ 
+                          item.submenu.some(sub => isActive(sub.path)) || openMobileSubmenu === item.path
+                            ? 'bg-primary-50 border-primary-500 text-primary-700' 
+                            : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'
+                        } text-base font-medium focus:outline-none text-left`}
+                      >
+                        <span className="flex items-center">
+                          {item.icon}
+                          {item.label}
+                        </span>
+                        <ChevronDown className={`h-5 w-5 transition-transform duration-200 ${openMobileSubmenu === item.path ? 'transform rotate-180' : ''}`} />
+                      </button>
+                      {openMobileSubmenu === item.path && (
+                        <div className="mt-1 space-y-1 pl-10 pr-4"> {/* Indented submenu, increased pl from 8 to 10 for better visual nesting */}
+                          {item.submenu.map((sub) => (
+                            <Link
+                              key={sub.path}
+                              to={sub.path}
+                              className={`block py-2 text-sm rounded-md ${isActive(sub.path) ? 'bg-primary-100 font-semibold text-primary-700' : 'text-gray-600 hover:bg-gray-100 hover:text-gray-800'}`}
+                              onClick={() => {
+                                setIsMobileMenuOpen(false); // Close main mobile menu
+                                setOpenMobileSubmenu(null);   // Close this mobile submenu
+                              }}
+                            >
+                              {sub.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <Link
+                      to={item.path}
+                      className={`${isActive(item.path) ? 'bg-primary-50 border-primary-500 text-primary-700' : 'border-transparent text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium`}
+                      onClick={() => {
+                        setIsMobileMenuOpen(false); // Close main mobile menu
+                        setOpenMobileSubmenu(null);   // Close any open mobile submenu
+                      }}
+                    >
+                      <div className="flex items-center">
+                        {item.icon}
+                        {item.label}
+                      </div>
+                    </Link>
                   )}
-                </Link>
+                </div>
               ))}
             </div>
             {/* Replace mobile profile section with ProfileDropdown */}

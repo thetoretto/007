@@ -1,7 +1,7 @@
 // d:\007\rsa\frontend\src\pages\DriverCheckInPage.tsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useBookingStore } from '../store/bookingStore';
+import { useBookingStore } from '../../store/bookingStore';
 import '../index.css';
 
 const DriverCheckInPage: React.FC = () => {

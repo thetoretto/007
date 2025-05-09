@@ -14,17 +14,18 @@ import AdminDashboard from './pages/admin/AdminDashboard';
 import useAuthStore from './store/authStore';
 
 // Lazy-loaded components
-const DriverTripManagement = lazy(() => import('./pages/driver/TripManagement'));
+
 const DriverStatistics = lazy(() => import('./pages/driver/Statistics'));
-const DriverUserManagement = lazy(() => import('./pages/driver/UserManagement'));
-const AdminTripManagement = lazy(() => import('./pages/admin/TripManagement'));
+
+const TripManagement = lazy(() => import('./components/dashboard/TripManagement')); // Shared component
 const AdminStatistics = lazy(() => import('./pages/admin/Statistics'));
 const AdminUserManagement = lazy(() => import('./pages/admin/UserManagement'));
 const AdminHotPointManagement = lazy(() => import('./pages/admin/AdminHotPointManagement')); // Import the new Hot Point Management page
-const DriverVehiclePage = lazy(() => import('./pages/driver/VehiclePage')); // Import the new vehicle page
-const ProfilePage = lazy(() => import('./pages/ProfilePage')); // Import the ProfilePage
-const DriverCheckInPage = lazy(() => import('./pages/DriverCheckInPage')); // Import the DriverCheckInPage
-const CreateTripPage = lazy(() => import('./pages/driver/CreateTripPage')); // Import the CreateTripPage
+const AdminRouteManagement = lazy(() => import('./pages/admin/AdminRouteManagement')); // Import the new Route Management page
+const VehiclePage = lazy(() => import('./pages/driver/VehiclePage')); // Renamed for clarity, serves both admin and driver roles
+const ProfilePage = lazy(() => import('./components/common/ProfilePage')); // Import the ProfilePage
+const DriverCheckInPage = lazy(() => import('./components/driver/DriverCheckInPage')); // Import the DriverCheckInPage
+const CreateTripPage = lazy(() => import('./components/dashboard/CreateTripPage')); // Import the CreateTripPage
 
 interface ProtectedRouteProps {
   element: React.ReactNode;
@@ -106,7 +107,7 @@ function App() {
                 <ProtectedRoute 
                   element={
                     <Suspense fallback={<div>Loading...</div>}>
-                      <DriverTripManagement />
+                      <TripManagement />
                     </Suspense>
                   } 
                   allowedRoles={['driver']} 
@@ -126,27 +127,14 @@ function App() {
                 />
               } 
             />
+            {/* Driver Vehicle Management Route */}
             <Route 
-              path="/driver/users" 
+              path="/driver/vehicle" // Path updated to /driver/vehicle
               element={
                 <ProtectedRoute 
                   element={
                     <Suspense fallback={<div>Loading...</div>}>
-                      <DriverUserManagement />
-                    </Suspense>
-                  } 
-                  allowedRoles={['driver']} 
-                />
-              } 
-            />
-            {/* Add Driver Vehicle Management Route */}
-            <Route 
-              path="/driver/vehicles"
-              element={
-                <ProtectedRoute 
-                  element={
-                    <Suspense fallback={<div>Loading...</div>}>
-                      <DriverVehiclePage />
+                      <VehiclePage /> {/* Component updated to VehiclePage */}
                     </Suspense>
                   } 
                   allowedRoles={['driver']} 
@@ -191,7 +179,7 @@ function App() {
                 <ProtectedRoute 
                   element={
                     <Suspense fallback={<div>Loading...</div>}>
-                      <AdminTripManagement />
+                      <TripManagement />
                     </Suspense>
                   } 
                   allowedRoles={['admin']} 
@@ -211,6 +199,20 @@ function App() {
                 />
               } 
             />
+            {/* Admin Vehicle Management Route */}
+            <Route 
+              path="/admin/vehicle" // Path for admin vehicle management
+              element={
+                <ProtectedRoute 
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <VehiclePage /> {/* Uses the same VehiclePage component */}
+                    </Suspense>
+                  } 
+                  allowedRoles={['admin']} 
+                />
+              }
+            />
             <Route 
               path="/admin/users" 
               element={
@@ -224,6 +226,19 @@ function App() {
                 />
               } 
             />
+            <Route
+              path="/admin/routes"
+              element={
+                <ProtectedRoute
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <AdminRouteManagement />
+                    </Suspense>
+                  }
+                  allowedRoles={['admin']}
+                />
+              }
+            />
             <Route 
               path="/admin/hotpoints"
               element={
@@ -231,6 +246,32 @@ function App() {
                   element={
                     <Suspense fallback={<div>Loading...</div>}>
                       <AdminHotPointManagement />
+                    </Suspense>
+                  } 
+                  allowedRoles={['admin']} 
+                />
+              }
+            />
+            <Route 
+              path="/admin/hotpoints/create"
+              element={
+                <ProtectedRoute 
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <AdminHotPointManagement mode="create" />
+                    </Suspense>
+                  } 
+                  allowedRoles={['admin']} 
+                />
+              }
+            />
+            <Route 
+              path="/admin/trips/new" 
+              element={
+                <ProtectedRoute 
+                  element={
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <CreateTripPage />
                     </Suspense>
                   } 
                   allowedRoles={['admin']} 

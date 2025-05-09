@@ -2,9 +2,13 @@ import '../../index.css';
 import React, { useState, useEffect } from 'react';
 import useVehicleStore, { Vehicle } from '../../store/vehicleStore';
 import useAuthStore from '../../store/authStore';
-import { Plus, Edit, Trash2, Save, X, Car, Users, Hash } from 'lucide-react'; // Added icons
+import { Plus, Edit, Trash2, Save, X, Car, Users, Hash, User } from 'lucide-react'; // Added icons, User icon for Driver ID
 
-const VehicleManagement: React.FC = () => {
+interface VehicleManagementProps {
+  userRole: 'driver' | 'admin';
+}
+
+const VehicleManagement: React.FC<VehicleManagementProps> = ({ userRole }) => {
   const { user } = useAuthStore();
   const { vehicles, fetchVehicles, addVehicle, updateVehicle, deleteVehicle } = useVehicleStore();
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -14,13 +18,16 @@ const VehicleManagement: React.FC = () => {
     model: '',
     licensePlate: '',
     capacity: '',
+    driverId: '', // Added for admin to potentially assign driver
   });
 
   useEffect(() => {
-    if (user?.id) {
-      fetchVehicles(user.id);
+    if (userRole === 'admin') {
+      fetchVehicles(); // Fetch all vehicles for admin
+    } else if (user?.id && userRole === 'driver') {
+      fetchVehicles(user.id); // Fetch driver's vehicles
     }
-  }, [user?.id, fetchVehicles]);
+  }, [user?.id, userRole, fetchVehicles]);
 
   useEffect(() => {
     if (vehicleToEdit) {
@@ -29,9 +36,10 @@ const VehicleManagement: React.FC = () => {
         model: vehicleToEdit.model,
         licensePlate: vehicleToEdit.licensePlate,
         capacity: vehicleToEdit.capacity.toString(),
+        driverId: vehicleToEdit.driverId || '', // Include driverId if present
       });
     } else {
-      setFormData({ brand: '', model: '', licensePlate: '', capacity: '' });
+      setFormData({ brand: '', model: '', licensePlate: '', capacity: '', driverId: '' });
     }
   }, [vehicleToEdit]);
 
@@ -60,11 +68,21 @@ const VehicleManagement: React.FC = () => {
       return;
     }
 
-    const vehicleData = {
+    let vehicleData: any = {
       ...formData,
       capacity: capacityValue,
-      driverId: user.id,
     };
+
+    if (userRole === 'driver' && user?.id) {
+      vehicleData.driverId = user.id;
+    } else if (userRole === 'admin') {
+      // For admin, driverId might come from the form or be handled by backend
+      // Assuming driverId is part of formData for admin for now if they are assigning it.
+      // If not, this part needs adjustment based on how admin assigns vehicles.
+      if (formData.driverId) { // Add a driverId field to formData if admin needs to set it
+        vehicleData.driverId = formData.driverId;
+      }
+    }
 
     if (vehicleToEdit) {
       updateVehicle(vehicleToEdit.id, vehicleData);
@@ -104,13 +122,16 @@ const VehicleManagement: React.FC = () => {
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Model</th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">License Plate</th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Capacity</th>
+              {userRole === 'admin' && (
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Driver ID</th>
+              )}
               <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {vehicles.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">No vehicles added yet.</td>
+                <td colSpan={userRole === 'admin' ? 6 : 5} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">No vehicles found.</td>
               </tr>
             ) : (
               vehicles.map((vehicle) => (
@@ -119,6 +140,9 @@ const VehicleManagement: React.FC = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{vehicle.model}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{vehicle.licensePlate}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{vehicle.capacity}</td>
+                  {userRole === 'admin' && (
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{vehicle.driverId || 'N/A'}</td>
+                  )}
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                     {/* Updated: Action button styling */}
                     <button
@@ -196,6 +220,25 @@ const VehicleManagement: React.FC = () => {
                   />
                 </div>
               </div>
+              {userRole === 'admin' && (
+                <div>
+                  <label htmlFor="driverId" className="block text-sm font-medium text-gray-700 mb-1">Driver ID (Optional)</label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <User className="h-5 w-5 text-gray-400" aria-hidden="true" />
+                    </div>
+                    <input
+                      type="text"
+                      id="driverId"
+                      name="driverId"
+                      value={formData.driverId}
+                      onChange={handleChange}
+                      className="form-input w-full pl-10 border-gray-300 rounded-md shadow-sm focus:border-primary-500 focus:ring focus:ring-primary-200 focus:ring-opacity-50 transition duration-150 ease-in-out"
+                      placeholder="Enter Driver ID if assigning"
+                    />
+                  </div>
+                </div>
+              )}
               <div>
                 <label htmlFor="licensePlate" className="block text-sm font-medium text-gray-700 mb-1">License Plate</label>
                 <div className="relative">

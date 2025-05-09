@@ -11,7 +11,7 @@ const HomePage: React.FC = () => {
       <Navbar />
 
       {/* Hero Section - Modernized Styling */}
-      <section className="bg-background-dark">
+      <section className="">
         <div className="container-app py-24 sm:py-32 md:py-40 flex flex-col items-center text-center">
           <h1 
             className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6 text-accent-mint"

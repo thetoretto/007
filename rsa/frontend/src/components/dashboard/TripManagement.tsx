@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { mockTimeSlots, mockVehicles, mockRoutes, getBookingsWithDetails } from '../../utils/mockData';
 
 // Import the DashboardNavbar component
-const DashboardNavbar = React.lazy(() => import('../../components/dashboard/DashboardNavbar'));
+const DashboardNavbar = React.lazy(() => import('./DashboardNavbar'));
 
 const TripManagement: React.FC = () => {
   const { user } = useAuthStore();
@@ -16,6 +16,7 @@ const TripManagement: React.FC = () => {
     ...ts,
     id: ts.id || `trip-${Math.random().toString(36).substr(2, 9)}`,
     vehicleId: ts.vehicleId || 'v1',
+    driverId: ts.driverId || user?.id, // Add driverId to track trip ownership
     passengers: 8,
     status: 'upcoming',
     availableSeats: mockVehicles.find(v => v.id === (ts.vehicleId || 'v1'))?.capacity || 16
@@ -73,22 +74,35 @@ const TripManagement: React.FC = () => {
     }
   });
 
+  // Filter trips based on user role
+  const filteredTrips = React.useMemo(() => {
+    if (user?.role === 'admin') {
+      return detailedTrips; // Admin sees all trips
+    } else if (user?.role === 'driver' && user?.id) {
+      return detailedTrips.filter(trip => trip.driverId === user.id); // Driver sees only their trips
+    }
+    return [];
+  }, [detailedTrips, user]);
+
+  // Determine the new trip route based on user role
+  const newTripRoute = user?.role === 'admin' ? '/admin/trips/new' : '/driver/trips/new';
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Add the horizontal navigation bar */}
       <React.Suspense fallback={<div>Loading...</div>}>
-        <DashboardNavbar userRole="driver" />
+        <DashboardNavbar userRole={user?.role || 'driver'} />
       </React.Suspense>
       
       <div className="md:flex md:items-center md:justify-between mb-6">
         <div className="flex-1 min-w-0">
           <h1 className="text-3xl font-bold text-gray-900">Trip Management</h1>
           <p className="mt-1 text-sm text-gray-500">
-            Manage your upcoming and past trips
+            {user?.role === 'admin' ? 'Manage all trips' : 'Manage your trips'}
           </p>
         </div>
         <div className="mt-4 flex md:mt-0 md:ml-4">
-          <Link to="/driver/trips/new" className="btn btn-primary">
+          <Link to={newTripRoute} className="btn btn-primary">
             <Plus className="h-4 w-4 mr-2" />
             New Trip
           </Link>
@@ -97,13 +111,15 @@ const TripManagement: React.FC = () => {
 
       <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
         <div className="px-4 sm:px-6 lg:px-8 py-4 border-b border-gray-200">
-          <h2 className="text-lg font-medium text-gray-900">All Trips</h2>
+          <h2 className="text-lg font-medium text-gray-900">
+            {user?.role === 'admin' ? 'All Trips' : 'Your Trips'}
+          </h2>
         </div>
 
         <div className="overflow-hidden">
-          {detailedTrips.length > 0 ? (
+          {filteredTrips.length > 0 ? (
             <div className="divide-y divide-gray-200">
-              {detailedTrips.map((trip) => (
+              {filteredTrips.map((trip) => (
                 <div
                   key={trip.id}
                   className={`hover:bg-gray-50 cursor-pointer p-4 sm:px-6 lg:px-8 transition-colors ${selectedTrip === trip.id ? 'bg-primary-100' : ''}`}
@@ -112,8 +128,7 @@ const TripManagement: React.FC = () => {
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="text-base font-medium text-gray-900">
-                        {/* {trip.route?.name} */} {/* Removed route name */}
-                        {trip.fromLocation} to {trip.toLocation} {/* Added from/to location */}
+                        {trip.fromLocation} to {trip.toLocation}
                       </h3>
                       <div className="mt-1 flex items-center text-sm text-gray-500">
                         <Calendar className="h-4 w-4 mr-1" />
@@ -144,33 +159,35 @@ const TripManagement: React.FC = () => {
                     <div className="mt-4 pt-4 border-t border-gray-100 animate-fade-in">
                       <div className="mb-4 flex justify-between items-center">
                         <h4 className="font-medium text-gray-900">Trip Details</h4>
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteTrip(trip.id);
-                            }}
-                            className="btn btn-danger py-1 px-3 text-xs"
-                          >
-                            Delete Trip
-                          </button>
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              // Open edit modal or navigate to edit page
-                            }}
-                            className="btn btn-secondary py-1 px-3 text-xs"
-                          >
-                            Edit Trip
-                          </button>
-                        </div>
+                        {/* Show edit/delete buttons only for admin or if driver owns the trip */}
+                        {(user?.role === 'admin' || (user?.role === 'driver' && trip.driverId === user.id)) && (
+                          <div className="flex space-x-2">
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteTrip(trip.id);
+                              }}
+                              className="btn btn-danger py-1 px-3 text-xs"
+                            >
+                              Delete Trip
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                // Open edit modal or navigate to edit page
+                              }}
+                              className="btn btn-secondary py-1 px-3 text-xs"
+                            >
+                              Edit Trip
+                            </button>
+                          </div>
+                        )}
                       </div>
 
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                         <div>
                           <h5 className="text-sm font-medium text-gray-500 mb-1">Route</h5>
-                          {/* <p className="text-sm">{trip.route?.name}</p> */} {/* Removed route name */}
-                          <p className="text-sm">{trip.fromLocation} to {trip.toLocation}</p> {/* Added from/to location */}
+                          <p className="text-sm">{trip.fromLocation} to {trip.toLocation}</p>
                         </div>
                         <div>
                           <h5 className="text-sm font-medium text-gray-500 mb-1">Vehicle</h5>
@@ -184,6 +201,12 @@ const TripManagement: React.FC = () => {
                           <h5 className="text-sm font-medium text-gray-500 mb-1">Capacity</h5>
                           <p className="text-sm">{trip.confirmedBookings} / {trip.availableSeats} seats</p>
                         </div>
+                        {user?.role === 'admin' && (
+                          <div>
+                            <h5 className="text-sm font-medium text-gray-500 mb-1">Driver</h5>
+                            <p className="text-sm">{trip.driverId || 'No driver assigned'}</p>
+                          </div>
+                        )}
                       </div>
                     </div>
                   )}
@@ -197,10 +220,10 @@ const TripManagement: React.FC = () => {
               </div>
               <h3 className="mt-2 text-sm font-medium text-gray-900">No trips found</h3>
               <p className="mt-1 text-sm text-gray-500">
-                You don't have any trips at the moment.
+                {user?.role === 'admin' ? 'No trips have been created yet.' : 'You don\'t have any trips at the moment.'}
               </p>
               <div className="mt-6">
-                <Link to="/driver/trips/new" className="btn btn-primary">
+                <Link to={newTripRoute} className="btn btn-primary">
                   Create New Trip
                 </Link>
               </div>

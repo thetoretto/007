@@ -17,13 +17,16 @@ const ProfileDropdown: React.FC = () => {
   };
 
   const toggleDropdown = () => {
+    console.log('ProfileDropdown: toggleDropdown called. Current isOpen:', isOpen);
     setIsOpen(!isOpen);
+    console.log('ProfileDropdown: new isOpen state:', !isOpen);
   };
 
   // Close dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        console.log('ProfileDropdown: Clicked outside, closing dropdown.');
         setIsOpen(false);
       }
     };
@@ -32,6 +35,8 @@ const ProfileDropdown: React.FC = () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  console.log('ProfileDropdown: Rendering, isOpen:', isOpen, 'User:', user);
 
   return (
     <div className="relative" ref={dropdownRef}>

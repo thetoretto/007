@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import useAuthStore from '../store/authStore';
-import Navbar from '../components/common/Navbar';
-import Footer from '../components/common/Footer';
+import useAuthStore from '../../store/authStore';
+import DashboardNavbar from '../dashboard/DashboardNavbar';
 import { User, Edit3, Shield, Phone, Mail, LogOut, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import LoadingSpinner from '../components/common/LoadingSpinner';
-import '../index.css';
+import LoadingSpinner from './LoadingSpinner';
+import '../../index.css';
 
 const ProfileSchema = Yup.object().shape({
   firstName: Yup.string().required('First name is required'),
@@ -110,7 +109,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
-      <Navbar />
+      <DashboardNavbar />
       <main className="flex-grow container-app py-8 sm:py-12">
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-8 text-center">Your Profile</h1>
 
@@ -295,7 +294,6 @@ const ProfilePage: React.FC = () => {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 };

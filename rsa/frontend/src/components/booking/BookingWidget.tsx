@@ -1,9 +1,9 @@
 import '../../index.css';
 import React, { useReducer, useCallback, useEffect, useMemo } from 'react';
 import { Route, Vehicle, Seat, /* PickupPoint, */ BookingState, BookingAction, BookingDetails } from './types'; // Keep local types for widget's internal structure
-import { useBookingStore } from '@/store/bookingStore'; // Import bookingStore
-import { Trip as StoreTrip } from '@/store/tripStore'; // Import StoreTrip
-import useHotPointStore, { HotPoint } from '@/store/hotPointStore'; // Import HotPoint store and type
+import { useBookingStore } from '../../store/bookingStore'; // Import bookingStore
+import { Trip as StoreTrip } from '../../store/tripStore'; // Import StoreTrip
+import useHotPointStore, { HotPoint } from '../../store/hotPointStore'; // Import HotPoint store and type
 
 // Replacing local PickupPoint with HotPoint from store
 export type { HotPoint as PickupPoint };
