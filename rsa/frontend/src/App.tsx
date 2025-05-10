@@ -12,6 +12,7 @@ import TripDetailsPage from './pages/passenger/TripDetailsPage'; // Import the n
 import DriverDashboard from './pages/driver/DriverDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import useAuthStore from './store/authStore';
+import useThemeStore from './store/themeStore'; // Import the theme store
 
 // Lazy-loaded components
 
@@ -50,12 +51,21 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element, allowedRoles =
 };
 
 function App() {
+  const { theme } = useThemeStore();
   const { checkAuth } = useAuthStore();
   
   useEffect(() => {
     // Check if the user is already authenticated
     checkAuth();
   }, [checkAuth]);
+
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
 
   return (
     <Router>

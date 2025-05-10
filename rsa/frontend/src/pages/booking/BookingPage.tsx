@@ -5,6 +5,7 @@ import BookingWidget from '../../components/booking/BookingWidget'; // Import th
 import { MapPin, CalendarCheck, Ticket, Info } from 'lucide-react'; // Import icons
 import { promoMessages } from '../../utils/mockData'; // Import promoMessages
 import '../../index.css';
+
 // import useAuthStore from '../../store/authStore'; // Keep if needed for user info outside widget
 // import useBookingStore from '../../store/bookingStore'; // Store logic is now inside the widget
 
@@ -70,16 +71,13 @@ const BookingPage: React.FC = () => {
             <div className="text-center">
               <div className="flex items-center justify-center mb-4">
                 <Info className="h-8 w-8 mr-2" />
-                <h3 className="text-3xl text-white font-semibold">Waruziko !!!</h3>
+           
               </div>
               <p className="text-lg text-primary-100 leading-relaxed font-mono whitespace-pre-wrap text-center">
                 {displayedText}
                 <span className="inline-block w-1.5 h-6 bg-primary-100 animate-pulse ml-1.5" />
               </p>
             </div>
-            <a href="/offers" className="mt-6 text-lg text-primary-100 hover:text-white font-medium self-center underline transition-colors duration-300">
-              View All Offers &rarr;
-            </a>
           </div>
 
           <div className="lg:col-span-1 bg-[#AEFFDE] p-12 rounded-xl shadow-2xl flex flex-col items-center justify-center min-h-[400px] transform transition-all hover:scale-[1.02] group">

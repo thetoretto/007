@@ -7,19 +7,19 @@ import '../index.css';
 
 const HomePage: React.FC = () => {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-background-dark"> {/* Added dark mode background for overall page */}
       <Navbar />
 
       {/* Hero Section - Modernized Styling */}
-      <section className="">
-        <div className="container-app py-24 sm:py-32 md:py-40 flex flex-col items-center text-center">
+      <section className="section-cta">
+        <div className="section-hero-content">
           <h1 
-            className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-6 text-accent-mint"
+            className="text-title-hero mb-6"
           >
             Your Journey, Simplified
           </h1>
           <p 
-            className="text-lg sm:text-xl text-gray-600 max-w-2xl lg:max-w-3xl mb-10"
+            className="text-subtitle-hero mb-10"
           >
             Effortless booking for comfortable and reliable transportation. Find your route, book your seat, and travel with ease.
           </p>
@@ -34,7 +34,7 @@ const HomePage: React.FC = () => {
             </Link>
             <Link
               to="/learn-more"
-              className="btn btn-outline text-primary-600 border-primary-600 hover:bg-primary-50 text-base px-8 py-3 transition-colors duration-300"
+              className="btn btn-secondary btn-outline   text-base px-8 py-3 transition-colors duration-300"
             >
               Learn More
             </Link>
@@ -43,11 +43,11 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* How It Works Section - Modernized Styling */}
-      <section className="py-16 lg:py-24 bg-white">
+      <section className="section-default"> {/* Changed from bg-white to section-default */}
         <div className="container-app">
           <div className="text-center mb-12 lg:mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">How It Works</h2>
-            <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+            <h2 className="text-section-title">How It Works</h2>
+            <p className="text-section-subtitle">
               Booking your ride takes just a few simple steps.
             </p>
           </div>
@@ -56,15 +56,15 @@ const HomePage: React.FC = () => {
             {[Map, Calendar, CreditCard].map((Icon, index) => (
               <div
                 key={index}
-                className="bg-gray-50 p-6 lg:p-8 rounded-xl hover:shadow-lg transition-shadow duration-300 ease-in-out flex flex-col items-center text-center border border-gray-200"
+                className="card-feature" /* Applied card-feature */
               >
-                <div className="bg-primary-100 text-primary-600 p-4 rounded-full mb-6 inline-flex items-center justify-center ring-4 ring-primary-50">
+                <div className="card-feature-icon-wrapper card-feature-icon-wrapper-primary">
                   <Icon className="h-8 w-8" />
                 </div>
-                <h3 className="text-xl font-semibold text-gray-800 mb-3">
+                <h3 className="text-card-title">
                   {['Select Route', 'Choose Date & Time', 'Book & Pay Securely'][index]}
                 </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
+                <p className="text-card-description">
                   {[ 
                     'Browse available routes and select your desired destination.',
                     'Pick the most convenient date and time slot for your travel.',
@@ -78,11 +78,11 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* Features Section - Modernized Styling */}
-      <section className="py-16 lg:py-24 bg-gray-50">
+      <section className="section-offset"> {/* Changed from bg-gray-50 to section-offset */}
         <div className="container-app">
           <div className="text-center mb-12 lg:mb-16">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">Why Travel With Us?</h2>
-            <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
+            <h2 className="text-section-title">Why Travel With Us?</h2>
+            <p className="text-section-subtitle">
               Experience the difference with our commitment to quality and service.
             </p>
           </div>
@@ -91,15 +91,15 @@ const HomePage: React.FC = () => {
             {[Users, Clock, CreditCard, Star].map((Icon, index) => (
               <div
                 key={index}
-                className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out border border-gray-200 flex flex-col items-start"
+                className="card-base p-6 flex flex-col items-start" /* Applied card-base, kept p-6 and flex specific styles */
               >
-                <div className="bg-secondary-100 text-secondary-600 p-3 rounded-lg mb-5 inline-flex items-center justify-center ring-4 ring-secondary-50">
+                <div className="card-feature-icon-wrapper card-feature-icon-wrapper-secondary p-3 mb-5"> {/* Applied general wrapper and secondary variant, kept specific p-3 mb-5 */}
                   <Icon className="h-7 w-7" />
                 </div>
-                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                <h3 className="text-lg font-semibold text-accent-black dark:text-text-inverse mb-2"> {/* Kept specific text style as text-card-title might be too large or different margin */}
                   {['Modern Fleet', 'Punctual Service', 'Affordable Fares', 'Top-Rated Experience'][index]}
                 </h3>
-                <p className="text-gray-600 text-sm leading-relaxed">
+                <p className="text-card-description">
                   {[ 
                     'Travel in comfort with our well-maintained, air-conditioned vehicles.',
                     'We value your time. Count on us for on-time departures and arrivals.',
@@ -114,10 +114,10 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* CTA Section - Modernized Styling */}
-      <section className="py-16 lg:py-24 bg-gradient-to-r from-primary-100 to-primary-DEFAULT text-base">
-        <div className="container-app max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Ready for Your Next Adventure?</h2>
-          <p className="mt-4 max-w-2xl mx-auto text-lg text-base">
+      <section className="section-cta">
+        <div className="section-cta-content">
+          <h2 className="text-section-title">Ready for Your Next Adventure?</h2>
+          <p className="text-section-subtitle">
             Don't wait! Book your seat today and experience seamless travel with RideBooker.
           </p>
           <div className="mt-10">

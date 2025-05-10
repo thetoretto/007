@@ -68,9 +68,9 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
 
   return (
     // Updated: Removed max-width, added padding/border/shadow for consistency with page layout
-    <div className="form-card">
+    <div className="card-base p-6 sm:p-8"> {/* form-card is general, using card-base and adding padding */}
       {/* Updated: Heading style */}
-      <h2 className="text-xl sm:text-2xl font-semibold text-base mb-6">Log in to your account</h2>
+      <h2 className="text-section-title mb-6">Log in to your account</h2> {/* text-base was likely a typo, using section title style */}
       
       {error && (
         // Updated: Error message styling
@@ -86,7 +86,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
       >
         {({ isValid, dirty }) => (
           // Updated: Spacing
-          <Form className="space-y-5">
+          <Form className="space-y-6"> {/* Adjusted spacing slightly for consistency */}
             <div>
               {/* Updated: Label style */}
               <label htmlFor="emailOrPhone" className="form-label">
@@ -98,7 +98,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
                 name="emailOrPhone"
                 type="text" // Changed to text to allow phone numbers
                 autoComplete="username" // More general for email or phone
-                className="form-input"
+                className="form-input" /* form-input is good */
                 disabled={loading}
                 placeholder="Email or Phone Number"
               />
@@ -106,13 +106,13 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
               <ErrorMessage
                 name="emailOrPhone"
                 component="div"
-                className="form-error"
+                className="form-error" /* form-error is good */
               />
             </div>
 
             <div>
               {/* Updated: Label style */}
-              <label htmlFor="password" className="form-label">
+              <label htmlFor="password" className="form-label"> /* form-label is good */
                 Password
               </label>
               <div className="relative">
@@ -122,14 +122,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
                   name="password"
                   type={showPassword ? 'text' : 'password'}
                   autoComplete="current-password"
-                  className="form-input pr-10"
+                  className="form-input pr-10" /* form-input is good, pr-10 for icon */
                   disabled={loading}
                   placeholder="Password"
                 />
                 {/* Updated: Button style */}
                 <button
                   type="button"
-                  className="input-adornment-button"
+                  className="input-adornment-button" /* input-adornment-button is good */
                   onClick={togglePasswordVisibility}
                   aria-label={showPassword ? "Hide password" : "Show password"}
                 >
@@ -144,7 +144,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
               <ErrorMessage
                 name="password"
                 component="div"
-                className="form-error"
+                className="form-error" /* form-error is good */
               />
             </div>
 
@@ -155,18 +155,18 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
                   id="rememberMe"
                   name="rememberMe"
                   type="checkbox"
-                  className="form-checkbox"
+                  className="form-checkbox" /* form-checkbox is good */
                   disabled={loading}
                 />
                 {/* Updated: Label style */}
-                <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-700">
+                <label htmlFor="rememberMe" className="ml-2 block text-sm text-text-base dark:text-gray-300"> /* Adjusted for dark mode */
                   Remember me
                 </label>
               </div>
 
               <div className="text-sm">
                 {/* Updated: Link style */}
-                <Link to="/forgot-password" className="font-medium hover:underline">
+                <Link to="/forgot-password" className="font-medium text-primary-800 hover:underline dark:text-primary-200"> /* Using link colors from index.css */
                   Forgot password?
                 </Link>
               </div>
@@ -177,7 +177,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
               <button
                 type="submit"
                 disabled={loading || !(isValid && dirty)}
-                className="btn btn-primary w-full"
+                className="btn btn-primary w-full" /* btn btn-primary is good */
               >
                 {loading ? <LoadingSpinner size="small" color="dark" /> : <><LogIn className="h-4 w-4 mr-2" /> Sign in</>}
               </button>
@@ -187,31 +187,36 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
       </Formik>
 
       {/* Updated: Divider and link styles */}
-      <div className="mt-6">
+      <div className="mt-8"> /* Increased margin slightly */
         <div className="relative">
           <div className="absolute inset-0 flex items-center" aria-hidden="true">
-            <div className="w-full border-t border-gray-300" />
+            <div className="w-full border-t border-gray-300 dark:border-gray-600" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="divider-text-label">Or continue with</span>
+            <span className="divider-text-label">Or continue with</span> /* divider-text-label is good */
           </div>
+        </div>
+
+        <div className="mt-6 grid grid-cols-1 gap-4">
+          {/* Example Social Login Buttons (Add your actual components/logic here) */}
+          <button type="button" className="btn btn-secondary w-full">
+            {/* <GoogleIcon className="mr-2 h-4 w-4" /> */}
+            Sign in with Google
+          </button>
+          <button type="button" className="btn btn-secondary w-full">
+            {/* <FacebookIcon className="mr-2 h-4 w-4" /> */}
+            Sign in with Facebook
+          </button>
         </div>
 
         <div className="mt-6 text-center text-sm">
-          <p className="text-base">
-            Don't have an account?{' '}
-            <Link to="/register" className="font-medium hover:underline">
-              Sign up
-            </Link>
-          </p>
+        <p className="text-text-base dark:text-gray-400">
+          Don't have an account?{' '}
+          <Link to="/register" className="font-semibold leading-6 text-primary-800 hover:underline dark:text-primary-200">
+            Sign up
+          </Link>
+        </p>
         </div>
-      </div>
-
-      {/* Go Back Home Button */}
-      <div className="mt-6 text-center text-sm">
-        <Link to="/" className="font-medium text-primary-600 hover:text-primary-500 hover:underline">
-          &larr; Go Back Home
-        </Link>
       </div>
     </div>
   );

@@ -303,24 +303,24 @@ const BookingWidget: React.FC<BookingWidgetProps> = ({ onComplete, onCancel }) =
   const totalSteps = steps.length;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-lg shadow-xl p-6 relative w-full max-w-3xl mx-auto my-8 overflow-y-auto max-h-[90vh]">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 dark:bg-opacity-75"> {/* Added dark mode opacity */}
+      <div className="card-base p-6 w-full max-w-3xl mx-auto my-8 overflow-y-auto max-h-[90vh]"> {/* Applied card-base, kept sizing and scroll */}
         <button onClick={onCancel} className="btn btn-secondary absolute top-3 right-3 p-2 leading-none text-2xl z-10">&times;</button>
         
-        {/* Progress Bar */} 
+        {/* Progress Bar */}
         <div className="mb-8 px-2 pt-2">
           <div className="flex mb-1">
             {steps.map((label, index) => (
               <div key={label} className="text-xs text-center w-1/5">
-                <span className={`${state.currentStep === index + 1 ? 'font-bold text-base' : state.currentStep > index + 1 ? 'text-green-600' : 'text-gray-500'}`}>
+                <span className={`${state.currentStep === index + 1 ? 'font-bold text-text-base dark:text-text-inverse' : state.currentStep > index + 1 ? 'text-success dark:text-primary-200' : 'text-gray-500 dark:text-gray-400'}`}> {/* Adjusted text colors for progress */}
                   {label}
                 </span>
               </div>
             ))}
           </div>
-          <div className="w-full bg-gray-200 rounded-medium h-1 ">
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5"> {/* Adjusted progress bar background and height */}
             <div 
-              className="bg-primary-600 h-1 rounded-medium transition-all duration-500 ease-out" /* Progress bar color is fine */
+              className="bg-primary h-1.5 rounded-full transition-all duration-500 ease-out dark:bg-primary-200" /* Adjusted progress bar color and height */
               style={{ width: `${(state.currentStep / totalSteps) * 100}%` }}
             ></div>
           </div>
@@ -336,7 +336,7 @@ const BookingWidget: React.FC<BookingWidgetProps> = ({ onComplete, onCancel }) =
 
         {/* Navigation Buttons - Rendered here for central control */}
         {state.currentStep < 5 && ( // Don't show nav on receipt step
-          <div className="flex justify-between items-center pt-4 border-t mt-6">
+          <div className="flex justify-between items-center pt-4 border-t mt-6 dark:border-gray-700"> {/* Added dark mode border */}
             {state.currentStep > 1 ? (
               <button
                 onClick={handlePrev}

@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import useAuthStore from '../../store/authStore';
 import { Menu, X, Bus } from 'lucide-react';
 import ProfileDropdown from './ProfileDropdown';
+import ThemeToggle from './ThemeToggle'; // Import the ThemeToggle component
 
 const Navbar: React.FC = () => {
   const { user, logout } = useAuthStore();
@@ -15,65 +16,60 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    // Updated: Added border-b, adjusted padding, background to white
-    <nav className="bg-white border-b border-gray-200">
-      {/* Updated: Increased max-width, adjusted padding */}
-      <div className="container-app">
-        {/* Updated: Adjusted height */}
-        <div className="flex justify-between h-16">
+    <nav className="navbar-main">
+      <div className="navbar-container">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              {/* Updated: Adjusted logo size and text */}
-              <Link to="/" className="flex items-center gap-2 text-gray-900 transition-colors">
-                <Bus className="icon-xl text-primary-600" />
-                <span className="text-xl font-semibold">RideBooker</span>
+              <Link to="/" className="navbar-logo-link">
+                <Bus className="icon-xl text-primary dark:text-primary-200" /> {/* Adjusted icon color for dark mode compatibility with navbar-logo-link */}
+                <span className="navbar-logo-text">RideBooker</span>
               </Link>
             </div>
-            {/* Updated: Adjusted spacing and link styling */}
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-6 lg:space-x-8">
-              <Link to="/" className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-600 hover:text-primary-600 hover:border-primary-300 transition-colors">
+            <div className="navbar-links-desktop">
+              <Link to="/" className="navbar-link">
                 Home
               </Link>
-              <Link to="/book" className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-600 hover:text-primary-600 hover:border-primary-300 transition-colors">
+              <Link to="/book" className="navbar-link">
                 Book a Ride
               </Link>
               {user && (
                 <>
                   {user.role === 'passenger' && (
-                    <Link to="/passenger/trips" className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-600 hover:text-primary-600 hover:border-primary-300 transition-colors">
+                    <Link to="/passenger/trips" className="navbar-link">
                       My Trips
                     </Link>
                   )}
                   {user.role === 'driver' && (
-                    <Link to="/driver/dashboard" className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-600 hover:text-primary-600 hover:border-primary-300 transition-colors">
+                    <Link to="/driver/dashboard" className="navbar-link">
                       Driver Portal
                     </Link>
                   )}
                   {user.role === 'admin' && (
-                    <Link to="/admin/dashboard" className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-600 hover:text-primary-600 hover:border-primary-300 transition-colors">
+                    <Link to="/admin/dashboard" className="navbar-link">
                       Admin Panel
                     </Link>
                   )}
                 </>
               )}
-              <Link to="/contact" className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-600 hover:text-primary-600 hover:border-primary-300 transition-colors">
+              <Link to="/contact" className="navbar-link">
                 Contact
               </Link>
               {/* Consider removing or hiding Components link in production */}
-              <Link to="/components" className="inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-gray-600 hover:text-primary-600 hover:border-primary-300 transition-colors">
+              <Link to="/components" className="navbar-link">
                 Components
               </Link>
             </div>
           </div>
           {/* ProfileDropdown remains */}
           <div className="hidden sm:ml-6 sm:flex sm:items-center">
+            <ThemeToggle /> {/* Add ThemeToggle here */}
             <ProfileDropdown />
           </div>
           {/* Mobile menu button styling */}
           <div className="-mr-2 flex items-center sm:hidden">
             <button
               type="button"
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary-500"
+              className="navbar-mobile-menu-button"
               aria-expanded="false"
               onClick={toggleMenu}
             >
@@ -86,22 +82,22 @@ const Navbar: React.FC = () => {
             </button>
           </div>
         </div>
-      </div>
+      {/* </div> */}
 
       {/* Mobile menu styling */}
       {isMenuOpen && (
-        <div className="sm:hidden border-t border-gray-200">
+        <div className="navbar-mobile-menu">
           <div className="pt-2 pb-3 space-y-1">
             <Link
               to="/"
-              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+              className="navbar-mobile-link"
               onClick={toggleMenu}
             >
               Home
             </Link>
             <Link
               to="/book"
-              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+              className="navbar-mobile-link"
               onClick={toggleMenu}
             >
               Book a Ride
@@ -111,7 +107,7 @@ const Navbar: React.FC = () => {
                 {user.role === 'passenger' && (
                   <Link
                     to="/passenger/trips"
-                    className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+                    className="navbar-mobile-link"
                     onClick={toggleMenu}
                   >
                     My Trips
@@ -120,7 +116,7 @@ const Navbar: React.FC = () => {
                 {user.role === 'driver' && (
                   <Link
                     to="/driver/dashboard"
-                    className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+                    className="navbar-mobile-link"
                     onClick={toggleMenu}
                   >
                     Driver Portal
@@ -129,7 +125,7 @@ const Navbar: React.FC = () => {
                 {user.role === 'admin' && (
                   <Link
                     to="/admin/dashboard"
-                    className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+                    className="navbar-mobile-link"
                     onClick={toggleMenu}
                   >
                     Admin Panel
@@ -139,7 +135,7 @@ const Navbar: React.FC = () => {
             )}
             <Link
               to="/contact"
-              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-800"
+              className="navbar-mobile-link"
               onClick={toggleMenu}
             >
               Contact
@@ -147,6 +143,9 @@ const Navbar: React.FC = () => {
           </div>
           {/* Mobile Profile Section - Add ProfileDropdown here */}
           <div className="pt-4 pb-3 border-t border-gray-200">
+            <div className="flex items-center px-4 mb-2">
+              <ThemeToggle /> {/* Add ThemeToggle here for mobile view */}
+            </div>
             <div className="px-4">
               <ProfileDropdown />
             </div>

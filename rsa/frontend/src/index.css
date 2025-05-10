@@ -13,14 +13,14 @@
   }
 
   body {
-    @apply bg-white text-[#333333] antialiased;
+    @apply bg-background-light text-text-base antialiased dark:bg-background-dark dark:text-text-inverse;
   }
   section{
     
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-medium leading-tight text-[#000000];
+    @apply font-medium leading-tight text-accent-black dark:text-text-inverse;
   }
 
   h1 {
@@ -40,15 +40,15 @@
   }
 
   p {
-    @apply mb-4 leading-relaxed text-[#333333];
+    @apply mb-4 leading-relaxed text-text-base dark:text-text-inverse;
   }
 
   a {
-    @apply text-[#8CD9B9] hover:text-[#333333] transition-colors duration-150;
+    @apply text-primary-800 hover:text-text-base transition-colors duration-150 dark:text-text-accent dark:hover:text-primary-100;
   }
 
   *:focus-visible {
-    @apply outline-none ring-2 ring-[#AEFFDE] ring-offset-2;
+    @apply outline-none ring-2 ring-primary ring-offset-2 dark:ring-offset-background-dark dark:ring-primary-200;
   }
 }
 
@@ -59,23 +59,23 @@
   }
 
   .btn-primary {
-    @apply bg-[#AEFFDE] text-[#333333] hover:bg-[#AEFFDE] focus:ring-[#333333];
+    @apply bg-primary text-text-base hover:bg-primary-100 focus:ring-text-base dark:bg-primary dark:text-text-base dark:hover:bg-primary-800 dark:focus:ring-primary-200;
   }
 
   .btn-secondary {
-    @apply bg-[#E4F1FF] text-[#333333] border border-[#bcdcff] hover:bg-[#cce5ff] focus:ring-[#E4F1FF];
+    @apply bg-primary-100 text-text-base border border-background-light hover:bg-[#cce5ff] focus:ring-primary-100 dark:bg-section-dark dark:text-text-inverse dark:border-primary-900 dark:hover:bg-primary-900 dark:focus:ring-primary-800;
   }
 
   .btn-accent {
-    @apply bg-[#E4F1FF] text-[#000000] hover:bg-[#d4ecff] focus:ring-[#AEFFDE];
+    @apply bg-accent-light text-accent-black hover:bg-[#d4ecff] focus:ring-accent-mint dark:bg-accent-dark dark:text-text-accent dark:hover:bg-primary-900 dark:focus:ring-accent-mint;
   }
 
   .btn-success {
-    @apply bg-[#AEFFDE] text-[#000000] hover:bg-[#92f2cb] focus:ring-[#AEFFDE];
+    @apply bg-success text-accent-black hover:bg-[#92f2cb] focus:ring-success dark:bg-success dark:text-accent-black dark:hover:bg-primary-800 dark:focus:ring-success;
   }
 
   .btn-danger {
-    @apply bg-[#f87171] text-white hover:bg-[#ef4444] focus:ring-[#ef4444];
+    @apply bg-error text-text-inverse hover:bg-[#ef4444] focus:ring-[#ef4444] dark:bg-error dark:text-text-inverse dark:hover:bg-red-700 dark:focus:ring-red-700;
   }
 
   .btn-disabled {
@@ -83,7 +83,7 @@
   }
 
   .input, .form-input, input[type='text'], input[type='email'], input[type='password'], input[type='number'], input[type='search'], input[type='tel'], input[type='url'], textarea, select {
-    @apply block w-full rounded-md border-[#AEFFDE] shadow-sm focus:border-[#92f2cb] focus:ring-1 focus:ring-[#92f2cb] sm:text-sm py-2 px-3 placeholder-[#b8e7d7];
+    @apply block w-full rounded-md border-primary shadow-sm focus:border-[#92f2cb] focus:ring-1 focus:ring-[#92f2cb] sm:text-sm py-2 px-3 placeholder-[#b8e7d7] dark:bg-section-dark dark:border-primary-800 dark:text-text-inverse dark:placeholder-primary-800 dark:focus:border-primary-200 dark:focus:ring-primary-200;
   }
 
   select {
@@ -96,23 +96,23 @@
 
   .form-checkbox, input[type='checkbox'],
   .form-radio, input[type='radio'] {
-    @apply rounded border-[#AEFFDE] text-[#333333] focus:ring-[#AEFFDE] h-4 w-4;
+    @apply rounded border-primary text-text-base focus:ring-primary h-4 w-4 dark:bg-section-dark dark:border-primary-800 dark:checked:bg-primary dark:focus:ring-primary-200 dark:focus:ring-offset-background-dark;
   }
 
   .form-label {
-    @apply block text-sm font-medium text-[#333333] mb-1;
+    @apply block text-sm font-medium text-text-base mb-1 dark:text-text-inverse;
   }
 
   .form-error {
-    @apply mt-1 text-sm text-[#f87171];
+    @apply mt-1 text-sm text-error dark:text-red-400;
   }
 
   .card {
-    @apply bg-white shadow rounded-lg overflow-hidden;
+    @apply bg-background-light shadow rounded-lg overflow-hidden dark:bg-section-dark dark:border dark:border-primary-900;
   }
 
   .card-alt {
-    @apply bg-[#E4F1FF] border border-[#bcdcff] rounded-lg shadow-sm p-6;
+    @apply bg-section-light border border-[#bcdcff] rounded-lg shadow-sm p-6 dark:bg-background-dark dark:border-primary-800;
   }
 
   .card-interactive {
@@ -120,7 +120,7 @@
   }
 
   .form-card {
-    @apply bg-white p-6 sm:p-8 border border-[#AEFFDE] rounded-lg shadow-sm w-full;
+    @apply bg-background-light p-6 sm:p-8 border border-primary rounded-lg shadow-sm w-full dark:bg-section-dark dark:border-primary-800;
   }
 
   .badge {
@@ -128,23 +128,23 @@
   }
 
   .badge-primary {
-    @apply bg-[#AEFFDE] text-[#333333];
+    @apply bg-primary text-text-base dark:bg-primary-200 dark:text-text-base;
   }
 
   .badge-success {
-    @apply bg-[#AEFFDE] text-[#333333];
+    @apply bg-success text-text-base dark:bg-success dark:text-text-base;
   }
 
   .badge-warning {
-    @apply bg-yellow-200 text-yellow-800;
+    @apply bg-yellow-200 text-yellow-800 dark:bg-yellow-500 dark:text-yellow-100;
   }
 
   .badge-error {
-    @apply bg-[#f87171] text-white;
+    @apply bg-error text-text-inverse dark:bg-red-500 dark:text-red-100;
   }
 
   .badge-gray {
-    @apply bg-gray-200 text-gray-800;
+    @apply bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-300;
   }
 
   .container-app {
@@ -175,7 +175,7 @@
   }
 
   .alert-danger, .alert-success, .alert-warning, .alert-info {
-    @apply bg-[#E4F1FF] text-[#333333] border border-[#bcdcff];
+    @apply bg-section-light text-text-base border border-[#bcdcff] dark:bg-section-dark dark:text-text-inverse dark:border-primary-800;
   }
 
   .icon-background {
@@ -183,7 +183,7 @@
   }
 
   .icon-background-primary {
-    @apply bg-[#AEFFDE] text-[#333333];
+    @apply bg-primary text-text-base dark:bg-primary-200 dark:text-text-base;
   }
 
   .icon-background-lg {
@@ -193,23 +193,119 @@
     @apply w-10 h-10;
   }
 
+
   .btn-secondary-inverted {
-    @apply bg-white text-[#333333] border border-[#AEFFDE] hover:bg-[#E4F1FF] focus:ring-[#AEFFDE];
+    @apply bg-background-light text-text-base border border-primary hover:bg-primary-100 focus:ring-primary dark:bg-section-dark dark:text-text-inverse dark:border-primary-800 dark:hover:bg-primary-900 dark:focus:ring-primary-200;
   }
 
   .btn-primary-outline {
-    @apply bg-transparent text-[#333333] border border-[#AEFFDE] hover:bg-[#E4F1FF] focus:ring-[#AEFFDE];
+    @apply bg-transparent text-text-base border border-primary hover:bg-primary-100 focus:ring-primary dark:text-text-accent dark:border-primary-200 dark:hover:bg-section-dark dark:focus:ring-primary-200;
   }
 
   .btn-primary-ghost {
-    @apply bg-transparent text-[#333333] hover:bg-[#E4F1FF] focus:ring-[#AEFFDE];
+    @apply bg-transparent text-text-base hover:bg-primary-100 focus:ring-primary dark:text-text-accent dark:hover:bg-section-dark dark:focus:ring-primary-200;
   }
 
   .input-adornment-button {
-    @apply absolute inset-y-0 right-0 px-3 flex items-center text-[#92f2cb] hover:text-[#65e6b4] focus:outline-none;
+    @apply absolute inset-y-0 right-0 px-3 flex items-center text-[#92f2cb] hover:text-[#65e6b4] focus:outline-none dark:text-primary-200 dark:hover:text-primary;
   }
 
   .divider-text-label {
-    @apply px-2 bg-white text-[#333333];
+    @apply px-2 bg-background-light text-text-base dark:bg-background-dark dark:text-text-inverse;
+  }
+
+  /* General Layout & Spacing */
+  .section-padding-y {
+    @apply py-16 lg:py-24; /* Consistent vertical padding for sections */
+  }
+  .section-padding-x {
+    @apply px-4 sm:px-6 lg:px-8; /* Consistent horizontal padding, often part of .container-app */
+  }
+
+  /* Typography Enhancements */
+  .text-title-hero {
+    @apply text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-accent-black dark:text-accent-mint;
+  }
+  .text-subtitle-hero {
+    @apply text-lg sm:text-xl text-text-base dark:text-gray-300 max-w-2xl lg:max-w-3xl;
+  }
+  .text-section-title {
+    @apply text-3xl lg:text-4xl font-bold tracking-tight text-accent-black dark:text-text-inverse;
+  }
+  .text-section-subtitle {
+    @apply mt-4 text-lg text-text-base dark:text-gray-400 max-w-2xl mx-auto;
+  }
+  .text-card-title {
+    @apply text-xl font-semibold text-accent-black dark:text-text-inverse mb-3;
+  }
+  .text-card-description {
+    @apply text-text-base dark:text-gray-300 text-sm leading-relaxed;
+  }
+
+  /* Card Styles */
+  .card-base {
+    @apply bg-background-light dark:bg-section-dark rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out border border-gray-200 dark:border-gray-700;
+  }
+  .card-feature {
+    @apply card-base p-6 lg:p-8 flex flex-col items-center text-center;
+  }
+  .card-feature-icon-wrapper {
+    @apply p-4 rounded-full mb-6 inline-flex items-center justify-center ring-4;
+  }
+  .card-feature-icon-wrapper-primary {
+    @apply bg-primary-100 text-primary-800 ring-primary-100/50 dark:bg-primary-900/30 dark:text-primary-200 dark:ring-primary-900/50;
+  }
+   .card-feature-icon-wrapper-secondary { /* For features like 'Modern Fleet' */
+    @apply bg-section-light text-primary-800 ring-section-light/50 dark:bg-section-dark dark:text-primary-200 dark:ring-section-dark/50;
+  }
+
+  /* Navbar Specific */
+  .navbar-main {
+    @apply bg-background-light dark:bg-background-dark border-b border-gray-200 dark:border-gray-700 sticky top-0 z-50;
+  }
+  .navbar-container {
+    @apply container-app flex justify-between h-16; /* h-16 is common */
+  }
+  .navbar-logo-link {
+    @apply flex items-center gap-2 text-accent-black dark:text-text-inverse transition-colors;
+  }
+  .navbar-logo-text {
+    @apply text-xl font-semibold;
+  }
+  .navbar-links-desktop {
+    @apply hidden sm:ml-6 sm:flex sm:space-x-6 lg:space-x-8;
+  }
+  .navbar-link {
+    @apply inline-flex items-center px-1 pt-1 border-b-2 border-transparent text-sm font-medium text-text-base dark:text-gray-300 hover:text-primary dark:hover:text-primary-200 hover:border-primary dark:hover:border-primary-200 transition-colors;
+  }
+  /* .navbar-link-active - often handled by NavLink component from react-router-dom */
+  .navbar-mobile-menu-button {
+    @apply inline-flex items-center justify-center p-2 rounded-md text-gray-400 dark:text-gray-500 hover:text-text-base dark:hover:text-text-inverse hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary;
+  }
+  .navbar-mobile-menu {
+    @apply sm:hidden border-t border-gray-200 dark:border-gray-700 bg-background-light dark:bg-background-dark;
+  }
+  .navbar-mobile-link {
+    @apply block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-text-base dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 hover:text-accent-black dark:hover:text-text-inverse;
+  }
+
+  /* Section Specific */
+  .section-hero {
+    @apply bg-section-dark dark:bg-background-dark; /* Example: HomePage hero bg-[#333333] */
+  }
+  .section-hero-content {
+    @apply container-app section-padding-y flex flex-col items-center text-center;
+  }
+  .section-default {
+     @apply section-padding-y bg-background-light dark:bg-background-dark;
+  }
+  .section-offset { /* For sections with slightly different background */
+    @apply section-padding-y bg-gray-50 dark:bg-section-dark;
+  }
+  .section-cta {
+    @apply section-padding-y bg-gradient-to-r from-primary-100 to-primary text-text-base dark:from-primary-900/50 dark:to-primary-800 dark:text-text-inverse;
+  }
+  .section-cta-content {
+     @apply container-app max-w-4xl mx-auto text-center;
   }
 }
