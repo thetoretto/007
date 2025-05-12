@@ -11,7 +11,7 @@ const VehiclePage: React.FC = () => { // Renamed component
   const userRole = user?.role === 'admin' ? 'admin' : 'driver';
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50"> {/* Added page wrapper */}
+    <div className="flex flex-col min-h-screen card"> {/* Added page wrapper */}
       <DashboardNavbar userRole={userRole} /> {/* Pass userRole to DashboardNavbar */}
       
       {/* Added main content container with padding and max-width */}

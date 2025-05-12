@@ -9,7 +9,7 @@ const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: string; chi
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-75 overflow-y-auto h-full w-full z-50 flex justify-center items-center p-4">
-      <div className="relative mx-auto p-6 border w-full max-w-lg shadow-xl rounded-md bg-white">
+      <div className="relative mx-auto p-6 border w-full max-w-lg shadow-xl rounded-md card">
         <div className="flex justify-between items-center border-b pb-3 mb-4">
           <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-700 transition-colors">
@@ -174,7 +174,7 @@ const AdminHotPointManagement: React.FC = () => {
         </div>
 
         {/* Filters and Search */} 
-        <div className="mb-6 p-4 bg-white rounded-lg shadow-md">
+        <div className="mb-6 p-4 card rounded-lg shadow-md">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
             <div className="md:col-span-2">
               <label htmlFor="search" className="block text-sm font-medium text-gray-700 mb-1">Search Hot Points</label>
@@ -209,7 +209,7 @@ const AdminHotPointManagement: React.FC = () => {
         </div>
 
         {/* Hot Points Table */} 
-        <div className="bg-white shadow-lg rounded-lg overflow-x-auto">
+        <div className="card shadow-lg rounded-lg overflow-x-auto">
           {filteredHotPoints.length === 0 ? (
             <p className="p-6 text-center text-gray-500">No hot points found. Try adjusting your search or filters, or add a new hot point.</p>
           ) : (
@@ -223,7 +223,7 @@ const AdminHotPointManagement: React.FC = () => {
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="card divide-y divide-gray-200">
                 {filteredHotPoints.map((hp) => (
                   <tr key={hp.id} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{hp.name}</td>

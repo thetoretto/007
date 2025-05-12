@@ -72,7 +72,7 @@ const BenefitCard: React.FC<BenefitCardProps> = ({ icon: Icon, title, descriptio
   return (
   <motion.div 
     variants={fadeInUp} 
-    className="bg-white p-6 rounded-lg shadow-md border border-gray-200 cursor-pointer transition-all duration-300 ease-in-out"
+    className="card p-6 rounded-lg shadow-md border border-gray-200 cursor-pointer transition-all duration-300 ease-in-out"
     onClick={() => setIsExpanded(!isExpanded)}
     layout // Enable layout animation for smooth expansion
   >
@@ -106,7 +106,7 @@ const BenefitCard: React.FC<BenefitCardProps> = ({ icon: Icon, title, descriptio
 
 const LearnMorePage: React.FC = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-background-dark">
       <Navbar />
       <main className="flex-grow container-app py-16 sm:py-24">
         <motion.div

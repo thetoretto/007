@@ -197,7 +197,7 @@ const DriverDashboard: React.FC = () => {
       </div>
 
       {/* Trip Statistics Section */}
-      <div className="mb-8 bg-white rounded-lg shadow-sm p-4 sm:p-6">
+      <div className="mb-8 card rounded-lg shadow-sm p-4 sm:p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-gray-800">Trip Statistics</h2>
           <div className="flex items-center space-x-2">
@@ -231,7 +231,7 @@ const DriverDashboard: React.FC = () => {
       </div>
 
       {/* Income Section */}
-      <div className="mb-8 bg-white rounded-lg shadow-sm p-4 sm:p-6">
+      <div className="mb-8 card rounded-lg shadow-sm p-4 sm:p-6">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-semibold text-gray-800">Income ({timePeriod.charAt(0).toUpperCase() + timePeriod.slice(1)})</h2>
           <button onClick={toggleShowIncome} className="btn btn-ghost btn-sm">
@@ -248,7 +248,7 @@ const DriverDashboard: React.FC = () => {
             </p>
           </div>
         ) : (
-          <div className="text-center py-6 bg-gray-50 rounded-lg">
+          <div className="text-center py-6 card rounded-lg">
             <p className="text-gray-500">Income is hidden. Click 'Show Income' and enter password to view.</p>
           </div>
         )}
@@ -256,7 +256,7 @@ const DriverDashboard: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
+          <div className="card rounded-lg shadow-sm overflow-hidden mb-8">
             <div className="px-4 sm:px-6 lg:px-8 py-4 border-b border-gray-200">
               <h2 className="text-lg font-medium text-gray-900">Upcoming Trips</h2>
             </div>
@@ -267,7 +267,7 @@ const DriverDashboard: React.FC = () => {
                   {upcomingDetailedTrips.map((trip) => (
                     <div
                       key={trip.id}
-                      className={`hover:bg-gray-50 cursor-pointer p-4 sm:px-6 lg:px-8 transition-colors ${selectedTrip?.id === trip.id ? 'bg-primary-50' : ''
+                      className={`hover:card cursor-pointer p-4 sm:px-6 lg:px-8 transition-colors ${selectedTrip?.id === trip.id ? 'bg-primary-50' : ''
                         }`}
                       onClick={() => setSelectedTrip(trip.id === selectedTrip?.id ? null : trip)}
                     >
@@ -404,25 +404,25 @@ const DriverDashboard: React.FC = () => {
 
         {/* Right Sidebar */}
         <div>
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
+          <div className="card rounded-lg shadow-sm overflow-hidden mb-8">
             <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
               <h2 className="text-lg font-medium text-gray-900">Daily Summary</h2>
             </div>
             <div className="p-4 sm:px-6">
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="card p-3 rounded-lg">
                   <p className="text-xs text-gray-500 mb-1">Trips Today</p>
                   <p className="text-2xl font-bold text-primary-600">{totalTripsToday}</p>
                 </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="card p-3 rounded-lg">
                   <p className="text-xs text-gray-500 mb-1">Passengers (Est.)</p>
                   <p className="text-2xl font-bold text-primary-600">{totalPassengers}</p>
                 </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="card p-3 rounded-lg">
                   <p className="text-xs text-gray-500 mb-1">Completed</p>
                   <p className="text-2xl font-bold text-success-600">{completedTrips}</p>
                 </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
+                <div className="card p-3 rounded-lg">
                   <p className="text-xs text-gray-500 mb-1">Upcoming</p>
                   <p className="text-2xl font-bold text-accent-600">{upcomingTripsCount}</p>
                 </div>
@@ -430,7 +430,7 @@ const DriverDashboard: React.FC = () => {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+          <div className="card rounded-lg shadow-sm overflow-hidden">
             <div className="px-4 sm:px-6 py-4 border-b border-gray-200">
               <h2 className="text-lg font-medium text-gray-900">Quick Actions</h2>
             </div>

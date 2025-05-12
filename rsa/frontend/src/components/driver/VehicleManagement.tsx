@@ -100,7 +100,7 @@ const VehicleManagement: React.FC<VehicleManagementProps> = ({ userRole }) => {
 
   return (
     // Updated: Container styling
-    <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
+    <div className="card p-6 rounded-lg shadow-md border border-gray-200">
       {/* Updated: Header and button styling */}
       <div className="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
         <h2 className="text-xl font-semibold text-gray-800">Manage Your Vehicles</h2>
@@ -128,7 +128,7 @@ const VehicleManagement: React.FC<VehicleManagementProps> = ({ userRole }) => {
               <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="card divide-y divide-gray-200">
             {vehicles.length === 0 ? (
               <tr>
                 <td colSpan={userRole === 'admin' ? 6 : 5} className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">No vehicles found.</td>
@@ -170,7 +170,7 @@ const VehicleManagement: React.FC<VehicleManagementProps> = ({ userRole }) => {
       {/* Modal - Updated Styling */} 
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
-          <div className="relative mx-auto p-6 border w-full max-w-md shadow-xl rounded-lg bg-white">
+          <div className="relative mx-auto p-6 border w-full max-w-md shadow-xl rounded-lg card">
             <div className="flex justify-between items-center border-b border-gray-200 pb-4 mb-5">
               <h3 className="text-lg font-semibold text-gray-900">
                 {vehicleToEdit ? 'Edit Vehicle' : 'Add New Vehicle'}

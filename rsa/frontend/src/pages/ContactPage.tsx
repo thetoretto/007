@@ -6,7 +6,7 @@ import Footer from '../components/common/Footer'; // Assuming Footer is updated
 
 const ContactPage: React.FC = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-background-dark">
       <Navbar />
       {/* Updated: Page padding and max-width */}
       <main className="flex-grow py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
@@ -20,7 +20,7 @@ const ContactPage: React.FC = () => {
           </div>
 
           {/* Updated: Card styling, grid layout, rounded-xl */}
-          <div className="bg-white rounded-xl shadow-lg overflow-hidden lg:grid lg:grid-cols-2 lg:gap-px"> {/* Added rounded-xl */}
+          <div className="card rounded-xl shadow-lg overflow-hidden lg:grid lg:grid-cols-2 lg:gap-px"> {/* Added rounded-xl */}
             {/* Contact Information - Refined Styling */}
             <div className="relative p-8 lg:p-10 bg-primary-900 text-white"> {/* Pocket-like gradient */}
               <h2 className="text-2xl font-semibold mb-6">Contact Information</h2>
@@ -42,7 +42,7 @@ const ContactPage: React.FC = () => {
             </div>
 
             {/* Contact Form - Refined Styling */}
-            <div className="p-8 lg:p-10 bg-white">
+            <div className="p-8 lg:p-10 dark:bg-background-lelo">
               <h2 className="text-2xl font-semibold text-gray-900 mb-6">Send us a Message</h2>
               <form action="#" method="POST">
                 <div className="grid grid-cols-1 gap-y-6">
@@ -95,7 +95,7 @@ const ContactPage: React.FC = () => {
                   <div>
                     <button
                       type="submit"
-                      className="btn btn-primary w-full"
+                      className="btn btn-secondary w-full"
                     >
                       Send Message
                     </button>

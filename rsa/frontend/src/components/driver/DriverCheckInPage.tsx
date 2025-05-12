@@ -41,7 +41,7 @@ const DriverCheckInPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4">
-      <div className="bg-white shadow-xl rounded-lg p-8 md:p-12 w-full max-w-md">
+      <div className="card shadow-xl rounded-lg p-8 md:p-12 w-full max-w-md">
         <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">Driver Check-In</h1>
         
         <form onSubmit={handleCheckIn} className="space-y-6">

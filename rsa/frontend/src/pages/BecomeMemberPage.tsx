@@ -39,7 +39,7 @@ const BecomeMemberPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
+    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-background-dark">
       <Navbar />
       <main className="flex-grow container-app py-16 sm:py-24">
         <motion.div
@@ -60,7 +60,7 @@ const BecomeMemberPage: React.FC = () => {
 
           <motion.div variants={fadeInUp} className="grid md:grid-cols-2 gap-8">
             {/* Registration Form */}
-            <motion.div className="bg-white p-8 rounded-lg shadow-xl border border-gray-200">
+            <motion.div className="card p-8 rounded-lg shadow-xl border border-gray-200">
               {isSubmitted ? (
                 <div className="text-center py-8">
                   <motion.div initial={{ scale: 0.5, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
@@ -243,7 +243,7 @@ const BecomeMemberPage: React.FC = () => {
 
             {/* Benefits Section */}
             <motion.div className="space-y-6">
-              <div className="bg-white p-6 rounded-lg border border-gray-200 shadow-sm">
+              <div className="card p-6 rounded-lg border border-gray-200 shadow-sm">
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">Driver Benefits</h3>
                 <div className="space-y-4">
                   <div className="flex items-start space-x-3">

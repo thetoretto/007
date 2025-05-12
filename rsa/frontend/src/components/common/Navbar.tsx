@@ -55,9 +55,6 @@ const Navbar: React.FC = () => {
                 Contact
               </Link>
               {/* Consider removing or hiding Components link in production */}
-              <Link to="/components" className="navbar-link">
-                Components
-              </Link>
             </div>
           </div>
           {/* ProfileDropdown remains */}

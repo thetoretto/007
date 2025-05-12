@@ -149,10 +149,10 @@ const Statistics: React.FC = () => {
 
       {/* Stats Cards (remains) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="bg-white overflow-hidden shadow-sm rounded-lg">
+        <div className="card overflow-hidden shadow-sm rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
-              <div className="flex-shrink-0 bg-primary-100 rounded-md p-3">
+              <div className="flex-shrink-0 card rounded-md p-3">
                 <Activity className="h-6 w-6 text-primary-600" />
               </div>
               <div className="ml-5 w-0 flex-1">
@@ -167,10 +167,10 @@ const Statistics: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow-sm rounded-lg">
+        <div className="card overflow-hidden shadow-sm rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
-              <div className="flex-shrink-0 bg-primary-100 rounded-md p-3">
+              <div className="flex-shrink-0 card rounded-md p-3">
                 <Users className="h-6 w-6 text-primary-600" />
               </div>
               <div className="ml-5 w-0 flex-1">
@@ -185,10 +185,10 @@ const Statistics: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow-sm rounded-lg">
+        <div className="card overflow-hidden shadow-sm rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
-              <div className="flex-shrink-0 bg-primary-100 rounded-md p-3">
+              <div className="flex-shrink-0 card rounded-md p-3">
                 <DollarSign className="h-6 w-6 text-primary-600" />
               </div>
               <div className="ml-5 w-0 flex-1">
@@ -203,10 +203,10 @@ const Statistics: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-white overflow-hidden shadow-sm rounded-lg">
+        <div className="card overflow-hidden shadow-sm rounded-lg">
           <div className="p-5">
             <div className="flex items-center">
-              <div className="flex-shrink-0 bg-primary-100 rounded-md p-3">
+              <div className="flex-shrink-0 card rounded-md p-3">
                 <TrendingUp className="h-6 w-6 text-primary-600" />
               </div>
               <div className="ml-5 w-0 flex-1">
@@ -224,7 +224,7 @@ const Statistics: React.FC = () => {
       
       {/* Charts Section (existing charts remain) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="card rounded-lg shadow-sm p-6">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-medium text-gray-900">Daily Trip & Revenue Statistics</h2>
             <div className="flex items-center space-x-2">
@@ -266,7 +266,7 @@ const Statistics: React.FC = () => {
           </div>
         </div>
         
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="card rounded-lg shadow-sm p-6">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-medium text-gray-900">User Distribution</h2>
             <div className="flex items-center space-x-2">
@@ -301,7 +301,7 @@ const Statistics: React.FC = () => {
       {/* New Charts Section: Driver Origins, Popular Destinations, Payment Overview */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
         {/* Driver Origins */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="card rounded-lg shadow-sm p-6">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-medium text-gray-900">Driver Common Origins</h2>
             <MapPin className="h-5 w-5 text-gray-400" />
@@ -328,7 +328,7 @@ const Statistics: React.FC = () => {
         </div>
 
         {/* Popular Destinations */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="card rounded-lg shadow-sm p-6">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-medium text-gray-900">Popular Destinations</h2>
             <Navigation className="h-5 w-5 text-gray-400" />
@@ -361,7 +361,7 @@ const Statistics: React.FC = () => {
         </div>
 
         {/* Simulated Payment Overview */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="card rounded-lg shadow-sm p-6">
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-lg font-medium text-gray-900">Payment Overview</h2>
             <CreditCard className="h-5 w-5 text-gray-400" />

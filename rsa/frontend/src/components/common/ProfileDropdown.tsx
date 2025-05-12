@@ -79,7 +79,7 @@ const ProfileDropdown: React.FC = () => {
       {/* Dropdown Menu */}
       {isOpen && (
         <div
-          className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-20"
+          className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 card ring-1 ring-black ring-opacity-5 focus:outline-none z-20"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="user-menu-button"

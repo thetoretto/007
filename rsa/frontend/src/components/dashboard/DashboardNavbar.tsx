@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Settings, Activity, Users, Clock, Menu, X, ChevronDown } from "react-feather";
 import useAuthStore from '../../store/authStore';
 import ProfileDropdown from '../common/ProfileDropdown'; // Import the new component
+import ThemeToggle from '../common/ThemeToggle'; // Import the new component
 
 interface NavItem {
   path: string;
@@ -91,7 +92,7 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ userRole }) => {
   }, []);
 
   return (
-    <div className="bg-white shadow-sm mb-6">
+    <div className="card shadow-sm mb-6">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -135,7 +136,7 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ userRole }) => {
                       <ChevronDown className={`h-4 w-4 ml-1 transition-transform duration-200 ${openDesktopSubmenu === item.path ? 'transform rotate-180' : ''}`} />
                     </button>
                     {openDesktopSubmenu === item.path && (
-                      <div className="absolute z-20 bg-white shadow-lg rounded-md mt-2 py-1 w-56 origin-top-right ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <div className="absolute z-20 card shadow-lg rounded-md mt-2 py-1 w-56 origin-top-right ring-1 ring-black ring-opacity-5 focus:outline-none">
                         {item.submenu.map((sub) => (
                           <Link
                             key={sub.path}
@@ -166,6 +167,7 @@ const DashboardNavbar: React.FC<DashboardNavbarProps> = ({ userRole }) => {
           </nav>
           {/* Add ProfileDropdown to the desktop view */}
           <div className="hidden md:flex items-center ml-4">
+          <ThemeToggle /> 
             <ProfileDropdown />
           </div>
         </div>

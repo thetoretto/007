@@ -34,7 +34,7 @@ const TripTicket: React.FC<TripTicketProps> = ({ booking }) => {
   const statusInfo = getStatusInfo();
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6 md:p-8 relative border border-gray-200">
+    <div className="card rounded-lg shadow-lg p-6 md:p-8 relative border border-gray-200">
       {/* Header with QR Code and Booking ID */}
       <div className="flex flex-col sm:flex-row justify-between items-start mb-6 pb-6 border-b border-dashed border-gray-300">
         <div className="mb-4 sm:mb-0">

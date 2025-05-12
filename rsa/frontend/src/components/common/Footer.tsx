@@ -6,7 +6,7 @@ import { Facebook, Twitter, Instagram, Mail, Phone, MapPin } from 'lucide-react'
 const Footer: React.FC = () => {
   return (
     // Updated: Changed background, text color, padding
-    <footer className="bg-gray-50 border-t border-gray-200">
+    <footer className="card border-t border-gray-200">
       {/* Updated: Increased max-width, adjusted padding */}
       <div className="container-app py-12 lg:py-16">
         {/* Updated: Adjusted grid layout and gap */}

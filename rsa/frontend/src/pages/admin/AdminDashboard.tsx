@@ -179,10 +179,10 @@ const AdminDashboard: React.FC = () => {
             <MapPin className="h-4 w-4 mr-2" />
             Manage Hotpoints
           </Link>
-          {/* <Link to="/admin/reports" className="btn btn-secondary">
+          <Link to="/admin/reports" className="btn btn-secondary">
             <Activity className="h-4 w-4 mr-2" />
             Generate Reports
-          </Link> */}
+          </Link>
           <div className="flex items-center space-x-1">
             <Filter className="h-5 w-5 text-gray-500" />
             <select
@@ -200,8 +200,8 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Stats Cards - Updated */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
-        <div className="bg-white p-6 rounded-lg shadow-sm">
+      <div className="card grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+        <div className=" p-6 rounded-lg shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <p className="text-sm font-medium text-gray-500">Total Trips</p>
             <Calendar className="h-6 w-6 text-primary-500" />
@@ -210,7 +210,7 @@ const AdminDashboard: React.FC = () => {
           <p className="text-xs text-gray-400 capitalize">For {timePeriod} Period</p>
         </div>
 
-        <div className="bg-white p-6 rounded-lg shadow-sm">
+        <div className=" p-6 rounded-lg shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <p className="text-sm font-medium text-gray-500">Total Passengers</p>
             <Users className="h-6 w-6 text-green-500" />
@@ -222,12 +222,12 @@ const AdminDashboard: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
         {/* Best Performing Drivers */}
-        <div className="lg:col-span-1 bg-white p-6 rounded-lg shadow-sm">
+        <div className="card lg:col-span-1  p-6 rounded-lg shadow-sm">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Top Drivers</h2>
           {adminData.bestPerformingDrivers.length > 0 ? (
             <ul className="space-y-4">
               {adminData.bestPerformingDrivers.map((driver, index) => (
-                <li key={driver.id} className="flex items-center space-x-3 p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors">
+                <li key={driver.id} className="flex items-center space-x-3 p-3 card rounded-md hover:bg-gray-100 transition-colors">
                   <img src={driver.avatar || `https://ui-avatars.com/api/?name=${driver.name.replace(' ', '+')}&background=random`} alt={driver.name} className="h-10 w-10 rounded-full object-cover"/>
                   <div>
                     <p className="font-medium text-gray-700 text-sm">{driver.name}</p>
@@ -246,7 +246,7 @@ const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Active Routes */}
-        <div className="lg:col-span-2 bg-white p-6 rounded-lg shadow-sm">
+        <div className="card lg:col-span-2 bg-white p-6 rounded-lg shadow-sm">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Most Active Routes</h2>
           {adminData.activeRoutes.length > 0 ? (
             <div className="space-y-3">
@@ -271,7 +271,7 @@ const AdminDashboard: React.FC = () => {
 
 
       {/* Recent Trips List - (Existing, can be kept or modified) */}
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
+      <div className="card bg-white rounded-lg shadow-sm overflow-hidden mb-8">
         <div className="px-4 sm:px-6 lg:px-8 py-4 border-b border-gray-200 flex justify-between items-center">
           <h2 className="text-lg font-medium text-gray-900">Manage Trips</h2>
           <span className="text-sm text-gray-500">Displaying {sortedTrips.slice(0,5).length} of {sortedTrips.length} trips</span>
@@ -322,7 +322,7 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Simulated Payment Method Overview */}
-      <div className="bg-white p-6 rounded-lg shadow-sm mb-8">
+      <div className="card  p-6 rounded-lg shadow-sm mb-8">
         <h2 className="text-xl font-semibold text-gray-800 mb-4">Simulated Payment Overview ({timePeriod})</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
             <div>

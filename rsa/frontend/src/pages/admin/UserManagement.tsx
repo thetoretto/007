@@ -13,7 +13,7 @@ const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: string; chi
   if (!isOpen) return null;
   return (
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50 flex justify-center items-center">
-      <div className="relative mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white">
+      <div className="relative mx-auto p-5 border w-full max-w-md shadow-lg rounded-md card">
         <div className="flex justify-between items-center border-b pb-3 mb-3">
           <h3 className="text-lg font-medium text-gray-900">{title}</h3>
           <button onClick={onClose} className="text-gray-400 hover:text-gray-600">
@@ -196,27 +196,27 @@ const UserManagement: React.FC = () => {
       <div className="mb-8">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">User Overview</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <div className="card p-4 rounded-lg shadow-sm border border-gray-200">
             <h3 className="text-sm font-medium text-gray-500">Total Users</h3>
             <p className="mt-1 text-3xl font-semibold text-gray-900">{userStats.total}</p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <div className="card p-4 rounded-lg shadow-sm border border-gray-200">
             <h3 className="text-sm font-medium text-gray-500">Passengers</h3>
             <p className="mt-1 text-3xl font-semibold text-blue-600">{userStats.passengers}</p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <div className="card p-4 rounded-lg shadow-sm border border-gray-200">
             <h3 className="text-sm font-medium text-gray-500">Drivers</h3>
             <p className="mt-1 text-3xl font-semibold text-green-600">{userStats.drivers}</p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <div className="card p-4 rounded-lg shadow-sm border border-gray-200">
             <h3 className="text-sm font-medium text-gray-500">Admins</h3>
             <p className="mt-1 text-3xl font-semibold text-purple-600">{userStats.admins}</p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <div className="card p-4 rounded-lg shadow-sm border border-gray-200">
             <h3 className="text-sm font-medium text-gray-500">Active Users</h3>
             <p className="mt-1 text-3xl font-semibold text-teal-600">{userStats.active}</p>
           </div>
-          <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+          <div className="card p-4 rounded-lg shadow-sm border border-gray-200">
             <h3 className="text-sm font-medium text-gray-500">Inactive Users</h3>
             <p className="mt-1 text-3xl font-semibold text-red-600">{userStats.inactive}</p>
           </div>
@@ -239,7 +239,7 @@ const UserManagement: React.FC = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
+      <div className="card rounded-lg shadow-sm overflow-hidden mb-8">
         <div className="px-4 sm:px-6 lg:px-8 py-4 border-b border-gray-200">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-3 md:space-y-0">
             <h2 className="text-lg font-medium text-gray-900">Users ({filteredUsers.length})</h2>
@@ -305,7 +305,7 @@ const UserManagement: React.FC = () => {
                 <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="card divide-y divide-gray-200">
               {filteredUsers.length > 0 ? (
                 filteredUsers.map((u) => (
                   <tr key={u.id}>

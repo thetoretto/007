@@ -381,7 +381,7 @@ const TripForm: React.FC<TripFormProps> = ({ isOpen, onClose, tripToEdit, onSubm
   return (
     // Modal overlay and container for non-embedded use
     <div className="fixed inset-0 bg-gray-600 bg-opacity-75 overflow-y-auto h-full w-full z-50 flex items-center justify-center p-4">
-      <div className="relative mx-auto p-6 border w-full max-w-lg shadow-xl rounded-lg bg-white">
+      <div className="relative mx-auto p-6 border w-full max-w-lg shadow-xl rounded-lg card">
         <div className="flex justify-between items-center border-b border-gray-200 pb-4 mb-5">
           <h3 className="text-lg font-semibold text-gray-900">
             {tripToEdit ? 'Edit Trip Details' : 'Create New Trip'}

@@ -31,6 +31,7 @@ export default {
           light: '#ffffff',
           dark: '#333333',
           lelo:'#AEFFDE',
+          noir:'#000000',
         },
         text: {
           base: '#333333',

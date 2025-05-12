@@ -112,7 +112,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
 
             <div>
               {/* Updated: Label style */}
-              <label htmlFor="password" className="form-label"> /* form-label is good */
+              <label htmlFor="password" className="form-label"> 
                 Password
               </label>
               <div className="relative">
@@ -159,14 +159,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
                   disabled={loading}
                 />
                 {/* Updated: Label style */}
-                <label htmlFor="rememberMe" className="ml-2 block text-sm text-text-base dark:text-gray-300"> /* Adjusted for dark mode */
+                <label htmlFor="rememberMe" className="ml-2 block text-sm text-text-base dark:text-gray-300"> 
                   Remember me
                 </label>
               </div>
 
               <div className="text-sm">
                 {/* Updated: Link style */}
-                <Link to="/forgot-password" className="font-medium text-primary-800 hover:underline dark:text-primary-200"> /* Using link colors from index.css */
+                <Link to="/forgot-password" className="font-medium text-primary-800 hover:underline dark:text-primary-200"> 
                   Forgot password?
                 </Link>
               </div>
@@ -187,26 +187,23 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
       </Formik>
 
       {/* Updated: Divider and link styles */}
-      <div className="mt-8"> /* Increased margin slightly */
+      <div className="mt-8">
         <div className="relative">
           <div className="absolute inset-0 flex items-center" aria-hidden="true">
             <div className="w-full border-t border-gray-300 dark:border-gray-600" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="divider-text-label">Or continue with</span> /* divider-text-label is good */
+            <span className="divider-text-label">Or continue with</span> 
           </div>
         </div>
 
-        <div className="mt-6 grid grid-cols-1 gap-4">
-          {/* Example Social Login Buttons (Add your actual components/logic here) */}
-          <button type="button" className="btn btn-secondary w-full">
-            {/* <GoogleIcon className="mr-2 h-4 w-4" /> */}
-            Sign in with Google
-          </button>
-          <button type="button" className="btn btn-secondary w-full">
-            {/* <FacebookIcon className="mr-2 h-4 w-4" /> */}
-            Sign in with Facebook
-          </button>
+        <div className="mt-6 text-center text-sm">
+        <p className="text-text-base dark:text-gray-400">
+          Don't have an account?{' '}
+          <Link to="/" className="font-semibold leading-6 text-primary-800 hover:underline dark:text-primary-200">
+            Return home
+          </Link>
+        </p>
         </div>
 
         <div className="mt-6 text-center text-sm">

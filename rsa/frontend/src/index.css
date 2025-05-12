@@ -63,7 +63,7 @@
   }
 
   .btn-secondary {
-    @apply bg-primary-100 text-text-base border border-background-light hover:bg-[#cce5ff] focus:ring-primary-100 dark:bg-section-dark dark:text-text-inverse dark:border-primary-900 dark:hover:bg-primary-900 dark:focus:ring-primary-800;
+    @apply bg-primary-900 text-text-inverse border border-background-light hover:bg-[#cce5ff]  dark:bg-section-dark dark:text-text-accent dark:border-primary-900 dark:hover:bg-primary-900 dark:focus:ring-primary-800;
   }
 
   .btn-accent {
@@ -108,7 +108,7 @@
   }
 
   .card {
-    @apply bg-background-light shadow rounded-lg overflow-hidden dark:bg-section-dark dark:border dark:border-primary-900;
+    @apply bg-background-light shadow rounded-lg overflow-hidden dark:bg-section-dark dark:border dark:border-gray-700;
   }
 
   .card-alt {
