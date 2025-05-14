@@ -31,7 +31,7 @@ const VehicleStep: React.FC<VehicleStepProps> = ({ vehicles, selectedVehicleId, 
               className={`
                 p-4 border rounded-lg cursor-pointer transition-all duration-200 ease-in-out 
                 flex justify-between items-center hover:shadow-md hover:border-blue-400
-                ${selectedVehicleId === vehicle.id ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-300' : 'border-gray-200 bg-white'}
+                ${selectedVehicleId === vehicle.id ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-300' : 'border-gray-200 card'}
               `}
               onClick={() => handleSelect(vehicle.id)}
             >

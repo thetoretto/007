@@ -11,7 +11,7 @@ import PasswordConfirmationModal from '../../components/common/PasswordConfirmat
 
 const DriverDashboard: React.FC = () => {
   const { user } = useAuthStore();
-  const { trips, fetchTrips, removeTrip } = useTripStore();
+  const { trips, fetchTrips, updateTrip, markTripAsCompleted } = useTripStore(); // Added markTripAsCompleted
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
   const [isTripModalOpen, setIsTripModalOpen] = useState(false);
   const [tripToEdit, setTripToEdit] = useState<Trip | null>(null);
@@ -145,17 +145,6 @@ const DriverDashboard: React.FC = () => {
     // Future: Update booking status via API/store
   };
 
-  const handleCancelTrip = (tripId: string) => {
-    if (window.confirm('Are you sure you want to cancel this trip?')) {
-      // In a real app, you'd likely call an API endpoint first
-      // For now, just update the status in the store (or remove if cancellation means deletion)
-      // updateTrip(tripId, { status: 'cancelled' });
-      removeTrip(tripId); // Or removeTrip(tripId) depending on business logic
-      alert(`Trip ${tripId} cancelled (simulated).`);
-      setSelectedTrip(null); // Close details view
-    }
-  };
-
   const openEditModal = (trip: Trip) => {
     setTripToEdit(trip);
     setIsTripModalOpen(true);
@@ -168,6 +157,30 @@ const DriverDashboard: React.FC = () => {
 
   // Define completedTrips just before the return statement
   const completedTrips = trips.filter(t => t.status === 'completed').length;
+
+  const availableTrips = useMemo(() => {
+    return trips.filter(trip => !trip.driverId || trip.driverId === '');
+  }, [trips]);
+
+  const handleClaimTrip = (tripId: string) => {
+    if (!user || !user.id) {
+      alert("You must be logged in to claim a trip.");
+      return;
+    }
+    if (window.confirm("Are you sure you want to claim this trip?")) {
+      updateTrip(tripId, { driverId: user.id, status: 'scheduled' }); // Assuming 'scheduled' is an appropriate status after claiming
+      alert("Trip claimed successfully!");
+      fetchTrips(); // Refresh trip lists
+    }
+  };
+
+  const handleMarkTripAsCompleted = (tripId: string) => {
+    if (window.confirm("Are you sure you want to mark this trip as completed?")) {
+      markTripAsCompleted(tripId);
+      alert("Trip marked as completed!");
+      fetchTrips(); // Refresh trips to update UI
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -195,6 +208,30 @@ const DriverDashboard: React.FC = () => {
           </Link>
         </div>
       </div>
+
+      {/* Available Trips Section */}
+      {availableTrips.length > 0 && (
+        <div className="mb-8 card bg-base-100 shadow-xl p-4 sm:p-6">
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">Available Trips for Claiming</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {availableTrips.map(trip => (
+              <div key={trip.id} className="card bg-base-200 shadow-md p-4">
+                <h3 className="font-semibold text-lg">{trip.route?.origin.name} to {trip.route?.destination.name}</h3>
+                <p className="text-sm text-gray-600">Date: {trip.date} at {trip.time}</p>
+                <p className="text-sm text-gray-600">Vehicle: {trip.vehicle?.make} {trip.vehicle?.model} ({trip.vehicle?.licensePlate})</p>
+                {trip.price && <p className="text-sm text-gray-600">Price: ${trip.price.toFixed(2)}</p>}
+                <p className={`text-sm font-medium mt-2 ${trip.status === 'pending_approval' ? 'text-warning' : 'text-info'}`}>Status: {trip.status}</p>
+                <button 
+                  onClick={() => handleClaimTrip(trip.id)} 
+                  className="btn btn-sm btn-success mt-3 w-full"
+                >
+                  Claim Trip
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Trip Statistics Section */}
       <div className="mb-8 card rounded-lg shadow-sm p-4 sm:p-6">
@@ -274,8 +311,7 @@ const DriverDashboard: React.FC = () => {
                       <div className="flex items-center justify-between">
                         <div>
                           <h3 className="text-base font-medium text-gray-900">
-                            {/* {trip.route?.name || 'Unknown Route'} */} {/* Removed route name */}
-                            {trip.fromLocation} to {trip.toLocation} {/* Added from/to location */}
+                            {trip.fromLocation} to {trip.toLocation}
                           </h3>
                           <div className="mt-1 flex items-center text-sm text-gray-500">
                             <Calendar className="h-4 w-4 mr-1" />
@@ -284,13 +320,23 @@ const DriverDashboard: React.FC = () => {
                             <Clock className="h-4 w-4 mr-1" />
                             <span>{trip.time}</span>
                           </div>
+                          <p className="text-xs text-gray-500 mt-1">
+                            Status: <span className={`font-medium ${trip.status === 'completed' ? 'text-success-600' :
+                              trip.status === 'active' ? 'text-sky-600' :
+                              trip.status === 'cancelled' ? 'text-error-600' :
+                                'text-warning-600' // For scheduled, pending_approval
+                              }`}>{trip.status.charAt(0).toUpperCase() + trip.status.slice(1).replace('_', ' ')}</span>
+                          </p>
+                          <p className="text-xs text-gray-500 mt-1">
+                            Onboarding: {trip.confirmedBookings || 0} confirmed / {trip.totalBookings || 0} total bookings
+                          </p>
                         </div>
 
                         <div className="flex flex-col items-end">
                           <div className="flex items-center">
                             <Users className="h-4 w-4 text-gray-400 mr-1" />
                             <span className="text-sm">
-                              {trip.confirmedBookings} / {trip.vehicle?.capacity || 'N/A'}
+                              {trip.confirmedBookings || 0} / {trip.vehicle?.capacity || 'N/A'} seats
                             </span>
                           </div>
                           {trip.pendingBookings > 0 && (
@@ -316,27 +362,21 @@ const DriverDashboard: React.FC = () => {
                               >
                                 <Edit size={12} className="mr-1" /> Edit
                               </button>
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleCancelTrip(trip.id);
-                                }}
-                                className="btn btn-danger py-1 px-3 text-xs flex items-center"
-                              >
-                                <Trash2 size={12} className="mr-1" /> Cancel Trip
-                              </button>
-                              {/* Link to a dedicated Trip Details page might still be useful */}
-                              {/* <Link
-                                to={`/driver/trips/${trip.id}`}
-                                onClick={(e) => e.stopPropagation()}
-                                className="btn btn-primary py-1 px-3 text-xs"
-                              >
-                                Trip Details
-                              </Link> */}
+                              {trip.status !== 'completed' && trip.status !== 'cancelled' && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleMarkTripAsCompleted(trip.id);
+                                  }}
+                                  className="btn btn-success py-1 px-3 text-xs flex items-center"
+                                >
+                                  <CheckCircle size={12} className="mr-1" /> Mark Completed
+                                </button>
+                              )}
                             </div>
                           </div>
 
-                          {/* Passenger List */}
+                          {/* Passenger List */}                          
                           {trip.bookings.length > 0 ? (
                             <div className="divide-y divide-gray-100 max-h-60 overflow-y-auto pr-2">
                               {trip.bookings.map((booking) => (

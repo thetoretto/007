@@ -1,5 +1,6 @@
 // d:\007\rsa\frontend\src\components\booking\types.ts
 import { HotPoint } from '../../store/hotPointStore'; // Import the global HotPoint type
+import { Trip as StoreTrip } from '../../store/tripStore'; // Import StoreTrip
 
 export interface Station {
   id: string;
@@ -60,18 +61,18 @@ export interface BookingDetails {
 // State for the Booking Widget reducer
 export interface BookingState {
   currentStep: number;
-  selectedRoute: Route | null;
-  selectedVehicle: Vehicle | null;
+  selectedTrip: StoreTrip | null; // Changed from selectedRoute
+  selectedVehicle: Vehicle | null; // This is derived from selectedTrip in the widget
   selectedSeats: Seat[];
   needsPickup: boolean;
   selectedPickupPoint: BookingPickupPoint | null; // Use the aliased/imported HotPoint
   bookingDetails: BookingDetails | null;
   // Data fetched or passed as props
-  routes: Route[];
-  vehicles: Vehicle[]; // Filtered based on selectedRoute
-  seats: Seat[]; // Fetched based on selectedVehicle
-  pickupPoints: BookingPickupPoint[]; // Use the aliased/imported HotPoint
-  allHotPoints?: HotPoint[]; // To store all fetched hot points, used by BookingWidget
+  availableTrips: StoreTrip[]; // Changed from routes: Route[]
+  // vehicles: Vehicle[]; // This was already commented out or managed via selectedTrip
+  seats: Seat[]; // Fetched based on selectedVehicle (from selectedTrip)
+  pickupPoints: BookingPickupPoint[]; // Filtered HotPoints for the selectedTrip
+  allHotPoints: HotPoint[]; // All available hot points, used to filter pickupPoints
   // UI State
   error: string | null;
   loading: boolean;
@@ -82,8 +83,8 @@ export type BookingAction =
   | { type: 'NEXT_STEP' }
   | { type: 'PREV_STEP' }
   | { type: 'GO_TO_STEP'; payload: number }
-  | { type: 'SELECT_ROUTE'; payload: string }
-  | { type: 'SELECT_VEHICLE'; payload: string }
+  | { type: 'SELECT_TRIP'; payload: string } // Changed from SELECT_ROUTE
+  | { type: 'SELECT_VEHICLE'; payload: string } // This might be implicitly handled by SELECT_TRIP
   | { type: 'SELECT_SEAT'; payload: string }
   | { type: 'DESELECT_SEAT'; payload: string }
   | { type: 'TOGGLE_PICKUP'; payload: boolean }
@@ -91,4 +92,6 @@ export type BookingAction =
   | { type: 'SET_LOADING'; payload: boolean }
   | { type: 'SET_ERROR'; payload: string | null }
   | { type: 'CONFIRM_BOOKING_SUCCESS'; payload: BookingDetails }
-  | { type: 'RESET' };
+  | { type: 'RESET' }
+  | { type: 'SET_AVAILABLE_TRIPS', payload: StoreTrip[] } // Added to match BookingWidget
+  | { type: 'SET_ALL_HOT_POINTS', payload: HotPoint[] }; // Added to match BookingWidget

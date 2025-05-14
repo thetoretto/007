@@ -1,16 +1,25 @@
 // d:\007\rsa\frontend\src\store\bookingStore.ts
 import { create } from 'zustand';
-import { Booking, BookingStatus } from '../types';
-import { mockBookings, mockUsers, mockVehicles, mockRoutes, mockTimeSlots } from '../utils/mockData'; // Assuming mockBookings is available
+import { Booking, BookingStatus, Passenger as GlobalPassenger } from '../types'; // Import global types
+export { BookingStatus }; // Re-export BookingStatus
+import { mockBookings, mockUsers, mockVehicles, mockRoutes, mockTimeSlots, BookingWithDetails as GlobalBookingWithDetails } from '../utils/mockData'; // Assuming mockBookings is available and import BookingWithDetails
 import useTripStore, { Trip as StoreTrip } from './tripStore'; // Import from tripStore
 
-export interface BookingWithDetails extends Booking {
-  passenger?: typeof mockUsers[0];
-  trip?: StoreTrip; // Use Trip from tripStore for consistency
-  vehicle?: StoreTrip['vehicle']; // Use vehicle type from StoreTrip
-  route?: StoreTrip['route']; // Use route type from StoreTrip
-  // timeSlot is implicitly part of StoreTrip (date, time)
-  // Add other details as needed
+// SeatReservation can remain here if it's specific to this store's logic
+// or be moved to types.ts if it becomes more globally used.
+export interface SeatReservation {
+  seatId: string;
+  passengerId?: string; // Passenger who reserved the seat
+  // Add other relevant seat reservation details if needed
+}
+
+// Use the imported BookingWithDetails
+export interface BookingWithDetails extends GlobalBookingWithDetails {
+  // You can extend it further here if bookingStore needs specific additions
+  // For now, we assume GlobalBookingWithDetails is sufficient or will be updated in mockData.ts
+  // Ensure that the Booking type used within BookingWithDetails (if it's part of GlobalBookingWithDetails) is compatible
+  // or explicitly use the imported Booking type.
+  trip?: StoreTrip; // Override if StoreTrip is more specific than what GlobalBookingWithDetails.trip might be
 }
 
 interface BookingState {
@@ -19,6 +28,7 @@ interface BookingState {
   error: string | null;
   fetchBookingsByUserId: (userId: string) => Promise<void>;
   fetchBookingById: (bookingId: string) => Promise<BookingWithDetails | undefined>;
+  fetchAllBookings: () => Promise<void>; // Added for admin to fetch all bookings
   checkInBooking: (bookingId: string) => Promise<{ success: boolean; message?: string; booking?: BookingWithDetails }>;
   getAvailableTripsForBooking: (criteria?: { originName?: string; destinationName?: string; date?: string }) => StoreTrip[];
   // Add other actions like cancelBooking, updateBookingStatus, etc.
@@ -53,6 +63,18 @@ const useBookingStore = create<BookingState>((set, get) => ({
         .filter(b => b.userId === userId)
         .map(enrichBookingDetails);
       set({ bookings: userBookings, isLoading: false });
+    } catch (err) {
+      set({ error: (err as Error).message, isLoading: false });
+    }
+  },
+
+  fetchAllBookings: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const allBookings = mockBookings.map(enrichBookingDetails);
+      set({ bookings: allBookings, isLoading: false });
     } catch (err) {
       set({ error: (err as Error).message, isLoading: false });
     }

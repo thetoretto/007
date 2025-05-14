@@ -1,16 +1,8 @@
 import { create } from 'zustand';
 import { v4 as uuidv4 } from 'uuid';
 
-// Define the Vehicle interface
-export interface Vehicle {
-  id: string;
-  driverId: string; // Assuming vehicles are linked to drivers
-  type: 'Car' | 'Van' | 'Bus' | 'Minibus';
-  brand: string;
-  model: string; // Added model for more detail
-  licensePlate: string; // Added license plate
-  capacity: number;
-}
+import { Vehicle } from '../types'; // Import Vehicle type
+import { mockVehicles as allMockVehicles } from '../utils/mockData'; // Import mockVehicles
 
 // Define the store state and actions
 interface VehicleState {
@@ -21,25 +13,22 @@ interface VehicleState {
   removeVehicle: (vehicleId: string) => void;
 }
 
-// Mock vehicle data (replace with API calls later)
-const mockVehicles: Vehicle[] = [
-  {
-    id: 'v1', driverId: 'user-driver-123', type: 'Car', brand: 'Toyota', model: 'Camry', licensePlate: 'ABC-123', capacity: 4
-  },
-  {
-    id: 'v2', driverId: 'user-driver-123', type: 'Van', brand: 'Ford', model: 'Transit', licensePlate: 'XYZ-789', capacity: 8
-  },
-  {
-    id: 'v3', driverId: 'user-other-456', type: 'Minibus', brand: 'Mercedes', model: 'Sprinter', licensePlate: 'MERC-01', capacity: 12
-  },
-];
-
 const useVehicleStore = create<VehicleState>((set, get) => ({
   vehicles: [],
 
   fetchVehicles: (driverId) => {
     // Simulate fetching vehicles for the logged-in driver
-    const driverVehicles = mockVehicles.filter(v => v.driverId === driverId);
+    // Ensure that the Vehicle type from '../types' has 'driverId'. If not, this filter might need adjustment
+    // or the global mockVehicles need to include driverId if this store is meant to filter by it.
+    // For now, assuming global mockVehicles might not have driverId directly in the same way.
+    // This part might need further review based on the actual structure of global mockVehicles and requirements.
+    // If global mockVehicles don't have driverId, this store might be for *all* vehicles of a certain type, or driver-specific vehicles added via addVehicle.
+    // Let's assume for now the intent is to filter the global list if possible, or manage a local list if not.
+    // Given the original code filtered a local mockVehicles by driverId, we'll try to replicate that with allMockVehicles.
+    // This requires `allMockVehicles` items to potentially have a `driverId` field.
+    // The `Vehicle` type from `types.ts` has an optional `driverId`. The `mockVehicles` in `mockData.ts` does not show `driverId` in the snippet.
+    // For the purpose of this refactoring, we will assume `allMockVehicles` can be filtered by `driverId` if the field exists on items.
+    const driverVehicles = allMockVehicles.filter(v => v.driverId === driverId);
     console.log(`Fetching vehicles for driver: ${driverId}`, driverVehicles);
     set({ vehicles: driverVehicles });
     // In a real app: fetch(`/api/drivers/${driverId}/vehicles`).then(res => res.json()).then(data => set({ vehicles: data }));

@@ -52,7 +52,7 @@ const ReceiptStep: React.FC<ReceiptStepProps> = ({ details, onBookAnother, onClo
       </div>
 
       {/* Booking Details Summary */}
-      <div className="bg-white p-4 rounded-lg border border-gray-200 text-left space-y-2 text-sm">
+      <div className="card p-4 rounded-lg border border-gray-200 text-left space-y-2 text-sm">
         <h4 className="text-base font-semibold text-gray-700 mb-2 pb-2 border-b">Trip Details</h4>
         <p><strong className="font-medium text-gray-600 w-20 inline-block">Route:</strong> {details.route.origin.name} to {details.route.destination.name}</p>
         <p><strong className="font-medium text-gray-600 w-20 inline-block">Vehicle:</strong> {details.vehicle.model}</p>

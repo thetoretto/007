@@ -118,7 +118,15 @@ export interface Trip {
   passengers?: string[]; // list of passenger IDs booked on this trip
 }
 
-export type BookingStatus = 'booked' | 'pending' | 'confirmed' | 'checked-in' | 'validated' | 'cancelled' | 'completed';
+export enum BookingStatus {
+  BOOKED = 'booked',
+  PENDING = 'pending',
+  CONFIRMED = 'confirmed',
+  CHECKED_IN = 'checked-in',
+  VALIDATED = 'validated',
+  CANCELLED = 'cancelled',
+  COMPLETED = 'completed',
+}
 
 export interface Booking {
   id: string;

@@ -156,7 +156,7 @@ const AdminHotPointManagement: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="container-app flex flex-col min-h-screen bg-gray-100">
       <DashboardNavbar userRole="admin" />
       <main className="flex-grow container-app py-8 w-full">
         <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">

@@ -11,7 +11,7 @@ const VehiclePage: React.FC = () => { // Renamed component
   const userRole = user?.role === 'admin' ? 'admin' : 'driver';
 
   return (
-    <div className="flex flex-col min-h-screen card"> {/* Added page wrapper */}
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 "> {/* Added page wrapper */}
       <DashboardNavbar userRole={userRole} /> {/* Pass userRole to DashboardNavbar */}
       
       {/* Added main content container with padding and max-width */}
@@ -22,7 +22,7 @@ const VehiclePage: React.FC = () => { // Renamed component
         <VehicleManagement userRole={userRole} /> {/* Pass userRole to VehicleManagement */}
       </main>
       
-      <Footer /> {/* Added Footer */}
+       {/* Added Footer */}
     </div>
   );
 };

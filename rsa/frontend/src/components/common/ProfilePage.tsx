@@ -108,7 +108,7 @@ const ProfilePage: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100">
+    <div className="container-app flex-col min-h-screen ">
       <DashboardNavbar />
       <main className="flex-grow container-app py-8 sm:py-12">
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-8 text-center">Your Profile</h1>
@@ -124,7 +124,7 @@ const ProfilePage: React.FC = () => {
           </div>
         )}
 
-        <div className="bg-white p-6 sm:p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
+        <div className="card p-6 sm:p-8 rounded-lg shadow-lg max-w-2xl mx-auto">
           <div className="flex items-center mb-6">
             <User className="h-12 w-12 text-primary-600 mr-4" />
             <div>

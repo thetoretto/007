@@ -168,18 +168,41 @@ const TripForm: React.FC<TripFormProps> = ({ isOpen, onClose, tripToEdit, onSubm
         }
         onSubmit(dataToSubmit as Trip | Omit<Trip, 'id' | 'createdAt' | 'updatedAt' | 'status'>);
         // onClose might be handled by the parent in this case, or not needed if embedded
-    } else { // Default behavior (e.g., for DriverDashboard modal)
-        const finalTripData = {
-            ...tripDataPayload,
-            driverId: tripToEdit ? tripToEdit.driverId : (user?.id || ''), // Preserve driverId on edit, else current user
-        };
+    } else { // Default behavior (e.g., for DriverDashboard modal used by drivers)
+        // The main check `if (!user?.id && !tripToEdit?.driverId)` at the start of handleSubmit
+        // ensures that either user.id is present (for new trips) or tripToEdit.driverId is present (for edits).
 
         if (tripToEdit) {
-            updateTrip(tripToEdit.id, finalTripData);
-            console.log('Updating trip (internal):', tripToEdit.id, finalTripData);
+            // driverId for update is tripToEdit.driverId, which is known to be valid here.
+            const updatePayloadForStore = {
+                driverId: tripToEdit.driverId, // Explicitly use from tripToEdit
+                routeId: formData.routeId,
+                vehicleId: formData.vehicleId,
+                date: formData.date,
+                time: formData.time,
+                price: priceValue,
+                notes: formData.notes,
+                offersPickup: formData.offersPickup,
+                pickupHotPointIds: formData.offersPickup ? formData.pickupHotPointIds : [],
+            };
+            updateTrip(tripToEdit.id, updatePayloadForStore);
+            console.log('Updating trip (DriverDashboard):', tripToEdit.id, updatePayloadForStore);
         } else {
-            addTrip(finalTripData as Omit<Trip, 'id' | 'status' | 'createdAt' | 'updatedAt'>); // Cast for addTrip
-            console.log('Adding new trip (internal):', finalTripData);
+            // For new trips, user.id is known to be valid here due to the initial check.
+            // The check `if (!user?.id && !tripToEdit?.driverId)` at the beginning of handleSubmit ensures user.id is available.
+            const newTripDataForStore = {
+                driverId: user!.id, // user.id is guaranteed by the check at the start of handleSubmit
+                routeId: formData.routeId,
+                vehicleId: formData.vehicleId,
+                date: formData.date,
+                time: formData.time,
+                price: priceValue,
+                notes: formData.notes,
+                offersPickup: formData.offersPickup,
+                pickupHotPointIds: formData.offersPickup ? formData.pickupHotPointIds : [],
+            };
+            addTrip(newTripDataForStore); // No cast needed as newTripDataForStore matches the expected type
+            console.log('Adding new trip (DriverDashboard):', newTripDataForStore);
         }
         onClose(); // Close modal after submission
     }
@@ -250,11 +273,11 @@ const TripForm: React.FC<TripFormProps> = ({ isOpen, onClose, tripToEdit, onSubm
             <input
               type="date"
               id="date"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              required
-              className="form-input w-full pl-10"
+                  name="date"
+                  value={formData.date}
+                  onChange={handleChange}
+                  className="input input-bordered w-full"
+                  disabled={!!tripToEdit && user?.role === 'driver'}
             />
           </div>
         </div>
@@ -267,11 +290,11 @@ const TripForm: React.FC<TripFormProps> = ({ isOpen, onClose, tripToEdit, onSubm
             <input
               type="time"
               id="time"
-              name="time"
-              value={formData.time}
-              onChange={handleChange}
-              required
-              className="form-input w-full pl-10"
+                  name="time"
+                  value={formData.time}
+                  onChange={handleChange}
+                  className="input input-bordered w-full"
+                  disabled={false} // Explicitly enable, though default is enabled
             />
           </div>
         </div>

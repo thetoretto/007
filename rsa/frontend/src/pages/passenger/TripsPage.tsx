@@ -241,9 +241,9 @@ const TripsPage: React.FC = () => {
   return (
     
     
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-background-dark">
       {/* Navbar is already part of the layout, ensure it's not duplicated if App.tsx handles global layout */}
-      {/* <Navbar/> */}
+       <Navbar/> 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {/* Loading and error states from bookingStore */}
       {isLoading && <p className="text-center py-10">Loading your trips...</p>}
@@ -252,7 +252,7 @@ const TripsPage: React.FC = () => {
       <>
       <h1 className="text-3xl font-bold text-gray-900 mb-6">My Trips</h1>
 
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
+      <div className="card rounded-lg shadow-sm overflow-hidden">
         <div className="border-b border-gray-200 px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
           {/* Filters */}
           <div className="flex overflow-x-auto space-x-2 sm:space-x-4">

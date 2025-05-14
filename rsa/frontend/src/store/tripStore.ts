@@ -31,6 +31,7 @@ interface TripState {
   updateTrip: (tripId: string, updatedTripData: Partial<Omit<Trip, 'id' | 'vehicle' | 'route' | 'fromLocation' | 'toLocation'>>) => void;
   fetchTrips: () => void;
   decrementSeat: (tripId: string) => void; // For booking integration
+  markTripAsCompleted: (tripId: string) => void;
 }
 
 const generateId = () => `trip-${Date.now().toString(36)}${Math.random().toString(36).substr(2, 5)}`;
@@ -152,6 +153,15 @@ const useTripStore = create<TripState>((set, get) => ({
         }
         return trip;
       })
+    };
+  }),
+
+  markTripAsCompleted: (tripId) => set((state) => {
+    console.log('Marking trip as completed:', tripId);
+    return {
+      trips: state.trips.map((trip) =>
+        trip.id === tripId ? { ...trip, status: 'completed' as TripStatus, updatedAt: new Date() } : trip
+      ),
     };
   }),
 

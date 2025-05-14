@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo } from 'react'; // Added useMemo
 import { Link } from 'react-router-dom';
 import useAuthStore from '../../store/authStore';
 import useTripStore, { Trip } from '../../store/tripStore'; // Import trip store and Trip type
+import { useBookingStore } from '@store/bookingStore'; // Import booking store
+import { Booking, BookingStatus } from '@store/bookingStore'; // Import Booking and BookingStatus types from bookingStore
 import { mockUsers, mockRoutes as allMockRoutes, mockVehicles } from '../../utils/mockData'; // Using more specific mock data
 import {  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
 import { Users, Calendar, TrendingUp, Settings, User, Map, Activity, Plus, Edit, Trash2, Clock, Filter, Star, MapPin } from 'lucide-react'; // Added MapPin for Hotpoints, removed CreditCard, MapMarker, Navigation
@@ -96,7 +98,12 @@ const generateAdminMockData = (period: 'daily' | 'weekly' | 'monthly' | 'yearly'
 
 const AdminDashboard: React.FC = () => {
   const { user } = useAuthStore();
-  const { trips, fetchTrips, removeTrip, addTrip, updateTrip } = useTripStore(); // Use trip store, added add/update
+  const { trips, fetchTrips: fetchTripStoreTrips, removeTrip, updateTrip, addTrip } = useTripStore(); // Renamed fetchTrips and added addTrip
+
+  // Log the booking store instance to check its contents
+  const bookingStoreInstance = useBookingStore();
+  console.log('AdminDashboard: bookingStoreInstance:', bookingStoreInstance);
+  const { bookings, fetchAllBookings } = bookingStoreInstance; // Use fetchAllBookings for admin view
   const [isTripModalOpen, setIsTripModalOpen] = useState(false);
   const [tripToEdit, setTripToEdit] = useState<Trip | null>(null);
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null); // For displaying details
@@ -107,17 +114,13 @@ const AdminDashboard: React.FC = () => {
   const DashboardNavbar = React.lazy(() => import('../../components/dashboard/DashboardNavbar'));
 
   useEffect(() => {
-    fetchTrips(); // Fetch trips on component mount
-  }, [fetchTrips]);
+    fetchTripStoreTrips(); // Fetch trips on component mount
+    fetchAllBookings(); // Fetch all bookings for admin view
+  }, [fetchTripStoreTrips, fetchAllBookings]);
 
   useEffect(() => {
     setAdminData(generateAdminMockData(timePeriod, trips));
   }, [timePeriod, trips]);
-
-  const openCreateModal = () => {
-    setTripToEdit(null);
-    setIsTripModalOpen(true);
-  };
 
   const openEditModal = (trip: Trip) => {
     setTripToEdit(trip);
@@ -139,8 +142,25 @@ const AdminDashboard: React.FC = () => {
     return trip.status === 'upcoming' && tripDateTime >= now;
   }).length;
 
+  // Augment trips with booking details for admin view
+  const detailedTrips = useMemo(() => {
+    return trips.map(trip => {
+      const relevantBookings = bookings.filter(b => b.tripId === trip.id);
+      const confirmedBookingsCount = relevantBookings.filter(
+        b => b.status === BookingStatus.CONFIRMED || b.status === BookingStatus.CHECKED_IN
+      ).length;
+      const checkedInCount = relevantBookings.filter(b => b.status === BookingStatus.CHECKED_IN).length;
+      return {
+        ...trip,
+        confirmedBookings: confirmedBookingsCount,
+        checkedInCount: checkedInCount,
+        totalBookingsForTrip: relevantBookings.length, // Total bookings associated with this trip
+      };
+    });
+  }, [trips, bookings]);
+
   // Filter and sort trips for display (e.g., all trips sorted by date)
-  const sortedTrips = [...trips].sort((a, b) => {
+  const sortedTrips = [...detailedTrips].sort((a, b) => {
     const dateA = new Date(`${a.date}T${a.time}`);
     const dateB = new Date(`${b.date}T${b.time}`);
     return dateB.getTime() - dateA.getTime(); // Sort descending (newest first)
@@ -150,9 +170,9 @@ const AdminDashboard: React.FC = () => {
     if ('id' in tripData) {
       await updateTrip(tripData.id, tripData);
     } else {
-      await addTrip(tripData);
+      await addTrip(tripData); // addTrip is now destructured from useTripStore
     }
-    fetchTrips(); // Re-fetch to update list
+    fetchTripStoreTrips(); // Re-fetch to update list
     setIsTripModalOpen(false);
   };
 
@@ -171,10 +191,6 @@ const AdminDashboard: React.FC = () => {
           </p>
         </div>
         <div className="mt-4 flex md:mt-0 md:ml-4 space-x-3 items-center">
-          <button onClick={openCreateModal} className="btn btn-primary">
-            <Plus className="h-4 w-4 mr-2" />
-            New Trip
-          </button>
           <Link to="/admin/hotpoints" className="btn btn-info">
             <MapPin className="h-4 w-4 mr-2" />
             Manage Hotpoints
@@ -284,6 +300,7 @@ const AdminDashboard: React.FC = () => {
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Route</th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Time</th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Onboarding</th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Driver</th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Vehicle</th>
                   <th scope="col" className="relative px-6 py-3">
@@ -297,9 +314,18 @@ const AdminDashboard: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{trip.fromLocation} to {trip.toLocation}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{trip.date} at {trip.time}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${trip.status === 'completed' ? 'bg-green-100 text-green-800' : trip.status === 'upcoming' ? 'bg-blue-100 text-blue-800' : trip.status === 'cancelled' ? 'bg-red-100 text-red-800' : 'bg-gray-100 text-gray-800'}`}>
-                        {trip.status}
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                        ${trip.status === 'completed' ? 'bg-green-100 text-green-800' :
+                          trip.status === 'active' ? 'bg-sky-100 text-sky-800' :
+                          trip.status === 'scheduled' ? 'bg-yellow-100 text-yellow-800' :
+                          trip.status === 'pending_approval' ? 'bg-orange-100 text-orange-800' :
+                          trip.status === 'cancelled' ? 'bg-red-100 text-red-800' :
+                          'bg-gray-100 text-gray-800'}`}>
+                        {trip.status.charAt(0).toUpperCase() + trip.status.slice(1).replace('_', ' ')}
                       </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {`${trip.checkedInCount || 0} / ${trip.confirmedBookings || 0} (${trip.totalBookingsForTrip || 0} total)`}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{trip.driverId || 'N/A'}</td>{/* Replace with driver name later */}
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{mockVehicles.find(v => v.id === trip.vehicleId)?.model || 'N/A'}</td>
