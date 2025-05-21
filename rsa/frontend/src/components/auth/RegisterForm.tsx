@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { Eye, EyeOff, UserPlus } from 'lucide-react'; // Added UserPlus icon
+import { Eye, EyeOff, UserPlus, Mail, Phone, User, Lock, FileCheck } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import LoadingSpinner from '../common/LoadingSpinner';
+import { motion } from 'framer-motion';
 
 const RegisterSchema = Yup.object().shape({
   firstName: Yup.string().required('First name is required'),
@@ -37,15 +38,17 @@ const RegisterForm: React.FC = () => {
     firstName: string;
     lastName: string;
     email: string;
-    phoneNumber: string; // Changed from phone
+    phoneNumber: string;
     password: string;
+    confirmPassword: string;
+    termsAccepted: boolean;
   }) => {
     try {
       await register({
         firstName: values.firstName,
         lastName: values.lastName,
         email: values.email,
-        phoneNumber: values.phoneNumber, // Changed from phone
+        phoneNumber: values.phoneNumber,
         password: values.password,
         role: 'passenger', // Default role for registration
       });
@@ -56,283 +59,303 @@ const RegisterForm: React.FC = () => {
   };
 
   return (
-    // Updated: Removed max-width, added padding/border/shadow for consistency
-    <div className="bg-white p-6 sm:p-8 border border-gray-200 rounded-lg shadow-sm w-full">
-      {/* Updated: Heading style */}
-      <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-6">Create your account</h2>
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="w-full"
+    >
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold text-text-base dark:text-text-inverse">Create Your Account</h2>
+        <p className="mt-2 text-text-muted dark:text-primary-200">Join our community of travelers across Africa</p>
+      </div>
       
       {error && (
-        // Updated: Error message styling
-        <div className="mb-4 p-3 bg-red-50 text-red-700 border border-red-200 rounded-md text-sm">
-          {error}
-        </div>
+        <motion.div 
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          className="alert alert-danger mb-6 p-4 rounded-lg border border-error bg-error bg-opacity-10 text-error flex items-start"
+        >
+          <div className="flex-shrink-0 mr-2">
+            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <span>{error}</span>
+        </motion.div>
       )}
       
-      <Formik
-        initialValues={{
-          firstName: '',
-          lastName: '',
-          email: '',
-          phoneNumber: '', // Changed from phone
-          password: '',
-          confirmPassword: '',
-          termsAccepted: false,
-        }}
-        validationSchema={RegisterSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ isValid, dirty }) => (
-          // Updated: Spacing
-          <Form className="space-y-5">
-            {/* Updated: Grid layout for names */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                {/* Updated: Label style */}
-                <label htmlFor="firstName" className="form-label">
-                  First name
-                </label>
-                {/* Updated: Input style */}
-                <Field
-                  id="firstName"
-                  name="firstName"
-                  type="text"
-                  autoComplete="given-name"
-                  className="form-input"
-                  disabled={loading}
-                />
-                {/* Updated: Error message style */}
-                <ErrorMessage
-                  name="firstName"
-                  component="div"
-                  className="form-error"
-                />
+      <div className="card p-6 sm:p-8 border border-primary-100 dark:border-primary-800 bg-background-light dark:bg-section-dark rounded-xl shadow-sm">
+        <Formik
+          initialValues={{
+            firstName: '',
+            lastName: '',
+            email: '',
+            phoneNumber: '',
+            password: '',
+            confirmPassword: '',
+            termsAccepted: false,
+          }}
+          validationSchema={RegisterSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ isValid, dirty }) => (
+            <Form className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="firstName" className="form-label mb-1.5 text-text-base dark:text-text-inverse">
+                    First Name
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                      <User size={18} className="text-primary-600 dark:text-primary-400" />
+                    </div>
+                    <Field
+                      id="firstName"
+                      name="firstName"
+                      type="text"
+                      autoComplete="given-name"
+                      className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 rounded-lg bg-background-light dark:bg-section-dark text-text-base dark:text-text-inverse focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
+                      disabled={loading}
+                      placeholder="Your first name"
+                    />
+                  </div>
+                  <ErrorMessage
+                    name="firstName"
+                    component="div"
+                    className="mt-1 text-sm text-error"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="lastName" className="form-label mb-1.5 text-text-base dark:text-text-inverse">
+                    Last Name
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                      <User size={18} className="text-primary-600 dark:text-primary-400" />
+                    </div>
+                    <Field
+                      id="lastName"
+                      name="lastName"
+                      type="text"
+                      autoComplete="family-name"
+                      className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 rounded-lg bg-background-light dark:bg-section-dark text-text-base dark:text-text-inverse focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
+                      disabled={loading}
+                      placeholder="Your last name"
+                    />
+                  </div>
+                  <ErrorMessage
+                    name="lastName"
+                    component="div"
+                    className="mt-1 text-sm text-error"
+                  />
+                </div>
               </div>
 
               <div>
-                {/* Updated: Label style */}
-                <label htmlFor="lastName" className="form-label">
-                  Last name
+                <label htmlFor="email" className="form-label mb-1.5 text-text-base dark:text-text-inverse">
+                  Email Address
                 </label>
-                {/* Updated: Input style */}
-                <Field
-                  id="lastName"
-                  name="lastName"
-                  type="text"
-                  autoComplete="family-name"
-                  className="form-input"
-                  disabled={loading}
-                />
-                {/* Updated: Error message style */}
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                    <Mail size={18} className="text-primary-600 dark:text-primary-400" />
+                  </div>
+                  <Field
+                    id="email"
+                    name="email"
+                    type="email"
+                    autoComplete="email"
+                    className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 rounded-lg bg-background-light dark:bg-section-dark text-text-base dark:text-text-inverse focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
+                    disabled={loading}
+                    placeholder="your.email@example.com"
+                  />
+                </div>
                 <ErrorMessage
-                  name="lastName"
+                  name="email"
                   component="div"
-                  className="form-error"
+                  className="mt-1 text-sm text-error"
                 />
               </div>
-            </div>
 
-            <div>
-              {/* Updated: Label style */}
-              <label htmlFor="email" className="form-label">
-                Email address
-              </label>
-              {/* Updated: Input style */}
-              <Field
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                className="form-input"
-                disabled={loading}
-                placeholder="you@example.com"
-              />
-              {/* Updated: Error message style */}
-              <ErrorMessage
-                name="email"
-                component="div"
-                className="form-error"
-              />
-            </div>
-
-            <div>
-              {/* Updated: Label style */}
-              <label htmlFor="phoneNumber" className="form-label">
-                Phone Number
-              </label>
-              {/* Updated: Input style */}
-              <Field
-                id="phoneNumber"
-                name="phoneNumber"
-                type="tel" // Use tel type for phone numbers
-                autoComplete="tel"
-                className="form-input"
-                disabled={loading}
-                placeholder="+1234567890"
-              />
-              {/* Updated: Error message style */}
-              <ErrorMessage
-                name="phoneNumber"
-                component="div"
-                className="form-error"
-              />
-            </div>
-
-            <div>
-              {/* Updated: Label style */}
-              <label htmlFor="password" className="form-label">
-                Password
-              </label>
-              <div className="relative">
-                {/* Updated: Input style */}
-                <Field
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  className="form-input pr-10"
-                  disabled={loading}
-                  placeholder="Create a password"
-                />
-                {/* Updated: Button style */}
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" aria-hidden="true" />
-                  ) : (
-                    <Eye className="h-5 w-5" aria-hidden="true" />
-                  )}
-                </button>
-              </div>
-              {/* Updated: Error message style */}
-              <ErrorMessage
-                name="password"
-                component="div"
-                className="form-error"
-              />
-            </div>
-
-            <div>
-              {/* Updated: Label style */}
-              <label htmlFor="phoneNumber" className="form-label">
-                Phone Number
-              </label>
-              {/* Updated: Input style */}
-              <Field
-                id="phoneNumber"
-                name="phoneNumber"
-                type="tel" // Use tel type for phone numbers
-                autoComplete="tel"
-                className="form-input"
-                disabled={loading}
-                placeholder="+1234567890"
-              />
-              {/* Updated: Error message style */}
-              <ErrorMessage
-                name="phoneNumber"
-                component="div"
-                className="form-error"
-              />
-            </div>
-
-            <div>
-              {/* Updated: Label style */}
-              <label htmlFor="confirmPassword" className="form-label">
-                Confirm password
-              </label>
-              <div className="relative">
-                {/* Updated: Input style */}
-                <Field
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type={showConfirmPassword ? 'text' : 'password'}
-                  autoComplete="new-password"
-                  className="form-input pr-10"
-                  disabled={loading}
-                  placeholder="Confirm your password"
-                />
-                {/* Updated: Button style */}
-                <button
-                  type="button"
-                  className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                >
-                  {showConfirmPassword ? (
-                    <EyeOff className="h-5 w-5" aria-hidden="true" />
-                  ) : (
-                    <Eye className="h-5 w-5" aria-hidden="true" />
-                  )}
-                </button>
-              </div>
-              {/* Updated: Error message style */}
-              <ErrorMessage
-                name="confirmPassword"
-                component="div"
-                className="form-error"
-              />
-            </div>
-
-            <div className="flex items-start">
-              {/* Updated: Checkbox style */}
-              <Field
-                id="termsAccepted"
-                name="termsAccepted"
-                type="checkbox"
-                className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded mt-0.5"
-                disabled={loading}
-              />
-              <div className="ml-2">
-                {/* Updated: Label style */}
-                <label htmlFor="termsAccepted" className="text-sm text-gray-700">
-                  I agree to the{' '}
-                  <Link to="/terms" className="font-medium text-primary-600 hover:text-primary-700 hover:underline">Terms</Link> and{' '}
-                  <Link to="/privacy" className="font-medium text-primary-600 hover:text-primary-700 hover:underline">Privacy Policy</Link>.
+              <div>
+                <label htmlFor="phoneNumber" className="form-label mb-1.5 text-text-base dark:text-text-inverse">
+                  Phone Number
                 </label>
-                {/* Updated: Error message style */}
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                    <Phone size={18} className="text-primary-600 dark:text-primary-400" />
+                  </div>
+                  <Field
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    type="tel"
+                    autoComplete="tel"
+                    className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 rounded-lg bg-background-light dark:bg-section-dark text-text-base dark:text-text-inverse focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
+                    disabled={loading}
+                    placeholder="+27 12 345 6789"
+                  />
+                </div>
+                <p className="text-xs text-text-muted dark:text-primary-300 mt-1">
+                  Include country code (e.g., +27 for South Africa)
+                </p>
                 <ErrorMessage
-                  name="termsAccepted"
+                  name="phoneNumber"
                   component="div"
-                  className="form-error"
+                  className="mt-1 text-sm text-error"
                 />
               </div>
-            </div>
 
-            <div>
-              {/* Updated: Button style and added icon */}
-              <button
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label htmlFor="password" className="form-label mb-1.5 text-text-base dark:text-text-inverse">
+                    Password
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                      <Lock size={18} className="text-primary-600 dark:text-primary-400" />
+                    </div>
+                    <Field
+                      id="password"
+                      name="password"
+                      type={showPassword ? 'text' : 'password'}
+                      autoComplete="new-password"
+                      className="form-input pl-10 pr-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 rounded-lg bg-background-light dark:bg-section-dark text-text-base dark:text-text-inverse focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
+                      disabled={loading}
+                      placeholder="Create a password"
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label={showPassword ? "Hide password" : "Show password"}
+                    >
+                      {showPassword ? (
+                        <EyeOff size={18} aria-hidden="true" />
+                      ) : (
+                        <Eye size={18} aria-hidden="true" />
+                      )}
+                    </button>
+                  </div>
+                  <ErrorMessage
+                    name="password"
+                    component="div"
+                    className="mt-1 text-sm text-error"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="confirmPassword" className="form-label mb-1.5 text-text-base dark:text-text-inverse">
+                    Confirm Password
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                      <Lock size={18} className="text-primary-600 dark:text-primary-400" />
+                    </div>
+                    <Field
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type={showConfirmPassword ? 'text' : 'password'}
+                      autoComplete="new-password"
+                      className="form-input pl-10 pr-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 rounded-lg bg-background-light dark:bg-section-dark text-text-base dark:text-text-inverse focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
+                      disabled={loading}
+                      placeholder="Confirm your password"
+                    />
+                    <button
+                      type="button"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+                    >
+                      {showConfirmPassword ? (
+                        <EyeOff size={18} aria-hidden="true" />
+                      ) : (
+                        <Eye size={18} aria-hidden="true" />
+                      )}
+                    </button>
+                  </div>
+                  <ErrorMessage
+                    name="confirmPassword"
+                    component="div"
+                    className="mt-1 text-sm text-error"
+                  />
+                </div>
+              </div>
+
+              <div className="bg-secondary-50 dark:bg-primary-900 dark:bg-opacity-20 p-4 rounded-lg border border-primary-100 dark:border-primary-800">
+                <p className="text-sm font-medium text-text-base dark:text-primary-200 mb-2">
+                  Password requirements:
+                </p>
+                <ul className="text-xs text-text-muted dark:text-primary-300 space-y-1">
+                  <li className="flex items-center">
+                    <FileCheck size={16} className="mr-1.5 text-primary-600 dark:text-primary-400" />
+                    At least 8 characters
+                  </li>
+                  <li className="flex items-center">
+                    <FileCheck size={16} className="mr-1.5 text-primary-600 dark:text-primary-400" />
+                    At least one uppercase letter (A-Z)
+                  </li>
+                  <li className="flex items-center">
+                    <FileCheck size={16} className="mr-1.5 text-primary-600 dark:text-primary-400" />
+                    At least one lowercase letter (a-z)
+                  </li>
+                  <li className="flex items-center">
+                    <FileCheck size={16} className="mr-1.5 text-primary-600 dark:text-primary-400" />
+                    At least one number (0-9)
+                  </li>
+                </ul>
+              </div>
+
+              <div className="flex items-start">
+                <div className="flex items-center h-5">
+                  <Field
+                    id="termsAccepted"
+                    name="termsAccepted"
+                    type="checkbox"
+                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-primary-300 dark:border-primary-600 rounded transition-colors"
+                    disabled={loading}
+                  />
+                </div>
+                <div className="ml-3 text-sm">
+                  <label htmlFor="termsAccepted" className="font-medium text-text-base dark:text-text-inverse">
+                    I agree to the{' '}
+                    <Link to="/terms" className="text-primary dark:text-primary-300 hover:text-primary-700 dark:hover:text-primary-200 hover:underline">
+                      Terms of Service
+                    </Link>
+                    {' '}and{' '}
+                    <Link to="/privacy" className="text-primary dark:text-primary-300 hover:text-primary-700 dark:hover:text-primary-200 hover:underline">
+                      Privacy Policy
+                    </Link>
+                  </label>
+                  <ErrorMessage
+                    name="termsAccepted"
+                    component="div"
+                    className="mt-1 text-sm text-error"
+                  />
+                </div>
+              </div>
+
+              <motion.button
                 type="submit"
                 disabled={loading || !(isValid && dirty)}
-                className={`btn btn-primary w-full ${ (loading || !(isValid && dirty)) ? 'opacity-50 cursor-not-allowed !bg-primary-600' : '' }`}
+                className="btn btn-primary w-full flex items-center justify-center gap-2 py-2.5 text-base font-medium"
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
               >
-                {loading ? <LoadingSpinner size="small" color="black" /> : <><UserPlus className="h-4 w-4 mr-2" /> Create account</>}
-              </button>
-            </div>
-          </Form>
-        )}
-      </Formik>
-
-      {/* Updated: Divider and link styles */}
-      <div className="mt-6">
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center" aria-hidden="true">
-            <div className="w-full border-t border-gray-300" />
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">Already have an account?</span>
-          </div>
-        </div>
-
-        <div className="mt-6 text-center text-sm">
-          <Link to="/login" className="font-medium text-base hover:text-accent hover:underline">
-            Sign in
-          </Link>
-        </div>
+                {loading ? (
+                  <LoadingSpinner size="small" color="white" />
+                ) : (
+                  <>
+                    <UserPlus size={18} />
+                    <span>Create account</span>
+                  </>
+                )}
+              </motion.button>
+            </Form>
+          )}
+        </Formik>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -1,0 +1,42 @@
+<svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="kente-base" width="80" height="80" patternUnits="userSpaceOnUse">
+      <!-- Horizontal lines -->
+      <rect x="0" y="0" width="80" height="5" fill="#E9A52F" opacity="0.7" />
+      <rect x="0" y="15" width="80" height="3" fill="#E9A52F" opacity="0.5" />
+      <rect x="0" y="30" width="80" height="7" fill="#E9A52F" opacity="0.7" />
+      <rect x="0" y="45" width="80" height="3" fill="#E9A52F" opacity="0.5" />
+      <rect x="0" y="60" width="80" height="5" fill="#E9A52F" opacity="0.7" />
+      <rect x="0" y="75" width="80" height="3" fill="#E9A52F" opacity="0.5" />
+      
+      <!-- Vertical lines -->
+      <rect x="0" y="0" width="5" height="80" fill="#037B7F" opacity="0.7" />
+      <rect x="15" y="0" width="3" height="80" fill="#037B7F" opacity="0.5" />
+      <rect x="30" y="0" width="5" height="80" fill="#037B7F" opacity="0.7" />
+      <rect x="45" y="0" width="3" height="80" fill="#037B7F" opacity="0.5" />
+      <rect x="60" y="0" width="5" height="80" fill="#037B7F" opacity="0.7" />
+      <rect x="75" y="0" width="3" height="80" fill="#037B7F" opacity="0.5" />
+      
+      <!-- Diamond patterns -->
+      <rect x="10" y="10" width="10" height="10" fill="#A51744" opacity="0.8" />
+      <rect x="40" y="10" width="10" height="10" fill="#A51744" opacity="0.8" />
+      <rect x="70" y="10" width="10" height="10" fill="#A51744" opacity="0.8" />
+      
+      <rect x="25" y="25" width="10" height="10" fill="#A51744" opacity="0.8" />
+      <rect x="55" y="25" width="10" height="10" fill="#A51744" opacity="0.8" />
+      
+      <rect x="10" y="40" width="10" height="10" fill="#A51744" opacity="0.8" />
+      <rect x="40" y="40" width="10" height="10" fill="#A51744" opacity="0.8" />
+      <rect x="70" y="40" width="10" height="10" fill="#A51744" opacity="0.8" />
+      
+      <rect x="25" y="55" width="10" height="10" fill="#A51744" opacity="0.8" />
+      <rect x="55" y="55" width="10" height="10" fill="#A51744" opacity="0.8" />
+      
+      <rect x="10" y="70" width="10" height="10" fill="#A51744" opacity="0.8" />
+      <rect x="40" y="70" width="10" height="10" fill="#A51744" opacity="0.8" />
+      <rect x="70" y="70" width="10" height="10" fill="#A51744" opacity="0.8" />
+    </pattern>
+  </defs>
+  
+  <rect width="240" height="240" fill="url(#kente-base)" />
+</svg> 

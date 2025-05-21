@@ -168,18 +168,34 @@ function bookingReducer(state: BookingState, action: BookingAction): BookingStat
 interface BookingWidgetProps {
   onComplete?: (bookingDetails: any) => void;
   onCancel?: () => void;
+  origin?: string;
+  destination?: string;
   // Add props for injecting real data later
 }
 
-const BookingWidget: React.FC<BookingWidgetProps> = ({ onComplete, onCancel }) => {
+const BookingWidget: React.FC<BookingWidgetProps> = ({ onComplete, onCancel, origin, destination }) => {
   const [state, dispatch] = useReducer(bookingReducer, initialState);
   const { getAvailableTripsForBooking } = useBookingStore();
   const { hotPoints: allGlobalHotPoints, fetchHotPoints } = useHotPointStore(); // Get all hot points
 
   useEffect(() => {
     const trips = getAvailableTripsForBooking(); 
-    dispatch({ type: 'SET_AVAILABLE_TRIPS', payload: trips });
-  }, [getAvailableTripsForBooking]);
+    
+    // Filter trips based on origin/destination if provided
+    const filteredTrips = trips.filter(trip => {
+      if (origin && destination) {
+        return trip.fromLocation?.toLowerCase().includes(origin.toLowerCase()) && 
+               trip.toLocation?.toLowerCase().includes(destination.toLowerCase());
+      } else if (origin) {
+        return trip.fromLocation?.toLowerCase().includes(origin.toLowerCase());
+      } else if (destination) {
+        return trip.toLocation?.toLowerCase().includes(destination.toLowerCase());
+      }
+      return true;
+    });
+    
+    dispatch({ type: 'SET_AVAILABLE_TRIPS', payload: filteredTrips });
+  }, [getAvailableTripsForBooking, origin, destination]);
 
   useEffect(() => {
     fetchHotPoints(); // Fetch all hot points once
@@ -259,7 +275,7 @@ const BookingWidget: React.FC<BookingWidgetProps> = ({ onComplete, onCancel }) =
     } catch (err: any) {
       dispatch({ type: 'SET_ERROR', payload: err.message || 'An unknown error occurred.' });
     }
-  }, [state.selectedRoute, state.selectedVehicle, state.selectedSeats, state.needsPickup, state.selectedPickupPoint, onComplete]);
+  }, [state.selectedTrip, state.selectedVehicle, state.selectedSeats, state.needsPickup, state.selectedPickupPoint, onComplete]);
 
 
   const canProceed = useCallback(() => {
@@ -270,7 +286,7 @@ const BookingWidget: React.FC<BookingWidgetProps> = ({ onComplete, onCancel }) =
       case 4: return !state.needsPickup || (state.needsPickup && !!state.selectedPickupPoint);
       default: return false; // Cannot proceed from receipt step
     }
-  }, [state.currentStep, state.selectedRoute, state.selectedVehicle, state.selectedSeats, state.needsPickup, state.selectedPickupPoint]);
+  }, [state.currentStep, state.selectedTrip, state.selectedVehicle, state.selectedSeats, state.needsPickup, state.selectedPickupPoint]);
 
   const renderStep = () => {
     switch (state.currentStep) {

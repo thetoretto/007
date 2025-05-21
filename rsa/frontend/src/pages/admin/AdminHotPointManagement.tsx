@@ -22,7 +22,12 @@ const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: string; chi
   );
 };
 
-const AdminHotPointManagement: React.FC = () => {
+// Define interface for component props
+interface AdminHotPointManagementProps {
+  mode?: 'view' | 'create' | 'edit';
+}
+
+const AdminHotPointManagement: React.FC<AdminHotPointManagementProps> = ({ mode = 'view' }) => {
   const {
     hotPoints,
     fetchHotPoints,
@@ -54,6 +59,13 @@ const AdminHotPointManagement: React.FC = () => {
     };
     loadHotPoints();
   }, [fetchHotPoints]);
+
+  // Open create modal automatically if in create mode
+  useEffect(() => {
+    if (mode === 'create') {
+      openAddModal();
+    }
+  }, [mode]);
 
   const filteredHotPoints = useMemo(() => {
     return hotPoints.filter(hp => {

@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { Eye, EyeOff, LogIn } from 'lucide-react'; // Added LogIn icon
+import { Eye, EyeOff, LogIn, User, Lock } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import LoadingSpinner from '../common/LoadingSpinner';
+import { motion } from 'framer-motion';
 
 interface LoginFormProps {
   redirectTo?: string;
@@ -23,7 +24,7 @@ const LoginSchema = Yup.object().shape({
   password: Yup.string().required('Password is required'),
 });
 
-const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed default redirectTo
+const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => {
   const navigate = useNavigate();
   const { login, loading, error, user } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
@@ -35,8 +36,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
         password: values.password,
         rememberMe: values.rememberMe,
       });
-      // User object should be updated in the store after login
-      // We access the updated user from the store directly
+      
       const loggedInUser = useAuthStore.getState().user;
       if (loggedInUser) {
         switch (loggedInUser.role) {
@@ -47,16 +47,14 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
             navigate('/driver/dashboard');
             break;
           case 'passenger':
-            navigate(redirectTo || '/'); // Default to '/' or provided redirectTo for passengers
+            navigate(redirectTo || '/');
             break;
           default:
-            navigate(redirectTo || '/'); // Fallback to default
+            navigate(redirectTo || '/');
         }
       } else {
-        // Fallback if user is not available for some reason
         navigate(redirectTo || '/');
       }
-
     } catch (error) {
       // Error is handled by the store
     }
@@ -67,155 +65,150 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => { // Removed def
   };
 
   return (
-    // Updated: Removed max-width, added padding/border/shadow for consistency with page layout
-    <div className="card-base p-6 sm:p-8"> {/* form-card is general, using card-base and adding padding */}
-      {/* Updated: Heading style */}
-      <h2 className="text-section-title mb-6">Log in to your account</h2> {/* text-base was likely a typo, using section title style */}
+    <motion.div 
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="w-full"
+    >
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold text-text-base dark:text-text-inverse">Welcome Back</h2>
+        <p className="mt-2 text-text-muted dark:text-primary-200">Log in to continue your journey</p>
+      </div>
       
       {error && (
-        // Updated: Error message styling
-        <div className="alert alert-danger">
-          {error}
-        </div>
+        <motion.div 
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          className="alert alert-danger mb-6 p-4 rounded-lg border border-error bg-error bg-opacity-10 text-error flex items-start"
+        >
+          <div className="flex-shrink-0 mr-2">
+            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+            </svg>
+          </div>
+          <span>{error}</span>
+        </motion.div>
       )}
       
-      <Formik
-        initialValues={{ emailOrPhone: '', password: '', rememberMe: false }}
-        validationSchema={LoginSchema}
-        onSubmit={handleSubmit}
-      >
-        {({ isValid, dirty }) => (
-          // Updated: Spacing
-          <Form className="space-y-6"> {/* Adjusted spacing slightly for consistency */}
-            <div>
-              {/* Updated: Label style */}
-              <label htmlFor="emailOrPhone" className="form-label">
-                Email or Phone Number
-              </label>
-              {/* Updated: Input style */}
-              <Field
-                id="emailOrPhone"
-                name="emailOrPhone"
-                type="text" // Changed to text to allow phone numbers
-                autoComplete="username" // More general for email or phone
-                className="form-input" /* form-input is good */
-                disabled={loading}
-                placeholder="Email or Phone Number"
-              />
-              {/* Updated: Error message style */}
-              <ErrorMessage
-                name="emailOrPhone"
-                component="div"
-                className="form-error" /* form-error is good */
-              />
-            </div>
-
-            <div>
-              {/* Updated: Label style */}
-              <label htmlFor="password" className="form-label"> 
-                Password
-              </label>
-              <div className="relative">
-                {/* Updated: Input style */}
-                <Field
-                  id="password"
-                  name="password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  className="form-input pr-10" /* form-input is good, pr-10 for icon */
-                  disabled={loading}
-                  placeholder="Password"
-                />
-                {/* Updated: Button style */}
-                <button
-                  type="button"
-                  className="input-adornment-button" /* input-adornment-button is good */
-                  onClick={togglePasswordVisibility}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5" aria-hidden="true" />
-                  ) : (
-                    <Eye className="h-5 w-5" aria-hidden="true" />
-                  )}
-                </button>
-              </div>
-              {/* Updated: Error message style */}
-              <ErrorMessage
-                name="password"
-                component="div"
-                className="form-error" /* form-error is good */
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                {/* Updated: Checkbox style */}
-                <Field
-                  id="rememberMe"
-                  name="rememberMe"
-                  type="checkbox"
-                  className="form-checkbox" /* form-checkbox is good */
-                  disabled={loading}
-                />
-                {/* Updated: Label style */}
-                <label htmlFor="rememberMe" className="ml-2 block text-sm text-text-base dark:text-gray-300"> 
-                  Remember me
+      <div className="card p-6 sm:p-8 border border-primary-100 dark:border-primary-800 bg-background-light dark:bg-section-dark rounded-xl shadow-sm">
+        <Formik
+          initialValues={{ emailOrPhone: '', password: '', rememberMe: false }}
+          validationSchema={LoginSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ isValid, dirty }) => (
+            <Form className="space-y-6">
+              <div>
+                <label htmlFor="emailOrPhone" className="form-label mb-1.5 text-text-base dark:text-text-inverse">
+                  Email or Phone Number
                 </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                    <User size={18} className="text-primary-600 dark:text-primary-400" />
+                  </div>
+                  <Field
+                    id="emailOrPhone"
+                    name="emailOrPhone"
+                    type="text"
+                    autoComplete="username"
+                    className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 rounded-lg bg-background-light dark:bg-section-dark text-text-base dark:text-text-inverse focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
+                    disabled={loading}
+                    placeholder="Enter your email or phone"
+                  />
+                </div>
+                <ErrorMessage
+                  name="emailOrPhone"
+                  component="div"
+                  className="mt-1 text-sm text-error"
+                />
               </div>
 
-              <div className="text-sm">
-                {/* Updated: Link style */}
-                <Link to="/forgot-password" className="font-medium text-primary-800 hover:underline dark:text-primary-200"> 
-                  Forgot password?
-                </Link>
+              <div>
+                <label htmlFor="password" className="form-label mb-1.5 text-text-base dark:text-text-inverse">
+                  Password
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                    <Lock size={18} className="text-primary-600 dark:text-primary-400" />
+                  </div>
+                  <Field
+                    id="password"
+                    name="password"
+                    type={showPassword ? 'text' : 'password'}
+                    autoComplete="current-password"
+                    className="form-input pl-10 pr-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 rounded-lg bg-background-light dark:bg-section-dark text-text-base dark:text-text-inverse focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
+                    disabled={loading}
+                    placeholder="Enter your password"
+                  />
+                  <button
+                    type="button"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                    onClick={togglePasswordVisibility}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? (
+                      <EyeOff size={18} aria-hidden="true" />
+                    ) : (
+                      <Eye size={18} aria-hidden="true" />
+                    )}
+                  </button>
+                </div>
+                <ErrorMessage
+                  name="password"
+                  component="div"
+                  className="mt-1 text-sm text-error"
+                />
               </div>
-            </div>
 
-            <div>
-              {/* Updated: Button style and added icon */}
-              <button
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <Field
+                    id="rememberMe"
+                    name="rememberMe"
+                    type="checkbox"
+                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-primary-300 dark:border-primary-600 rounded transition-colors"
+                    disabled={loading}
+                  />
+                  <label htmlFor="rememberMe" className="ml-2 block text-sm text-text-base dark:text-primary-200">
+                    Remember me
+                  </label>
+                </div>
+
+                <div className="text-sm">
+                  <Link to="/forgot-password" className="font-medium text-primary hover:text-primary-700 dark:text-primary-300 dark:hover:text-primary-200 transition-colors">
+                    Forgot password?
+                  </Link>
+                </div>
+              </div>
+
+              <motion.button
                 type="submit"
                 disabled={loading || !(isValid && dirty)}
-                className="btn btn-primary w-full" /* btn btn-primary is good */
+                className="btn btn-primary w-full flex items-center justify-center gap-2 py-2.5 text-base font-medium"
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
               >
-                {loading ? <LoadingSpinner size="small" color="dark" /> : <><LogIn className="h-4 w-4 mr-2" /> Sign in</>}
-              </button>
-            </div>
-          </Form>
-        )}
-      </Formik>
-
-      {/* Updated: Divider and link styles */}
-      <div className="mt-8">
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center" aria-hidden="true">
-            <div className="w-full border-t border-gray-300 dark:border-gray-600" />
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="divider-text-label">Or continue with</span> 
-          </div>
-        </div>
-
-        <div className="mt-6 text-center text-sm">
-        <p className="text-text-base dark:text-gray-400">
-          Don't have an account?{' '}
-          <Link to="/" className="font-semibold leading-6 text-primary-800 hover:underline dark:text-primary-200">
-            Return home
-          </Link>
-        </p>
-        </div>
-
-        <div className="mt-6 text-center text-sm">
-        <p className="text-text-base dark:text-gray-400">
-          Don't have an account?{' '}
-          <Link to="/register" className="font-semibold leading-6 text-primary-800 hover:underline dark:text-primary-200">
-            Sign up
-          </Link>
-        </p>
+                {loading ? (
+                  <LoadingSpinner size="small" color="white" />
+                ) : (
+                  <>
+                    <LogIn size={18} />
+                    <span>Sign in</span>
+                  </>
+                )}
+              </motion.button>
+            </Form>
+          )}
+        </Formik>
+        
+        <div className="mt-6 pt-6 border-t border-primary-100 dark:border-primary-800 text-center">
+          <p className="text-xs text-text-muted dark:text-primary-300">
+            By continuing, you agree to our <Link to="/terms" className="underline hover:text-primary dark:hover:text-primary-200">Terms of Service</Link> and <Link to="/privacy" className="underline hover:text-primary dark:hover:text-primary-200">Privacy Policy</Link>.
+          </p>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

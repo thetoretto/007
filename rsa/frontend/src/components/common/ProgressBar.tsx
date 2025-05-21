@@ -27,10 +27,10 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ steps, currentStep, onStepCli
             <div
               className={`flex items-center justify-center w-10 h-10 rounded-full mb-2 transition-colors ${
                 index + 1 < currentStep
-                  ? 'bg-success-500 text-white'
+                  ? 'bg-success text-text-inverse dark:bg-success dark:text-accent-black'
                   : index + 1 === currentStep
-                  ? 'bg-primary-500 text-white'
-                  : 'bg-gray-200 text-gray-500'
+                  ? 'bg-primary text-text-inverse dark:bg-primary-400 dark:text-text-base'
+                  : 'bg-section-light text-text-muted dark:bg-section-dark dark:text-primary-200'
               }`}
             >
               {index + 1 < currentStep ? (
@@ -41,7 +41,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ steps, currentStep, onStepCli
             </div>
             <span
               className={`text-xs font-medium text-center ${
-                index + 1 <= currentStep ? 'text-gray-800' : 'text-gray-500'
+                index + 1 <= currentStep ? 'text-text-base dark:text-text-inverse' : 'text-text-muted dark:text-primary-200'
               }`}
             >
               {step}
@@ -51,7 +51,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ steps, currentStep, onStepCli
       </div>
       <div className="relative">
         <div className="absolute inset-0 flex items-center">
-          <div className="h-1 w-full bg-gray-200 rounded"></div>
+          <div className="h-1 w-full bg-section-light dark:bg-section-dark rounded"></div>
         </div>
         <div
           className="absolute inset-0 flex items-center"
@@ -59,7 +59,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ steps, currentStep, onStepCli
             width: `${((currentStep - 1) / (steps.length - 1)) * 100}%`,
           }}
         >
-          <div className="h-1 w-full bg-primary-500 rounded transition-all duration-300"></div>
+          <div className="h-1 w-full bg-primary dark:bg-primary-400 rounded transition-all duration-300"></div>
         </div>
       </div>
     </div>

@@ -1,3 +1,5 @@
+@import './styles/variables.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -199,11 +201,11 @@
   }
 
   .btn-primary-outline {
-    @apply bg-transparent text-text-base border border-primary hover:bg-primary-100 focus:ring-primary dark:text-text-accent dark:border-primary-200 dark:hover:bg-section-dark dark:focus:ring-primary-200;
+    @apply bg-transparent text-text-base border border-primary hover:bg-primary-100 focus:ring-primary dark:text-text-accent dark:border-primary-200 dark:hover:bg-background-darkAlternate dark:focus:ring-primary-200;
   }
 
   .btn-primary-ghost {
-    @apply bg-transparent text-text-base hover:bg-primary-100 focus:ring-primary dark:text-text-accent dark:hover:bg-section-dark dark:focus:ring-primary-200;
+    @apply bg-transparent text-text-base hover:bg-primary-100 focus:ring-primary dark:text-text-accent dark:hover:bg-background-darkAlternate dark:focus:ring-primary-200;
   }
 
   .input-adornment-button {

@@ -3,7 +3,7 @@ import React from 'react';
 
 interface LoadingSpinnerProps {
   size?: 'small' | 'medium' | 'large';
-  color?: 'primary' | 'white';
+  color?: 'primary' | 'white' | 'accent' | 'secondary';
 }
 
 const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
@@ -17,8 +17,10 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   }[size];
 
   const colorClass = {
-    primary: 'text-primary-500',
-    white: 'text-white',
+    primary: 'text-primary dark:text-primary-200',
+    white: 'text-text-inverse',
+    accent: 'text-accent-yellow dark:text-accent-kente-gold',
+    secondary: 'text-secondary dark:text-secondary-200',
   }[color];
 
   return (

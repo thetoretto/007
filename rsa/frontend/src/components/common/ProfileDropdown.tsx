@@ -44,7 +44,7 @@ const ProfileDropdown: React.FC = () => {
         // Logged-in user view
         <button
           type="button"
-          className="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+          className="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-primary-200 dark:focus:ring-offset-background-dark"
           onClick={toggleDropdown}
         >
           {user.avatar ? (
@@ -54,20 +54,20 @@ const ProfileDropdown: React.FC = () => {
               alt={`${user.firstName} ${user.lastName}`}
             />
           ) : (
-            <div className="h-8 w-8 rounded-full bg-primary-100 flex items-center justify-center">
-              <span className="text-primary-800 font-medium text-sm">
+            <div className="h-8 w-8 rounded-full bg-primary-100 dark:bg-primary-800 flex items-center justify-center">
+              <span className="text-primary-800 dark:text-primary-100 font-medium text-sm">
                 {user.firstName?.[0]}{user.lastName?.[0]}
               </span>
             </div>
           )}
-          <span className="ml-2 hidden sm:inline text-gray-700 hover:text-primary-600">{user.firstName}</span>
-          <ChevronDown className="ml-1 h-4 w-4 text-gray-500 hidden sm:inline" />
+          <span className="ml-2 hidden sm:inline text-text-base hover:text-primary dark:text-text-inverse dark:hover:text-primary-200">{user.firstName}</span>
+          <ChevronDown className="ml-1 h-4 w-4 text-text-muted dark:text-text-inverse hidden sm:inline" />
         </button>
       ) : (
         // Logged-out user view
         <button
           type="button"
-          className="flex items-center gap-1 text-gray-500 hover:text-primary-600"
+          className="flex items-center gap-1 text-text-base hover:text-primary dark:text-text-inverse dark:hover:text-primary-200"
           onClick={toggleDropdown}
         >
           <User className="h-5 w-5" />
@@ -87,13 +87,13 @@ const ProfileDropdown: React.FC = () => {
           {user ? (
             // Dropdown items for logged-in user
             <>
-              <div className="px-4 py-2 border-b border-gray-100">
-                <p className="text-sm font-medium text-gray-900 truncate">{user.firstName} {user.lastName}</p>
-                <p className="text-xs text-gray-500 truncate">{user.email}</p>
+              <div className="px-4 py-2 border-b border-gray-100 dark:border-primary-800">
+                <p className="text-sm font-medium text-text-base dark:text-text-inverse truncate">{user.firstName} {user.lastName}</p>
+                <p className="text-xs text-text-muted dark:text-primary-200 truncate">{user.email}</p>
               </div>
               <Link
                 to="/profile"
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                className="flex items-center px-4 py-2 text-sm text-text-base hover:bg-section-light hover:text-primary dark:text-text-inverse dark:hover:bg-primary-900 dark:hover:text-primary-200"
                 role="menuitem"
                 onClick={() => setIsOpen(false)}
               >
@@ -102,7 +102,7 @@ const ProfileDropdown: React.FC = () => {
               </Link>
               <button
                 onClick={handleLogout}
-                className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                className="flex items-center w-full text-left px-4 py-2 text-sm text-text-base hover:bg-section-light hover:text-primary dark:text-text-inverse dark:hover:bg-primary-900 dark:hover:text-primary-200"
                 role="menuitem"
               >
                 <LogOut className="mr-2 h-4 w-4" />
@@ -114,7 +114,7 @@ const ProfileDropdown: React.FC = () => {
             <>
               <Link
                 to="/login"
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                className="flex items-center px-4 py-2 text-sm text-text-base hover:bg-section-light hover:text-primary dark:text-text-inverse dark:hover:bg-primary-900 dark:hover:text-primary-200"
                 role="menuitem"
                 onClick={() => setIsOpen(false)}
               >
@@ -123,7 +123,7 @@ const ProfileDropdown: React.FC = () => {
               </Link>
               <Link
                 to="/register"
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900"
+                className="flex items-center px-4 py-2 text-sm text-text-base hover:bg-section-light hover:text-primary dark:text-text-inverse dark:hover:bg-primary-900 dark:hover:text-primary-200"
                 role="menuitem"
                 onClick={() => setIsOpen(false)}
               >

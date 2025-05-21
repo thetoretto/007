@@ -9,10 +9,11 @@ import LearnMorePage from './pages/LearnMorePage'; // Import the new page // Imp
 import BecomeMemberPage from './pages/BecomeMemberPage'; // Import the new become member page
 import TripsPage from './pages/passenger/TripsPage';
 import TripDetailsPage from './pages/passenger/TripDetailsPage'; // Import the new TripDetailsPage
+import DemoPage from './pages/passenger/DemoPage'; // Import DemoPage
 import DriverDashboard from './pages/driver/DriverDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import useAuthStore from './store/authStore';
-import useThemeStore from './store/themeStore'; // Import the theme store
+import FloatingThemeToggle from './components/common/FloatingThemeToggle';
 
 // Lazy-loaded components
 
@@ -51,7 +52,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element, allowedRoles =
 };
 
 function App() {
-  const { theme } = useThemeStore();
   const { checkAuth } = useAuthStore();
   
   useEffect(() => {
@@ -59,19 +59,12 @@ function App() {
     checkAuth();
   }, [checkAuth]);
 
-  useEffect(() => {
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
-  }, [theme]);
-
   return (
     <Router>
       <div className="flex flex-col min-h-screen">
         {/* <Navbar /> */}
         <main className="flex-grow">
+          <FloatingThemeToggle position="bottom-right" />
           <Routes>
             {/* Public routes */}
             <Route path="/" element={<HomePage />} />
@@ -81,6 +74,7 @@ function App() {
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/learn-more" element={<LearnMorePage />} />
             <Route path="/become-member" element={<BecomeMemberPage />} />
+            <Route path="/passenger/demo" element={<DemoPage />} />
             <Route 
               path="/profile" 
               element={
