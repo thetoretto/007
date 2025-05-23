@@ -329,9 +329,7 @@ const HomePage: React.FC = () => {
                   <div className={`card-feature-icon-wrapper inline-flex items-center justify-center w-16 h-16 rounded-xl bg-${item.color}/10 text-${item.color} group-hover:scale-110 group-hover:bg-${item.color} group-hover:text-white transition-all duration-300`}>
                     <item.icon className="h-8 w-8" />
                   </div>
-                  <span className={`absolute -top-3 -right-3 text-7xl font-black text-${item.color}/5 dark:text-${item.color}/10 group-hover:text-${item.color}/10 transition-all duration-300`}>
-                    {item.step}
-                  </span>
+          
                 </div>
                 
                 <h3 className={`text-xl font-bold mb-4 group-hover:text-${item.color} transition-colors duration-300`}>

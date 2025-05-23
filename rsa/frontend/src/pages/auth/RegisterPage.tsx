@@ -72,7 +72,7 @@ const RegisterPage: React.FC = () => {
       </div>
       
       {/* Beautiful African-inspired background section */}
-      <div className="hidden lg:block lg:w-1/2 relative overflow-hidden bg-gradient-to-br from-accent-green to-accent-blue order-1 lg:order-2">
+      <div className="hidden lg:block lg:w-1/2 relative overflow-hidden  bg-gradient-to-br from-primary-800 to-primary-900 order-1 lg:order-2">
         {/* Decorative patterns */}
         <div className="absolute inset-0 opacity-10 pattern-kente"></div>
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_60%,rgba(255,255,255,0.1)_0%,transparent_60%)]"></div>
@@ -124,7 +124,7 @@ const RegisterPage: React.FC = () => {
           
           {/* New: Login button on desktop view */}
           <div className="absolute bottom-10 left-0 right-0 flex justify-center">
-            <Link to="/login" className="flex items-center text-white bg-accent-blue hover:bg-accent-blue-700 transition-colors px-6 py-3 rounded-lg shadow-lg">
+            <Link to="/login" className="flex items-center text-white bg-primary-700 hover:bg-primary-600 transition-colors px-6 py-3 rounded-lg shadow-lg">
               <span className="mr-2">Already have an account? Sign in</span>
               <ChevronRight size={18} />
             </Link>

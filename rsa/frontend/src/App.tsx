@@ -19,7 +19,8 @@ import FloatingThemeToggle from './components/common/FloatingThemeToggle';
 
 const DriverStatistics = lazy(() => import('./pages/driver/Statistics'));
 
-const TripManagement = lazy(() => import('./components/dashboard/TripManagement')); // Shared component
+const TripManagement = lazy(() => import('./components/dashboard/TripManagement')); 
+const TripActivityLog = lazy(() => import('./components/common/TripActivityLog'));
 const AdminStatistics = lazy(() => import('./pages/admin/Statistics'));
 const AdminUserManagement = lazy(() => import('./pages/admin/UserManagement'));
 const AdminHotPointManagement = lazy(() => import('./pages/admin/AdminHotPointManagement')); // Import the new Hot Point Management page
@@ -28,6 +29,7 @@ const VehiclePage = lazy(() => import('./pages/driver/VehiclePage')); // Renamed
 const ProfilePage = lazy(() => import('./components/common/ProfilePage')); // Import the ProfilePage
 const DriverCheckInPage = lazy(() => import('./components/driver/DriverCheckInPage')); // Import the DriverCheckInPage
 const CreateTripPage = lazy(() => import('./components/dashboard/CreateTripPage')); // Import the CreateTripPage
+
 
 interface ProtectedRouteProps {
   element: React.ReactNode;

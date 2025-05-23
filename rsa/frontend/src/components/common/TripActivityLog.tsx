@@ -342,7 +342,7 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
   };
   
   return (
-    <div className="card">
+    <div className="bg-white ">
       <div className="panel-header">
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-card-title">Trip Activity</h2>
