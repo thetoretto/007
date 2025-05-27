@@ -104,15 +104,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => {
                   Email or Phone Number
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                    <User size={18} className="text-primary-600 dark:text-primary-400" />
-                  </div>
                   <Field
                     id="emailOrPhone"
                     name="emailOrPhone"
                     type="text"
                     autoComplete="username"
-                    className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 rounded-lg bg-background-light dark:bg-section-dark text-text-base dark:text-text-inverse focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
+                    className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light  focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
                     disabled={loading}
                     placeholder="Enter your email or phone"
                   />
@@ -129,15 +126,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => {
                   Password
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
-                    <Lock size={18} className="text-primary-600 dark:text-primary-400" />
-                  </div>
                   <Field
                     id="password"
                     name="password"
                     type={showPassword ? 'text' : 'password'}
                     autoComplete="current-password"
-                    className="form-input pl-10 pr-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 rounded-lg bg-background-light dark:bg-section-dark text-text-base dark:text-text-inverse focus:ring-2 focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
+                    className="form-input pl-10 pr-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
                     disabled={loading}
                     placeholder="Enter your password"
                   />

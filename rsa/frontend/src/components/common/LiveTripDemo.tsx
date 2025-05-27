@@ -178,7 +178,7 @@ const LiveTripDemo: React.FC<LiveTripDemoProps> = ({ tripId = 'demo-trip-1' }) =
   };
   
   return (
-    <div className="border rounded-lg bg-white shadow-md">
+    <div className="border rounded-lg bg-white dark:bg-primary-900/20 dark:border-primary-800 shadow-md transition-all duration-200">
       {/* Confirmation Modal */}
       <ConfirmationModal 
         isOpen={showConfirmation}
@@ -191,37 +191,41 @@ const LiveTripDemo: React.FC<LiveTripDemoProps> = ({ tripId = 'demo-trip-1' }) =
       
       <div className="p-4">
         <div className="flex flex-wrap items-center justify-between mb-4">
-          <h2 className="text-xl font-semibold">Live Trip Demo</h2>
-          <div className="flex items-center">
-            <div className={`w-3 h-3 rounded-full mr-2 ${connected ? 'bg-green-500' : 'bg-red-500'}`}></div>
-            <span className="text-sm">{connected ? 'Connected' : 'Disconnected'}</span>
+          <h2 className="text-xl font-semibold dark:text-white" id="live-trip-demo-title">Live Trip Demo</h2>
+          <div className="flex items-center" role="status" aria-live="polite">
+            <div 
+              className={`w-3 h-3 rounded-full mr-2 ${connected ? 'bg-green-500' : 'bg-red-500'}`}
+              aria-hidden="true"
+            ></div>
+            <span className="text-sm dark:text-primary-200">{connected ? 'Connected' : 'Disconnected'}</span>
           </div>
         </div>
       
         <div className="flex flex-col lg:flex-row gap-4">
           <div className="lg:w-3/5">
             <div className="mb-3 flex flex-col sm:flex-row justify-between items-start sm:items-center">
-              <h3 className="text-lg font-medium mb-2 sm:mb-0">Trip Map</h3>
+              <h3 className="text-lg font-medium mb-2 sm:mb-0 dark:text-white" id="trip-map-heading">Trip Map</h3>
               
-              <div className="flex flex-wrap gap-1 sm:gap-2">
+              <div className="flex flex-wrap gap-1 sm:gap-2" role="toolbar" aria-label="Map controls">
                 <button 
                   onClick={toggleLiveTracking}
-                  className={`px-3 py-1.5 rounded text-sm font-medium flex items-center ${
+                  className={`px-3 py-1.5 rounded text-sm font-medium flex items-center transition-colors duration-200 ${
                     isLiveTracking 
-                      ? 'bg-red-100 text-red-700 hover:bg-red-200' 
-                      : 'bg-green-100 text-green-700 hover:bg-green-200'
+                      ? 'bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50' 
+                      : 'bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-300 dark:hover:bg-green-900/50'
                   }`}
                   aria-label={isLiveTracking ? 'Stop Live Tracking' : 'Start Live Tracking'}
+                  aria-pressed={isLiveTracking}
                 >
                   {isLiveTracking ? (
                     <>
-                      <WifiOff className="h-4 w-4 mr-1.5" />
+                      <WifiOff className="h-4 w-4 mr-1.5" aria-hidden="true" />
                       <span className="hidden sm:inline">Stop Tracking</span>
                       <span className="sm:hidden">Stop</span>
                     </>
                   ) : (
                     <>
-                      <Wifi className="h-4 w-4 mr-1.5" />
+                      <Wifi className="h-4 w-4 mr-1.5" aria-hidden="true" />
                       <span className="hidden sm:inline">Live Tracking</span>
                       <span className="sm:hidden">Track</span>
                     </>
@@ -230,27 +234,27 @@ const LiveTripDemo: React.FC<LiveTripDemoProps> = ({ tripId = 'demo-trip-1' }) =
                 
                 <button 
                   onClick={requestLocationUpdate}
-                  className="px-3 py-1.5 bg-blue-100 text-blue-700 hover:bg-blue-200 rounded text-sm font-medium flex items-center"
+                  className="px-3 py-1.5 bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-300 dark:hover:bg-blue-900/50 rounded text-sm font-medium flex items-center transition-colors duration-200"
                   aria-label="Update Location"
                 >
-                  <RefreshCw className="h-4 w-4 mr-1.5" />
+                  <RefreshCw className="h-4 w-4 mr-1.5" aria-hidden="true" />
                   <span className="hidden sm:inline">Update Location</span>
                   <span className="sm:hidden">Update</span>
                 </button>
                 
                 <button 
                   onClick={simulateBooking}
-                  className="px-3 py-1.5 bg-purple-100 text-purple-700 hover:bg-purple-200 rounded text-sm font-medium flex items-center"
+                  className="px-3 py-1.5 bg-purple-100 text-purple-700 hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:hover:bg-purple-900/50 rounded text-sm font-medium flex items-center transition-colors duration-200"
                   aria-label="Simulate Booking"
                 >
-                  <UserCheck className="h-4 w-4 mr-1.5" />
+                  <UserCheck className="h-4 w-4 mr-1.5" aria-hidden="true" />
                   <span className="hidden sm:inline">Simulate Booking</span>
                   <span className="sm:hidden">Book</span>
                 </button>
               </div>
             </div>
             
-            <div className="rounded overflow-hidden border">
+            <div className="rounded overflow-hidden border dark:border-primary-700" aria-labelledby="trip-map-heading">
               <MapDisplay 
                 height="350px"
                 pickupLocation={startLocation}
@@ -262,13 +266,13 @@ const LiveTripDemo: React.FC<LiveTripDemoProps> = ({ tripId = 'demo-trip-1' }) =
               />
             </div>
             
-            <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-gray-600">
+            <div className="mt-3 grid grid-cols-2 gap-2 text-xs text-gray-600 dark:text-gray-300">
               <div className="flex items-center">
-                <MapPin className="h-4 w-4 text-green-500 mr-1" />
+                <MapPin className="h-4 w-4 text-green-500 mr-1" aria-hidden="true" />
                 <span className="truncate">From: {startLocation.name}</span>
               </div>
               <div className="flex items-center">
-                <MapPin className="h-4 w-4 text-red-500 mr-1" />
+                <MapPin className="h-4 w-4 text-red-500 mr-1" aria-hidden="true" />
                 <span className="truncate">To: {endLocation.name}</span>
               </div>
             </div>
@@ -276,28 +280,37 @@ const LiveTripDemo: React.FC<LiveTripDemoProps> = ({ tripId = 'demo-trip-1' }) =
           
           <div className="lg:w-2/5">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="text-lg font-medium">Real-time Updates</h3>
-              <span className="text-xs text-gray-500 flex items-center">
-                <Clock className="h-3.5 w-3.5 mr-1" />
+              <h3 className="text-lg font-medium dark:text-white" id="real-time-updates-heading">Real-time Updates</h3>
+              <span className="text-xs text-gray-500 dark:text-gray-400 flex items-center">
+                <Clock className="h-3.5 w-3.5 mr-1" aria-hidden="true" />
                 Live Feed
               </span>
             </div>
             
-            <div className="h-[350px] overflow-y-auto border rounded p-3 bg-gray-50">
+            <div 
+              className="h-[350px] overflow-y-auto border dark:border-primary-700 rounded p-3 bg-gray-50 dark:bg-primary-900/10"
+              aria-labelledby="real-time-updates-heading"
+              role="log"
+              aria-live="polite"
+            >
               {messages.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
-                  <Bell className="h-8 w-8 mb-2 text-gray-400" />
+                <div className="flex flex-col items-center justify-center h-full text-center text-gray-500 dark:text-gray-400">
+                  <Bell className="h-8 w-8 mb-2 text-gray-400 dark:text-gray-500" aria-hidden="true" />
                   <p className="italic">No messages yet.</p>
                   <p className="text-xs mt-1">Start tracking or update location to see messages.</p>
                 </div>
               ) : (
                 messages.map((msg, idx) => (
-                  <div key={idx} className="mb-3 p-2 bg-white rounded shadow-sm">
-                    <div className="flex justify-between text-xs text-gray-500 mb-1">
+                  <div 
+                    key={idx} 
+                    className="mb-3 p-2 bg-white dark:bg-primary-800/30 rounded shadow-sm transition-all duration-200"
+                    role="article"
+                  >
+                    <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400 mb-1">
                       <span className="font-medium">{msg.type}</span>
                       <span>{new Date().toLocaleTimeString()}</span>
                     </div>
-                    <div className="text-sm">
+                    <div className="text-sm dark:text-primary-200">
                       {msg.type === 'VEHICLE_LOCATION' && (
                         <span>
                           Vehicle at: {msg.payload.location.latitude.toFixed(4)}, {msg.payload.location.longitude.toFixed(4)}
@@ -322,7 +335,10 @@ const LiveTripDemo: React.FC<LiveTripDemoProps> = ({ tripId = 'demo-trip-1' }) =
         </div>
       </div>
       
-      <div className="mt-2 px-4 py-3 text-sm text-gray-500 bg-gray-50 rounded-b-lg border-t">
+      <div 
+        className="mt-2 px-4 py-3 text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-primary-900/20 rounded-b-lg border-t dark:border-primary-800"
+        role="contentinfo"
+      >
         <p className="text-xs">
           <strong>Note:</strong> This is a demonstration of real-time capabilities using mock data.
           In a production environment, this would connect to a real backend service.
@@ -332,4 +348,4 @@ const LiveTripDemo: React.FC<LiveTripDemoProps> = ({ tripId = 'demo-trip-1' }) =
   );
 };
 
-export default LiveTripDemo; 
+export default LiveTripDemo;

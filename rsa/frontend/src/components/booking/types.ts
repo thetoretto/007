@@ -32,8 +32,16 @@ export interface Vehicle {
 export interface Seat {
   id: string;
   number: string;
-  available: boolean;
+  // available: boolean; // Replaced by status
   price: number; // Price might vary per seat or be based on vehicle base price
+  type: 'standard' | 'premium' | 'vip' | 'accessible';
+  status: 'available' | 'selected' | 'booked' | 'reserved';
+  position: {
+    row: number; // 0-indexed
+    col: number; // 0-indexed
+    aisle?: boolean; // Optional: Indicates if there's an aisle next to this seat
+  };
+  notes?: string; // Optional notes for the seat
 }
 
 export interface PickupPoint {

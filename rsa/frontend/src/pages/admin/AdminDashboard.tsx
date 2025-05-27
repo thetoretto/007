@@ -216,8 +216,8 @@ const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Stats Cards - Updated */}
-      <div className="card grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
-        <div className=" p-6 rounded-lg shadow-sm">
+      <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
+        <div className="card  p-6 rounded-lg shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <p className="text-sm font-medium text-gray-500">Total Trips</p>
             <Calendar className="h-6 w-6 text-primary-500" />
@@ -226,7 +226,7 @@ const AdminDashboard: React.FC = () => {
           <p className="text-xs text-gray-400 capitalize">For {timePeriod} Period</p>
         </div>
 
-        <div className=" p-6 rounded-lg shadow-sm">
+        <div className="card p-6 rounded-lg shadow-sm">
           <div className="flex items-center justify-between mb-2">
             <p className="text-sm font-medium text-gray-500">Total Passengers</p>
             <Users className="h-6 w-6 text-green-500" />
@@ -262,7 +262,7 @@ const AdminDashboard: React.FC = () => {
         </div>
 
         {/* Active Routes */}
-        <div className="card lg:col-span-2 bg-white p-6 rounded-lg shadow-sm">
+        <div className="card lg:col-span-2  p-6 rounded-lg shadow-sm">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">Most Active Routes</h2>
           {adminData.activeRoutes.length > 0 ? (
             <div className="space-y-3">
@@ -287,15 +287,15 @@ const AdminDashboard: React.FC = () => {
 
 
       {/* Recent Trips List - (Existing, can be kept or modified) */}
-      <div className="card bg-white rounded-lg shadow-sm overflow-hidden mb-8">
+      <div className="card  rounded-lg shadow-sm overflow-hidden mb-8">
         <div className="px-4 sm:px-6 lg:px-8 py-4 border-b border-gray-200 flex justify-between items-center">
           <h2 className="text-lg font-medium text-gray-900">Manage Trips</h2>
           <span className="text-sm text-gray-500">Displaying {sortedTrips.slice(0,5).length} of {sortedTrips.length} trips</span>
         </div>
-        <div className="overflow-x-auto">
+        <div className="card overflow-x-auto">
           {sortedTrips.length > 0 ? (
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
+            <table className="min-w-full divide-y divide-gray-500">
+              <thead className="bg-background-600">
                 <tr>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Route</th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date & Time</th>
@@ -308,7 +308,7 @@ const AdminDashboard: React.FC = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className=" divide-y divide-gray-200">
                 {sortedTrips.slice(0, 10).map((trip) => (
                   <tr key={trip.id} className={`hover:bg-gray-50 ${selectedTrip?.id === trip.id ? 'bg-primary-50' : ''}`} onClick={() => setSelectedTrip(trip.id === selectedTrip?.id ? null : trip)}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{trip.fromLocation} to {trip.toLocation}</td>

@@ -1,12 +1,18 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import useAuthStore from '../../store/authStore';
-import { Users, Search, Edit, Trash2, UserPlus, Filter, X, Save, PlusCircle } from 'react-feather';
+import { 
+  Users, Search, Edit, Trash2, UserPlus, Filter, X, Save, PlusCircle, 
+  Download, MoreHorizontal, CheckCircle, XCircle, AlertCircle, ChevronLeft, 
+  ChevronRight, ArrowUp, ArrowDown, RefreshCw, Eye, EyeOff, Check, Clipboard
+} from 'react-feather';
 import { mockUsers as initialMockUsers } from '../../utils/mockData'; 
-import { User, UserStatus, UserRole } from '../../types'; // Updated import
+import { User, UserStatus, UserRole } from '../../types';
 
 // Import the DashboardNavbar component
 const DashboardNavbar = React.lazy(() => import('../../components/dashboard/DashboardNavbar'));
 import '../../index.css';
+import ToastContainer from '../../components/common/ToastContainer';import { useToast } from '../../hooks/useToast';
+
 
 // Basic Modal Component (Replace with your actual Modal component if available)
 const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: string; children: React.ReactNode }> = ({ isOpen, onClose, title, children }) => {
@@ -28,6 +34,7 @@ const Modal: React.FC<{ isOpen: boolean; onClose: () => void; title: string; chi
 
 const UserManagement: React.FC = () => {
   const { user: adminUser, updateUserStatus, register, updateUser, deleteUser } = useAuthStore(); // Added updateUser and deleteUser
+  const { addToast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [users, setUsers] = useState<User[]>(() => 
     initialMockUsers.map(u => ({ ...u, status: u.status || 'active' }))
@@ -96,7 +103,11 @@ const UserManagement: React.FC = () => {
   const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newUser.firstName || !newUser.lastName || !newUser.email || !newUser.password || !newUser.role) {
-        alert('Please fill in all required fields including password and role.');
+        addToast({
+          type: 'error',
+          title: 'Validation Error',
+          message: 'Please fill in all required fields including password and role.'
+        });
         return;
     }
     try {
@@ -112,8 +123,17 @@ const UserManagement: React.FC = () => {
       // A more robust solution would be to get the new user from register's response or fetch all users.
       setUsers(initialMockUsers.map(u => ({ ...u, status: u.status || 'active' }))); 
       closeAddModal();
+      addToast({
+        type: 'success',
+        title: 'User Added',
+        message: `${newUser.firstName} ${newUser.lastName} has been successfully added.`
+      });
     } catch (error) {
-      alert(`Failed to add user: ${(error as Error).message}`);
+      addToast({
+        type: 'error',
+        title: 'Failed to Add User',
+        message: (error as Error).message
+      });
     }
   };
 
@@ -131,7 +151,11 @@ const UserManagement: React.FC = () => {
     e.preventDefault();
     if (!editingUser) return;
     if (!editingUser.firstName || !editingUser.lastName || !editingUser.email) {
-        alert('Please fill in all required fields.');
+        addToast({
+          type: 'error',
+          title: 'Validation Error',
+          message: 'Please fill in all required fields.'
+        });
         return;
     }
     try {
@@ -143,21 +167,38 @@ const UserManagement: React.FC = () => {
       // A better approach in a real app would be to fetch users or get the updated user from the store.
       setUsers(initialMockUsers.map(u => ({ ...u, status: u.status || 'active' })));
       closeEditModal();
-      alert('User updated successfully.');
+      addToast({
+        type: 'success',
+        title: 'User Updated',
+        message: `${editingUser.firstName} ${editingUser.lastName}'s information has been updated.`
+      });
     } catch (error) {
-      alert(`Failed to update user: ${(error as Error).message}`);
+      addToast({
+        type: 'error',
+        title: 'Failed to Update User',
+        message: (error as Error).message
+      });
     }
   };
 
   const handleDeleteUser = async (userId: string) => {
     if (window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
       try {
+        const userToDelete = users.find(u => u.id === userId);
         await deleteUser(userId);
         // Update local state. Similar to edit, re-map from the modified initialMockUsers.
         setUsers(initialMockUsers.map(u => ({ ...u, status: u.status || 'active' })));
-        alert('User deleted successfully.');
+        addToast({
+          type: 'success',
+          title: 'User Deleted',
+          message: userToDelete ? `${userToDelete.firstName} ${userToDelete.lastName} has been deleted.` : 'User has been deleted.'
+        });
       } catch (error) {
-        alert(`Failed to delete user: ${(error as Error).message}`);
+        addToast({
+          type: 'error',
+          title: 'Failed to Delete User',
+          message: (error as Error).message
+        });
       }
     }
   };
@@ -174,14 +215,25 @@ const UserManagement: React.FC = () => {
   const handleToggleUserStatus = async (userId: string, currentStatus: UserStatus) => {
     const newStatus = currentStatus === 'active' ? 'inactive' : 'active';
     try {
+      const userToUpdate = users.find(u => u.id === userId);
       await updateUserStatus(userId, newStatus);
       // Update local state
       setUsers(prevUsers => 
         prevUsers.map(u => u.id === userId ? { ...u, status: newStatus, updatedAt: new Date().toISOString() } : u)
       );
-      alert(`User status updated to ${newStatus}`);
+      addToast({
+        type: 'success',
+        title: 'Status Updated',
+        message: userToUpdate ? 
+          `${userToUpdate.firstName} ${userToUpdate.lastName}'s status has been updated to ${newStatus}.` : 
+          `User status has been updated to ${newStatus}.`
+      });
     } catch (error) {
-      alert(`Failed to update user status: ${(error as Error).message}`);
+      addToast({
+        type: 'error',
+        title: 'Failed to Update Status',
+        message: (error as Error).message
+      });
     }
   };
 
@@ -191,6 +243,7 @@ const UserManagement: React.FC = () => {
       <React.Suspense fallback={<div>Loading...</div>}>
         <DashboardNavbar userRole="admin" />
       </React.Suspense>
+      <ToastContainer position="top-right" />
 
       {/* Dashboard Stats Section */}
       <div className="mb-8">

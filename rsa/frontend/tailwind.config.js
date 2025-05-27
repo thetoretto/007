@@ -1,5 +1,4 @@
 /** @type {import('tailwindcss').Config} */
-/** @type {import('tailwindcss').Config} */
 export default {
   darkMode: 'class',
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
@@ -10,92 +9,92 @@ export default {
       },
       colors: {
         primary: {
-          DEFAULT: '#E57C23', // Terracotta orange
-          50: '#FFF2E6',     // Very light orange
-          100: '#FFDDB3',    // Light orange
-          200: '#FFB266',    // Soft orange
-          300: '#FF8519',    // Bright orange
-          400: '#E57C23',    // Main terracotta
-          500: '#C66218',    // Deeper terracotta
-          600: '#A44800',    // Dark terracotta
-          700: '#7D3600',    // Very dark terracotta
-          800: '#5C2800',    // Brown terracotta
-          900: '#3B1A00',    // Almost black terracotta
+          DEFAULT: '#E57C23',  // Base terracotta
+          50: '#FFF8F0',       // Soft warm white
+          100: '#FEEBD8',
+          200: '#FCD4B0',
+          300: '#FABD88',
+          400: '#F8A15F',
+          500: '#E57C23',     // Main terracotta
+          600: '#C4621A',
+          700: '#A34B12',
+          800: '#82380D',
+          900: '#612708',
         },
         secondary: {
-          DEFAULT: '#025464', // Deep teal blue
-          50: '#E6F4F6',     // Very light teal
-          100: '#B3E0E6',    // Light teal
-          200: '#66C0CC',    // Soft teal
-          300: '#19A0B2',    // Bright teal
-          400: '#037F91',    // Main teal
-          500: '#025464',    // Deep teal blue
-          600: '#014756',    // Darker teal
-          700: '#01353F',    // Very dark teal
-          800: '#002329',    // Almost black teal
-          900: '#001214',    // Black teal
+          DEFAULT: '#025464',  // Deep teal
+          50: '#E6F6F9',
+          100: '#B3E6ED',
+          200: '#80D6E1',
+          300: '#4DC6D5',
+          400: '#1AB6C9',
+          500: '#025464',      // Main teal
+          600: '#01424F',
+          700: '#01303A',
+          800: '#001E25',
+          900: '#000C10',
         },
         accent: {
-          DEFAULT: '#E57C23', // Default accent (same as primary)
-          light: '#EAEEFF',   // Light blue accent
-          dark: '#333F6B',    // Dark blue accent
-          mint: '#92F2CB',    // Mint green for focus rings
-          black: '#000000',   // Added accent-black
-          yellow: '#F8CB2E',  // Vibrant yellow
-          green: '#7EAA92',   // Sage green
-          purple: '#8E3FBF',  // Rich purple
-          red: '#E74646',     // Warm red
-          orange: '#FF8000',  // Bright orange
+          DEFAULT: '#E57C23',  // Terracotta
+          light: '#F5E6D8',    // Warm parchment
+          dark: '#2A363B',     // Charcoal
+          mint: '#A3D9C9',     // Soft sage
+          black: '#2B2118',    // Deep espresso
+          yellow: '#F4D35E',   // Goldenrod
+          green: '#7EAA92',    // Muted sage
+          purple: '#8E6C88',   // Dusty lavender
+          red: '#C44536',      // Burnt sienna
+          orange: '#E57C23',   // Matching terracotta
           kente: {
-            gold: '#FFC940',   // Kente gold
-            green: '#006B54',  // Kente green
-            red: '#C8102E',    // Kente red
-            blue: '#0033A0',   // Kente blue
-            black: '#000000',  // Kente black
+            gold: '#FFD700',   // Rich gold
+            green: '#2E5D4A',   // Forest green
+            red: '#9A2A2A',     // Oxblood
+            blue: '#0047AB',    // Cobalt
+            black: '#1A120B',   // Deep brown-black
           },
         },
         earth: {
-          clay: '#A0522D',    // Clay brown
-          ochre: '#CC7722',   // Ochre
-          sienna: '#882D17',  // Sienna
-          sand: '#E2C290',    // Sand
-          coffee: '#4A2C2A',  // Coffee
+          clay: '#A0522D',     // Terra cotta
+          ochre: '#CC7722',    // Burnt orange
+          sienna: '#882D17',   // Red earth
+          sand: '#D2B48C',     // Warm sand
+          coffee: '#4A2C2A',   // Dark roast
         },
         background: {
-          light: '#FFFBF5',       // Warm white
-          dark: '#1A120B',        // Rich dark brown
-          alternate: '#F8F0E5',   // Cream
-          darkAlternate: '#201B10', // Darker brown
+          light: '#FFFBF5',    // Warm ivory
+          dark: '#1A120B',     // Rich espresso
+          alternate: '#F8F0E5', // Cream
+          darkAlternate: '#2B2118', // Dark chocolate
         },
         section: {
-          light: '#F8F9FA',       // Light gray-blue
-          dark: '#1A1A24',        // Deep blue-black
+          light: '#F5F0EB',    // Warm off-white
+          dark: '#1F1A15',     // Deep umber
         },
         text: {
-          base: '#1A120B',       // Dark brown
-          inverse: '#FFFBF5',    // Warm white
-          muted: '#78716C',      // Muted gray
-          accent: '#E57C23',     // Terracotta for accents
+          base: '#2B2118',     // Dark espresso
+          inverse: '#FFFBF5',  // Warm white
+          muted: '#7A6E64',    // Taupe
+          accent: '#E57C23',   // Terracotta
         },
         success: {
-          DEFAULT: '#7EAA92',    // Sage green
-          darker: '#56806a',     // Darker sage
+          DEFAULT: '#7EAA92',  // Sage green
+          darker: '#5B7A6A',
         },
         warning: {
-          DEFAULT: '#F8CB2E',    // Vibrant yellow
-          darker: '#DFB520',     // Darker yellow
+          DEFAULT: '#F4D35E',  // Goldenrod
+          darker: '#D4B350',
         },
         error: {
-          DEFAULT: '#E74646',    // Warm red
-          darker: '#B83232',     // Darker red
+          DEFAULT: '#C44536',  // Terra cotta red
+          darker: '#A33528',
         },
         info: {
-          DEFAULT: '#025464',    // Deep teal blue
-          darker: '#014756',     // Darker teal
+          DEFAULT: '#4A708B',  // Slate blue
+          darker: '#38556B',
         },
       },
       patterns: {
-        kente: 'repeating-linear-gradient(45deg, #FFC940 0, #FFC940 10px, #006B54 10px, #006B54 20px, #C8102E 20px, #C8102E 30px, #0033A0 30px, #0033A0 40px)',
+        kente: 'repeating-linear-gradient(45deg, #FFD700 0, #FFD700 10px, #2E5D4A 10px, #2E5D4A 20px, #9A2A2A 20px, #9A2A2A 30px, #0047AB 30px, #0047AB 40px)',
         mudcloth: 'repeating-linear-gradient(90deg, #1A120B 0, #1A120B 2px, transparent 2px, transparent 10px)',
       },
       keyframes: {
@@ -113,8 +112,11 @@ export default {
         },
         'bg-pulse-slow': {
           '0%, 100%': { 'background-color': '#E57C23' },
-          '50%': { 'background-color': '#F8CB2E' },
+          '50%': { 'background-color': '#F4D35E' },
         },
+      },
+      animation: {
+        'pulse-slow': 'bg-pulse-slow 3s ease-in-out infinite',
       },
     },
   },

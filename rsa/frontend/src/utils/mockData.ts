@@ -103,7 +103,7 @@ export const mockDrivers: Driver[] = [
   {
     ...(mockUsers.find(u => u.id === '3') as User & { role: 'driver' }),
     licenseNumber: 'DL123456',
-    vehicleId: 'v1',
+    vehicleId: 'v1', // Corresponds to Toyota Avensis now
     rating: 4.8,
     isActive: true, // This might be driver-specific status, separate from User.status
   } as Driver,
@@ -206,61 +206,58 @@ export const mockRoutes: Route[] = [
 export const mockVehicles: Vehicle[] = [
   {
     id: 'v1',
-    model: 'Mercedes Sprinter',
-    licensePlate: 'ABC-1234',
-    capacity: 20,
-    type: 'shuttle',
-    features: ['air_conditioning', 'wifi', 'usb_charging'],
+    driverId: '3',
+    model: 'Toyota Avensis',
+    licensePlate: 'RAA-001X',
+    capacity: 5,
+    type: 'sedan',
+    features: ['air_conditioning', 'gps'],
     isActive: true,
   },
   {
     id: 'v2',
-    model: 'Ford Transit',
-    licensePlate: 'XYZ-5678',
-    capacity: 15,
-    type: 'minibus',
-    features: ['air_conditioning', 'wheelchair_accessible'],
+    driverId: '3',
+    model: 'Toyota Noah',
+    licensePlate: 'RAB-002Y',
+    capacity: 7,
+    type: 'minivan',
+    features: ['air_conditioning', 'sliding_doors'],
     isActive: true,
   },
   {
     id: 'v3',
-    model: 'Toyota Coaster',
-    licensePlate: 'DEF-9012',
-    capacity: 25,
-    type: 'coach',
-    features: ['air_conditioning', 'wifi', 'entertainment', 'restroom'],
+    driverId: '3',
+    model: 'Toyota Corolla',
+    licensePlate: 'RAC-003Z',
+    capacity: 5,
+    type: 'sedan',
+    features: ['air_conditioning', 'bluetooth'],
+    isActive: true,
+  },
+  {
+    id: 'v4',
+    driverId: '3',
+    model: 'Toyota Sienta',
+    licensePlate: 'RAD-004A',
+    capacity: 7,
+    type: 'minimpv',
+    features: ['air_conditioning', 'power_steering'],
+    isActive: true,
+  },
+  {
+    id: 'v5',
+    driverId: '3',
+    model: 'Toyota Vitz',
+    licensePlate: 'RAE-005B',
+    capacity: 5,
+    type: 'hatchback',
+    features: ['air_conditioning', 'abs'],
     isActive: true,
   },
 ];
 
-// Mock Seats for Vehicle 1
-export const mockSeatsV1: Seat[] = Array.from({ length: 20 }, (_, i) => ({
-  id: `s${i+1}v1`,
-  number: `${i+1}`,
-  vehicleId: 'v1',
-  isAvailable: i < 15, // 15 seats available, 5 booked
-  isHandicapAccessible: i === 0 || i === 1,
-  position: {
-    row: Math.floor(i / 4) + 1,
-    column: (i % 4) + 1,
-  },
-}));
-
-// Mock Seats for Vehicle 2
-export const mockSeatsV2: Seat[] = Array.from({ length: 15 }, (_, i) => ({
-  id: `s${i+1}v2`,
-  number: `${i+1}`,
-  vehicleId: 'v2',
-  isAvailable: i < 10, // 10 seats available, 5 booked
-  isHandicapAccessible: i === 0 || i === 1 || i === 2,
-  position: {
-    row: Math.floor(i / 3) + 1,
-    column: (i % 3) + 1,
-  },
-}));
-
-// All mock seats
-export const mockSeats: Seat[] = [...mockSeatsV1, ...mockSeatsV2];
+// All mock seats (now empty, as SeatSelector generates seats or receives them as props)
+export const mockSeats: Seat[] = [];
 
 // Mock Trips
 export const mockTrips: Trip[] = [

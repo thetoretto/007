@@ -252,15 +252,15 @@ const DriverDashboard: React.FC = () => {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-          <div className="bg-blue-50 p-4 rounded-lg">
+          <div className="card p-4 rounded-lg">
             <p className="text-sm text-blue-700 mb-1">Scheduled Trips</p>
             <p className="text-3xl font-bold text-blue-600">{scheduledTripsForPeriod}</p>
           </div>
-          <div className="bg-green-50 p-4 rounded-lg">
+          <div className="card p-4 rounded-lg">
             <p className="text-sm text-green-700 mb-1">Completed Trips</p>
             <p className="text-3xl font-bold text-green-600">{completedTripsForPeriod}</p>
           </div>
-          <div className="bg-red-50 p-4 rounded-lg">
+          <div className="card p-4 rounded-lg">
             <p className="text-sm text-red-700 mb-1">Cancelled Trips</p>
             <p className="text-3xl font-bold text-red-600">{cancelledTripsForPeriod}</p>
           </div>

@@ -9,21 +9,66 @@ import useHotPointStore, { HotPoint } from '../../store/hotPointStore'; // Impor
 export type { HotPoint as PickupPoint };
 import RouteStep from './steps/RouteStep';
 import VehicleStep from './steps/VehicleStep';
-import SeatStep from './steps/SeatStep';
+import SeatSelector from '../common/SeatSelector'; // Replaced SeatStep with SeatSelector
+import { Seat as SeatSelectorSeat } from '../common/SeatSelector'; // Import Seat type from SeatSelector
 import ConfirmPayStep from './steps/ConfirmPayStep';
 import ReceiptStep from './steps/ReceiptStep';
 
 // Mock data for pickup points can remain if not fetched from a store
 // const mockRoutes and mockVehicles will be replaced by data from stores
 
-// Generate seats based on vehicle capacity - Example for v1 (12 seats)
-const generateSeats = (vehicleId: string, capacity: number, price: number): Seat[] => {
-  return Array.from({ length: capacity }, (_, i) => ({
-    id: `${vehicleId}-s${i + 1}`,
-    number: `${i + 1}`,
-    available: Math.random() > 0.3, // Random availability for demo
-    price: price, // Use a base price or vehicle-specific price
-  }));
+// Generate seats based on vehicle capacity
+const generateSeats = (vehicleId: string, capacity: number, price: number, vehicleType?: string): Seat[] => {
+  const seats: Seat[] = [];
+  const seatsPerRow = 4; // Example: 4 seats per row (e.g., 2 aisle 2)
+  const numRows = Math.ceil(capacity / seatsPerRow);
+
+  // Add a driver's seat (optional, but good for layout consistency with SeatSelector)
+  seats.push({
+    id: `${vehicleId}-driver`,
+    number: 'D',
+    price: 0,
+    type: 'standard',
+    status: 'reserved',
+    position: { row: 0, col: 0 }, // Assuming driver is at front-left
+    notes: 'Driver Seat',
+  });
+
+  let seatCounter = 1;
+  for (let i = 0; i < capacity; i++) {
+    // Adjust row/col calculation if a driver seat is added and not part of 'capacity'
+    // For this example, passenger seats start after the driver if we consider driver part of a conceptual layout
+    // Or, capacity is purely for passengers. Let's assume capacity is for passengers.
+    const passengerSeatIndex = i;
+    const row = Math.floor(passengerSeatIndex / seatsPerRow);
+    const colInRow = passengerSeatIndex % seatsPerRow;
+
+    // Example: simple 2-aisle-2 layout for 4 seats per row, adjust col for visual representation
+    // This layout logic should ideally come from vehicle configuration
+    let actualCol = colInRow;
+    if (seatsPerRow === 4 && colInRow >= 2) actualCol +=1; // Create a virtual aisle for 2-X-2 layout
+
+    seats.push({
+      id: `${vehicleId}-s${seatCounter}`,
+      number: `${seatCounter}`,
+      price: price,
+      type: 'standard', // Default to standard, could be based on row or vehicleType
+      status: Math.random() > 0.2 ? 'available' : 'booked', // Most available, some booked
+      position: {
+        // If driver is at 0,0, passenger seats might start at row 0, col 1 or row 1
+        // For simplicity, let's assume passenger rows start from 0 if no driver, or 1 if driver is row 0.
+        // Given the driver seat added above at row 0, col 0, passenger seats could start from row 0, col 1 or row 1.
+        // Let's make passenger seats start from row 1 for clearer separation from a potential driver row.
+        // Or, more simply, just use the calculated row/col and ensure no overlap with driver if driver is fixed.
+        // For now, let's assume passenger seats are laid out independently of the conceptual 'driver' seat for simplicity of this function.
+        // The `SeatSelector` component will just render based on these positions.
+        row: row, 
+        col: actualCol 
+      },
+    });
+    seatCounter++;
+  }
+  return seats;
 };
 
 // Mock seats will now be generated dynamically when a vehicle is selected.
@@ -74,7 +119,7 @@ function bookingReducer(state: BookingState, action: BookingAction): BookingStat
       if (trip && trip.vehicle) {
         // Assuming price per seat is on the trip or vehicle object
         const seatPrice = trip.price || (trip.vehicle as any).basePrice || 10; // Fallback price, cast vehicle to any if basePrice is not on GlobalVehicle
-        seatsForVehicle = trip.vehicle.capacity ? generateSeats(trip.vehicle.id, trip.vehicle.capacity, seatPrice / 2) : [];
+        seatsForVehicle = trip.vehicle.capacity ? generateSeats(trip.vehicle.id, trip.vehicle.capacity, seatPrice / 2, trip.vehicle.type) : [];
       }
       return {
         ...state,
@@ -96,7 +141,7 @@ function bookingReducer(state: BookingState, action: BookingAction): BookingStat
       const vehicle = state.selectedTrip?.vehicle;
       if (!vehicle) return state;
 
-      const seatsForVehicle = vehicle.capacity ? generateSeats(vehicle.id, vehicle.capacity, ((vehicle as any).basePrice || 20) / 2) : [];
+      const seatsForVehicle = vehicle.capacity ? generateSeats(vehicle.id, vehicle.capacity, ((vehicle as any).basePrice || 20) / 2, vehicle.type) : [];
       return {
         ...state,
         selectedVehicle: vehicle, 
@@ -297,7 +342,37 @@ const BookingWidget: React.FC<BookingWidgetProps> = ({ onComplete, onCancel, ori
         // Or it could be a confirmation of the vehicle details from selectedTrip.vehicle
         return <VehicleStep vehicles={state.selectedTrip?.vehicle ? [state.selectedTrip.vehicle] : []} selectedVehicleId={state.selectedTrip?.vehicle?.id} onSelectVehicle={handleSelectVehicle} onNext={handleNext} onPrev={handlePrev} />;
       case 3:
-        return <SeatStep vehicle={state.selectedTrip?.vehicle} seats={state.seats} selectedSeats={state.selectedSeats} onSelectSeat={handleSelectSeat} onDeselectSeat={handleDeselectSeat} onNext={handleNext} onPrev={handlePrev} />;
+        // Adapter function to handle onSeatSelect from SeatSelector
+        const handleSeatSelection = (newSelectedSeats: SeatSelectorSeat[]) => {
+          // Determine which seats were added or removed compared to state.selectedSeats
+          const currentSelectedIds = state.selectedSeats.map(s => s.id);
+          const newSelectedIds = newSelectedSeats.map(s => s.id);
+
+          // Seats to select (present in newSelectedSeats but not in currentSelectedIds)
+          newSelectedSeats.forEach(seat => {
+            if (!currentSelectedIds.includes(seat.id)) {
+              // Map SeatSelectorSeat to BookingWidget's Seat type if necessary, or ensure they are compatible
+              // For now, assuming they are compatible enough or SeatSelector uses a compatible structure.
+              handleSelectSeat(seat.id); 
+            }
+          });
+
+          // Seats to deselect (present in currentSelectedIds but not in newSelectedSeats)
+          state.selectedSeats.forEach(seat => {
+            if (!newSelectedIds.includes(seat.id)) {
+              handleDeselectSeat(seat.id);
+            }
+          });
+        };
+        return <SeatSelector 
+                  initialSeats={state.seats} // Pass seats from BookingWidget state
+                  initialSelectedSeats={state.selectedSeats} // Pass selected seats from BookingWidget state
+                  onSeatSelect={handleSeatSelection} 
+                  maxSelectableSeats={state.selectedTrip?.vehicle?.capacity} 
+                  vehicleName={state.selectedTrip?.vehicle?.model || 'Vehicle'} // Pass vehicle name
+               />;
+        // Note: The onNext and onPrev props are handled by the BookingWidget's main navigation buttons,
+        // so they are not directly passed to SeatSelector unless it needs to trigger them internally.
       case 4:
         // Pass selectedTrip and availableHotPoints (which are state.pickupPoints) to ConfirmPayStep
         return <ConfirmPayStep 

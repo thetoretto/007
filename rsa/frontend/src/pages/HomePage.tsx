@@ -169,7 +169,7 @@ const HomePage: React.FC = () => {
                 <div className="space-y-4">
                   {/* Origin Input */}
                   <div className="relative">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-accent-red"></div>
+              
                     <input
                       type="text"
                       placeholder="Enter pickup location"
@@ -184,7 +184,6 @@ const HomePage: React.FC = () => {
                   
                   {/* Destination Input */}
                   <div className="relative">
-                    <div className="absolute left-3 top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-accent-kente-gold"></div>
                     <input
                       type="text"
                       placeholder="Enter destination"
@@ -510,7 +509,7 @@ const HomePage: React.FC = () => {
       </section>
 
       {/* App Download Section - NEW */}
-      <section id="download" className="py-20 bg-primary-900 text-white relative overflow-hidden">
+      {/* <section id="download" className="py-20 bg-primary-900 text-white relative overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute inset-0 bg-[url('/images/map-pattern.svg')] bg-no-repeat bg-cover"></div>
         </div>
@@ -569,7 +568,7 @@ const HomePage: React.FC = () => {
             </div>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* Enhanced CTA Section */}
       <section className="section-cta relative">

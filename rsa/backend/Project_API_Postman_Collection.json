@@ -1,0 +1,835 @@
+{
+	"info": {
+		"_postman_id": "c1f7e9c0-12a6-4f1a-8b0a-7c8d9e0f1a2b",
+		"name": "RSA Project API Collection",
+		"description": "API endpoints for the RSA project, covering Hotpoints and Transportation Routes.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Hotpoints API",
+			"description": "Endpoints for managing hotpoints/locations.",
+			"item": [
+				{
+					"name": "Get all hotpoints",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer mock-user-id-anyuser", "type": "text"}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/hotpoints",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "hotpoints"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a new hotpoint (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer mock-user-id-admin", "type": "text"},
+							{"key": "Content-Type", "value": "application/json", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Central Park Cafe\",\n  \"address\": \"123 Park Ave, New York, NY\",\n  \"latitude\": 40.7829,\n  \"longitude\": -73.9654,\n  \"type\": \"Cafe\",\n  \"description\": \"A lovely cafe by the park.\",\n  \"isActive\": true\n}",
+							"options": {"raw": {"language": "json"}}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/hotpoints",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "hotpoints"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get hotpoint by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer mock-user-id-anyuser", "type": "text"}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/hotpoints/:hotpointId",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "hotpoints", ":hotpointId"],
+							"variable": [{"key": "hotpointId", "value": "hp123", "description": "Example Hotpoint ID"}]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update hotpoint by ID (Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Authorization", "value": "Bearer mock-user-id-admin", "type": "text"},
+							{"key": "Content-Type", "value": "application/json", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Updated Central Park Cafe\",\n  \"address\": \"456 Park Ave South, New York, NY\",\n  \"latitude\": 40.7830,\n  \"longitude\": -73.9655,\n  \"type\": \"Restaurant\",\n  \"description\": \"Now a full restaurant with extended hours!\",\n  \"isActive\": false\n}",
+							"options": {"raw": {"language": "json"}}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/hotpoints/:hotpointId",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "hotpoints", ":hotpointId"],
+							"variable": [{"key": "hotpointId", "value": "hp123", "description": "Example Hotpoint ID"}]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete hotpoint by ID (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{"key": "Authorization", "value": "Bearer mock-user-id-admin", "type": "text"}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/hotpoints/:hotpointId",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "hotpoints", ":hotpointId"],
+							"variable": [{"key": "hotpointId", "value": "hp123", "description": "Example Hotpoint ID"}]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transportation Routes API",
+			"description": "Endpoints for managing transportation routes.",
+			"item": [
+				{
+					"name": "Get all transportation routes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer mock-user-id-anyuser", "type": "text"}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/routes",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "routes"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a new transportation route (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{"key": "Authorization", "value": "Bearer mock-user-id-admin", "type": "text"},
+							{"key": "Content-Type", "value": "application/json", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"City Loop Bus\",\n  \"description\": \"Connects major downtown areas.\",\n  \"stops\": [\"Central Station\", \"Market Street\", \"City Hall\"],\n  \"averageDurationMinutes\": 45,\n  \"isActive\": true\n}",
+							"options": {"raw": {"language": "json"}}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/routes",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "routes"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get transportation route by ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{"key": "Authorization", "value": "Bearer mock-user-id-anyuser", "type": "text"}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/routes/:routeId",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "routes", ":routeId"],
+							"variable": [{"key": "routeId", "value": "route456", "description": "Example Route ID"}]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update transportation route by ID (Admin)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{"key": "Authorization", "value": "Bearer mock-user-id-admin", "type": "text"},
+							{"key": "Content-Type", "value": "application/json", "type": "text"}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Expanded City Loop Bus\",\n  \"description\": \"Connects major downtown areas, the new stadium, and the airport.\",\n  \"stops\": [\"Central Station\", \"Market Street\", \"City Hall\", \"New Stadium\", \"Airport Terminal 1\"],\n  \"averageDurationMinutes\": 60,\n  \"isActive\": true\n}",
+							"options": {"raw": {"language": "json"}}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/routes/:routeId",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "routes", ":routeId"],
+							"variable": [{"key": "routeId", "value": "route456", "description": "Example Route ID"}]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete transportation route by ID (Admin)",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{"key": "Authorization", "value": "Bearer mock-user-id-admin", "type": "text"}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/routes/:routeId",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "routes", ":routeId"],
+							"variable": [{"key": "routeId", "value": "route456", "description": "Example Route ID"}]
+						}
+					},
+					"response": []
+				}
+,
+			{
+				"name": "Authentication & Users API",
+				"description": "Endpoints for user authentication and management.",
+				"item": [
+					{
+						"name": "Register a new user",
+						"request": {
+							"method": "POST",
+							"header": [
+								{"key": "Content-Type", "value": "application/json", "type": "text"}
+							],
+							"body": {
+								"mode": "raw",
+								"raw": "{\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"New\",\n  \"lastName\": \"User\",\n  \"role\": \"user\"\n}",
+								"options": {"raw": {"language": "json"}}
+							},
+							"url": {
+								"raw": "{{baseUrl}}/api/auth/register",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "auth", "register"]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Login a user",
+						"request": {
+							"method": "POST",
+							"header": [
+								{"key": "Content-Type", "value": "application/json", "type": "text"}
+							],
+							"body": {
+								"mode": "raw",
+								"raw": "{\n  \"email\": \"user@example.com\",\n  \"password\": \"password123\"\n}",
+								"options": {"raw": {"language": "json"}}
+							},
+							"url": {
+								"raw": "{{baseUrl}}/api/auth/login",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "auth", "login"]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Get current user profile",
+						"request": {
+							"method": "GET",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{userToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/users/me",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "users", "me"]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Update current user profile",
+						"request": {
+							"method": "PUT",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{userToken}}", "type": "text"},
+								{"key": "Content-Type", "value": "application/json", "type": "text"}
+							],
+							"body": {
+								"mode": "raw",
+								"raw": "{\n  \"firstName\": \"UpdatedFirstName\",\n  \"lastName\": \"UpdatedLastName\"\n}",
+								"options": {"raw": {"language": "json"}}
+							},
+							"url": {
+								"raw": "{{baseUrl}}/api/users/me",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "users", "me"]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "List all users (Admin)",
+						"request": {
+							"method": "GET",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/users",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "users"]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Get user by ID (Admin)",
+						"request": {
+							"method": "GET",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/users/:userId",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "users", ":userId"],
+								"variable": [{"key": "userId", "value": "user123", "description": "Example User ID"}]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Update user by ID (Admin)",
+						"request": {
+							"method": "PUT",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text"},
+								{"key": "Content-Type", "value": "application/json", "type": "text"}
+							],
+							"body": {
+								"mode": "raw",
+								"raw": "{\n  \"email\": \"updateduser@example.com\",\n  \"firstName\": \"AdminUpdatedFirst\",\n  \"lastName\": \"AdminUpdatedLast\",\n  \"role\": \"user\"\n}",
+								"options": {"raw": {"language": "json"}}
+							},
+							"url": {
+								"raw": "{{baseUrl}}/api/users/:userId",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "users", ":userId"],
+								"variable": [{"key": "userId", "value": "user123", "description": "Example User ID"}]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Delete user by ID (Admin)",
+						"request": {
+							"method": "DELETE",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/users/:userId",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "users", ":userId"],
+								"variable": [{"key": "userId", "value": "user123", "description": "Example User ID"}]
+							}
+						},
+						"response": []
+					}
+,
+			{
+				"name": "Trips API",
+				"description": "Endpoints for managing user trips.",
+				"item": [
+					{
+						"name": "Get all trips for the current user",
+						"request": {
+							"method": "GET",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{userToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/trips",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "trips"]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Create a new trip for the current user",
+						"request": {
+							"method": "POST",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{userToken}}", "type": "text"},
+								{"key": "Content-Type", "value": "application/json", "type": "text"}
+							],
+							"body": {
+								"mode": "raw",
+								"raw": "{\n  \"startLocationId\": \"hp123\",\n  \"endLocationId\": \"hp456\",\n  \"vehicleId\": \"vehicle789\",\n  \"tripStartTime\": \"2024-03-15T09:00:00Z\"\n}",
+								"options": {"raw": {"language": "json"}}
+							},
+							"url": {
+								"raw": "{{baseUrl}}/api/trips",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "trips"]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Get trip by ID for the current user",
+						"request": {
+							"method": "GET",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{userToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/trips/:tripId",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "trips", ":tripId"],
+								"variable": [{"key": "tripId", "value": "tripABC", "description": "Example Trip ID"}]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Cancel a trip by ID for the current user",
+						"request": {
+							"method": "PATCH",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{userToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/trips/:tripId/cancel",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "trips", ":tripId", "cancel"]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "List all trips (Admin)",
+						"request": {
+							"method": "GET",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/admin/trips",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "admin", "trips"]
+							}
+						},
+						"response": []
+					}
+,
+			{
+				"name": "Bookings API",
+				"description": "Endpoints for managing bookings.",
+				"item": [
+					{
+						"name": "Get all bookings for the current user",
+						"request": {
+							"method": "GET",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{userToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/bookings",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "bookings"]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Create a new booking for the current user",
+						"request": {
+							"method": "POST",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{userToken}}", "type": "text"},
+								{"key": "Content-Type", "value": "application/json", "type": "text"}
+							],
+							"body": {
+								"mode": "raw",
+								"raw": "{\n  \"tripId\": \"tripABC\",\n  \"numberOfSeats\": 2\n}",
+								"options": {"raw": {"language": "json"}}
+							},
+							"url": {
+								"raw": "{{baseUrl}}/api/bookings",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "bookings"]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Get booking by ID for the current user",
+						"request": {
+							"method": "GET",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{userToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/bookings/:bookingId",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "bookings", ":bookingId"],
+								"variable": [{"key": "bookingId", "value": "bookingXYZ", "description": "Example Booking ID"}]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Cancel a booking by ID for the current user",
+						"request": {
+							"method": "DELETE",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{userToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/bookings/:bookingId",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "bookings", ":bookingId"],
+								"variable": [{"key": "bookingId", "value": "bookingXYZ", "description": "Example Booking ID"}]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "List all bookings (Admin)",
+						"request": {
+							"method": "GET",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/admin/bookings",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "admin", "bookings"]
+							}
+						},
+						"response": []
+					}
+,
+			{
+				"name": "Payments API",
+				"description": "Endpoints for managing payments.",
+				"item": [
+					{
+						"name": "Create a payment for a booking",
+						"request": {
+							"method": "POST",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{userToken}}", "type": "text"},
+								{"key": "Content-Type", "value": "application/json", "type": "text"}
+							],
+							"body": {
+								"mode": "raw",
+								"raw": "{\n  \"bookingId\": \"bookingXYZ\",\n  \"amount\": 50.00,\n  \"paymentMethod\": \"Credit Card\",\n  \"transactionId\": \"txn_123456789\"\n}",
+								"options": {"raw": {"language": "json"}}
+							},
+							"url": {
+								"raw": "{{baseUrl}}/api/payments",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "payments"]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Get payment status by booking ID",
+						"request": {
+							"method": "GET",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{userToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/payments/booking/:bookingId",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "payments", "booking", ":bookingId"],
+								"variable": [{"key": "bookingId", "value": "bookingXYZ", "description": "Example Booking ID"}]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "List all payments (Admin)",
+						"request": {
+							"method": "GET",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/admin/payments",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "admin", "payments"]
+							}
+						},
+						"response": []
+					}
+,
+			{
+				"name": "Vehicles API",
+				"description": "Endpoints for managing vehicles (Admin).",
+				"item": [
+					{
+						"name": "Get all vehicles",
+						"request": {
+							"method": "GET",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{userToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/vehicles",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "vehicles"]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Create a new vehicle (Admin)",
+						"request": {
+							"method": "POST",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text"},
+								{"key": "Content-Type", "value": "application/json", "type": "text"}
+							],
+							"body": {
+								"mode": "raw",
+								"raw": "{\n  \"type\": \"Sedan\",\n  \"make\": \"Toyota\",\n  \"model\": \"Camry\",\n  \"year\": 2022,\n  \"licensePlate\": \"XYZ123\",\n  \"capacity\": 4,\n  \"isActive\": true\n}",
+								"options": {"raw": {"language": "json"}}
+							},
+							"url": {
+								"raw": "{{baseUrl}}/api/vehicles",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "vehicles"]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Get vehicle by ID",
+						"request": {
+							"method": "GET",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{userToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/vehicles/:vehicleId",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "vehicles", ":vehicleId"],
+								"variable": [{"key": "vehicleId", "value": "vehicle789", "description": "Example Vehicle ID"}]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Update vehicle by ID (Admin)",
+						"request": {
+							"method": "PUT",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text"},
+								{"key": "Content-Type", "value": "application/json", "type": "text"}
+							],
+							"body": {
+								"mode": "raw",
+								"raw": "{\n  \"licensePlate\": \"NEWLP456\",\n  \"capacity\": 5,\n  \"isActive\": false\n}",
+								"options": {"raw": {"language": "json"}}
+							},
+							"url": {
+								"raw": "{{baseUrl}}/api/vehicles/:vehicleId",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "vehicles", ":vehicleId"],
+								"variable": [{"key": "vehicleId", "value": "vehicle789", "description": "Example Vehicle ID"}]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Delete vehicle by ID (Admin)",
+						"request": {
+							"method": "DELETE",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/vehicles/:vehicleId",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "vehicles", ":vehicleId"],
+								"variable": [{"key": "vehicleId", "value": "vehicle789", "description": "Example Vehicle ID"}]
+							}
+						},
+						"response": []
+					}
+,
+			{
+				"name": "Drivers API",
+				"description": "Endpoints for managing drivers (Admin).",
+				"item": [
+					{
+						"name": "Get all drivers (Admin)",
+						"request": {
+							"method": "GET",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/admin/drivers",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "admin", "drivers"]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Create a new driver (Admin)",
+						"request": {
+							"method": "POST",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text"},
+								{"key": "Content-Type", "value": "application/json", "type": "text"}
+							],
+							"body": {
+								"mode": "raw",
+								"raw": "{\n  \"userId\": \"userDriver123\",\n  \"licenseNumber\": \"DLN98765\",\n  \"vehicleId\": \"vehicle789\",\n  \"isActive\": true\n}",
+								"options": {"raw": {"language": "json"}}
+							},
+							"url": {
+								"raw": "{{baseUrl}}/api/admin/drivers",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "admin", "drivers"]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Get driver by ID (Admin)",
+						"request": {
+							"method": "GET",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/admin/drivers/:driverId",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "admin", "drivers", ":driverId"],
+								"variable": [{"key": "driverId", "value": "driverXYZ", "description": "Example Driver ID"}]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Update driver by ID (Admin)",
+						"request": {
+							"method": "PUT",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text"},
+								{"key": "Content-Type", "value": "application/json", "type": "text"}
+							],
+							"body": {
+								"mode": "raw",
+								"raw": "{\n  \"vehicleId\": \"vehicleNew456\",\n  \"isActive\": false\n}",
+								"options": {"raw": {"language": "json"}}
+							},
+							"url": {
+								"raw": "{{baseUrl}}/api/admin/drivers/:driverId",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "admin", "drivers", ":driverId"],
+								"variable": [{"key": "driverId", "value": "driverXYZ", "description": "Example Driver ID"}]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Delete driver by ID (Admin)",
+						"request": {
+							"method": "DELETE",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/admin/drivers/:driverId",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "admin", "drivers", ":driverId"],
+								"variable": [{"key": "driverId", "value": "driverXYZ", "description": "Example Driver ID"}]
+							}
+						},
+						"response": []
+					}
+,
+			{
+				"name": "Admin API",
+				"description": "Endpoints for administrative tasks.",
+				"item": [
+					{
+						"name": "Get system overview (Admin)",
+						"request": {
+							"method": "GET",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text"}
+							],
+							"url": {
+								"raw": "{{baseUrl}}/api/admin/overview",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "admin", "overview"]
+							}
+						},
+						"response": []
+					},
+					{
+						"name": "Manage system settings (Admin)",
+						"request": {
+							"method": "PUT",
+							"header": [
+								{"key": "Authorization", "value": "Bearer {{adminToken}}", "type": "text"},
+								{"key": "Content-Type", "value": "application/json", "type": "text"}
+							],
+							"body": {
+								"mode": "raw",
+								"raw": "{\n  \"settingKey\": \"maintenanceMode\",\n  \"settingValue\": true\n}",
+								"options": {"raw": {"language": "json"}}
+							},
+							"url": {
+								"raw": "{{baseUrl}}/api/admin/settings",
+								"host": ["{{baseUrl}}"],
+								"path": ["api", "admin", "settings"]
+							}
+						},
+						"response": []
+					}
+				]
+			}
+		],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:3001",
+			"type": "string",
+			"description": "Base URL for the API server. Assumes routes are mounted under /api/ prefix."
+		},
+		{
+			"key": "adminToken",
+			"value": "mock-user-id-admin",
+			"type": "string",
+			"description": "Placeholder token for admin user (e.g., 'mock-user-id-admin'). Update with actual admin user ID if needed for mock auth."
+		},
+		{
+			"key": "userToken",
+			"value": "mock-user-id-anyuser",
+			"type": "string",
+			"description": "Placeholder token for a regular user (e.g., 'mock-user-id-anyuser'). Update with actual user ID if needed for mock auth."
+		}
+	]
+}
