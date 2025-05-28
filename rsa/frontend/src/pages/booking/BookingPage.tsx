@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '../../components/common/Navbar';
 import { MapPin, ChevronRight, Shield, Clock, CalendarCheck, CheckCircle, ChevronDown, Calendar, Info, CreditCard, Smartphone, User, Wallet } from 'lucide-react';
 import SeatSelector from '../../components/common/SeatSelector';
+import PaymentForm, { PaymentMethod } from '../../components/common/PaymentForm';
 import { useBookingStore } from '../../store/bookingStore';
 import useTripStore, { Trip } from '../../store/tripStore';
 import useHotPointStore, { HotPoint } from '../../store/hotPointStore';
@@ -181,7 +182,11 @@ const BookingPage: React.FC = () => {
   };
   
   // Step 5: Process payment
-  const processPayment = () => {
+  const processPayment = (paymentData: {
+    method: PaymentMethod;
+    details: any;
+  }) => {
+    setSelectedPaymentMethod(paymentData.method);
     setIsProcessingPayment(true);
     
     // Simulate payment processing
@@ -669,7 +674,7 @@ const BookingPage: React.FC = () => {
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 border border-gray-100 dark:border-gray-700">
               <h2 className="text-xl font-semibold mb-6 text-center sm:text-left">Payment</h2>
               
-              {/* User authentication check */}
+              {/* User authentication check - only show if not logged in */}
               {!isUserLoggedIn && !userName && (
                 <div className="mb-6 bg-gray-50 dark:bg-gray-700 p-5 rounded-lg">
                   <h3 className="font-medium mb-3 flex items-center">
@@ -691,56 +696,8 @@ const BookingPage: React.FC = () => {
                 </div>
               )}
               
-              {/* Payment method selection */}
-              <div className="mb-6">
-                <h3 className="font-medium mb-3">Select Payment Method</h3>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  <button
-                    onClick={() => selectPaymentMethod('airtel')}
-                    className={`p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
-                      selectedPaymentMethod === 'airtel' 
-                        ? 'border-accent-kente-gold bg-accent-kente-gold/10' 
-                        : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
-                    }`}
-                  >
-                    <div className="w-12 h-12 flex items-center justify-center bg-red-100 dark:bg-red-900/30 rounded-full mb-2">
-                      <Smartphone className="h-6 w-6 text-red-600 dark:text-red-400" />
-                    </div>
-                    <span className="font-medium">Airtel Money</span>
-                  </button>
-                  
-                  <button
-                    onClick={() => selectPaymentMethod('momo')}
-                    className={`p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
-                      selectedPaymentMethod === 'momo' 
-                        ? 'border-accent-kente-gold bg-accent-kente-gold/10' 
-                        : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
-                    }`}
-                  >
-                    <div className="w-12 h-12 flex items-center justify-center bg-yellow-100 dark:bg-yellow-900/30 rounded-full mb-2">
-                      <Wallet className="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
-                    </div>
-                    <span className="font-medium">MoMo</span>
-                  </button>
-                  
-                  <button
-                    onClick={() => selectPaymentMethod('card')}
-                    className={`p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
-                      selectedPaymentMethod === 'card' 
-                        ? 'border-accent-kente-gold bg-accent-kente-gold/10' 
-                        : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
-                    }`}
-                  >
-                    <div className="w-12 h-12 flex items-center justify-center bg-blue-100 dark:bg-blue-900/30 rounded-full mb-2">
-                      <CreditCard className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-                    </div>
-                    <span className="font-medium">Card</span>
-                  </button>
-                </div>
-              </div>
-              
-              {/* Ticket holder names */}
-              {selectedPaymentMethod && (
+              {/* Passenger Information */}
+              {userName && (
                 <div className="mb-6 bg-gray-50 dark:bg-gray-700 p-5 rounded-lg">
                   <h3 className="font-medium mb-3">Passenger Information</h3>
                   <div className="space-y-4">
@@ -762,58 +719,34 @@ const BookingPage: React.FC = () => {
                 </div>
               )}
               
-              {/* Payment summary */}
-              <div className="mb-6 bg-gray-50 dark:bg-gray-700 p-5 rounded-lg">
-                <h3 className="font-medium mb-3">Payment Summary</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span>Ticket Price</span>
-                    <span>${selectedTrip.price}</span>
-                  </div>
-                  {isHotpointNeeded && selectedHotpoint && (
-                    <div className="flex justify-between">
-                      <span>Hotpoint Fee</span>
-                      <span>$2.00</span>
-                    </div>
-                  )}
-                  <div className="border-t border-gray-200 dark:border-gray-600 my-2 pt-2 flex justify-between font-bold">
-                    <span>Total</span>
-                    <span>${(selectedTrip.price || 0) + (isHotpointNeeded && selectedHotpoint ? 2 : 0)}</span>
-                  </div>
-                </div>
-              </div>
+              {/* Payment Form Component */}
+              {userName && (
+                <PaymentForm
+                  amount={(selectedTrip.price || 0) + (isHotpointNeeded && selectedHotpoint ? 2 : 0)}
+                  isProcessing={isProcessingPayment}
+                  onComplete={processPayment}
+                  onCancel={() => setStep(4)}
+                />
+              )}
               
-              {/* Payment action buttons */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <button 
-                  onClick={() => setStep(4)}
-                  className="w-full px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg"
-                  disabled={isProcessingPayment}
-                >
-                  Back
-                </button>
-                
-                <button 
-                  onClick={processPayment}
-                  disabled={!selectedPaymentMethod || isProcessingPayment || (ticketHolders.some(h => !h.name.trim())) || (!isUserLoggedIn && !userName)}
-                  className={`w-full px-6 py-3 rounded-lg text-white relative ${
-                    selectedPaymentMethod && !isProcessingPayment && !ticketHolders.some(h => !h.name.trim()) && (isUserLoggedIn || userName)
-                      ? 'bg-accent-kente-gold hover:bg-accent-kente-gold-dark' 
-                      : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
-                  }`}
-                >
-                  {isProcessingPayment ? (
-                    <>
-                      <span className="opacity-0">Pay Now</span>
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      </div>
-                    </>
-                  ) : (
-                    <>Pay Now</>
-                  )}
-                </button>
-              </div>
+              {/* Show button to go back if no name entered */}
+              {!userName && (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <button 
+                    onClick={() => setStep(4)}
+                    className="w-full px-6 py-3 border border-gray-300 dark:border-gray-600 rounded-lg"
+                  >
+                    Back
+                  </button>
+                  
+                  <button 
+                    disabled={!userName}
+                    className="w-full px-6 py-3 rounded-lg text-white bg-gray-300 dark:bg-gray-700 cursor-not-allowed"
+                  >
+                    Enter your name to continue
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
