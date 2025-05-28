@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { Check, X, AlertTriangle, Info, Users, Accessibility } from 'lucide-react';
-import { showNotification } from '../../utils/notifications'; // Assuming this path is correct
+import { X, Check, User } from 'lucide-react';
+import { showNotification } from '../../utils/notifications';
+import { motion } from 'framer-motion';
 
 interface Seat {
   id: string;
@@ -11,7 +12,7 @@ interface Seat {
   position: {
     row: number; // 0: front, 1: middle, 2: back
     col: number; // Index within the row
-    aisle?: boolean; // Indicates if there's an aisle next to this seat in its drawn position
+    aisle?: boolean;
   };
   notes?: string;
 }
@@ -21,56 +22,19 @@ interface SeatSelectorProps {
   initialSelectedSeats?: Seat[];
   onSeatSelect?: (seats: Seat[]) => void;
   maxSelectableSeats?: number;
-  vehicleName?: string; // Added to replace vehicleConfig.name
+  vehicleName?: string;
 }
 
-// vehicleConfig and generateSeats are removed as seats will be passed via props.
-
-const SeatComponent: React.FC<{
-  seat: Seat;
-  onClick: () => void;
-  isSelected: boolean;
-  isDisabled: boolean;
-}> = ({ seat, onClick, isSelected, isDisabled }) => {
-  const getSeatStyles = () => {
-    let baseStyle = 'w-10 h-10 sm:w-12 sm:h-12 rounded-md border-2 flex items-center justify-center font-semibold text-sm transition-all duration-150 ease-in-out relative';
-    if (isDisabled && seat.status !== 'selected') {
-      return `${baseStyle} bg-gray-300 border-gray-400 text-gray-500 cursor-not-allowed`;
-    }
-    if (isSelected) {
-      return `${baseStyle} bg-blue-500 border-blue-700 text-white shadow-lg transform scale-105`;
-    }
-    switch (seat.type) {
-      case 'premium': return `${baseStyle} bg-indigo-100 border-indigo-300 hover:bg-indigo-200 text-indigo-800`;
-      case 'vip': return `${baseStyle} bg-purple-100 border-purple-300 hover:bg-purple-200 text-purple-800`;
-      case 'accessible': return `${baseStyle} bg-yellow-100 border-yellow-300 hover:bg-yellow-200 text-yellow-800`;
-      case 'standard':
-      default:
-        return `${baseStyle} bg-green-100 border-green-300 hover:bg-green-200 text-green-800`;
-    }
-  };
-
-  return (
-    <button
-      type="button"
-      aria-label={`Seat ${seat.number}, Type: ${seat.type}, Price: $${seat.price.toFixed(2)}, Status: ${isDisabled && !isSelected ? 'Booked/Reserved' : isSelected ? 'Selected' : 'Available'}`}
-      aria-pressed={isSelected}
-      disabled={isDisabled && !isSelected}
-      onClick={onClick}
-      className={getSeatStyles()}
-      title={seat.notes || `Seat ${seat.number} - ${seat.type}`}
-    >
-      {seat.number}
-      {isSelected && <Check size={16} className="absolute top-1 right-1 text-white" />}
-      {seat.type === 'accessible' && !isSelected && <Accessibility size={16} className="absolute bottom-1 right-1 opacity-70" />}
-      {seat.status === 'reserved' && <Info size={16} className="absolute top-1 left-1 opacity-70" title="Driver"/>}
-    </button>
-  );
-};
-
-const SeatSelector: React.FC<SeatSelectorProps> = ({ initialSeats, initialSelectedSeats = [], onSeatSelect, maxSelectableSeats, vehicleName = 'Vehicle' }) => {
+const SeatSelector: React.FC<SeatSelectorProps> = ({ 
+  initialSeats, 
+  initialSelectedSeats = [], 
+  onSeatSelect, 
+  maxSelectableSeats = 1, 
+  vehicleName = 'Vehicle' 
+}) => {
   const [seatsData, setSeatsData] = useState<Seat[]>(initialSeats);
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>(initialSelectedSeats);
+  const [hoveredSeat, setHoveredSeat] = useState<string | null>(null);
 
   // Update seatsData if initialSeats prop changes
   useEffect(() => {
@@ -82,6 +46,7 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({ initialSeats, initialSelect
     setSelectedSeats(initialSelectedSeats);
   }, [initialSelectedSeats]);
 
+  // Handle seat selection
   const handleSeatClick = useCallback((seatId: string) => {
     const clickedSeat = seatsData.find(s => s.id === seatId);
     if (!clickedSeat || clickedSeat.status === 'booked' || clickedSeat.status === 'reserved') return;
@@ -91,171 +56,267 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({ initialSeats, initialSelect
     let newSelectedSeats;
     if (isCurrentlySelected) {
       newSelectedSeats = selectedSeats.filter(s => s.id !== seatId);
-      showNotification('Seat Deselected', { body: `Seat ${clickedSeat.number} removed from selection.` });
+      showNotification('Seat Deselected', { 
+        body: `Seat ${clickedSeat.number} removed from your selection.` 
+      });
     } else {
       if (maxSelectableSeats && selectedSeats.length >= maxSelectableSeats) {
-        showNotification('Selection Limit Reached', { body: `You can select a maximum of ${maxSelectableSeats} seats.`, type: 'warning' });
+        if (maxSelectableSeats === 1) {
+          newSelectedSeats = [clickedSeat];
+          showNotification('Seat Changed', { 
+            body: `Your seat selection has been updated to Seat ${clickedSeat.number}.` 
+          });
+        } else {
+          showNotification('Selection Limit Reached', { 
+            body: `You can select a maximum of ${maxSelectableSeats} seats.`
+          });
         return;
+        }
+      } else {
+        newSelectedSeats = [...selectedSeats, clickedSeat];
+        showNotification('Seat Selected', { 
+          body: `Seat ${clickedSeat.number} (${clickedSeat.type}) added for $${clickedSeat.price.toFixed(2)}` 
+        });
       }
-      newSelectedSeats = [...selectedSeats, clickedSeat];
-      showNotification('Seat Selected', { body: `Seat ${clickedSeat.number} (${clickedSeat.type}) added for $${clickedSeat.price.toFixed(2)}` });
     }
+    
     setSelectedSeats(newSelectedSeats);
     if (onSeatSelect) {
       onSeatSelect(newSelectedSeats);
     }
   }, [seatsData, selectedSeats, onSeatSelect, maxSelectableSeats]);
 
+  // Calculate total price
   const totalAmount = useMemo(() => {
     return selectedSeats.reduce((sum, seat) => sum + seat.price, 0);
   }, [selectedSeats]);
 
-  const renderSeats = () => {
-    const seatGrid: (Seat | null)[][] = [];
-    if (!seatsData || seatsData.length === 0) return <p>No seat data available.</p>;
+  // Organize seats into a grid for rendering
+  const seatGrid = useMemo(() => {
+    const grid: (Seat | null)[][] = [];
+    if (!seatsData || seatsData.length === 0) return grid;
 
-    // Determine rows and columns from the seatsData itself
+    // Find dimensions
     const rows = Math.max(...seatsData.map(s => s.position.row)) + 1;
     const cols = Math.max(...seatsData.map(s => s.position.col)) + 1;
 
+    // Initialize grid with nulls
     for (let i = 0; i < rows; i++) {
-      seatGrid.push(new Array(cols).fill(null));
+      grid.push(Array(cols).fill(null));
     }
 
+    // Place seats in grid
     seatsData.forEach(seat => {
       if (seat.position.row < rows && seat.position.col < cols) {
-        seatGrid[seat.position.row][seat.position.col] = seat;
+        grid[seat.position.row][seat.position.col] = seat;
       }
     });
 
-    // Steering wheel logic might need adjustment if 'driver' seat ID or specific position isn't guaranteed.
-    // For now, let's assume the first seat in the first row, first col could be a driver or needs special handling if ID is 'driver'.
-    const hasDriverSeat = seatsData.some(s => s.id === 'driver' && s.position.row === 0 && s.position.col === 0);
+    return grid;
+  }, [seatsData]);
 
+  // Get seat color based on type and status
+  const getSeatStyles = (seat: Seat, isSelected: boolean, isHovered: boolean) => {
+    // Default styles
+    let bgColor = 'bg-gray-100';
+    let borderColor = 'border-gray-300';
+    let textColor = 'text-gray-800';
+    
+    if (seat.status === 'reserved') {
+      bgColor = 'bg-gray-300';
+      borderColor = 'border-gray-400';
+      textColor = 'text-gray-500';
+      return { bgColor, borderColor, textColor };
+    }
+
+    if (seat.status === 'booked') {
+      bgColor = 'bg-gray-200';
+      borderColor = 'border-gray-300';
+      textColor = 'text-gray-500';
+      return { bgColor, borderColor, textColor };
+    }
+
+    if (isSelected) {
+      bgColor = 'bg-accent-kente-gold';
+      borderColor = 'border-yellow-600';
+      textColor = 'text-white';
+      return { bgColor, borderColor, textColor };
+    }
+
+    switch (seat.type) {
+      case 'premium':
+        bgColor = isHovered ? 'bg-blue-200' : 'bg-blue-100';
+        borderColor = 'border-blue-300';
+        textColor = 'text-blue-800';
+        break;
+      case 'vip':
+        bgColor = isHovered ? 'bg-purple-200' : 'bg-purple-100';
+        borderColor = 'border-purple-300';
+        textColor = 'text-purple-800';
+        break;
+      case 'accessible':
+        bgColor = isHovered ? 'bg-yellow-200' : 'bg-yellow-100';
+        borderColor = 'border-yellow-300';
+        textColor = 'text-yellow-800';
+        break;
+      default:
+        bgColor = isHovered ? 'bg-green-200' : 'bg-green-100';
+        borderColor = 'border-green-300';
+        textColor = 'text-green-800';
+    }
+
+    return { bgColor, borderColor, textColor };
+  };
+
+  // Render a single seat
+  const renderSeat = (seat: Seat | null, rowIndex: number, colIndex: number) => {
+    if (!seat) return <div key={`empty-${rowIndex}-${colIndex}`} className="w-9 h-8" />;
+
+    const isSelected = selectedSeats.some(s => s.id === seat.id);
+    const isDisabled = seat.status === 'booked' || seat.status === 'reserved';
+    const isHovered = hoveredSeat === seat.id;
+    
+    const { bgColor, borderColor, textColor } = getSeatStyles(seat, isSelected, isHovered);
 
     return (
-      <div className="space-y-3 p-2 sm:p-4 bg-gray-200 rounded-lg relative overflow-hidden">
-        {/* Steering wheel for front row */}
-        <div className="absolute top-4 left-1/2 transform -translate-x-1/2 -translate-y-full text-xs text-gray-500 font-medium">FRONT</div>
-        {hasDriverSeat && seatGrid[0] && seatGrid[0][0] && seatGrid[0][0].id === 'driver' && (
-            <div className="absolute"
-                 style={{ top: 'calc(2rem + 0.375rem)', left: 'calc(1.5rem + 0.375rem)' }} // Approximate position relative to driver seat
-            >
-                <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border-2 border-gray-600 bg-gray-500 transform -rotate-45" title="Steering Wheel"></div>
+      <motion.div
+        key={`seat-${rowIndex}-${colIndex}`}
+        className={`
+          flex items-center justify-center
+          w-9 h-8 m-0.5
+          ${bgColor} ${textColor}
+          border ${borderColor}
+          rounded-sm
+          select-none
+          transition-colors duration-150
+          ${isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}
+          ${isSelected ? 'shadow-sm' : ''}
+        `}
+        whileHover={!isDisabled ? { scale: 1.05 } : {}}
+        whileTap={!isDisabled ? { scale: 0.95 } : {}}
+        onClick={() => !isDisabled && handleSeatClick(seat.id)}
+        onMouseEnter={() => setHoveredSeat(seat.id)}
+        onMouseLeave={() => setHoveredSeat(null)}
+        title={`${seat.number} - ${seat.type} - $${seat.price.toFixed(2)}`}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.2 }}
+      >
+        {/* Seat number */}
+        <div className="font-medium text-sm">
+          {seat.number}
+        </div>
+        
+        {/* Selection indicator */}
+        {isSelected && (
+          <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full flex items-center justify-center">
+            <Check className="text-white" size={8} />
             </div>
         )}
 
-        {seatGrid.map((row, rowIndex) => (
-          <div key={`row-${rowIndex}`} className={`flex justify-center items-center gap-2 sm:gap-3 ${rowIndex > 0 ? 'mt-3 sm:mt-4' : ''}`}>
-            {row.map((seat, colIndex) => (
-              <div key={`seat-${rowIndex}-${colIndex}`} className="flex-shrink-0">
-                {seat ? (
-                  <SeatComponent
-                    seat={seat}
-                    onClick={() => handleSeatClick(seat.id)}
-                    isSelected={selectedSeats.some(s => s.id === seat.id)}
-                    isDisabled={seat.status === 'booked' || seat.status === 'reserved'}
-                  />
-                ) : (
-                  <div className="w-10 h-10 sm:w-12 sm:h-12" /> // Spacer for aisles
-                )}
-              </div>
-            ))}
-          </div>
-        ))}
-        <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 text-xs text-gray-500 font-medium">REAR</div>
-      </div>
+        {/* Price tooltip on hover */}
+        {isHovered && !isDisabled && (
+          <motion.div
+            className="absolute -top-6 bg-gray-800 text-white text-xs px-1.5 py-0.5 rounded z-10"
+            initial={{ opacity: 0, y: 5 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            ${seat.price}
+          </motion.div>
+        )}
+      </motion.div>
     );
   };
 
-  const legendItems = [
-    { label: 'Available (Standard)', color: 'bg-green-100 border-green-300', type: 'standard' },
-    { label: 'Available (Premium)', color: 'bg-indigo-100 border-indigo-300', type: 'premium' },
-    { label: 'Available (VIP)', color: 'bg-purple-100 border-purple-300', type: 'vip' },
-    { label: 'Available (Accessible)', color: 'bg-yellow-100 border-yellow-300', icon: <Accessibility size={14}/>, type: 'accessible' },
-    { label: 'Selected', color: 'bg-blue-500 border-blue-700 text-white', icon: <Check size={14}/> },
-    { label: 'Booked/Reserved', color: 'bg-gray-300 border-gray-400 text-gray-500', icon: <X size={14}/> },
-    { label: 'Driver', color: 'bg-gray-300 border-gray-400 text-gray-500', icon: <Info size={14}/>, notes: 'Driver Seat' },
-  ];
-
   return (
-    <div className="bg-white rounded-lg shadow-xl p-4 sm:p-6 max-w-4xl mx-auto">
-      <h2 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">{vehicleName} Seat Selection</h2>
-
-      <div className="flex flex-col lg:flex-row gap-6 sm:gap-8">
-        {/* Left Side: Seat Map */}
-        <div className="flex-grow lg:w-2/3">
-          {renderSeats()}
+    <div className="space-y-3">
+      {/* Heading with minimalist design */}
+      <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-2 mb-3">
+        <h3 className="text-sm font-medium">{vehicleName} Seating</h3>
+        <span className="text-xs text-gray-500">
+          {selectedSeats.length}/{maxSelectableSeats} selected
+        </span>
+      </div>
+      
+      {/* Enhanced seat grid */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="p-3">
+          {/* Vehicle outline with minimal design */}
+          <div className="relative pb-2 pt-4">
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-gray-200 dark:bg-gray-700 text-xs px-2 py-0.5 rounded-full text-gray-600 dark:text-gray-300">
+              FRONT
         </div>
 
-        {/* Right Side: Legend & Summary */}
-        <div className="lg:w-1/3 space-y-6">
-          {/* Legend */}
-          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-700 mb-3">Seat Legend</h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2">
-              {legendItems.map(item => (
-                <div key={item.label} className="flex items-center space-x-2">
-                  <div className={`w-5 h-5 rounded-sm border ${item.color} flex items-center justify-center`}>
-                    {item.icon}
-                  </div>
-                  <span className="text-xs sm:text-sm text-gray-600">{item.label}</span>
+            {/* Seat map with improved grid */}
+            <div className="flex flex-col items-center">
+              {seatGrid.map((row, rowIndex) => (
+                <div key={`row-${rowIndex}`} className="flex my-0.5">
+                  {row.map((seat, colIndex) => renderSeat(seat, rowIndex, colIndex))}
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Selection Summary */}
-          <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
-            <h3 className="text-lg font-semibold text-gray-700 mb-3">Your Selection</h3>
-            {selectedSeats.length === 0 ? (
-              <p className="text-gray-500 text-sm italic">No seats selected yet.</p>
-            ) : (
-              <div className="space-y-2 mb-4">
-                {selectedSeats.map(seat => (
-                  <div key={seat.id} className="flex justify-between items-center text-sm text-gray-700">
-                    <span>Seat {seat.number} <span className="text-xs">({seat.type})</span></span>
-                    <span className="font-medium">${seat.price.toFixed(2)}</span>
-                  </div>
-                ))}
-                <div className="pt-2 mt-2 border-t border-gray-200 flex justify-between items-center font-bold text-gray-800">
-                  <span>Total:</span>
-                  <span>${totalAmount.toFixed(2)}</span>
-                </div>
-              </div>
-            )}
-            <button
-              type="button"
-              onClick={() => {
-                if (selectedSeats.length > 0) {
-                  showNotification('Booking Confirmed!', { body: `You have booked ${selectedSeats.length} seat(s) for $${totalAmount.toFixed(2)}.` });
-                  // Here you would typically proceed to payment or next step
-                  // For demo, let's mark selected seats as booked and clear selection
-                  const newSeatsData = seatsData.map(s => 
-                    selectedSeats.find(ss => ss.id === s.id) ? { ...s, status: 'booked' as Seat['status'] } : s
-                  );
-                  setSeatsData(newSeatsData);
-                  setSelectedSeats([]);
-                  if(onSeatSelect) onSeatSelect([]);
-                } else {
-                  showNotification('No Seats Selected', { body: 'Please select at least one seat to confirm.', type: 'info' });
-                }
-              }}
-              disabled={selectedSeats.length === 0}
-              className="w-full mt-4 px-4 py-2.5 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-150 ease-in-out disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
-            >
-              <Check size={20} />
-              <span>Confirm Selection ({selectedSeats.length})</span>
-            </button>
+            
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 bg-gray-200 dark:bg-gray-700 text-xs px-2 py-0.5 rounded-full text-gray-600 dark:text-gray-300">
+              REAR
+            </div>
           </div>
         </div>
       </div>
+      
+      {/* Selected seats summary with clean design */}
+      {selectedSeats.length > 0 && (
+        <div className="mt-3 pt-2 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex items-center justify-between text-sm mb-2">
+            <span className="font-medium">Selected Seats</span>
+            <span className="text-accent-kente-gold font-medium">${totalAmount.toFixed(2)}</span>
+          </div>
 
-      {maxSelectableSeats && (
-        <p className="text-center text-sm text-gray-500 mt-6">
-          <Info size={14} className="inline mr-1" /> You can select a maximum of {maxSelectableSeats} seats.
-        </p>
+          <div className="space-y-1.5">
+            {selectedSeats.map((seat) => (
+              <div key={seat.id} className="flex justify-between items-center text-sm px-2 py-1 bg-gray-50 dark:bg-gray-800 rounded">
+                <div className="flex items-center">
+                  <div className={`
+                    w-5 h-5 flex items-center justify-center rounded mr-2 text-xs font-medium
+                    ${seat.type === 'premium' ? 'bg-blue-100 text-blue-800' : 
+                      seat.type === 'vip' ? 'bg-purple-100 text-purple-800' : 
+                      seat.type === 'accessible' ? 'bg-yellow-100 text-yellow-800' : 
+                      'bg-green-100 text-green-800'}
+                  `}>
+                    {seat.number}
+                  </div>
+                  <span className="text-gray-700 dark:text-gray-300">${seat.price.toFixed(2)}</span>
+                </div>
+                <button 
+                  onClick={() => handleSeatClick(seat.id)}
+                  className="text-gray-400 hover:text-red-500 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <X size={12} />
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
       )}
+      
+      {/* Legend with minimal design */}
+      <div className="flex justify-center flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 pt-2">
+        <div className="flex items-center">
+          <div className="w-2.5 h-2.5 bg-green-100 border border-green-300 rounded-sm mr-1"></div>
+          <span>Standard</span>
+        </div>
+        <div className="flex items-center">
+          <div className="w-2.5 h-2.5 bg-blue-100 border border-blue-300 rounded-sm mr-1"></div>
+          <span>Premium</span>
+        </div>
+        <div className="flex items-center">
+          <div className="w-2.5 h-2.5 bg-purple-100 border border-purple-300 rounded-sm mr-1"></div>
+          <span>VIP</span>
+        </div>
+        <div className="flex items-center">
+          <div className="w-2.5 h-2.5 bg-yellow-100 border border-yellow-300 rounded-sm mr-1"></div>
+          <span>Accessible</span>
+        </div>
+      </div>
     </div>
   );
 };

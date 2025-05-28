@@ -226,30 +226,30 @@ const DriverDashboard: React.FC = () => {
           <div className="flex-1 min-w-0 mb-4 md:mb-0">
             <h1 className="text-2xl md:text-3xl font-bold text-text-base dark:text-text-inverse">Driver Dashboard</h1>
             <p className="mt-1 text-sm text-text-muted dark:text-text-muted-dark">
-              {user && `Welcome back, ${user.firstName} ${user.lastName}`}
-            </p>
-          </div>
+            {user && `Welcome back, ${user.firstName} ${user.lastName}`}
+          </p>
+        </div>
           <div className="flex flex-wrap gap-3 items-center">
             <button onClick={openCreateModal} className="btn btn-primary flex items-center gap-2">
               <Plus className="h-4 w-4" />
-              New Trip
-            </button>
+            New Trip
+          </button>
             <Link to="/driver/check-in" className="btn btn-secondary flex items-center gap-2">
               <QRScannerIcon className="h-4 w-4" /> 
-              Validate Ticket
-            </Link>
-          </div>
+            Validate Ticket
+          </Link>
         </div>
+      </div>
 
-        {/* Available Trips Section */}
-        {availableTrips.length > 0 && (
+      {/* Available Trips Section */}
+      {availableTrips.length > 0 && (
           <div className="mb-8 card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 p-6">
             <h2 className="text-xl font-semibold mb-4 text-text-base dark:text-text-inverse flex items-center">
               <Truck className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
               Available Trips for Claiming
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {availableTrips.map(trip => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {availableTrips.map(trip => (
                 <div key={trip.id} className="card bg-section-light dark:bg-section-medium rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 p-4 hover:shadow-md transition-all">
                   <div className="flex justify-between items-start mb-2">
                     <h3 className="font-semibold text-text-base dark:text-text-inverse">{trip.fromLocation || ''} to {trip.toLocation || ''}</h3>
@@ -270,20 +270,20 @@ const DriverDashboard: React.FC = () => {
                       </p>
                     )}
                   </div>
-                  <button 
-                    onClick={() => handleClaimTrip(trip.id)} 
+                <button 
+                  onClick={() => handleClaimTrip(trip.id)} 
                     className="btn btn-success btn-sm w-full flex items-center justify-center gap-2"
-                  >
+                >
                     <Shield className="h-4 w-4" />
-                    Claim Trip
-                  </button>
-                </div>
-              ))}
-            </div>
+                  Claim Trip
+                </button>
+              </div>
+            ))}
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Trip Statistics Section */}
+      {/* Trip Statistics Section */}
         <div className="mb-8 card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-semibold text-text-base dark:text-text-inverse flex items-center">
@@ -292,18 +292,18 @@ const DriverDashboard: React.FC = () => {
             </h2>
             <div className="flex items-center bg-section-light dark:bg-section-medium rounded-lg p-2">
               <Filter className="h-5 w-5 text-text-muted dark:text-text-muted-dark mr-2" />
-              <select
-                value={timePeriod}
-                onChange={(e) => setTimePeriod(e.target.value as 'daily' | 'weekly' | 'monthly' | 'yearly')}
+            <select
+              value={timePeriod}
+              onChange={(e) => setTimePeriod(e.target.value as 'daily' | 'weekly' | 'monthly' | 'yearly')}
                 className="select select-bordered select-sm focus:ring-0 focus:outline-none text-text-base dark:text-text-inverse bg-transparent"
-              >
-                <option value="daily">Daily</option>
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-                <option value="yearly">Yearly</option>
-              </select>
-            </div>
+            >
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+            </select>
           </div>
+        </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="card bg-section-light dark:bg-section-medium p-4 rounded-lg border border-primary-100 dark:border-primary-800 transition-all hover:shadow-sm">
               <div className="flex items-center justify-between mb-2">
@@ -330,17 +330,17 @@ const DriverDashboard: React.FC = () => {
                 <p className="text-sm font-medium text-text-muted dark:text-text-muted-dark">Cancelled</p>
                 <div className="p-2 rounded-full bg-red-50 dark:bg-red-900">
                   <AlertCircle className="h-5 w-5 text-red-500 dark:text-red-400" />
-                </div>
-              </div>
+          </div>
+          </div>
               <p className="text-3xl font-semibold text-text-base dark:text-text-inverse">{cancelledTripsForPeriod}</p>
               <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1 capitalize">For {timePeriod} Period</p>
-            </div>
           </div>
         </div>
+      </div>
 
-        {/* Income Section */}
+      {/* Income Section */}
         <div className="mb-8 card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 p-6">
-          <div className="flex justify-between items-center mb-4">
+        <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-semibold text-text-base dark:text-text-inverse flex items-center">
               <DollarSign className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
               Income ({timePeriod.charAt(0).toUpperCase() + timePeriod.slice(1)})
@@ -350,18 +350,18 @@ const DriverDashboard: React.FC = () => {
               className="btn btn-ghost btn-sm flex items-center gap-2"
             >
               {showIncome ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              {showIncome ? 'Hide' : 'Show'} Income
-            </button>
-          </div>
-          {showIncome ? (
+            {showIncome ? 'Hide' : 'Show'} Income
+          </button>
+        </div>
+        {showIncome ? (
             <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-lg border border-yellow-200 dark:border-yellow-800">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-yellow-700 dark:text-yellow-200 mb-1">Total Earnings</p>
                   <p className="text-3xl font-bold text-yellow-600 dark:text-yellow-300 flex items-center">
                     <DollarSign className="h-7 w-7 mr-1" />
-                    {driverIncome.toFixed(2)}
-                  </p>
+              {driverIncome.toFixed(2)}
+            </p>
                 </div>
                 <div className="p-3 bg-yellow-100 dark:bg-yellow-800 rounded-full">
                   <DollarSign className="h-8 w-8 text-yellow-600 dark:text-yellow-300" />
@@ -377,19 +377,19 @@ const DriverDashboard: React.FC = () => {
                   <span className="font-medium">${completedTripsForPeriod > 0 ? (driverIncome / completedTripsForPeriod).toFixed(2) : '0.00'}</span>
                 </p>
               </div>
-            </div>
-          ) : (
+          </div>
+        ) : (
             <div className="text-center py-10 bg-section-light dark:bg-section-medium rounded-lg border border-dashed border-primary-200 dark:border-primary-800">
               <div className="mx-auto h-12 w-12 text-text-muted dark:text-text-muted-dark">
                 <DollarSign className="h-12 w-12" />
               </div>
               <p className="mt-2 text-text-muted dark:text-text-muted-dark">Income is hidden. Click 'Show Income' and enter password to view.</p>
-            </div>
-          )}
-        </div>
+          </div>
+        )}
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="lg:col-span-2">
             <div className="card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 overflow-hidden mb-8">
               <div className="px-6 py-4 border-b border-primary-100 dark:border-primary-800 flex justify-between items-center">
                 <h2 className="text-lg font-semibold text-text-base dark:text-text-inverse flex items-center">
@@ -402,31 +402,31 @@ const DriverDashboard: React.FC = () => {
                 >
                   <Plus className="h-4 w-4" /> New Trip
                 </button>
-              </div>
+            </div>
 
-              <div className="overflow-hidden">
-                {upcomingDetailedTrips.length > 0 ? (
+            <div className="overflow-hidden">
+              {upcomingDetailedTrips.length > 0 ? (
                   <div className="divide-y divide-primary-100 dark:divide-primary-800">
-                    {upcomingDetailedTrips.map((trip) => (
-                      <div
-                        key={trip.id}
+                  {upcomingDetailedTrips.map((trip) => (
+                    <div
+                      key={trip.id}
                         className={`cursor-pointer p-6 transition-colors hover:bg-section-light dark:hover:bg-section-medium ${
                           selectedTrip?.id === trip.id ? 'bg-primary-50 dark:bg-primary-900/20' : ''
                         }`}
-                        onClick={() => setSelectedTrip(trip.id === selectedTrip?.id ? null : trip)}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div>
+                      onClick={() => setSelectedTrip(trip.id === selectedTrip?.id ? null : trip)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div>
                             <h3 className="text-base font-medium text-text-base dark:text-text-inverse">
-                              {trip.fromLocation} to {trip.toLocation}
-                            </h3>
+                            {trip.fromLocation} to {trip.toLocation}
+                          </h3>
                             <div className="mt-1 flex items-center text-sm text-text-muted dark:text-text-muted-dark">
-                              <Calendar className="h-4 w-4 mr-1" />
-                              <span>{trip.date}</span>
-                              <span className="mx-2">•</span>
-                              <Clock className="h-4 w-4 mr-1" />
-                              <span>{trip.time}</span>
-                            </div>
+                            <Calendar className="h-4 w-4 mr-1" />
+                            <span>{trip.date}</span>
+                            <span className="mx-2">•</span>
+                            <Clock className="h-4 w-4 mr-1" />
+                            <span>{trip.time}</span>
+                          </div>
                             <div className="mt-1 flex items-center">
                               <span className={`badge ${
                                 trip.status === 'completed' ? 'badge-success' :
@@ -440,79 +440,79 @@ const DriverDashboard: React.FC = () => {
                                 {trip.confirmedBookings || 0} confirmed / {trip.totalBookings || 0} total
                               </span>
                             </div>
-                          </div>
+                        </div>
 
-                          <div className="flex flex-col items-end">
+                        <div className="flex flex-col items-end">
                             <div className="flex items-center text-sm text-text-muted dark:text-text-muted-dark">
                               <Users className="h-4 w-4 mr-1" />
                               <span>
                                 {trip.confirmedBookings || 0} / {getSeatCapacity(trip)} seats
-                              </span>
-                            </div>
-                            {trip.pendingBookings > 0 && (
-                              <div className="mt-1 flex items-center text-xs text-yellow-600 dark:text-yellow-400">
-                                <AlertCircle className="h-3 w-3 mr-1" />
-                                <span>{trip.pendingBookings} pending</span>
-                              </div>
-                            )}
+                            </span>
                           </div>
+                          {trip.pendingBookings > 0 && (
+                              <div className="mt-1 flex items-center text-xs text-yellow-600 dark:text-yellow-400">
+                              <AlertCircle className="h-3 w-3 mr-1" />
+                              <span>{trip.pendingBookings} pending</span>
+                            </div>
+                          )}
                         </div>
+                      </div>
 
-                        {selectedTrip?.id === trip.id && (
+                      {selectedTrip?.id === trip.id && (
                           <div className="mt-4 pt-4 border-t border-primary-100 dark:border-primary-800 animate-fade-in">
-                            <div className="mb-4 flex justify-between items-center">
+                          <div className="mb-4 flex justify-between items-center">
                               <h4 className="font-medium text-text-base dark:text-text-inverse">Passenger List & Actions</h4>
-                              <div className="flex space-x-2">
+                            <div className="flex space-x-2">
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  openEditModal(trip);
+                                }}
+                                  className="btn btn-ghost btn-sm flex items-center gap-2"
+                              >
+                                  <Edit size={12} /> Edit
+                              </button>
+                              {trip.status !== 'completed' && trip.status !== 'cancelled' && (
                                 <button
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    openEditModal(trip);
+                                    handleMarkTripAsCompleted(trip.id);
                                   }}
-                                  className="btn btn-ghost btn-sm flex items-center gap-2"
-                                >
-                                  <Edit size={12} /> Edit
-                                </button>
-                                {trip.status !== 'completed' && trip.status !== 'cancelled' && (
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      handleMarkTripAsCompleted(trip.id);
-                                    }}
                                     className="btn btn-success btn-sm flex items-center gap-2"
-                                  >
+                                >
                                     <CheckCircle size={12} /> Mark Completed
-                                  </button>
-                                )}
-                              </div>
+                                </button>
+                              )}
                             </div>
+                          </div>
 
-                            {/* Passenger List */}                          
+                          {/* Passenger List */}                          
                             {trip.bookings && trip.bookings.length > 0 ? (
                               <div className="divide-y divide-primary-100 dark:divide-primary-800 max-h-60 overflow-y-auto pr-2">
-                                {trip.bookings.map((booking) => (
+                              {trip.bookings.map((booking) => (
                                   <div key={booking.id} className="py-3 flex items-center justify-between">
-                                    <div>
+                                  <div>
                                       <p className="font-medium text-sm text-text-base dark:text-text-inverse">
-                                        {booking.passenger?.firstName} {booking.passenger?.lastName}
-                                      </p>
+                                      {booking.passenger?.firstName} {booking.passenger?.lastName}
+                                    </p>
                                       <p className="text-xs text-text-muted dark:text-text-muted-dark">
                                         Seat {formatSeatInfo(booking)}
                                         {hasDoorstepPickup(booking) && ' • Doorstep Pickup'}
-                                      </p>
-                                    </div>
-                                    <div>
-                                      {booking.status === 'confirmed' ? (
-                                        <button
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            handleCheckInPassenger(booking.id);
-                                          }}
+                                    </p>
+                                  </div>
+                                  <div>
+                                    {booking.status === 'confirmed' ? (
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          handleCheckInPassenger(booking.id);
+                                        }}
                                           className="btn btn-success btn-sm flex items-center gap-2"
-                                        >
+                                      >
                                           <CheckCircle size={12} />
-                                          Check In
-                                        </button>
-                                      ) : booking.status === 'checked-in' ? (
+                                        Check In
+                                      </button>
+                                    ) : booking.status === 'checked-in' ? (
                                         <span className="badge badge-success">Checked In</span>
                                       ) : (
                                         <span className={`badge ${
@@ -520,74 +520,74 @@ const DriverDashboard: React.FC = () => {
                                             ? 'badge-warning'
                                             : 'badge-ghost'
                                         }`}>{booking.status}</span>
-                                      )}
-                                    </div>
+                                    )}
                                   </div>
-                                ))}
-                              </div>
-                            ) : (
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
                               <div className="text-center py-6 bg-section-light dark:bg-section-medium rounded-lg">
                                 <p className="text-text-muted dark:text-text-muted-dark">
-                                  No bookings for this trip yet.
-                                </p>
+                              No bookings for this trip yet.
+                            </p>
                               </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
                     <div className="mx-auto h-12 w-12 bg-section-light dark:bg-section-medium rounded-full flex items-center justify-center">
                       <Calendar className="h-6 w-6 text-text-muted dark:text-text-muted-dark" />
-                    </div>
+                  </div>
                     <h3 className="mt-2 text-sm font-medium text-text-base dark:text-text-inverse">No upcoming trips</h3>
                     <p className="mt-1 text-sm text-text-muted dark:text-text-muted-dark">
-                      You don't have any scheduled trips starting soon.
-                    </p>
-                    <div className="mt-6">
-                      <button onClick={openCreateModal} className="btn btn-primary">
+                    You don't have any scheduled trips starting soon.
+                  </p>
+                  <div className="mt-6">
+                    <button onClick={openCreateModal} className="btn btn-primary">
                         <Plus className="h-4 w-4 mr-2" />
-                        Create New Trip
-                      </button>
-                    </div>
+                      Create New Trip
+                    </button>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </div>
+        </div>
 
-          {/* Right Sidebar */}
-          <div>
+        {/* Right Sidebar */}
+        <div>
             <div className="card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 overflow-hidden mb-8">
               <div className="px-6 py-4 border-b border-primary-100 dark:border-primary-800">
                 <h2 className="text-lg font-semibold text-text-base dark:text-text-inverse flex items-center">
                   <Clock className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
                   Daily Summary
                 </h2>
-              </div>
+            </div>
               <div className="p-4">
-                <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4">
                   <div className="card bg-section-light dark:bg-section-medium p-3 rounded-lg">
                     <p className="text-xs text-text-muted dark:text-text-muted-dark mb-1">Trips Today</p>
                     <p className="text-2xl font-bold text-primary dark:text-primary-200">{totalTripsToday}</p>
-                  </div>
+                </div>
                   <div className="card bg-section-light dark:bg-section-medium p-3 rounded-lg">
                     <p className="text-xs text-text-muted dark:text-text-muted-dark mb-1">Passengers</p>
                     <p className="text-2xl font-bold text-primary dark:text-primary-200">{totalPassengers}</p>
-                  </div>
+                </div>
                   <div className="card bg-section-light dark:bg-section-medium p-3 rounded-lg">
                     <p className="text-xs text-text-muted dark:text-text-muted-dark mb-1">Completed</p>
                     <p className="text-2xl font-bold text-green-500 dark:text-green-400">{completedTrips}</p>
-                  </div>
+                </div>
                   <div className="card bg-section-light dark:bg-section-medium p-3 rounded-lg">
                     <p className="text-xs text-text-muted dark:text-text-muted-dark mb-1">Upcoming</p>
                     <p className="text-2xl font-bold text-blue-500 dark:text-blue-400">{upcomingTripsCount}</p>
-                  </div>
                 </div>
               </div>
             </div>
+          </div>
 
             <div className="card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 overflow-hidden">
               <div className="px-6 py-4 border-b border-primary-100 dark:border-primary-800">
@@ -595,61 +595,61 @@ const DriverDashboard: React.FC = () => {
                   <Settings className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
                   Quick Actions
                 </h2>
-              </div>
+            </div>
               <div className="p-4">
-                <div className="space-y-3">
-                  <Link
+              <div className="space-y-3">
+                <Link
                     to="/driver/scanner"
                     className="btn btn-primary w-full flex items-center justify-center gap-2"
-                  >
+                >
                     <QRScannerIcon className="h-5 w-5" />
-                    Open QR Scanner
-                  </Link>
-                  <button
-                    onClick={openCreateModal}
+                  Open QR Scanner
+                </Link>
+                <button
+                  onClick={openCreateModal}
                     className="btn btn-secondary w-full flex items-center justify-center gap-2"
-                  >
+                >
                     <Plus className="h-5 w-5" />
-                    New Trip
-                  </button>
-                  <Link
+                  New Trip
+                </button>
+                <Link
                     to="/driver/vehicles"
                     className="btn btn-outline btn-secondary w-full flex items-center justify-center gap-2"
                   >
                     <Truck className="h-5 w-5" />
-                    Manage Vehicles
-                  </Link>
-                </div>
+                  Manage Vehicles
+                </Link>
+              </div>
 
                 <div className="mt-6 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-lg border border-primary-100 dark:border-primary-800 flex items-start">
                   <Info className="h-5 w-5 text-primary dark:text-primary-200 mr-2 mt-0.5 flex-shrink-0" />
-                  <div>
+                <div>
                     <p className="text-sm text-primary-700 dark:text-primary-300 font-medium">Remember</p>
                     <p className="text-xs text-primary-600 dark:text-primary-400 mt-1">
-                      Always check passenger tickets and verify their identity before allowing boarding.
-                    </p>
-                  </div>
+                    Always check passenger tickets and verify their identity before allowing boarding.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Trip Form Modal */}
-        <TripForm
-          isOpen={isTripModalOpen}
-          onClose={() => setIsTripModalOpen(false)}
-          tripToEdit={tripToEdit}
-        />
+      {/* Trip Form Modal */}
+      <TripForm
+        isOpen={isTripModalOpen}
+        onClose={() => setIsTripModalOpen(false)}
+        tripToEdit={tripToEdit}
+      />
         
         {/* Password Confirmation Modal */}
-        <PasswordConfirmationModal
-          isOpen={isPasswordModalOpen}
-          onClose={() => setIsPasswordModalOpen(false)}
-          onConfirm={handlePasswordConfirm}
-          title="Confirm Password to View Income"
-          message="Please enter your password to view your income details."
-        />
+      <PasswordConfirmationModal
+        isOpen={isPasswordModalOpen}
+        onClose={() => setIsPasswordModalOpen(false)}
+        onConfirm={handlePasswordConfirm}
+        title="Confirm Password to View Income"
+        message="Please enter your password to view your income details."
+      />
       </div>
     </div>
   );

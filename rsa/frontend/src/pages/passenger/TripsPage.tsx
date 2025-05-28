@@ -3,7 +3,7 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useBookingStore, type BookingWithDetails } from '../../store/bookingStore';
 import Navbar from '../../components/common/Navbar';
-import { ChevronDown, Filter, CalendarDays, Clock, MapPin, Users, Tag, Inbox, AlertCircle, CheckCircle, XCircle, Info, ListFilter, Search } from 'lucide-react';
+import { ChevronDown, Filter, CalendarDays, Clock, MapPin, Users, Tag, Inbox, AlertCircle, CheckCircle, XCircle, Info, ListFilter, Search, ArrowLeft } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import SkeletonCard from '../../components/common/SkeletonCard';
 // Using a local card component since the UI library import is causing issues
@@ -309,6 +309,17 @@ const TripsPage: React.FC = () => {
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-background-dark">
       <Navbar/> 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header with back button */}
+        <div className="mb-6 flex items-center">
+          <Link 
+            to="/passenger/dashboard" 
+            className="btn btn-ghost btn-sm gap-2 mb-4"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to Dashboard
+          </Link>
+        </div>
+
         {/* Advanced Filter UI elements would go here. Example: */}
         {/* <div className="mb-6 p-4 bg-white rounded shadow dark:bg-gray-800"> */}
         {/*   <h3 className="text-lg font-semibold mb-2">Filter Trips</h3> */}

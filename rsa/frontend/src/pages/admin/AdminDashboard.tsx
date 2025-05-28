@@ -193,33 +193,33 @@ const AdminDashboard: React.FC = () => {
           <div className="flex-1 min-w-0 mb-4 md:mb-0">
             <h1 className="text-2xl md:text-3xl font-bold text-text-base dark:text-text-inverse">Admin Dashboard</h1>
             <p className="mt-1 text-sm text-text-muted dark:text-text-muted-dark">
-              {user && `Welcome back, ${user.firstName} ${user.lastName}`}
-            </p>
-          </div>
+            {user && `Welcome back, ${user.firstName} ${user.lastName}`}
+          </p>
+        </div>
           <div className="flex flex-wrap gap-3 items-center">
             <Link to="/admin/hotpoints" className="btn btn-primary flex items-center gap-2">
               <MapPin className="h-4 w-4" />
-              Manage Hotpoints
-            </Link>
+            Manage Hotpoints
+          </Link>
             <Link to="/admin/reports" className="btn btn-secondary flex items-center gap-2">
               <Activity className="h-4 w-4" />
-              Generate Reports
-            </Link>
+            Generate Reports
+          </Link>
             <div className="flex items-center  dark:bg-section-dark rounded-lg p-2">
               <Filter className="h-5 w-5 text-text-muted dark:text-text-muted-dark mr-2" />
-              <select
-                value={timePeriod}
-                onChange={(e) => setTimePeriod(e.target.value as 'daily' | 'weekly' | 'monthly' | 'yearly')}
+            <select
+              value={timePeriod}
+              onChange={(e) => setTimePeriod(e.target.value as 'daily' | 'weekly' | 'monthly' | 'yearly')}
                 className="select select-bordered select-sm focus:ring-0 focus:outline-none text-text-base dark:text-text-inverse bg-transparent"
-              >
-                <option value="daily">Daily</option>
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-                <option value="yearly">Yearly</option>
-              </select>
-            </div>
+            >
+              <option value="daily">Daily</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+              <option value="yearly">Yearly</option>
+            </select>
           </div>
         </div>
+      </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
@@ -254,8 +254,8 @@ const AdminDashboard: React.FC = () => {
             </div>
             <p className="text-3xl font-semibold text-text-base dark:text-text-inverse">{upcomingTripsCount}</p>
             <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1">Scheduled for the future</p>
-          </div>
-          
+        </div>
+
           <div className="card bg-base-100 dark:bg-section-dark p-6 rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 transition-all hover:shadow-md">
             <div className="flex items-center justify-between mb-4">
               <p className="text-sm font-medium text-text-muted dark:text-text-muted-dark">Total Routes</p>
@@ -265,19 +265,19 @@ const AdminDashboard: React.FC = () => {
             </div>
             <p className="text-3xl font-semibold text-text-base dark:text-text-inverse">{adminData.activeRoutes.length}</p>
             <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1">Active in this period</p>
-          </div>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-          {/* Best Performing Drivers */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+        {/* Best Performing Drivers */}
           <div className="card bg-base-100 dark:bg-section-dark p-6 rounded-lg shadow-sm border border-primary-100 dark:border-primary-800">
             <h2 className="text-xl font-semibold text-text-base dark:text-text-inverse mb-4 flex items-center">
               <User className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
               Top Drivers
             </h2>
-            {adminData.bestPerformingDrivers.length > 0 ? (
-              <ul className="space-y-4">
-                {adminData.bestPerformingDrivers.map((driver, index) => (
+          {adminData.bestPerformingDrivers.length > 0 ? (
+            <ul className="space-y-4">
+              {adminData.bestPerformingDrivers.map((driver, index) => (
                   <li key={driver.id} className="flex items-center p-3  dark:bg-primary-900/10 rounded-lg hover:bg-section-medium dark:hover:bg-primary-900/20 transition-colors">
                     <div className="relative">
                       <img 
@@ -295,36 +295,36 @@ const AdminDashboard: React.FC = () => {
                     <div className="ml-3">
                       <p className="font-medium text-text-base dark:text-text-inverse">{driver.name}</p>
                       <div className="flex items-center text-xs text-text-muted dark:text-text-muted-dark">
-                        <Star className="h-3 w-3 text-yellow-400 mr-1" /> {driver.rating.toFixed(1)}
-                        <span className="mx-1.5">•</span>
-                        {driver.completedTrips} trips
-                      </div>
+                      <Star className="h-3 w-3 text-yellow-400 mr-1" /> {driver.rating.toFixed(1)}
+                      <span className="mx-1.5">•</span>
+                      {driver.completedTrips} trips
                     </div>
-                  </li>
-                ))}
-              </ul>
-            ) : (
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : (
               <div className="text-center py-8  dark:bg-section-medium rounded-lg">
                 <p className="text-text-muted dark:text-text-muted-dark">No driver data for this period</p>
               </div>
-            )}
+          )}
             
             <Link to="/admin/drivers" className="mt-4 text-sm text-primary dark:text-primary-200 hover:underline flex items-center justify-end">
               View all drivers <ArrowRight className="h-4 w-4 ml-1" />
             </Link>
-          </div>
+        </div>
 
-          {/* Active Routes */}
+        {/* Active Routes */}
           <div className="lg:col-span-2 card bg-base-100 dark:bg-section-dark p-6 rounded-lg shadow-sm border border-primary-100 dark:border-primary-800">
             <h2 className="text-xl font-semibold text-text-base dark:text-text-inverse mb-4 flex items-center">
               <Map className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
               Most Active Routes
             </h2>
-            {adminData.activeRoutes.length > 0 ? (
-              <div className="space-y-3">
-                {adminData.activeRoutes.map(route => (
+          {adminData.activeRoutes.length > 0 ? (
+            <div className="space-y-3">
+              {adminData.activeRoutes.map(route => (
                   <div key={route.name} className="p-4  dark:bg-primary-900/10 rounded-lg hover:bg-section-medium dark:hover:bg-primary-900/20 transition-colors">
-                    <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between">
                       <p className="font-medium text-text-base dark:text-text-inverse truncate max-w-[70%]">{route.name}</p>
                       <span className="text-sm font-semibold text-primary dark:text-primary-200 whitespace-nowrap">{route.count} trips</span>
                     </div>
@@ -332,11 +332,11 @@ const AdminDashboard: React.FC = () => {
                       <MapPin size={12} className="inline mr-1"/> {route.origin} 
                       <TrendingUp size={12} className="inline mx-2"/> 
                       <Navigation size={12} className="inline mr-1"/> {route.destination}
-                    </div>
                   </div>
-                ))}
-              </div>
-            ) : (
+                </div>
+              ))}
+            </div>
+          ) : (
               <div className="text-center py-8  dark:bg-section-medium rounded-lg">
                 <p className="text-text-muted dark:text-text-muted-dark">No route data for this period</p>
               </div>
@@ -368,11 +368,11 @@ const AdminDashboard: React.FC = () => {
               <span className="text-sm text-text-muted dark:text-text-muted-dark">
                 Showing {sortedTrips.slice(0,5).length} of {sortedTrips.length} trips
               </span>
-            </div>
-          </div>
-          
+        </div>
+      </div>
+
           <div className="overflow-x-auto">
-            {sortedTrips.length > 0 ? (
+          {sortedTrips.length > 0 ? (
               <table className="min-w-full divide-y divide-primary-100 dark:divide-primary-800">
                 <thead className=" dark:bg-section-medium">
                   <tr>
@@ -382,13 +382,13 @@ const AdminDashboard: React.FC = () => {
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted-dark uppercase tracking-wider">Onboarding</th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted-dark uppercase tracking-wider">Driver</th>
                     <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted-dark uppercase tracking-wider">Vehicle</th>
-                    <th scope="col" className="relative px-6 py-3">
-                      <span className="sr-only">Actions</span>
-                    </th>
-                  </tr>
-                </thead>
+                  <th scope="col" className="relative px-6 py-3">
+                    <span className="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
                 <tbody className="bg-base-100 dark:bg-section-dark divide-y divide-primary-100 dark:divide-primary-800">
-                  {sortedTrips.slice(0, 10).map((trip) => (
+                {sortedTrips.slice(0, 10).map((trip) => (
                     <tr 
                       key={trip.id} 
                       className={`hover: dark:hover:bg-section-medium transition-colors cursor-pointer ${selectedTrip?.id === trip.id ? 'bg-primary-50 dark:bg-primary-900/20' : ''}`} 
@@ -396,7 +396,7 @@ const AdminDashboard: React.FC = () => {
                     >
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-base dark:text-text-inverse">{trip.fromLocation} to {trip.toLocation}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted dark:text-text-muted-dark">{trip.date} at {trip.time}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                    <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`badge ${
                           trip.status === 'completed' ? 'badge-success' :
                           trip.status === 'active' ? 'badge-info' :
@@ -404,15 +404,15 @@ const AdminDashboard: React.FC = () => {
                           trip.status === 'pending_approval' ? 'badge-warning' :
                           trip.status === 'cancelled' ? 'badge-error' :
                           'badge-ghost'}`}>
-                          {trip.status.charAt(0).toUpperCase() + trip.status.slice(1).replace('_', ' ')}
-                        </span>
-                      </td>
+                        {trip.status.charAt(0).toUpperCase() + trip.status.slice(1).replace('_', ' ')}
+                      </span>
+                    </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted dark:text-text-muted-dark">
                         <div className="flex items-center">
                           <Users className="h-4 w-4 mr-1 text-primary dark:text-primary-200" />
-                          {`${trip.checkedInCount || 0} / ${trip.confirmedBookings || 0} (${trip.totalBookingsForTrip || 0} total)`}
+                      {`${trip.checkedInCount || 0} / ${trip.confirmedBookings || 0} (${trip.totalBookingsForTrip || 0} total)`}
                         </div>
-                      </td>
+                    </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted dark:text-text-muted-dark">{trip.driverId || 'Not assigned'}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted dark:text-text-muted-dark">{mockVehicles.find(v => v.id === trip.vehicleId)?.model || 'N/A'}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
@@ -430,13 +430,13 @@ const AdminDashboard: React.FC = () => {
                             <Trash2 size={16}/>
                           </button>
                         </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            ) : (
-              <div className="text-center py-12">
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div className="text-center py-12">
                 <Calendar className="mx-auto h-12 w-12 text-text-muted dark:text-text-muted-dark" />
                 <h3 className="mt-2 text-sm font-medium text-text-base dark:text-text-inverse">No trips found</h3>
                 <p className="mt-1 text-sm text-text-muted dark:text-text-muted-dark">Create the first trip using the button above.</p>
@@ -449,10 +449,10 @@ const AdminDashboard: React.FC = () => {
                 >
                   <Plus className="h-4 w-4 mr-2" /> Create Trip
                 </button>
-              </div>
-            )}
-          </div>
-          
+            </div>
+          )}
+      </div>
+
           {sortedTrips.length > 10 && (
             <div className="px-6 py-3 border-t border-primary-100 dark:border-primary-800 flex justify-center">
               <Link to="/admin/trips" className="btn btn-ghost btn-sm text-primary dark:text-primary-200 flex items-center gap-2">
@@ -460,15 +460,15 @@ const AdminDashboard: React.FC = () => {
               </Link>
             </div>
           )}
-        </div>
+      </div>
 
         {/* Trip Form Modal */}
-        <TripForm
-          isOpen={isTripModalOpen}
-          onClose={() => setIsTripModalOpen(false)}
+      <TripForm
+        isOpen={isTripModalOpen}
+        onClose={() => setIsTripModalOpen(false)}
           onSubmit={handleTripFormSubmit}
-          tripToEdit={tripToEdit}
-        />
+        tripToEdit={tripToEdit}
+      />
       </div>
     </div>
   );

@@ -80,8 +80,8 @@ const TripDetailsPage: React.FC = () => {
       <div className="min-h-screen flex flex-col items-center justify-center">
         <Navbar />
         <p className="text-lg text-red-600 mt-20">Error: {error}</p>
-        <Link to="/passenger/trips" className="mt-4 btn btn-primary">
-          Back to My Trips
+        <Link to="/passenger/dashboard" className="mt-4 btn btn-primary">
+          Back to Dashboard
         </Link>
       </div>
     );
@@ -92,8 +92,8 @@ const TripDetailsPage: React.FC = () => {
       <div className="min-h-screen flex flex-col items-center justify-center">
         <Navbar />
         <p className="text-lg text-gray-600 mt-20">No booking details found for this trip.</p>
-        <Link to="/passenger/trips" className="mt-4 btn btn-primary">
-          Back to My Trips
+        <Link to="/passenger/dashboard" className="mt-4 btn btn-primary">
+          Back to Dashboard
         </Link>
       </div>
     );
@@ -108,7 +108,7 @@ const TripDetailsPage: React.FC = () => {
           className="mb-6 inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-800"
         >
           <ArrowLeft className="h-4 w-4 mr-1.5" />
-          Back to Trips
+          Back
         </button>
 
         <div className="bg-white shadow-xl rounded-lg overflow-hidden">

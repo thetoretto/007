@@ -27,9 +27,9 @@ const Navbar: React.FC = () => {
     { path: '/book', label: 'Book a Ride', icon: <BookOpen className="h-5 w-5" /> },
     { path: '/passenger/demo', label: 'Demo Features', icon: <ClipboardList className="h-5 w-5" /> },
     { 
-      path: '/passenger/trips', 
-      label: 'My Trips', 
-      icon: <ClipboardList className="h-5 w-5" />,
+      path: '/passenger/dashboard', 
+      label: 'My Account', 
+      icon: <User className="h-5 w-5" />,
       roles: ['passenger']
     },
     { 
@@ -84,29 +84,29 @@ const Navbar: React.FC = () => {
       <div className="container-app mx-auto px-4 md:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <div className="flex-shrink-0 flex items-center">
+            <div className="flex-shrink-0 flex items-center">
             <Link to="/" className="flex items-center gap-2">
               <Bus className="h-6 w-6 text-primary dark:text-primary-200" />
               <span className="text-lg font-semibold text-text-base dark:text-text-inverse transition-colors duration-200">RideBooker</span>
-            </Link>
-          </div>
+              </Link>
+            </div>
           
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:justify-between md:flex-1">
             <div className="flex items-center space-x-1 lg:space-x-4 ml-6">
               {filteredNavItems.map((item) => (
-                <Link 
+              <Link 
                   key={item.path}
                   to={item.path} 
                   className={`flex items-center px-3 py-2 text-sm lg:text-base rounded-md text-text-base hover:text-primary dark:text-text-inverse dark:hover:text-primary-200 border-b-2 ${
                     isActive(item.path) 
-                      ? 'border-primary dark:border-primary-200 font-medium' 
-                      : 'border-transparent'
-                  } transition-all duration-200`}
-                >
+                    ? 'border-primary dark:border-primary-200 font-medium' 
+                    : 'border-transparent'
+                } transition-all duration-200`}
+              >
                   <span className="mr-1.5">{item.icon}</span>
                   {item.label}
-                </Link>
+              </Link>
               ))}
             </div>
             
@@ -150,23 +150,23 @@ const Navbar: React.FC = () => {
               to={item.path}
               className={`flex items-center px-3 py-2 rounded-md text-base font-medium ${
                 isActive(item.path) 
-                  ? 'text-primary dark:text-primary-200 bg-section-light dark:bg-primary-900' 
-                  : 'text-text-base dark:text-text-inverse hover:bg-section-light hover:text-primary dark:hover:bg-primary-900 dark:hover:text-primary-200'
-              } transition-colors duration-200`}
+                ? 'text-primary dark:text-primary-200 bg-section-light dark:bg-primary-900' 
+                : 'text-text-base dark:text-text-inverse hover:bg-section-light hover:text-primary dark:hover:bg-primary-900 dark:hover:text-primary-200'
+            } transition-colors duration-200`}
             >
               <span className="mr-2">{item.icon}</span>
               {item.label}
             </Link>
           ))}
-        </div>
+          </div>
         
         {/* Mobile profile section */}
         <div className="pt-4 pb-3 border-t border-primary-100 dark:border-primary-800 bg-background-light dark:bg-section-dark">
-          <div className="px-4">
-            <ProfileDropdown />
+            <div className="px-4">
+              <ProfileDropdown />
+            </div>
           </div>
         </div>
-      </div>
     </nav>
   );
 };

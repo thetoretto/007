@@ -1,7 +1,7 @@
 import '../../index.css';
 import React, { useState, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Clock, MapPin, User, Search, TrendingUp, BarChart2, Ticket, Star, CreditCard, ChevronRight, AlertCircle, CheckCircle, ArrowRight, XCircle, Zap } from 'lucide-react';
+import { Calendar, Clock, MapPin, User, Search, TrendingUp, BarChart2, Ticket, Star, CreditCard, ChevronRight, AlertCircle, CheckCircle, ArrowRight, XCircle, Zap, Activity } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import { useBookingStore, BookingWithDetails } from '../../store/bookingStore';
 import { getRandomRoutes, getRandomBookings } from '../../utils/mockData';
@@ -151,7 +151,7 @@ const PassengerDashboard: React.FC = () => {
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <Link to="/passenger/booking" className="btn btn-primary flex items-center gap-2">
+            <Link to="/book" className="btn btn-primary flex items-center gap-2">
               <Ticket className="h-4 w-4" />
               Book a Trip
             </Link>
@@ -272,7 +272,7 @@ const PassengerDashboard: React.FC = () => {
                     <p className="mt-1 text-sm text-text-muted dark:text-text-muted-dark">
                       You don't have any upcoming trips scheduled.
                     </p>
-                    <Link to="/passenger/booking" className="btn btn-primary mt-4">
+                    <Link to="/book" className="btn btn-primary mt-4">
                       Book a Trip
                     </Link>
                   </div>
@@ -426,7 +426,7 @@ const PassengerDashboard: React.FC = () => {
               </div>
               <div className="p-4">
                 <div className="space-y-3">
-                  <Link to="/passenger/booking" className="btn btn-primary w-full flex items-center justify-center gap-2">
+                  <Link to="/book" className="btn btn-primary w-full flex items-center justify-center gap-2">
                     <Ticket className="h-5 w-5" />
                     Book New Trip
                   </Link>
@@ -434,7 +434,7 @@ const PassengerDashboard: React.FC = () => {
                     <Calendar className="h-5 w-5" />
                     View All Trips
                   </Link>
-                  <Link to="/passenger/profile" className="btn btn-outline btn-secondary w-full flex items-center justify-center gap-2">
+                  <Link to="/profile" className="btn btn-outline btn-secondary w-full flex items-center justify-center gap-2">
                     <User className="h-5 w-5" />
                     Edit Profile
                   </Link>
