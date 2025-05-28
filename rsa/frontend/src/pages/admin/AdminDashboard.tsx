@@ -262,7 +262,7 @@ const AdminDashboard: React.FC = () => {
               <div className="p-2 rounded-full bg-purple-50 dark:bg-purple-900">
                 <Map className="h-6 w-6 text-purple-500 dark:text-purple-400" />
               </div>
-            </div>
+          </div>
             <p className="text-3xl font-semibold text-text-base dark:text-text-inverse">{adminData.activeRoutes.length}</p>
             <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1">Active in this period</p>
         </div>
@@ -327,7 +327,7 @@ const AdminDashboard: React.FC = () => {
                   <div className="flex items-center justify-between">
                       <p className="font-medium text-text-base dark:text-text-inverse truncate max-w-[70%]">{route.name}</p>
                       <span className="text-sm font-semibold text-primary dark:text-primary-200 whitespace-nowrap">{route.count} trips</span>
-                    </div>
+                  </div>
                     <div className="text-xs text-text-muted dark:text-text-muted-dark mt-2 flex items-center">
                       <MapPin size={12} className="inline mr-1"/> {route.origin} 
                       <TrendingUp size={12} className="inline mx-2"/> 

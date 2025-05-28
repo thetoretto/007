@@ -1,37 +1,61 @@
-import React, { useState } from 'react';
-import { CreditCard, Smartphone, Wallet, Check } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { CreditCard, Smartphone, Wallet, Check, AlertCircle, ArrowLeft, Info } from 'lucide-react';
 
 export type PaymentMethod = 'airtel' | 'momo' | 'card' | null;
 
-interface CardDetails {
+export interface CardDetails {
   number: string;
   name: string;
   expiry: string;
   cvv: string;
 }
 
-interface MobileMoneyDetails {
+export interface MobileMoneyDetails {
   phoneNumber: string;
   fullName: string;
 }
 
-interface PaymentFormProps {
+export interface PaymentFormProps {
   onComplete: (data: {
     method: PaymentMethod;
     details: CardDetails | MobileMoneyDetails | null;
   }) => void;
   amount: number;
-  isProcessing: boolean;
+  isProcessing?: boolean;
   onCancel: () => void;
+  defaultMethod?: PaymentMethod;
+  availableMethods?: PaymentMethod[];
+  currency?: string;
+  title?: string;
+  cardLabel?: string;
+  airtelLabel?: string;
+  momoLabel?: string;
+  cancelLabel?: string;
+  payLabel?: string;
+  className?: string;
+  showProcessingIndicator?: boolean;
+  showTotalAmount?: boolean;
 }
 
 const PaymentForm: React.FC<PaymentFormProps> = ({
   onComplete,
   amount,
-  isProcessing,
-  onCancel
+  isProcessing = false,
+  onCancel,
+  defaultMethod = null,
+  availableMethods = ['airtel', 'momo', 'card'],
+  currency = '$',
+  title = 'Payment Method',
+  cardLabel = 'Card',
+  airtelLabel = 'Airtel Money',
+  momoLabel = 'MoMo',
+  cancelLabel = 'Back',
+  payLabel = 'Pay',
+  className = '',
+  showProcessingIndicator = true,
+  showTotalAmount = true
 }) => {
-  const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>(null);
+  const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>(defaultMethod);
   const [cardDetails, setCardDetails] = useState<CardDetails>({
     number: '',
     name: '',
@@ -43,6 +67,14 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     fullName: ''
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
+
+  // Update selected method when defaultMethod changes
+  useEffect(() => {
+    if (defaultMethod && availableMethods.includes(defaultMethod)) {
+      setSelectedMethod(defaultMethod);
+    }
+  }, [defaultMethod, availableMethods]);
 
   const validateCardDetails = (): boolean => {
     const newErrors: Record<string, string> = {};
@@ -93,11 +125,23 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   const handleCardInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCardDetails(prev => ({ ...prev, [name]: value }));
+    setTouched(prev => ({ ...prev, [name]: true }));
+    
+    // Live validation for better UX
+    if (touched[name]) {
+      validateCardDetails();
+    }
   };
 
   const handleMobileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setMobileDetails(prev => ({ ...prev, [name]: value }));
+    setTouched(prev => ({ ...prev, [name]: true }));
+    
+    // Live validation for better UX
+    if (touched[name]) {
+      validateMobileDetails();
+    }
   };
 
   const handleSubmit = () => {
@@ -142,6 +186,12 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   const handleCardNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formattedValue = formatCardNumber(e.target.value);
     setCardDetails(prev => ({ ...prev, number: formattedValue }));
+    setTouched(prev => ({ ...prev, number: true }));
+    
+    // Live validation
+    if (touched.number) {
+      validateCardDetails();
+    }
   };
 
   const handleExpiryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -153,61 +203,93 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     }
     
     setCardDetails(prev => ({ ...prev, expiry: value }));
+    setTouched(prev => ({ ...prev, expiry: true }));
+    
+    // Live validation
+    if (touched.expiry) {
+      validateCardDetails();
+    }
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700">
-      <h3 className="text-lg font-semibold mb-4">Payment Method</h3>
+    <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 sm:p-6 border border-gray-200 dark:border-gray-700 ${className}`}>
+      <h3 className="text-lg font-semibold mb-4">{title}</h3>
       
       {/* Payment method selection */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-        <button
-          type="button"
-          onClick={() => setSelectedMethod('airtel')}
-          className={`p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
-            selectedMethod === 'airtel' 
-              ? 'border-accent-kente-gold bg-accent-kente-gold/10' 
-              : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
-          }`}
-          disabled={isProcessing}
-        >
-          <div className="w-12 h-12 flex items-center justify-center bg-red-100 dark:bg-red-900/30 rounded-full mb-2">
-            <Smartphone className="h-6 w-6 text-red-600 dark:text-red-400" />
-          </div>
-          <span className="font-medium">Airtel Money</span>
-        </button>
-        
-        <button
-          type="button"
-          onClick={() => setSelectedMethod('momo')}
-          className={`p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
-            selectedMethod === 'momo' 
-              ? 'border-accent-kente-gold bg-accent-kente-gold/10' 
-              : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
-          }`}
-          disabled={isProcessing}
-        >
-          <div className="w-12 h-12 flex items-center justify-center bg-yellow-100 dark:bg-yellow-900/30 rounded-full mb-2">
-            <Wallet className="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
-          </div>
-          <span className="font-medium">MoMo</span>
-        </button>
-        
-        <button
-          type="button"
-          onClick={() => setSelectedMethod('card')}
-          className={`p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
-            selectedMethod === 'card' 
-              ? 'border-accent-kente-gold bg-accent-kente-gold/10' 
-              : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
-          }`}
-          disabled={isProcessing}
-        >
-          <div className="w-12 h-12 flex items-center justify-center bg-blue-100 dark:bg-blue-900/30 rounded-full mb-2">
-            <CreditCard className="h-6 w-6 text-blue-600 dark:text-blue-400" />
-          </div>
-          <span className="font-medium">Card</span>
-        </button>
+      <div className="grid grid-cols-1 gap-3 mb-6">
+        <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          {availableMethods.includes('airtel') && (
+            <button
+              type="button"
+              onClick={() => setSelectedMethod('airtel')}
+              className={`p-3 sm:p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
+                selectedMethod === 'airtel' 
+                  ? 'border-accent-kente-gold bg-accent-kente-gold/10 shadow-sm' 
+                  : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
+              }`}
+              disabled={isProcessing}
+              aria-pressed={selectedMethod === 'airtel'}
+            >
+              <div className="w-10 h-10 sm:w-14 sm:h-14 flex items-center justify-center bg-red-100 dark:bg-red-900/30 rounded-full mb-2 sm:mb-3">
+                <Smartphone className="h-5 w-5 sm:h-7 sm:w-7 text-red-600 dark:text-red-400" />
+              </div>
+              <span className="font-medium text-sm sm:text-base">{airtelLabel}</span>
+              {selectedMethod === 'airtel' && (
+                <div className="mt-1 sm:mt-2 bg-accent-kente-gold text-white text-xs rounded-full px-2 py-0.5 flex items-center">
+                  <Check className="h-3 w-3 mr-1" /> Selected
+                </div>
+              )}
+            </button>
+          )}
+          
+          {availableMethods.includes('momo') && (
+            <button
+              type="button"
+              onClick={() => setSelectedMethod('momo')}
+              className={`p-3 sm:p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
+                selectedMethod === 'momo' 
+                  ? 'border-accent-kente-gold bg-accent-kente-gold/10 shadow-sm' 
+                  : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
+              }`}
+              disabled={isProcessing}
+              aria-pressed={selectedMethod === 'momo'}
+            >
+              <div className="w-10 h-10 sm:w-14 sm:h-14 flex items-center justify-center bg-yellow-100 dark:bg-yellow-900/30 rounded-full mb-2 sm:mb-3">
+                <Wallet className="h-5 w-5 sm:h-7 sm:w-7 text-yellow-600 dark:text-yellow-400" />
+              </div>
+              <span className="font-medium text-sm sm:text-base">{momoLabel}</span>
+              {selectedMethod === 'momo' && (
+                <div className="mt-1 sm:mt-2 bg-accent-kente-gold text-white text-xs rounded-full px-2 py-0.5 flex items-center">
+                  <Check className="h-3 w-3 mr-1" /> Selected
+                </div>
+              )}
+            </button>
+          )}
+          
+          {availableMethods.includes('card') && (
+            <button
+              type="button"
+              onClick={() => setSelectedMethod('card')}
+              className={`p-3 sm:p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
+                selectedMethod === 'card' 
+                  ? 'border-accent-kente-gold bg-accent-kente-gold/10 shadow-sm' 
+                  : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
+              }`}
+              disabled={isProcessing}
+              aria-pressed={selectedMethod === 'card'}
+            >
+              <div className="w-10 h-10 sm:w-14 sm:h-14 flex items-center justify-center bg-blue-100 dark:bg-blue-900/30 rounded-full mb-2 sm:mb-3">
+                <CreditCard className="h-5 w-5 sm:h-7 sm:w-7 text-blue-600 dark:text-blue-400" />
+              </div>
+              <span className="font-medium text-sm sm:text-base">{cardLabel}</span>
+              {selectedMethod === 'card' && (
+                <div className="mt-1 sm:mt-2 bg-accent-kente-gold text-white text-xs rounded-full px-2 py-0.5 flex items-center">
+                  <Check className="h-3 w-3 mr-1" /> Selected
+                </div>
+              )}
+            </button>
+          )}
+        </div>
       </div>
       
       {/* Mobile Money Payment Form (Airtel or MoMo) */}
@@ -224,13 +306,19 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               value={mobileDetails.phoneNumber}
               onChange={handleMobileInputChange}
               placeholder="Enter phone number"
-              className={`w-full p-3 border ${errors.phoneNumber ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700`}
+              className={`w-full p-3 border ${errors.phoneNumber ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring focus:ring-accent-kente-gold/20`}
               disabled={isProcessing}
+              aria-invalid={!!errors.phoneNumber}
+              aria-describedby={errors.phoneNumber ? "phoneNumber-error" : undefined}
             />
             {errors.phoneNumber && (
-              <p className="mt-1 text-sm text-red-500">{errors.phoneNumber}</p>
+              <p id="phoneNumber-error" className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
+                <AlertCircle className="h-3.5 w-3.5 mr-1" />
+                {errors.phoneNumber}
+              </p>
             )}
-            <p className="mt-1 text-xs text-gray-500">
+            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 flex items-center">
+              <Info className="h-3.5 w-3.5 mr-1" />
               You'll receive a prompt on your phone to confirm payment
             </p>
           </div>
@@ -246,11 +334,16 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               value={mobileDetails.fullName}
               onChange={handleMobileInputChange}
               placeholder="Enter account holder's name"
-              className={`w-full p-3 border ${errors.fullName ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700`}
+              className={`w-full p-3 border ${errors.fullName ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring-accent-kente-gold`}
               disabled={isProcessing}
+              aria-invalid={!!errors.fullName}
+              aria-describedby={errors.fullName ? "fullName-error" : undefined}
             />
             {errors.fullName && (
-              <p className="mt-1 text-sm text-red-500">{errors.fullName}</p>
+              <p id="fullName-error" className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
+                <AlertCircle className="h-3.5 w-3.5 mr-1" />
+                {errors.fullName}
+              </p>
             )}
           </div>
         </div>
@@ -271,11 +364,16 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               onChange={handleCardNumberChange}
               placeholder="1234 5678 9012 3456"
               maxLength={19}
-              className={`w-full p-3 border ${errors.cardNumber ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700`}
+              className={`w-full p-3 border ${errors.cardNumber ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring-accent-kente-gold`}
               disabled={isProcessing}
+              aria-invalid={!!errors.cardNumber}
+              aria-describedby={errors.cardNumber ? "cardNumber-error" : undefined}
             />
             {errors.cardNumber && (
-              <p className="mt-1 text-sm text-red-500">{errors.cardNumber}</p>
+              <p id="cardNumber-error" className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
+                <AlertCircle className="h-3.5 w-3.5 mr-1" />
+                {errors.cardNumber}
+              </p>
             )}
           </div>
           
@@ -290,11 +388,16 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               value={cardDetails.name}
               onChange={handleCardInputChange}
               placeholder="John Doe"
-              className={`w-full p-3 border ${errors.cardName ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700`}
+              className={`w-full p-3 border ${errors.cardName ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring-accent-kente-gold`}
               disabled={isProcessing}
+              aria-invalid={!!errors.cardName}
+              aria-describedby={errors.cardName ? "cardName-error" : undefined}
             />
             {errors.cardName && (
-              <p className="mt-1 text-sm text-red-500">{errors.cardName}</p>
+              <p id="cardName-error" className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
+                <AlertCircle className="h-3.5 w-3.5 mr-1" />
+                {errors.cardName}
+              </p>
             )}
           </div>
           
@@ -311,11 +414,16 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                 onChange={handleExpiryChange}
                 placeholder="MM/YY"
                 maxLength={5}
-                className={`w-full p-3 border ${errors.cardExpiry ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700`}
+                className={`w-full p-3 border ${errors.cardExpiry ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring-accent-kente-gold`}
                 disabled={isProcessing}
+                aria-invalid={!!errors.cardExpiry}
+                aria-describedby={errors.cardExpiry ? "cardExpiry-error" : undefined}
               />
               {errors.cardExpiry && (
-                <p className="mt-1 text-sm text-red-500">{errors.cardExpiry}</p>
+                <p id="cardExpiry-error" className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
+                  <AlertCircle className="h-3.5 w-3.5 mr-1" />
+                  {errors.cardExpiry}
+                </p>
               )}
             </div>
             
@@ -331,11 +439,16 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                 onChange={handleCardInputChange}
                 placeholder="123"
                 maxLength={4}
-                className={`w-full p-3 border ${errors.cardCvv ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700`}
+                className={`w-full p-3 border ${errors.cardCvv ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring-accent-kente-gold`}
                 disabled={isProcessing}
+                aria-invalid={!!errors.cardCvv}
+                aria-describedby={errors.cardCvv ? "cardCvv-error" : undefined}
               />
               {errors.cardCvv && (
-                <p className="mt-1 text-sm text-red-500">{errors.cardCvv}</p>
+                <p id="cardCvv-error" className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
+                  <AlertCircle className="h-3.5 w-3.5 mr-1" />
+                  {errors.cardCvv}
+                </p>
               )}
             </div>
           </div>
@@ -343,43 +456,52 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
       )}
       
       {/* Payment Summary */}
-      <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-6">
-        <div className="flex justify-between items-center font-medium">
-          <span>Total Amount:</span>
-          <span className="text-lg text-accent-kente-gold">${amount.toFixed(2)}</span>
+      {showTotalAmount && (
+        <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-6">
+          <div className="flex justify-between items-center font-medium">
+            <span>Total Amount:</span>
+            <span className="text-lg text-accent-kente-gold">{currency}{amount.toFixed(2)}</span>
+          </div>
         </div>
-      </div>
+      )}
       
       {/* Action Buttons */}
       <div className="flex gap-3">
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-lg font-medium"
+          className="flex items-center justify-center flex-1 py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
           disabled={isProcessing}
         >
-          Back
+          <ArrowLeft className="h-4 w-4 mr-2" />
+          {cancelLabel}
         </button>
         
         <button
           type="button"
           onClick={handleSubmit}
           disabled={!selectedMethod || isProcessing}
-          className={`flex-1 py-3 px-4 rounded-lg font-medium text-white relative ${
+          className={`flex-1 py-3 px-4 rounded-lg font-medium text-white relative flex items-center justify-center transition-all ${
             selectedMethod && !isProcessing
-              ? 'bg-accent-kente-gold hover:bg-accent-kente-gold-dark' 
+              ? 'bg-accent-kente-gold hover:bg-accent-kente-gold-dark shadow-sm' 
               : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
           }`}
         >
-          {isProcessing ? (
+          {isProcessing && showProcessingIndicator ? (
             <>
-              <span className="opacity-0">Pay ${amount.toFixed(2)}</span>
+              <span className="opacity-0">{payLabel} {currency}{amount.toFixed(2)}</span>
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <div className="relative">
+                  <div className="w-6 h-6 border-2 border-white/30 rounded-full"></div>
+                  <div className="absolute top-0 left-0 w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                </div>
               </div>
             </>
           ) : (
-            <>Pay ${amount.toFixed(2)}</>
+            <>
+              {payLabel} {currency}{amount.toFixed(2)}
+              <Check className="ml-2 h-4 w-4" />
+            </>
           )}
         </button>
       </div>

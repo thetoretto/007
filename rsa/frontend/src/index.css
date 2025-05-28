@@ -177,7 +177,7 @@
   }
 
   .alert-danger, .alert-success, .alert-warning, .alert-info {
-    @apply bg-section-light text-text-base border border-[#bcdcff] dark:bg-section-dark dark:text-text-inverse dark:border-primary-800;
+    @apply bg-gray-50 text-text-base border border-[#bcdcff] dark:bg-section-dark dark:text-text-inverse dark:border-primary-800;
   }
 
   .icon-background {

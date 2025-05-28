@@ -1,9 +1,9 @@
 import React, { useState, useMemo, useCallback, useEffect } from 'react';
-import { X, Check, User } from 'lucide-react';
+import { X, Check, User, Info } from 'lucide-react';
 import { showNotification } from '../../utils/notifications';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
-interface Seat {
+export interface Seat {
   id: string;
   number: string;
   price: number;
@@ -17,12 +17,25 @@ interface Seat {
   notes?: string;
 }
 
-interface SeatSelectorProps {
+export interface SeatSelectorProps {
   initialSeats: Seat[];
   initialSelectedSeats?: Seat[];
   onSeatSelect?: (seats: Seat[]) => void;
   maxSelectableSeats?: number;
   vehicleName?: string;
+  compact?: boolean;
+  hideHeader?: boolean;
+  hideLegend?: boolean;
+  hideSummary?: boolean;
+  customColors?: {
+    standard?: string;
+    premium?: string;
+    vip?: string;
+    accessible?: string;
+    selected?: string;
+    indicator?: string;
+  };
+  className?: string;
 }
 
 const SeatSelector: React.FC<SeatSelectorProps> = ({ 
@@ -30,11 +43,28 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
   initialSelectedSeats = [], 
   onSeatSelect, 
   maxSelectableSeats = 1, 
-  vehicleName = 'Vehicle' 
+  vehicleName = 'Vehicle',
+  compact = false,
+  hideHeader = false,
+  hideLegend = false,
+  hideSummary = false,
+  customColors,
+  className = ''
 }) => {
   const [seatsData, setSeatsData] = useState<Seat[]>(initialSeats);
   const [selectedSeats, setSelectedSeats] = useState<Seat[]>(initialSelectedSeats);
   const [hoveredSeat, setHoveredSeat] = useState<string | null>(null);
+
+  // Define default colors that can be overridden with customColors
+  const colors = useMemo(() => ({
+    standard: { bg: 'bg-green-100', hover: 'bg-green-200', border: 'border-green-300', text: 'text-green-800' },
+    premium: { bg: 'bg-blue-100', hover: 'bg-blue-200', border: 'border-blue-300', text: 'text-blue-800' },
+    vip: { bg: 'bg-purple-100', hover: 'bg-purple-200', border: 'border-purple-300', text: 'text-purple-800' },
+    accessible: { bg: 'bg-yellow-100', hover: 'bg-yellow-200', border: 'border-yellow-300', text: 'text-yellow-800' },
+    selected: { bg: 'bg-accent-kente-gold', hover: 'bg-accent-kente-gold', border: 'border-yellow-600', text: 'text-white' },
+    indicator: 'bg-green-500',
+    ...customColors
+  }), [customColors]);
 
   // Update seatsData if initialSeats prop changes
   useEffect(() => {
@@ -118,9 +148,9 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
   // Get seat color based on type and status
   const getSeatStyles = (seat: Seat, isSelected: boolean, isHovered: boolean) => {
     // Default styles
-    let bgColor = 'bg-gray-100';
-    let borderColor = 'border-gray-300';
-    let textColor = 'text-gray-800';
+    let bgColor = colors.standard.bg;
+    let borderColor = colors.standard.border;
+    let textColor = colors.standard.text;
     
     if (seat.status === 'reserved') {
       bgColor = 'bg-gray-300';
@@ -137,32 +167,32 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
     }
 
     if (isSelected) {
-      bgColor = 'bg-accent-kente-gold';
-      borderColor = 'border-yellow-600';
-      textColor = 'text-white';
+      bgColor = colors.selected.bg;
+      borderColor = colors.selected.border;
+      textColor = colors.selected.text;
       return { bgColor, borderColor, textColor };
     }
 
     switch (seat.type) {
       case 'premium':
-        bgColor = isHovered ? 'bg-blue-200' : 'bg-blue-100';
-        borderColor = 'border-blue-300';
-        textColor = 'text-blue-800';
+        bgColor = isHovered ? colors.premium.hover : colors.premium.bg;
+        borderColor = colors.premium.border;
+        textColor = colors.premium.text;
         break;
       case 'vip':
-        bgColor = isHovered ? 'bg-purple-200' : 'bg-purple-100';
-        borderColor = 'border-purple-300';
-        textColor = 'text-purple-800';
+        bgColor = isHovered ? colors.vip.hover : colors.vip.bg;
+        borderColor = colors.vip.border;
+        textColor = colors.vip.text;
         break;
       case 'accessible':
-        bgColor = isHovered ? 'bg-yellow-200' : 'bg-yellow-100';
-        borderColor = 'border-yellow-300';
-        textColor = 'text-yellow-800';
+        bgColor = isHovered ? colors.accessible.hover : colors.accessible.bg;
+        borderColor = colors.accessible.border;
+        textColor = colors.accessible.text;
         break;
       default:
-        bgColor = isHovered ? 'bg-green-200' : 'bg-green-100';
-        borderColor = 'border-green-300';
-        textColor = 'text-green-800';
+        bgColor = isHovered ? colors.standard.hover : colors.standard.bg;
+        borderColor = colors.standard.border;
+        textColor = colors.standard.text;
     }
 
     return { bgColor, borderColor, textColor };
@@ -170,7 +200,7 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
 
   // Render a single seat
   const renderSeat = (seat: Seat | null, rowIndex: number, colIndex: number) => {
-    if (!seat) return <div key={`empty-${rowIndex}-${colIndex}`} className="w-9 h-8" />;
+    if (!seat) return <div key={`empty-${rowIndex}-${colIndex}`} className={`w-${compact ? '6' : '8'} h-${compact ? '5' : '7'}`} />;
 
     const isSelected = selectedSeats.some(s => s.id === seat.id);
     const isDisabled = seat.status === 'booked' || seat.status === 'reserved';
@@ -182,15 +212,15 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
       <motion.div
         key={`seat-${rowIndex}-${colIndex}`}
         className={`
-          flex items-center justify-center
-          w-9 h-8 m-0.5
+          relative flex items-center justify-center
+          w-${compact ? '6' : '8'} h-${compact ? '5' : '7'} m-0.5
           ${bgColor} ${textColor}
           border ${borderColor}
-          rounded-sm
+          rounded-md
           select-none
-          transition-colors duration-150
-          ${isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer'}
-          ${isSelected ? 'shadow-sm' : ''}
+          transition-all duration-150
+          ${isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:shadow-md'}
+          ${isSelected ? 'shadow-md ring-2 ring-accent-kente-gold' : ''}
         `}
         whileHover={!isDisabled ? { scale: 1.05 } : {}}
         whileTap={!isDisabled ? { scale: 0.95 } : {}}
@@ -203,49 +233,64 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
         transition={{ duration: 0.2 }}
       >
         {/* Seat number */}
-        <div className="font-medium text-sm">
+        <div className="font-medium text-xs">
           {seat.number}
         </div>
         
         {/* Selection indicator */}
         {isSelected && (
-          <div className="absolute -top-1 -right-1 w-3.5 h-3.5 bg-green-500 rounded-full flex items-center justify-center">
+          <div className={`absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 ${colors.indicator} rounded-full flex items-center justify-center shadow-sm`}>
             <Check className="text-white" size={8} />
-            </div>
+          </div>
         )}
 
         {/* Price tooltip on hover */}
         {isHovered && !isDisabled && (
           <motion.div
-            className="absolute -top-6 bg-gray-800 text-white text-xs px-1.5 py-0.5 rounded z-10"
+            className="absolute -top-8 bg-gray-800 text-white text-xs px-2 py-1 rounded-md z-10 shadow-md"
             initial={{ opacity: 0, y: 5 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            ${seat.price}
+            <div className="font-bold">${seat.price.toFixed(2)}</div>
+            <div className="text-xs text-gray-300">{seat.type}</div>
+            <div className="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-gray-800 rotate-45"></div>
           </motion.div>
         )}
       </motion.div>
     );
   };
 
-  return (
-    <div className="space-y-3">
-      {/* Heading with minimalist design */}
-      <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-2 mb-3">
-        <h3 className="text-sm font-medium">{vehicleName} Seating</h3>
-        <span className="text-xs text-gray-500">
-          {selectedSeats.length}/{maxSelectableSeats} selected
-        </span>
+  // Empty state
+  if (seatsData.length === 0) {
+    return (
+      <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 text-center ${className}`}>
+        <User className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
+        <p className="text-gray-500 dark:text-gray-400">No seat data available</p>
+        <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Please try again later</p>
       </div>
+    );
+  }
+
+  return (
+    <div className={`space-y-3 ${className}`}>
+      {/* Heading with minimalist design - optional */}
+      {!hideHeader && (
+        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-2 mb-3">
+          <h3 className="text-sm font-medium">{vehicleName} Seating</h3>
+          <span className="text-xs text-gray-500">
+            {selectedSeats.length}/{maxSelectableSeats} selected
+          </span>
+        </div>
+      )}
       
       {/* Enhanced seat grid */}
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div className="p-3">
+        <div className="p-2 sm:p-3">
           {/* Vehicle outline with minimal design */}
           <div className="relative pb-2 pt-4">
             <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-gray-200 dark:bg-gray-700 text-xs px-2 py-0.5 rounded-full text-gray-600 dark:text-gray-300">
               FRONT
-        </div>
+            </div>
 
             {/* Seat map with improved grid */}
             <div className="flex flex-col items-center">
@@ -263,8 +308,8 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
         </div>
       </div>
       
-      {/* Selected seats summary with clean design */}
-      {selectedSeats.length > 0 && (
+      {/* Selected seats summary with clean design - optional */}
+      {!hideSummary && selectedSeats.length > 0 && (
         <div className="mt-3 pt-2 border-t border-gray-200 dark:border-gray-700">
           <div className="flex items-center justify-between text-sm mb-2">
             <span className="font-medium">Selected Seats</span>
@@ -277,10 +322,10 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
                 <div className="flex items-center">
                   <div className={`
                     w-5 h-5 flex items-center justify-center rounded mr-2 text-xs font-medium
-                    ${seat.type === 'premium' ? 'bg-blue-100 text-blue-800' : 
-                      seat.type === 'vip' ? 'bg-purple-100 text-purple-800' : 
-                      seat.type === 'accessible' ? 'bg-yellow-100 text-yellow-800' : 
-                      'bg-green-100 text-green-800'}
+                    ${seat.type === 'premium' ? `${colors.premium.bg} ${colors.premium.text}` : 
+                      seat.type === 'vip' ? `${colors.vip.bg} ${colors.vip.text}` : 
+                      seat.type === 'accessible' ? `${colors.accessible.bg} ${colors.accessible.text}` : 
+                      `${colors.standard.bg} ${colors.standard.text}`}
                   `}>
                     {seat.number}
                   </div>
@@ -289,34 +334,53 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
                 <button 
                   onClick={() => handleSeatClick(seat.id)}
                   className="text-gray-400 hover:text-red-500 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                  aria-label={`Remove seat ${seat.number}`}
                 >
                   <X size={12} />
                 </button>
               </div>
             ))}
+                </div>
+              </div>
+            )}
+      
+      {/* Legend with minimal design - optional */}
+      {!hideLegend && (
+        <div className="flex justify-center flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 pt-2">
+          <div className="flex items-center">
+            <div className={`w-2.5 h-2.5 ${colors.standard.bg} ${colors.standard.border} rounded-sm mr-1`}></div>
+            <span>Standard</span>
+          </div>
+          <div className="flex items-center">
+            <div className={`w-2.5 h-2.5 ${colors.premium.bg} ${colors.premium.border} rounded-sm mr-1`}></div>
+            <span>Premium</span>
+          </div>
+          <div className="flex items-center">
+            <div className={`w-2.5 h-2.5 ${colors.vip.bg} ${colors.vip.border} rounded-sm mr-1`}></div>
+            <span>VIP</span>
+          </div>
+          <div className="flex items-center">
+            <div className={`w-2.5 h-2.5 ${colors.accessible.bg} ${colors.accessible.border} rounded-sm mr-1`}></div>
+            <span>Accessible</span>
+          </div>
+          <div className="flex items-center">
+            <div className={`w-2.5 h-2.5 bg-gray-300 border border-gray-400 rounded-sm mr-1`}></div>
+            <span>Unavailable</span>
           </div>
         </div>
       )}
-      
-      {/* Legend with minimal design */}
-      <div className="flex justify-center flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 pt-2">
-        <div className="flex items-center">
-          <div className="w-2.5 h-2.5 bg-green-100 border border-green-300 rounded-sm mr-1"></div>
-          <span>Standard</span>
-        </div>
-        <div className="flex items-center">
-          <div className="w-2.5 h-2.5 bg-blue-100 border border-blue-300 rounded-sm mr-1"></div>
-          <span>Premium</span>
-        </div>
-        <div className="flex items-center">
-          <div className="w-2.5 h-2.5 bg-purple-100 border border-purple-300 rounded-sm mr-1"></div>
-          <span>VIP</span>
-        </div>
-        <div className="flex items-center">
-          <div className="w-2.5 h-2.5 bg-yellow-100 border border-yellow-300 rounded-sm mr-1"></div>
-          <span>Accessible</span>
-        </div>
+
+      {/* Optional help text */}
+      {selectedSeats.length === 0 && !hideSummary && !compact && (
+        <div className="flex items-center justify-center text-xs text-gray-500 dark:text-gray-400 gap-1">
+          <Info size={12} />
+          <span>
+            {maxSelectableSeats > 1 
+              ? `Select up to ${maxSelectableSeats} seats` 
+              : 'Select a seat'}
+          </span>
       </div>
+      )}
     </div>
   );
 };
