@@ -67,7 +67,7 @@ export default {
           darkAlternate: '#2B2118', // Dark chocolate
         },
         section: {
-          light: '#F5F0EB',    // Warm off-white
+          
           dark: '#1F1A15',     // Deep umber
         },
         text: {

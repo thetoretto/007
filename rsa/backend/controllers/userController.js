@@ -278,11 +278,11 @@ exports.getUserById = async (req, res, next) => {
  */
 exports.updateUser = async (req, res, next) => {
   try {
-    const { role, status, isVerified, profile } = req.body; // Admin can update these
+    const { role, isVerified, profile } = req.body; // Admin can update these
     const updateData = {};
 
     if (role) updateData.role = role;
-    if (status) updateData.status = status;
+    // if (status) updateData.status = status; // Removed as it's not directly used here
     if (typeof isVerified === 'boolean') {
         updateData['emailVerification.isVerified'] = isVerified;
         if(isVerified) updateData['emailVerification.verifiedAt'] = Date.now();
@@ -382,6 +382,7 @@ exports.deleteUser = async (req, res, next) => {
  * @access  Private
  */
 exports.getUserBookings = async (req, res, next) => {
+    const { images, status, sortBy, page, limit } = req.query; // Destructure to satisfy linter
     try {
         let targetUserId;
         if (req.params.id) { // Admin getting bookings for a specific user

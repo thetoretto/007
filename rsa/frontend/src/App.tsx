@@ -10,6 +10,7 @@ import BecomeMemberPage from './pages/BecomeMemberPage'; // Import the new becom
 import TripsPage from './pages/passenger/TripsPage';
 import TripDetailsPage from './pages/passenger/TripDetailsPage'; // Import the new TripDetailsPage
 import DemoPage from './pages/passenger/DemoPage'; // Import DemoPage
+import PassengerDashboard from './pages/passenger/PassengerDashboard'; // Import PassengerDashboard
 import DriverDashboard from './pages/driver/DriverDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import useAuthStore from './store/authStore';
@@ -94,11 +95,15 @@ function App() {
             
             {/* Passenger routes */}
             <Route 
+              path="/passenger/dashboard" 
+              element={<ProtectedRoute element={<PassengerDashboard />} allowedRoles={['passenger']} />} 
+            />
+            <Route 
               path="/passenger/trips" 
               element={<ProtectedRoute element={<TripsPage />} allowedRoles={['passenger']} />} 
             />
             <Route 
-              path="/trip/:tripId"
+              path="/passenger/trips/:tripId"
               element={<ProtectedRoute element={<TripDetailsPage />} allowedRoles={['passenger', 'driver', 'admin']} />}
             />
             

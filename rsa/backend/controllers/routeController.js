@@ -217,7 +217,7 @@ exports.deleteRoute = async (req, res, next) => {
  */
 exports.searchRoutes = async (req, res, next) => {
   try {
-    const { originId, destinationId, date, minSeats, vehicleType, direct } = req.query;
+    const { originId, destinationId, date, minSeats, vehicleType, direct, sortBy: _sortBy, page: _page, limit: _limit } = req.query;
     let queryFilter = { status: 'active' }; // Only search active routes
 
     if (originId) queryFilter.origin = originId;

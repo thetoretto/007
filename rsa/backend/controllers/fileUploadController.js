@@ -1,7 +1,7 @@
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { AppError, ValidationError } = require('../middleware/errorHandler');
+const { AppError, ValidationError, NotFoundError } = require('../middleware/errorHandler');
 const { createLogger } = require('../utils/logger');
 const User = require('../models/User'); // For updating user avatar
 const Vehicle = require('../models/Vehicle'); // For updating vehicle images
@@ -12,7 +12,7 @@ const logger = createLogger('FileUploadController');
 
 // --- Multer Configuration for Local Storage ---
 // Define storage for different types of uploads
-const storageConfig = (destinationPath, allowedMimes, maxFileSizeMB = 5) => {
+const storageConfig = (destinationPath) => {
     // Ensure destination directory exists
     const absoluteDestinationPath = path.join(__dirname, '..', 'public', 'uploads', destinationPath);
     if (!fs.existsSync(absoluteDestinationPath)) {

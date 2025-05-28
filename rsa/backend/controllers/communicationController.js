@@ -15,7 +15,7 @@ const logger = createLogger('CommunicationController');
  */
 exports.sendDirectEmail = async (req, res, next) => {
     try {
-        const { to, subject, body, htmlBody, templateId, templateData } = req.body;
+        const { to, subject, body, htmlBody, templateId } = req.body; // Removed templateData as it's not directly used here
         const adminUserId = req.user.id;
 
         if (!to || !subject || (!body && !htmlBody && !templateId)) {
@@ -27,7 +27,7 @@ exports.sendDirectEmail = async (req, res, next) => {
             text: body,
             html: htmlBody,
             // template: templateId, // If using a template engine integrated with emailHandler
-            // context: templateData, // Data for the template
+            // context: templateData, // Data for the template (removed as it's not directly used here)
         };
 
         let recipients = Array.isArray(to) ? to : [to];
@@ -40,7 +40,7 @@ exports.sendDirectEmail = async (req, res, next) => {
         } else if (recipients.length > 1) {
             // For bulk, consider BCC or individual sends depending on privacy and email provider limits
             // This example assumes sendBulkEmail handles multiple recipients appropriately (e.g., individual sends or BCC)
-            await sendBulkEmail(recipients, emailOptions.subject, emailOptions.text, emailOptions.html /*, templateId, templateData */);
+            await sendBulkEmail(recipients, emailOptions.subject, emailOptions.text, emailOptions.html /*, templateId */); // Removed templateData
         }
 
         logger.info('Direct email sent by admin', { adminUserId, recipientsCount: recipients.length, subject });

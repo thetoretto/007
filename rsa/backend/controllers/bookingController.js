@@ -1,12 +1,12 @@
 const Booking = require('../models/Booking');
-const User = require('../models/User');
+// const User = require('../models/User'); // Unused import
 const Route = require('../models/Route');
 const Trip = require('../models/Trip');
 const Payment = require('../models/Payment'); // For payment integration
 const { AppError, ValidationError, NotFoundError, AuthorizationError } = require('../middleware/errorHandler');
 const { createLogger } = require('../utils/logger');
 const APIFeatures = require('../utils/apiFeatures');
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose'); // Unused import
 
 const logger = createLogger('BookingController');
 
@@ -17,16 +17,7 @@ const logger = createLogger('BookingController');
  */
 exports.createBooking = async (req, res, next) => {
   try {
-    const {
-      routeId,
-      tripId, // Optional: if booking for a pre-existing specific trip instance
-      passengers, // Array of passenger details
-      scheduledDateTime, // If booking a route, not a specific trip instance
-      pickupLocation, // Can override route's default
-      dropoffLocation, // Can override route's default
-      specialRequirements,
-      paymentMethodDetails // e.g., { type: 'card', token: 'tok_xxxx' }
-    } = req.body;
+    const { routeId, tripId, passengers, pickupLocation, dropoffLocation, requestedDateTime, paymentMethodDetails, specialRequirements } = req.body;
     const userId = req.user.id;
 
     if (!routeId && !tripId) {
@@ -52,12 +43,12 @@ exports.createBooking = async (req, res, next) => {
     } else {
         routeForBooking = await Route.findById(routeId).where({ status: 'active' });
         if (!routeForBooking) return next(new NotFoundError(`Active route not found with ID: ${routeId}`, 404));
-        if (!scheduledDateTime) return next(new ValidationError('Scheduled date and time are required when booking a route directly.', 400));
+        if (!requestedDateTime) return next(new ValidationError('Scheduled date and time are required when booking a route directly.', 400));
         
-        if (!routeForBooking.isAvailable(new Date(scheduledDateTime))) {
+        if (!routeForBooking.isAvailable(new Date(requestedDateTime))) {
             return next(new AppError('The selected route is not available at the scheduled date/time.', 400));
         }
-        tripDetails.scheduledDeparture = new Date(scheduledDateTime);
+        tripDetails.scheduledDeparture = new Date(requestedDateTime);
     }
 
     const numPassengers = (passengers ? passengers.length : 0) + 1; // +1 for the main user
@@ -111,7 +102,7 @@ exports.createBooking = async (req, res, next) => {
 
             logger.info('Simulated payment successful for booking', { bookingIdProvisional: newBooking.bookingId, paymentId: paymentRecord._id });
         } catch (paymentError) {
-            logger.error('Simulated payment processing failed', { error: paymentError.message, userId, routeId: routeForBooking._id });
+            logger.error('Simulated payment processing failed', { error: paymentError.message, userId: req.user.id, routeId: routeForBooking._id });
             newBooking.status = 'payment_failed';
             // Don't save booking if payment fails critically, or save with 'payment_failed'
             // For this example, we'll save it as payment_failed
@@ -150,7 +141,7 @@ exports.createBooking = async (req, res, next) => {
 
     // TODO: Send booking confirmation email/SMS
 
-    logger.info('Booking created', { bookingId: newBooking._id, userId, routeId: routeForBooking._id, status: newBooking.status });
+    logger.info('Booking created', { bookingId: newBooking._id, userId: req.user.id, routeId: routeForBooking._id, status: newBooking.status });
     res.status(201).json({
       success: true,
       message: `Booking ${newBooking.status}. Confirmation ID: ${newBooking.confirmationId || 'N/A'}`,

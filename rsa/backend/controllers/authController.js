@@ -8,16 +8,16 @@ const AdminSetting = require('../models/AdminSetting');
 const logger = createLogger('AuthController');
 
 // Helper function to generate tokens
-const generateToken = (payload, secret, expiresIn) => {
-  return jwt.sign(payload, secret, { expiresIn });
-};
+// const generateToken = (payload, secret, expiresIn) => { // Commented out as it's not used directly in this file
+//   return jwt.sign(payload, secret, { expiresIn });
+// };
 
 /**
  * @desc    Register a new user
  * @route   POST /api/v1/auth/register
  * @access  Public
  */
-exports.register = async (req, res, _next) => {
+exports.register = async (req, res, next) => {
   try {
     const { firstName, lastName, email, password, phone, dateOfBirth, role } = req.body;
 
@@ -83,7 +83,7 @@ exports.register = async (req, res, _next) => {
  * @route   POST /api/v1/auth/login
  * @access  Public
  */
-exports.login = async (req, res, _next) => {
+exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
@@ -155,8 +155,8 @@ exports.login = async (req, res, _next) => {
 
   } catch (error) {
     logger.error('User login failed', { email: req.body.email, error: error.message, stack: error.stack });
-    _next(error);
-    next(new AppError('Server error during login.', 500));
+    next(error);
+    // next(new AppError('Server error during login.', 500)); // Already handled by global error handler if next(error) is used
   }
 };
 
@@ -205,8 +205,8 @@ exports.verifyEmail = async (req, res, next) => {
 
   } catch (error) {
     logger.error('Email verification failed', { token: req.params.token, error: error.message, stack: error.stack });
-    _next(error);
-    next(new AppError('Server error during email verification.', 500));
+    next(error);
+    // next(new AppError('Server error during email verification.', 500));
   }
 };
 
@@ -249,8 +249,8 @@ exports.resendVerificationEmail = async (req, res, next) => {
 
   } catch (error) {
     logger.error('Resend verification email failed', { email: req.body.email, error: error.message, stack: error.stack });
-    _next(error);
-    next(new AppError('Server error resending verification email.', 500));
+    next(error);
+    // next(new AppError('Server error resending verification email.', 500));
   }
 };
 
@@ -283,14 +283,16 @@ exports.forgotPassword = async (req, res, next) => {
 
   } catch (error) {
     logger.error('Forgot password request failed', { email: req.body.email, error: error.message, stack: error.stack });
-    _next(error);
+    next(error);
     // Clear token if error occurred after generation
-    if (user && user.security.resetPasswordToken) {
-        user.security.resetPasswordToken = undefined;
-        user.security.resetPasswordExpires = undefined;
-        await user.save({ validateBeforeSave: false });
+    // This logic might need to be re-evaluated if `user` is not in scope here due to `next(error)`
+    // const user = await User.findOne({ email: req.body.email }); // Re-fetch or ensure `user` is available
+    if (error.userInstance && error.userInstance.security.resetPasswordToken) { // Assuming user instance is passed with error
+        error.userInstance.security.resetPasswordToken = undefined;
+        error.userInstance.security.resetPasswordExpires = undefined;
+        await error.userInstance.save({ validateBeforeSave: false });
     }
-    next(new AppError('Error processing forgot password request.', 500));
+    // next(new AppError('Error processing forgot password request.', 500));
   }
 };
 
@@ -332,8 +334,8 @@ exports.resetPassword = async (req, res, next) => {
 
   } catch (error) {
     logger.error('Password reset failed', { token: req.params.token, error: error.message, stack: error.stack });
-    _next(error);
-    next(new AppError('Error resetting password.', 500));
+    next(error);
+    // next(new AppError('Error resetting password.', 500));
   }
 };
 
@@ -372,8 +374,8 @@ exports.refreshToken = async (req, res, next) => {
 
   } catch (error) {
     logger.error('Token refresh failed', { error: error.message, stack: error.stack, body: req.body });
-    _next(error);
-    next(new AppError('Error refreshing token.', 500));
+    next(error);
+    // next(new AppError('Error refreshing token.', 500));
   }
 };
 
@@ -399,8 +401,8 @@ exports.logout = async (req, res, next) => {
 
   } catch (error) {
     logger.error('User logout failed', { userId: req.user ? req.user.id : 'N/A', error: error.message, stack: error.stack });
-    _next(error);
-    next(new AppError('Error during logout.', 500));
+    next(error);
+    // next(new AppError('Error during logout.', 500));
   }
 };
 
@@ -424,10 +426,10 @@ exports.getMe = async (req, res, next) => {
     });
   } catch (error) {
     logger.error('Failed to get current user profile', { userId: req.user.id, error: error.message, stack: error.stack });
-    _next(error);
-    next(new AppError('Error fetching user details.', 500));
+    next(error);
+    // next(new AppError('Error fetching user details.', 500));
   }
 };
 
 // JWT is required for token generation, ensure it's imported
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');

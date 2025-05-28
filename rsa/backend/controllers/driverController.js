@@ -1,6 +1,6 @@
 const Driver = require('../models/Driver');
 const User = require('../models/User'); // For linking Driver profile to a User account
-const Vehicle = require('../models/Vehicle'); // For managing vehicle assignments
+// const Vehicle = require('../models/Vehicle'); // For managing vehicle assignments
 const { AppError, ValidationError, NotFoundError, AuthorizationError } = require('../middleware/errorHandler');
 const { createLogger } = require('../utils/logger');
 const APIFeatures = require('../utils/apiFeatures');
@@ -182,7 +182,7 @@ exports.updateDriver = async (req, res, next) => {
     // Fields a driver can update themselves (example)
     const selfUpdatableFields = ['personalDetails.phone', 'personalDetails.address', 'emergencyContacts', 'availability', 'vehiclePreferences', 'bankDetails.accountHolderName']; // Be restrictive
     // Fields only admin can update (example)
-    const adminOnlyFields = ['status', 'performanceMetrics.rating', 'licenseDetails.status'];
+    // const adminOnlyFields = ['status', 'performanceMetrics.rating', 'licenseDetails.status'];
 
     if (!isAdmin) {
         for (const key in updateData) {

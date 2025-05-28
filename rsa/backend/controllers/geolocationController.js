@@ -1,7 +1,7 @@
 const Driver = require('../models/Driver');
 const Vehicle = require('../models/Vehicle');
 const Trip = require('../models/Trip'); // If live trip tracking is involved
-const Hotpoint = require('../models/Hotpoint');
+// const Hotpoint = require('../models/Hotpoint');
 const { AppError } = require('../middleware/errorHandler');
 const { createLogger } = require('../utils/logger');
 // const { calculateDistance } = require('../utils/geoUtils'); // Example utility
@@ -214,8 +214,8 @@ exports.updateVehicleLocation = async (req, res, next) => {
  * @access  Private (User associated with trip, Admin)
  */
 exports.getTripLiveLocation = async (req, res, next) => {
+  const { id: tripId } = req.params;
     try {
-        const { tripId } = req.params;
         const trip = await Trip.findById(tripId).populate('driver', 'currentLocation user').populate('vehicle', 'currentLocation');
 
         if (!trip) {

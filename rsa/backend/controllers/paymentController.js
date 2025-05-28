@@ -1,7 +1,8 @@
 const Payment = require('../models/Payment');
 const Booking = require('../models/Booking');
-const { AppError, ValidationError, NotFoundError, AuthorizationError } = require('../utils/errors');
-const createLogger = require('../utils/logger');
+const { AppError, ValidationError, NotFoundError, AuthorizationError } = require('../middleware/errorHandler');
+const User = require('../models/User');
+const { createLogger } = require('../utils/logger');
 const APIFeatures = require('../utils/apiFeatures');
 // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // Example for Stripe integration
 

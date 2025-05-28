@@ -1,10 +1,10 @@
 const User = require('../models/User');
 const Trip = require('../models/Trip');
 const Booking = require('../models/Booking');
-// const Vehicle = require('../models/Vehicle'); // Removed as unused
+const Vehicle = require('../models/Vehicle');
 const Driver = require('../models/Driver');
 const Payment = require('../models/Payment');
-// const Route = require('../models/Route'); // Removed as unused
+const Route = require('../models/Route');
 const Review = require('../models/Review');
 const { AppError } = require('../middleware/errorHandler');
 const { createLogger } = require('../utils/logger');

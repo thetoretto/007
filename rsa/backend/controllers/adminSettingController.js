@@ -9,7 +9,7 @@ const logger = createLogger('AdminSettingController');
  * @route   GET /api/v1/admin/settings
  * @access  Private (SuperAdmin/Admin)
  */
-exports.getAllSettings = async (req, res, _next) => {
+exports.getAllSettings = async (req, res, next) => {
   try {
     const settings = await AdminSetting.find().sort('group key');
     logger.info('Retrieved all admin settings', { count: settings.length, adminUserId: req.user.id });
@@ -20,7 +20,7 @@ exports.getAllSettings = async (req, res, _next) => {
     });
   } catch (error) {
     logger.error('Error getting all admin settings', { adminUserId: req.user.id, error: error.message, stack: error.stack });
-    _next(new AppError('Server error while retrieving settings.', 500));
+    next(new AppError('Server error while retrieving settings.', 500));
   }
 };
 
@@ -29,7 +29,7 @@ exports.getAllSettings = async (req, res, _next) => {
  * @route   GET /api/v1/admin/settings/:key
  * @access  Private (SuperAdmin/Admin)
  */
-exports.getSettingByKey = async (req, res, _next) => {
+exports.getSettingByKey = async (req, res, next) => {
   try {
     const setting = await AdminSetting.findOne({ key: req.params.key });
     if (!setting) {
@@ -42,7 +42,7 @@ exports.getSettingByKey = async (req, res, _next) => {
     });
   } catch (error) {
     logger.error(`Error getting admin setting by key ${req.params.key}`, { key: req.params.key, adminUserId: req.user.id, error: error.message, stack: error.stack });
-    _next(new AppError('Server error while retrieving setting.', 500));
+    next(new AppError('Server error while retrieving setting.', 500));
   }
 };
 
@@ -51,7 +51,7 @@ exports.getSettingByKey = async (req, res, _next) => {
  * @route   PUT /api/v1/admin/settings/:key
  * @access  Private (SuperAdmin)
  */
-exports.updateSetting = async (req, res, _next) => {
+exports.updateSetting = async (req, res, next) => {
   try {
     const { value } = req.body;
     if (value === undefined) {
@@ -91,7 +91,7 @@ exports.updateSetting = async (req, res, _next) => {
     });
   } catch (error) {
     logger.error(`Error updating admin setting ${req.params.key}`, { key: req.params.key, adminUserId: req.user.id, error: error.message, stack: error.stack, body: req.body });
-    _next(new AppError('Server error while updating setting.', 500));
+    next(new AppError('Server error while updating setting.', 500));
   }
 };
 
@@ -149,7 +149,7 @@ exports.createSetting = async (req, res, next) => {
  * @route   GET /api/v1/admin/settings/group/:groupName
  * @access  Private (SuperAdmin/Admin)
  */
-exports.getSettingsByGroup = async (req, res, _next) => {
+exports.getSettingsByGroup = async (req, res, next) => {
     try {
         const groupName = req.params.groupName;
         const settings = await AdminSetting.find({ group: groupName }).sort('key');
@@ -168,7 +168,7 @@ exports.getSettingsByGroup = async (req, res, _next) => {
         });
     } catch (error) {
         logger.error(`Error getting admin settings by group ${req.params.groupName}`, { group: req.params.groupName, adminUserId: req.user.id, error: error.message, stack: error.stack });
-        _next(new AppError('Server error while retrieving settings by group.', 500));
+        next(new AppError('Server error while retrieving settings by group.', 500));
     }
 };
 
@@ -178,7 +178,7 @@ exports.getSettingsByGroup = async (req, res, _next) => {
  * @route   GET /api/v1/admin/settings/groups
  * @access  Private (SuperAdmin/Admin)
  */
-exports.getSettingGroups = async (req, res, _next) => {
+exports.getSettingGroups = async (req, res, next) => {
     try {
         const groups = await AdminSetting.distinct('group');
         logger.info('Retrieved distinct admin setting groups', { count: groups.length, adminUserId: req.user.id });
@@ -189,6 +189,6 @@ exports.getSettingGroups = async (req, res, _next) => {
         });
     } catch (error) {
         logger.error('Error getting admin setting groups', { adminUserId: req.user.id, error: error.message, stack: error.stack });
-        _next(new AppError('Server error while retrieving setting groups.', 500));
+        next(new AppError('Server error while retrieving setting groups.', 500));
     }
 };

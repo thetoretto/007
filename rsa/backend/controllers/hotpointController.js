@@ -121,7 +121,7 @@ exports.getHotpointById = async (req, res, next) => {
  */
 exports.updateHotpoint = async (req, res, next) => {
   try {
-    const { name, description, location, address, type, category, amenities, operatingHours, contact, images, tags, status } = req.body;
+    const { location, tags } = req.body;
     
     const updateData = { ...req.body };
     if (location && location.coordinates) {
@@ -259,7 +259,7 @@ exports.getHotpointsNearby = async (req, res, next) => {
  */
 exports.searchHotpoints = async (req, res, next) => {
   try {
-    const { q, category, type, tags, amenities, rating, sortBy, page, limit } = req.query;
+    const { q, category, type, tags, amenities, rating } = req.query;
     let queryFilter = { status: { $ne: 'deleted' } };
 
     if (q) {

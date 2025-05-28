@@ -11,7 +11,7 @@ const logger = createLogger('AuditLogController');
  * @access  Private (Admin - or specific roles with audit permissions)
  * @query   userId, actionType, entityType, entityId, startDate, endDate, page, limit, sortBy, sortOrder
  */
-exports.getAuditLogs = async (req, res, _next) => {
+exports.getAuditLogs = async (req, res, next) => {
     try {
         const { 
             userId, 
@@ -72,7 +72,7 @@ exports.getAuditLogs = async (req, res, _next) => {
 
     } catch (error) {
         logger.error('Error retrieving audit logs', { adminUserId: req.user.id, error: error.message, stack: error.stack, query: req.query });
-        _next(new AppError('Server error while retrieving audit logs.', 500));
+        next(new AppError('Server error while retrieving audit logs.', 500));
     }
 };
 
@@ -81,7 +81,7 @@ exports.getAuditLogs = async (req, res, _next) => {
  * @route   GET /api/v1/admin/audit-logs/:id
  * @access  Private (Admin)
  */
-exports.getAuditLogById = async (req, res, _next) => {
+exports.getAuditLogById = async (req, res, next) => {
     try {
         const logEntry = await AuditLog.findById(req.params.id)
             .populate('user', 'profile.firstName profile.lastName email');
@@ -96,7 +96,7 @@ exports.getAuditLogById = async (req, res, _next) => {
 
     } catch (error) {
         logger.error(`Error retrieving audit log by ID ${req.params.id}`, { logId: req.params.id, adminUserId: req.user.id, error: error.message, stack: error.stack });
-        _next(new AppError('Server error while retrieving audit log.', 500));
+        next(new AppError('Server error while retrieving audit log.', 500));
     }
 };
 

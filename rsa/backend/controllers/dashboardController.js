@@ -23,7 +23,7 @@ exports.getDashboardStats = async (req, res, next) => {
     try {
         const today = moment().startOf('day');
         const startOfMonth = moment().startOf('month');
-        const startOfYear = moment().startOf('year');
+
 
         // User Stats
         const totalUsers = await User.countDocuments();
@@ -130,7 +130,7 @@ exports.getDashboardStats = async (req, res, next) => {
  */
 exports.getChartData = async (req, res, next) => {
     try {
-        const { chartType, timeRange, groupBy } = req.query; // e.g., chartType=userSignups, timeRange=last30days, groupBy=day
+        const { chartType, timeRange } = req.query; // e.g., chartType=userSignups, timeRange=last30days
 
         let data = {};
         const endDate = moment().endOf('day');
