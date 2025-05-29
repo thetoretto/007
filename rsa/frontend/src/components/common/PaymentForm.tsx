@@ -216,13 +216,13 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
       <h3 className="text-lg font-semibold mb-4">{title}</h3>
       
       {/* Payment method selection */}
-      <div className="grid grid-cols-1 gap-3 mb-6">
+      <div className="grid grid-cols-1 gap-3 mb-5 sm:mb-6">
         <div className="grid grid-cols-3 gap-2 sm:gap-3">
           {availableMethods.includes('airtel') && (
             <button
               type="button"
               onClick={() => setSelectedMethod('airtel')}
-              className={`p-3 sm:p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
+              className={`p-2.5 sm:p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
                 selectedMethod === 'airtel' 
                   ? 'border-accent-kente-gold bg-accent-kente-gold/10 shadow-sm' 
                   : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
@@ -230,10 +230,10 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               disabled={isProcessing}
               aria-pressed={selectedMethod === 'airtel'}
             >
-              <div className="w-10 h-10 sm:w-14 sm:h-14 flex items-center justify-center bg-red-100 dark:bg-red-900/30 rounded-full mb-2 sm:mb-3">
-                <Smartphone className="h-5 w-5 sm:h-7 sm:w-7 text-red-600 dark:text-red-400" />
+              <div className="w-9 h-9 sm:w-12 sm:h-12 flex items-center justify-center bg-red-100 dark:bg-red-900/30 rounded-full mb-2">
+                <Smartphone className="h-5 w-5 sm:h-6 sm:w-6 text-red-600 dark:text-red-400" />
               </div>
-              <span className="font-medium text-sm sm:text-base">{airtelLabel}</span>
+              <span className="font-medium text-xs sm:text-sm text-center">{airtelLabel}</span>
               {selectedMethod === 'airtel' && (
                 <div className="mt-1 sm:mt-2 bg-accent-kente-gold text-white text-xs rounded-full px-2 py-0.5 flex items-center">
                   <Check className="h-3 w-3 mr-1" /> Selected
@@ -246,7 +246,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             <button
               type="button"
               onClick={() => setSelectedMethod('momo')}
-              className={`p-3 sm:p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
+              className={`p-2.5 sm:p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
                 selectedMethod === 'momo' 
                   ? 'border-accent-kente-gold bg-accent-kente-gold/10 shadow-sm' 
                   : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
@@ -254,10 +254,10 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               disabled={isProcessing}
               aria-pressed={selectedMethod === 'momo'}
             >
-              <div className="w-10 h-10 sm:w-14 sm:h-14 flex items-center justify-center bg-yellow-100 dark:bg-yellow-900/30 rounded-full mb-2 sm:mb-3">
-                <Wallet className="h-5 w-5 sm:h-7 sm:w-7 text-yellow-600 dark:text-yellow-400" />
+              <div className="w-9 h-9 sm:w-12 sm:h-12 flex items-center justify-center bg-yellow-100 dark:bg-yellow-900/30 rounded-full mb-2">
+                <Wallet className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-600 dark:text-yellow-400" />
               </div>
-              <span className="font-medium text-sm sm:text-base">{momoLabel}</span>
+              <span className="font-medium text-xs sm:text-sm text-center">{momoLabel}</span>
               {selectedMethod === 'momo' && (
                 <div className="mt-1 sm:mt-2 bg-accent-kente-gold text-white text-xs rounded-full px-2 py-0.5 flex items-center">
                   <Check className="h-3 w-3 mr-1" /> Selected
@@ -270,7 +270,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             <button
               type="button"
               onClick={() => setSelectedMethod('card')}
-              className={`p-3 sm:p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
+              className={`p-2.5 sm:p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
                 selectedMethod === 'card' 
                   ? 'border-accent-kente-gold bg-accent-kente-gold/10 shadow-sm' 
                   : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
@@ -278,10 +278,10 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               disabled={isProcessing}
               aria-pressed={selectedMethod === 'card'}
             >
-              <div className="w-10 h-10 sm:w-14 sm:h-14 flex items-center justify-center bg-blue-100 dark:bg-blue-900/30 rounded-full mb-2 sm:mb-3">
-                <CreditCard className="h-5 w-5 sm:h-7 sm:w-7 text-blue-600 dark:text-blue-400" />
+              <div className="w-9 h-9 sm:w-12 sm:h-12 flex items-center justify-center bg-blue-100 dark:bg-blue-900/30 rounded-full mb-2">
+                <CreditCard className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600 dark:text-blue-400" />
               </div>
-              <span className="font-medium text-sm sm:text-base">{cardLabel}</span>
+              <span className="font-medium text-xs sm:text-sm text-center">{cardLabel}</span>
               {selectedMethod === 'card' && (
                 <div className="mt-1 sm:mt-2 bg-accent-kente-gold text-white text-xs rounded-full px-2 py-0.5 flex items-center">
                   <Check className="h-3 w-3 mr-1" /> Selected
@@ -294,7 +294,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
       
       {/* Mobile Money Payment Form (Airtel or MoMo) */}
       {(selectedMethod === 'airtel' || selectedMethod === 'momo') && (
-        <div className="space-y-4 mb-6">
+        <div className="space-y-4 mb-5 sm:mb-6">
           <div>
             <label htmlFor="phoneNumber" className="block text-sm font-medium mb-1">
               Phone Number
@@ -306,19 +306,19 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               value={mobileDetails.phoneNumber}
               onChange={handleMobileInputChange}
               placeholder="Enter phone number"
-              className={`w-full p-3 border ${errors.phoneNumber ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring focus:ring-accent-kente-gold/20`}
+              className={`w-full p-2.5 sm:p-3 text-sm border ${errors.phoneNumber ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring focus:ring-accent-kente-gold/20`}
               disabled={isProcessing}
               aria-invalid={!!errors.phoneNumber}
               aria-describedby={errors.phoneNumber ? "phoneNumber-error" : undefined}
             />
             {errors.phoneNumber && (
-              <p id="phoneNumber-error" className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
-                <AlertCircle className="h-3.5 w-3.5 mr-1" />
+              <p id="phoneNumber-error" className="mt-1 text-xs sm:text-sm text-red-500 dark:text-red-400 flex items-center">
+                <AlertCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1" />
                 {errors.phoneNumber}
               </p>
             )}
             <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 flex items-center">
-              <Info className="h-3.5 w-3.5 mr-1" />
+              <Info className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1" />
               You'll receive a prompt on your phone to confirm payment
             </p>
           </div>
@@ -334,14 +334,14 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               value={mobileDetails.fullName}
               onChange={handleMobileInputChange}
               placeholder="Enter account holder's name"
-              className={`w-full p-3 border ${errors.fullName ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring-accent-kente-gold`}
+              className={`w-full p-2.5 sm:p-3 text-sm border ${errors.fullName ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring-accent-kente-gold`}
               disabled={isProcessing}
               aria-invalid={!!errors.fullName}
               aria-describedby={errors.fullName ? "fullName-error" : undefined}
             />
             {errors.fullName && (
-              <p id="fullName-error" className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
-                <AlertCircle className="h-3.5 w-3.5 mr-1" />
+              <p id="fullName-error" className="mt-1 text-xs sm:text-sm text-red-500 dark:text-red-400 flex items-center">
+                <AlertCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1" />
                 {errors.fullName}
               </p>
             )}
@@ -351,7 +351,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
       
       {/* Credit Card Payment Form */}
       {selectedMethod === 'card' && (
-        <div className="space-y-4 mb-6">
+        <div className="space-y-4 mb-5 sm:mb-6">
           <div>
             <label htmlFor="number" className="block text-sm font-medium mb-1">
               Card Number
@@ -364,14 +364,14 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               onChange={handleCardNumberChange}
               placeholder="1234 5678 9012 3456"
               maxLength={19}
-              className={`w-full p-3 border ${errors.cardNumber ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring-accent-kente-gold`}
+              className={`w-full p-2.5 sm:p-3 text-sm border ${errors.cardNumber ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring-accent-kente-gold`}
               disabled={isProcessing}
               aria-invalid={!!errors.cardNumber}
               aria-describedby={errors.cardNumber ? "cardNumber-error" : undefined}
             />
             {errors.cardNumber && (
-              <p id="cardNumber-error" className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
-                <AlertCircle className="h-3.5 w-3.5 mr-1" />
+              <p id="cardNumber-error" className="mt-1 text-xs sm:text-sm text-red-500 dark:text-red-400 flex items-center">
+                <AlertCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1" />
                 {errors.cardNumber}
               </p>
             )}
@@ -388,20 +388,20 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               value={cardDetails.name}
               onChange={handleCardInputChange}
               placeholder="John Doe"
-              className={`w-full p-3 border ${errors.cardName ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring-accent-kente-gold`}
+              className={`w-full p-2.5 sm:p-3 text-sm border ${errors.cardName ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring-accent-kente-gold`}
               disabled={isProcessing}
               aria-invalid={!!errors.cardName}
               aria-describedby={errors.cardName ? "cardName-error" : undefined}
             />
             {errors.cardName && (
-              <p id="cardName-error" className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
-                <AlertCircle className="h-3.5 w-3.5 mr-1" />
+              <p id="cardName-error" className="mt-1 text-xs sm:text-sm text-red-500 dark:text-red-400 flex items-center">
+                <AlertCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1" />
                 {errors.cardName}
               </p>
             )}
           </div>
           
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
             <div>
               <label htmlFor="expiry" className="block text-sm font-medium mb-1">
                 Expiry Date
@@ -414,14 +414,14 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                 onChange={handleExpiryChange}
                 placeholder="MM/YY"
                 maxLength={5}
-                className={`w-full p-3 border ${errors.cardExpiry ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring-accent-kente-gold`}
+                className={`w-full p-2.5 sm:p-3 text-sm border ${errors.cardExpiry ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring-accent-kente-gold`}
                 disabled={isProcessing}
                 aria-invalid={!!errors.cardExpiry}
                 aria-describedby={errors.cardExpiry ? "cardExpiry-error" : undefined}
               />
               {errors.cardExpiry && (
-                <p id="cardExpiry-error" className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
-                  <AlertCircle className="h-3.5 w-3.5 mr-1" />
+                <p id="cardExpiry-error" className="mt-1 text-xs sm:text-sm text-red-500 dark:text-red-400 flex items-center">
+                  <AlertCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1" />
                   {errors.cardExpiry}
                 </p>
               )}
@@ -439,14 +439,14 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                 onChange={handleCardInputChange}
                 placeholder="123"
                 maxLength={4}
-                className={`w-full p-3 border ${errors.cardCvv ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring-accent-kente-gold`}
+                className={`w-full p-2.5 sm:p-3 text-sm border ${errors.cardCvv ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring-accent-kente-gold`}
                 disabled={isProcessing}
                 aria-invalid={!!errors.cardCvv}
                 aria-describedby={errors.cardCvv ? "cardCvv-error" : undefined}
               />
               {errors.cardCvv && (
-                <p id="cardCvv-error" className="mt-1 text-sm text-red-500 dark:text-red-400 flex items-center">
-                  <AlertCircle className="h-3.5 w-3.5 mr-1" />
+                <p id="cardCvv-error" className="mt-1 text-xs sm:text-sm text-red-500 dark:text-red-400 flex items-center">
+                  <AlertCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1" />
                   {errors.cardCvv}
                 </p>
               )}
@@ -457,20 +457,20 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
       
       {/* Payment Summary */}
       {showTotalAmount && (
-        <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-6">
-          <div className="flex justify-between items-center font-medium">
-            <span>Total Amount:</span>
-            <span className="text-lg text-accent-kente-gold">{currency}{amount.toFixed(2)}</span>
+        <div className="bg-gray-50 dark:bg-gray-700 p-3 sm:p-4 rounded-lg mb-5 sm:mb-6">
+          <div className="flex justify-between items-center">
+            <span className="font-medium text-sm sm:text-base">Total Amount:</span>
+            <span className="text-base sm:text-lg text-accent-kente-gold font-medium">{currency}{amount.toFixed(2)}</span>
           </div>
         </div>
       )}
       
       {/* Action Buttons */}
-      <div className="flex gap-3">
+      <div className="flex flex-col sm:flex-row gap-3">
         <button
           type="button"
           onClick={onCancel}
-          className="flex items-center justify-center flex-1 py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-lg font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+          className="flex items-center justify-center flex-1 py-2.5 sm:py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors order-2 sm:order-1"
           disabled={isProcessing}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
@@ -481,10 +481,10 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
           type="button"
           onClick={handleSubmit}
           disabled={!selectedMethod || isProcessing}
-          className={`flex-1 py-3 px-4 rounded-lg font-medium text-white relative flex items-center justify-center transition-all ${
+          className={`flex-1 py-2.5 sm:py-3 px-4 rounded-lg font-medium text-sm text-white relative flex items-center justify-center transition-all order-1 sm:order-2 ${
             selectedMethod && !isProcessing
               ? 'bg-accent-kente-gold hover:bg-accent-kente-gold-dark shadow-sm' 
-              : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed'
+              : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed opacity-70'
           }`}
         >
           {isProcessing && showProcessingIndicator ? (
@@ -492,8 +492,8 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               <span className="opacity-0">{payLabel} {currency}{amount.toFixed(2)}</span>
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="relative">
-                  <div className="w-6 h-6 border-2 border-white/30 rounded-full"></div>
-                  <div className="absolute top-0 left-0 w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <div className="w-5 h-5 sm:w-6 sm:h-6 border-2 border-white/30 rounded-full"></div>
+                  <div className="absolute top-0 left-0 w-5 h-5 sm:w-6 sm:h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
                 </div>
               </div>
             </>

@@ -133,28 +133,28 @@ const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({
           </button>
         </div>
         
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {/* Order summary */}
-          <div className="mb-6">
-            <h3 className="text-lg font-medium mb-3 text-accent-black dark:text-text-inverse">Order Summary</h3>
-            <div className="bg-gray-50 dark:bg-background-dark rounded-lg p-4 border border-gray-200 dark:border-primary-900">
+          <div className="mb-5 sm:mb-6">
+            <h3 className="text-lg font-medium mb-2 sm:mb-3 text-accent-black dark:text-text-inverse">Order Summary</h3>
+            <div className="bg-gray-50 dark:bg-background-dark rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-primary-900 max-h-[40vh] sm:max-h-[50vh] overflow-y-auto">
               {trip && (
-                <div className="mb-4 pb-3 border-b border-gray-200 dark:border-primary-900">
-                  <h4 className="font-medium mb-2 text-text-base dark:text-text-inverse">Trip Details</h4>
-                  <div className="text-sm">
-                    <div className="flex justify-between mb-1">
+                <div className="mb-3 sm:mb-4 pb-3 border-b border-gray-200 dark:border-primary-900">
+                  <h4 className="font-medium mb-1.5 sm:mb-2 text-sm sm:text-base text-text-base dark:text-text-inverse">Trip Details</h4>
+                  <div className="text-xs sm:text-sm space-y-1">
+                    <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">From:</span>
                       <span className="font-medium text-text-base dark:text-text-inverse">{trip.fromLocation}</span>
                     </div>
-                    <div className="flex justify-between mb-1">
+                    <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">To:</span>
                       <span className="font-medium text-text-base dark:text-text-inverse">{trip.toLocation}</span>
                     </div>
-                    <div className="flex justify-between mb-1">
+                    <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">Date & Time:</span>
                       <span className="font-medium text-text-base dark:text-text-inverse">{new Date(trip.date).toLocaleDateString()} at {trip.time}</span>
                     </div>
-                    <div className="flex justify-between mb-1">
+                    <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">Trip Price:</span>
                       <span className="font-medium text-text-base dark:text-text-inverse">${trip.price.toFixed(2)}</span>
                     </div>
@@ -163,11 +163,11 @@ const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({
               )}
               
               {seats && seats.length > 0 && (
-                <div className="mb-4 pb-3 border-b border-gray-200 dark:border-primary-900">
-                  <h4 className="font-medium mb-2 text-text-base dark:text-text-inverse">Selected Seats</h4>
-                  <div className="text-sm">
+                <div className="mb-3 sm:mb-4 pb-3 border-b border-gray-200 dark:border-primary-900">
+                  <h4 className="font-medium mb-1.5 sm:mb-2 text-sm sm:text-base text-text-base dark:text-text-inverse">Selected Seats</h4>
+                  <div className="text-xs sm:text-sm space-y-1">
                     {seats.map(seat => (
-                      <div key={seat.id} className="flex justify-between mb-1">
+                      <div key={seat.id} className="flex justify-between">
                         <span className="text-gray-600 dark:text-gray-400">Seat {seat.number} ({seat.type})</span>
                         <span className="font-medium text-text-base dark:text-text-inverse">${seat.price.toFixed(2)}</span>
                       </div>
@@ -177,21 +177,21 @@ const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({
               )}
               
               <div>
-                <h4 className="font-medium mb-2 text-text-base dark:text-text-inverse">Price Breakdown</h4>
-                <div className="text-sm">
-                  <div className="flex justify-between mb-1">
+                <h4 className="font-medium mb-1.5 sm:mb-2 text-sm sm:text-base text-text-base dark:text-text-inverse">Price Breakdown</h4>
+                <div className="text-xs sm:text-sm space-y-1">
+                  <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Subtotal:</span>
                     <span className="text-text-base dark:text-text-inverse">${pricing.subtotal.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between mb-1">
+                  <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Service Fee:</span>
                     <span className="text-text-base dark:text-text-inverse">${pricing.serviceFee.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between mb-1">
+                  <div className="flex justify-between">
                     <span className="text-gray-600 dark:text-gray-400">Platform Fee:</span>
                     <span className="text-text-base dark:text-text-inverse">${pricing.platformFee.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between font-medium text-base pt-2 border-t border-gray-200 dark:border-primary-900 mt-2">
+                  <div className="flex justify-between font-medium text-base pt-1 border-t border-gray-200 dark:border-primary-900 mt-1">
                     <span className="text-text-base dark:text-text-inverse">Total:</span>
                     <span className="text-text-base dark:text-text-inverse">${pricing.total.toFixed(2)}</span>
                   </div>
@@ -201,24 +201,20 @@ const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({
           </div>
           
           {/* Payment methods */}
-          <div className="mb-6">
-            <h3 className="text-lg font-medium mb-3 text-accent-black dark:text-text-inverse">Payment Method</h3>
-            <div className="space-y-2">
+          <div className="mb-5 sm:mb-6">
+            <h3 className="text-lg font-medium mb-2 sm:mb-3 text-accent-black dark:text-text-inverse">Payment Method</h3>
+            <div className="space-y-2 sm:space-y-3">
               {paymentMethods.map(method => (
                 <div 
                   key={method.id}
-                  className={`flex items-center p-3 border dark:border-primary-900 rounded-lg cursor-pointer ${
-                    selectedPaymentMethod === method.id 
-                      ? 'border-primary-800 bg-primary-100 dark:border-primary-200 dark:bg-primary-900 dark:bg-opacity-30' 
-                      : 'hover:bg-gray-50 dark:hover:bg-gray-800'
-                  }`}
+                  className={`flex items-center p-2.5 sm:p-3 border dark:border-primary-900 rounded-lg cursor-pointer transition-colors ${selectedPaymentMethod === method.id ? 'border-primary-800 bg-primary-100 dark:border-primary-200 dark:bg-primary-900 dark:bg-opacity-30' : 'hover:bg-gray-50 dark:hover:bg-gray-800'}`}
                   onClick={() => setSelectedPaymentMethod(method.id)}
                 >
-                  <div className="mr-3">
+                  <div className="mr-2 sm:mr-3">
                     {method.icon}
                   </div>
                   <div className="flex-1">
-                    <div className="font-medium text-text-base dark:text-text-inverse">{method.name}</div>
+                    <div className="font-medium text-sm sm:text-base text-text-base dark:text-text-inverse">{method.name}</div>
                     {method.expiryDate && (
                       <div className="text-xs text-gray-500 dark:text-gray-400 flex items-center">
                         <Calendar className="h-3 w-3 mr-1" />
@@ -235,11 +231,11 @@ const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({
               ))}
               
               <button 
-                className="flex items-center p-3 border border-dashed dark:border-primary-900 rounded-lg text-primary-800 dark:text-primary-200 hover:bg-primary-100 dark:hover:bg-gray-800 w-full"
+                className="flex items-center p-2.5 sm:p-3 border border-dashed dark:border-primary-900 rounded-lg text-primary-800 dark:text-primary-200 hover:bg-primary-100 dark:hover:bg-gray-800 w-full transition-colors"
                 onClick={onAddPaymentMethod}
               >
-                <div className="mx-auto flex items-center">
-                  <CreditCard className="h-5 w-5 mr-2" />
+                <div className="mx-auto flex items-center text-sm sm:text-base">
+                  <CreditCard className="h-4 sm:h-5 w-4 sm:w-5 mr-2" />
                   Add Payment Method
                 </div>
               </button>
@@ -257,17 +253,17 @@ const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({
           )}
           
           {/* Security notice */}
-          <div className="mb-6 text-xs text-gray-500 dark:text-gray-400 flex items-center">
-            <Shield className="h-4 w-4 mr-1 text-success" />
+          <div className="mb-5 sm:mb-6 text-xs text-gray-500 dark:text-gray-400 flex items-center">
+            <Shield className="h-3.5 sm:h-4 w-3.5 sm:w-4 mr-1 text-success" />
             Your payment is secured with 256-bit SSL encryption
           </div>
           
           {/* Action buttons */}
-          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
+          <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-3">
             <button
               type="button"
               onClick={onClose}
-              className="w-full sm:w-auto px-4 py-2 border border-gray-300 dark:border-primary-900 rounded-md shadow-sm text-sm font-medium text-text-base dark:text-text-inverse bg-background-light dark:bg-section-dark hover:bg-gray-50 dark:hover:bg-gray-800"
+              className="w-full sm:w-auto px-4 py-2 sm:py-2.5 border border-gray-300 dark:border-primary-900 rounded-md shadow-sm text-xs sm:text-sm font-medium text-text-base dark:text-text-inverse bg-background-light dark:bg-section-dark hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
               disabled={isProcessing}
             >
               Cancel
@@ -275,7 +271,7 @@ const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({
             <button
               type="button"
               onClick={handlePaymentSubmit}
-              className="w-full sm:w-auto px-4 py-2 rounded-md shadow-sm text-sm font-medium text-text-base bg-primary hover:bg-primary-800 dark:bg-primary dark:text-text-base dark:hover:bg-primary-800 flex items-center justify-center"
+              className="w-full sm:w-auto px-4 py-2 sm:py-2.5 rounded-md shadow-sm text-xs sm:text-sm font-medium text-text-base bg-primary hover:bg-primary-800 dark:bg-primary dark:text-text-base dark:hover:bg-primary-800 flex items-center justify-center transition-colors"
               disabled={isProcessing}
             >
               {isProcessing ? (

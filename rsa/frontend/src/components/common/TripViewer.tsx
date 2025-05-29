@@ -265,16 +265,16 @@ const TripViewer: React.FC<TripViewerProps> = ({
         {/* Mobile filter toggle */}
         <div className="md:hidden mb-4">
           <button
-                onClick={() => setShowFiltersPanel(!showFiltersPanel)}
-                className="w-full flex items-center justify-between px-4 py-2 bg-gray-100 dark:bg-gray-700 rounded-md border dark:border-gray-600"
-                aria-expanded={showFiltersPanel}
+            onClick={() => setShowFiltersPanel(!showFiltersPanel)}
+            className="w-full flex items-center justify-between px-4 py-2.5 bg-gray-100 dark:bg-gray-700 rounded-md border dark:border-gray-600"
+            aria-expanded={showFiltersPanel}
             aria-controls="filters-panel"
           >
             <div className="flex items-center">
               <Sliders className="h-4 w-4 mr-2" />
-              <span>Filters & Sorting</span>
+              <span className="text-sm">Filters & Sorting</span>
             </div>
-                <ChevronDown className={`h-5 w-5 transition-transform ${showFiltersPanel ? 'transform rotate-180' : ''}`} />
+            <ChevronDown className={`h-5 w-5 transition-transform ${showFiltersPanel ? 'transform rotate-180' : ''}`} />
           </button>
         </div>
         
@@ -284,10 +284,10 @@ const TripViewer: React.FC<TripViewerProps> = ({
             <div className="flex flex-col md:flex-row gap-3 mb-3">
                   {availableDates.length > 0 && (
               <div className="flex-1">
-                      <label htmlFor="date-filter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date</label>
+                      <label htmlFor="date-filter" className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date</label>
                 <select
                   id="date-filter"
-                        className="w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-accent-kente-gold focus:ring-accent-kente-gold bg-white dark:bg-gray-800"
+                        className="w-full h-9 border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-accent-kente-gold focus:ring-accent-kente-gold bg-white dark:bg-gray-800 text-sm"
                   value={filterDate}
                   onChange={(e) => setFilterDate(e.target.value)}
                 >
@@ -302,10 +302,10 @@ const TripViewer: React.FC<TripViewerProps> = ({
               
                   {availableRoutes.length > 0 && (
               <div className="flex-1">
-                      <label htmlFor="route-filter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Route</label>
+                      <label htmlFor="route-filter" className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Route</label>
                 <select
                   id="route-filter"
-                        className="w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-accent-kente-gold focus:ring-accent-kente-gold bg-white dark:bg-gray-800"
+                        className="w-full h-9 border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-accent-kente-gold focus:ring-accent-kente-gold bg-white dark:bg-gray-800 text-sm"
                   value={filterRoute}
                   onChange={(e) => setFilterRoute(e.target.value)}
                 >
@@ -319,10 +319,10 @@ const TripViewer: React.FC<TripViewerProps> = ({
               
                   {availableVehicleTypes.length > 0 && (
               <div className="flex-1">
-                      <label htmlFor="vehicle-filter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vehicle Type</label>
+                      <label htmlFor="vehicle-filter" className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vehicle Type</label>
                 <select
                   id="vehicle-filter"
-                        className="w-full border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-accent-kente-gold focus:ring-accent-kente-gold bg-white dark:bg-gray-800"
+                        className="w-full h-9 border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-accent-kente-gold focus:ring-accent-kente-gold bg-white dark:bg-gray-800 text-sm"
                   value={filterVehicleType}
                   onChange={(e) => setFilterVehicleType(e.target.value)}
                 >
@@ -335,20 +335,20 @@ const TripViewer: React.FC<TripViewerProps> = ({
                   )}
             </div>
             
-            <div className="flex flex-wrap gap-2 mb-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-2">
               <button
                 onClick={() => handleSort('time')}
-                className={`flex items-center px-3 py-1.5 text-sm rounded border 
+                className={`flex items-center px-2 py-1 text-xs sm:text-sm rounded border 
                       ${sortField === 'time' ? 'bg-accent-kente-gold/10 border-accent-kente-gold text-accent-kente-gold-dark' : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600'}`}
               >
-                <Clock className="h-3.5 w-3.5 mr-1" />
+                <Clock className="h-3 w-3 mr-1" />
                 <span className="hidden sm:inline">Departure</span> Time
                 {getSortIcon('time')}
               </button>
               
               <button
                 onClick={() => handleSort('price')}
-                className={`flex items-center px-3 py-1.5 text-sm rounded border 
+                className={`flex items-center px-2 py-1 text-xs sm:text-sm rounded border 
                       ${sortField === 'price' ? 'bg-accent-kente-gold/10 border-accent-kente-gold text-accent-kente-gold-dark' : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600'}`}
               >
                 Price
@@ -357,7 +357,7 @@ const TripViewer: React.FC<TripViewerProps> = ({
               
               <button
                 onClick={() => handleSort('duration')}
-                className={`flex items-center px-3 py-1.5 text-sm rounded border 
+                className={`flex items-center px-2 py-1 text-xs sm:text-sm rounded border 
                       ${sortField === 'duration' ? 'bg-accent-kente-gold/10 border-accent-kente-gold text-accent-kente-gold-dark' : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600'}`}
               >
                 Duration
@@ -366,7 +366,7 @@ const TripViewer: React.FC<TripViewerProps> = ({
               
               <button
                 onClick={() => handleSort('availableSeats')}
-                className={`flex items-center px-3 py-1.5 text-sm rounded border 
+                className={`flex items-center px-2 py-1 text-xs sm:text-sm rounded border 
                       ${sortField === 'availableSeats' ? 'bg-accent-kente-gold/10 border-accent-kente-gold text-accent-kente-gold-dark' : 'bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600'}`}
               >
                 <span className="hidden sm:inline">Available</span> Seats
@@ -389,7 +389,7 @@ const TripViewer: React.FC<TripViewerProps> = ({
         )}
         
         {/* Trip list */}
-        <div className="space-y-3">
+        <div className="space-y-3 overflow-y-auto max-h-[70vh] pr-1 pb-1" style={{ scrollbarWidth: 'thin' }}>
           {filteredTrips.length === 0 ? (
             <div className="text-center py-8">
               <Search className="h-12 w-12 mx-auto text-gray-400 mb-3" />
@@ -412,68 +412,68 @@ const TripViewer: React.FC<TripViewerProps> = ({
                 }`}
               >
                 <div 
-                  className="p-4 cursor-pointer"
+                  className="p-3 sm:p-4 cursor-pointer"
                   onClick={() => handleTripClick(trip)}
                 >
                   {/* Trip header */}
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-3">
                     <div className="mb-2 sm:mb-0">
-                      <div className="flex flex-wrap items-center gap-2">
-                        <div className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full px-2.5 py-0.5 text-sm font-medium flex items-center">
-                          <Clock className="h-3.5 w-3.5 mr-1" />
+                      <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                        <div className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full px-2 py-0.5 text-xs sm:text-sm font-medium flex items-center">
+                          <Clock className="h-3 w-3 mr-1" />
                           {trip.time}
                         </div>
-                        <span className="text-sm text-gray-600 dark:text-gray-400">{trip.duration} min journey</span>
+                        <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">{trip.duration} min journey</span>
                       </div>
                       
-                      <div className="flex flex-col mt-3">
+                      <div className="flex flex-col mt-2 sm:mt-3">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-accent-red/10 flex items-center justify-center mr-2">
-                            <MapPin className="h-4 w-4 text-accent-red" />
+                          <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-accent-red/10 flex items-center justify-center mr-2">
+                            <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-red" />
                           </div>
-                          <span className="font-medium">{trip.fromLocation}</span>
+                          <span className="font-medium text-sm sm:text-base">{trip.fromLocation}</span>
                         </div>
-                        <div className="w-8 flex justify-center">
-                          <div className="h-6 border-l-2 border-dashed border-gray-300 dark:border-gray-600 my-1"></div>
+                        <div className="w-7 sm:w-8 flex justify-center">
+                          <div className="h-5 sm:h-6 border-l-2 border-dashed border-gray-300 dark:border-gray-600 my-0.5 sm:my-1"></div>
                         </div>
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 w-8 h-8 rounded-full bg-accent-kente-gold/10 flex items-center justify-center mr-2">
-                            <MapPin className="h-4 w-4 text-accent-kente-gold" />
+                          <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-accent-kente-gold/10 flex items-center justify-center mr-2">
+                            <MapPin className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-kente-gold" />
                           </div>
-                          <span className="font-medium">{trip.toLocation}</span>
+                          <span className="font-medium text-sm sm:text-base">{trip.toLocation}</span>
                         </div>
                       </div>
                     </div>
                     
                     <div className="flex flex-row sm:flex-col justify-between sm:items-end items-center">
                       <div>
-                        <div className="text-xl font-bold text-accent-kente-gold">${trip.price.toFixed(2)}</div>
-                        <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mt-1">
-                          <User className="h-4 w-4 mr-1.5" />
+                        <div className="text-lg sm:text-xl font-bold text-accent-kente-gold">${trip.price.toFixed(2)}</div>
+                        <div className="flex items-center text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
+                          <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
                           <span>{trip.availableSeats} seats left</span>
                         </div>
                       </div>
                       
                       <button 
                         onClick={(e) => handleBookTrip(trip, e)}
-                        className="ml-2 sm:ml-0 sm:mt-3 px-3 sm:px-4 py-1.5 sm:py-2 bg-accent-kente-gold hover:bg-accent-kente-gold-dark text-white text-sm rounded-lg shadow-sm flex items-center transition-colors"
+                        className="ml-2 sm:ml-0 sm:mt-3 px-2.5 py-1.5 sm:px-3.5 sm:py-2 bg-accent-kente-gold hover:bg-accent-kente-gold-dark text-white text-xs sm:text-sm rounded-lg shadow-sm flex items-center transition-colors"
                       >
                         Book Now
-                        <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                        <ArrowRight className="ml-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />
                       </button>
                     </div>
                   </div>
                   
                   {/* Vehicle info preview */}
-                  <div className="mt-3 flex items-center justify-between">
-                    <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
-                      <Car className="h-4 w-4 mr-1.5" />
+                  <div className="mt-2 sm:mt-3 flex items-center justify-between">
+                    <div className="flex items-center text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                      <Car className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1" />
                       <span>{trip.vehicle.type} • {trip.vehicle.model}</span>
                     </div>
                     
                     {expandedTripId !== trip.id && (
                       <div className="text-xs text-accent-kente-gold flex items-center">
-                        <Info className="h-3.5 w-3.5 mr-1" />
+                        <Info className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1" />
                         <span>View details</span>
                       </div>
                     )}
@@ -506,20 +506,20 @@ const TripViewer: React.FC<TripViewerProps> = ({
                       
                       {/* Details */}
                       <div className={compact ? 'w-full' : 'lg:w-1/2'}>
-                        <div className="flex justify-between items-center mb-4">
-                          <h4 className="font-medium">Trip Details</h4>
-                          <div className="px-2.5 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-xs font-medium">
+                        <div className="flex justify-between items-center mb-3 sm:mb-4">
+                          <h4 className="font-medium text-sm sm:text-base">Trip Details</h4>
+                          <div className="px-2 py-0.5 sm:px-2.5 sm:py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-xs font-medium">
                             {trip.status === 'scheduled' ? 'Scheduled' : 
                              trip.status === 'in-progress' ? 'In Progress' : 
                              trip.status === 'completed' ? 'Completed' : 'Cancelled'}
                           </div>
                         </div>
                         
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
-                          <div className="bg-white dark:bg-gray-700/50 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mb-3 sm:mb-4">
+                          <div className="bg-white dark:bg-gray-700/50 p-2.5 sm:p-3 rounded-lg border border-gray-200 dark:border-gray-700">
                             <div className="text-gray-500 dark:text-gray-400 text-xs mb-1">Date</div>
-                            <div className="font-medium flex items-center">
-                              <Calendar className="h-4 w-4 text-accent-kente-gold mr-1.5" />
+                            <div className="font-medium text-sm flex items-center">
+                              <Calendar className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-kente-gold mr-1.5" />
                               {new Date(trip.date).toLocaleDateString(undefined, {
                                 weekday: 'short',
                                 month: 'short',
@@ -528,26 +528,26 @@ const TripViewer: React.FC<TripViewerProps> = ({
                             </div>
                           </div>
                           
-                          <div className="bg-white dark:bg-gray-700/50 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                          <div className="bg-white dark:bg-gray-700/50 p-2.5 sm:p-3 rounded-lg border border-gray-200 dark:border-gray-700">
                             <div className="text-gray-500 dark:text-gray-400 text-xs mb-1">Distance</div>
-                            <div className="font-medium flex items-center">
-                              <ArrowRight className="h-4 w-4 text-accent-kente-gold mr-1.5" />
+                            <div className="font-medium text-sm flex items-center">
+                              <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-kente-gold mr-1.5" />
                               {trip.distance} miles
                             </div>
                           </div>
                           
-                          <div className="bg-white dark:bg-gray-700/50 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                          <div className="bg-white dark:bg-gray-700/50 p-2.5 sm:p-3 rounded-lg border border-gray-200 dark:border-gray-700">
                             <div className="text-gray-500 dark:text-gray-400 text-xs mb-1">Vehicle</div>
-                            <div className="font-medium flex items-center">
-                              <Car className="h-4 w-4 text-accent-kente-gold mr-1.5" />
+                            <div className="font-medium text-sm flex items-center">
+                              <Car className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-kente-gold mr-1.5" />
                               {trip.vehicle.model}
                             </div>
                           </div>
                           
-                          <div className="bg-white dark:bg-gray-700/50 p-3 rounded-lg border border-gray-200 dark:border-gray-700">
+                          <div className="bg-white dark:bg-gray-700/50 p-2.5 sm:p-3 rounded-lg border border-gray-200 dark:border-gray-700">
                             <div className="text-gray-500 dark:text-gray-400 text-xs mb-1">Capacity</div>
-                            <div className="font-medium flex items-center">
-                              <User className="h-4 w-4 text-accent-kente-gold mr-1.5" />
+                            <div className="font-medium text-sm flex items-center">
+                              <User className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-kente-gold mr-1.5" />
                               {trip.vehicle.capacity} passengers
                             </div>
                           </div>

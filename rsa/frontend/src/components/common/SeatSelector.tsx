@@ -56,25 +56,74 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
   const [hoveredSeat, setHoveredSeat] = useState<string | null>(null);
 
   // Define default colors that can be overridden with customColors
-  const colors = useMemo(() => ({
-    standard: { bg: 'bg-green-100', hover: 'bg-green-200', border: 'border-green-300', text: 'text-green-800' },
-    premium: { bg: 'bg-blue-100', hover: 'bg-blue-200', border: 'border-blue-300', text: 'text-blue-800' },
-    vip: { bg: 'bg-purple-100', hover: 'bg-purple-200', border: 'border-purple-300', text: 'text-purple-800' },
-    accessible: { bg: 'bg-yellow-100', hover: 'bg-yellow-200', border: 'border-yellow-300', text: 'text-yellow-800' },
-    selected: { bg: 'bg-accent-kente-gold', hover: 'bg-accent-kente-gold', border: 'border-yellow-600', text: 'text-white' },
-    indicator: 'bg-green-500',
-    ...customColors
-  }), [customColors]);
+  const colors = useMemo(() => {
+    const defaultColorsDeep = {
+      standard: { bg: 'bg-green-100', hover: 'bg-green-200', border: 'border-green-300', text: 'text-green-800' },
+      premium: { bg: 'bg-blue-100', hover: 'bg-blue-200', border: 'border-blue-300', text: 'text-blue-800' },
+      vip: { bg: 'bg-purple-100', hover: 'bg-purple-200', border: 'border-purple-300', text: 'text-purple-800' },
+      accessible: { bg: 'bg-yellow-100', hover: 'bg-yellow-200', border: 'border-yellow-300', text: 'text-yellow-800' },
+      selected: { bg: 'bg-accent-kente-gold', hover: 'bg-accent-kente-gold', border: 'border-yellow-600', text: 'text-white' },
+      indicator: 'bg-green-500',
+    };
+
+    if (!customColors) {
+      return defaultColorsDeep;
+    }
+
+    const newColors = { ...defaultColorsDeep };
+
+    if (customColors.standard && typeof customColors.standard === 'string') {
+      newColors.standard = { ...defaultColorsDeep.standard, bg: customColors.standard, hover: customColors.standard };
+    } else if (customColors.standard) { // Assume it's an object if not a string, though type says string
+      newColors.standard = { ...defaultColorsDeep.standard, ...(customColors.standard as any) };
+    }
+
+    if (customColors.premium && typeof customColors.premium === 'string') {
+      newColors.premium = { ...defaultColorsDeep.premium, bg: customColors.premium, hover: customColors.premium };
+    } else if (customColors.premium) {
+      newColors.premium = { ...defaultColorsDeep.premium, ...(customColors.premium as any) };
+    }
+
+    if (customColors.vip && typeof customColors.vip === 'string') {
+      newColors.vip = { ...defaultColorsDeep.vip, bg: customColors.vip, hover: customColors.vip };
+    } else if (customColors.vip) {
+      newColors.vip = { ...defaultColorsDeep.vip, ...(customColors.vip as any) };
+    }
+
+    if (customColors.accessible && typeof customColors.accessible === 'string') {
+      newColors.accessible = { ...defaultColorsDeep.accessible, bg: customColors.accessible, hover: customColors.accessible };
+    } else if (customColors.accessible) {
+      newColors.accessible = { ...defaultColorsDeep.accessible, ...(customColors.accessible as any) };
+    }
+    
+    if (customColors.selected && typeof customColors.selected === 'string') {
+      newColors.selected = { ...defaultColorsDeep.selected, bg: customColors.selected, hover: customColors.selected };
+    } else if (customColors.selected) {
+      newColors.selected = { ...defaultColorsDeep.selected, ...(customColors.selected as any) };
+    }
+
+    if (customColors.indicator) {
+      newColors.indicator = customColors.indicator;
+    }
+
+    return newColors;
+  }, [customColors]);
 
   // Update seatsData if initialSeats prop changes
   useEffect(() => {
-    setSeatsData(initialSeats);
-  }, [initialSeats]);
+    // Only update if the actual data has changed, not just the reference
+    if (JSON.stringify(initialSeats) !== JSON.stringify(seatsData)) {
+      setSeatsData(initialSeats);
+    }
+  }, [initialSeats, seatsData]); // Added seatsData to dependency to avoid stale closure
 
   // Update selectedSeats if initialSelectedSeats prop changes
   useEffect(() => {
-    setSelectedSeats(initialSelectedSeats);
-  }, [initialSelectedSeats]);
+    // Only update if the actual data has changed
+    if (JSON.stringify(initialSelectedSeats) !== JSON.stringify(selectedSeats)) {
+      setSelectedSeats(initialSelectedSeats);
+    }
+  }, [initialSelectedSeats, selectedSeats]); // Added selectedSeats to dependency
 
   // Handle seat selection
   const handleSeatClick = useCallback((seatId: string) => {
@@ -200,7 +249,7 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
 
   // Render a single seat
   const renderSeat = (seat: Seat | null, rowIndex: number, colIndex: number) => {
-    if (!seat) return <div key={`empty-${rowIndex}-${colIndex}`} className={`w-${compact ? '6' : '8'} h-${compact ? '5' : '7'}`} />;
+    if (!seat) return <div key={`empty-${rowIndex}-${colIndex}`} className="w-5 h-4 sm:w-6 sm:h-5 md:w-7 md:h-6" />;
 
     const isSelected = selectedSeats.some(s => s.id === seat.id);
     const isDisabled = seat.status === 'booked' || seat.status === 'reserved';
@@ -213,7 +262,7 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
         key={`seat-${rowIndex}-${colIndex}`}
         className={`
           relative flex items-center justify-center
-          w-${compact ? '6' : '8'} h-${compact ? '5' : '7'} m-0.5
+          w-5 h-4 m-0.5 sm:w-6 sm:h-5 md:w-7 md:h-6
           ${bgColor} ${textColor}
           border ${borderColor}
           rounded-md
@@ -239,7 +288,8 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
         
         {/* Selection indicator */}
         {isSelected && (
-          <div className={`absolute -top-1 -right-1 w-3 h-3 sm:w-4 sm:h-4 ${colors.indicator} rounded-full flex items-center justify-center shadow-sm`}>
+          <div className="absolute -top-1 -right-1 w-3 h-3 sm:w-3.5 sm:h-3.5 md:w-4 md:h-4 rounded-full flex items-center justify-center shadow-sm"
+               style={{ backgroundColor: typeof colors.indicator === 'string' ? colors.indicator : 'rgb(34, 197, 94)' }}>
             <Check className="text-white" size={8} />
           </div>
         )}
@@ -292,10 +342,16 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
               FRONT
             </div>
 
-            {/* Seat map with improved grid */}
-            <div className="flex flex-col items-center">
+            {/* Seat map with improved grid - add horizontal scrolling for small screens */}
+            <div className="flex flex-col items-center overflow-x-auto touch-action-manipulation pb-1" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+              <style>
+                {`
+                .touch-action-manipulation { touch-action: manipulation; }
+                .overflow-x-auto::-webkit-scrollbar { display: none; }
+                `}
+              </style>
               {seatGrid.map((row, rowIndex) => (
-                <div key={`row-${rowIndex}`} className="flex my-0.5">
+                <div key={`row-${rowIndex}`} className="flex my-0.5 min-w-max">
                   {row.map((seat, colIndex) => renderSeat(seat, rowIndex, colIndex))}
                 </div>
               ))}
@@ -316,7 +372,7 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
             <span className="text-accent-kente-gold font-medium">${totalAmount.toFixed(2)}</span>
           </div>
 
-          <div className="space-y-1.5">
+          <div className="space-y-1.5 max-h-[120px] overflow-y-auto pr-1" style={{ scrollbarWidth: 'thin' }}>
             {selectedSeats.map((seat) => (
               <div key={seat.id} className="flex justify-between items-center text-sm px-2 py-1 bg-gray-50 dark:bg-gray-800 rounded">
                 <div className="flex items-center">
@@ -333,38 +389,38 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
                 </div>
                 <button 
                   onClick={() => handleSeatClick(seat.id)}
-                  className="text-gray-400 hover:text-red-500 p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
+                  className="text-gray-400 hover:text-red-500 p-1.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
                   aria-label={`Remove seat ${seat.number}`}
                 >
                   <X size={12} />
                 </button>
               </div>
             ))}
-                </div>
-              </div>
-            )}
+          </div>
+        </div>
+      )}
       
       {/* Legend with minimal design - optional */}
       {!hideLegend && (
-        <div className="flex justify-center flex-wrap gap-x-4 gap-y-1 text-xs text-gray-500 pt-2">
-          <div className="flex items-center">
-            <div className={`w-2.5 h-2.5 ${colors.standard.bg} ${colors.standard.border} rounded-sm mr-1`}></div>
+        <div className="flex flex-wrap justify-center gap-x-2 sm:gap-x-3 gap-y-1 text-xs text-gray-500 pt-2">
+          <div className="flex items-center px-1.5 py-0.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+            <div className={`w-2 h-2 sm:w-2.5 sm:h-2.5 ${colors.standard.bg} ${colors.standard.border} rounded-sm mr-1`}></div>
             <span>Standard</span>
           </div>
-          <div className="flex items-center">
-            <div className={`w-2.5 h-2.5 ${colors.premium.bg} ${colors.premium.border} rounded-sm mr-1`}></div>
+          <div className="flex items-center px-1.5 py-0.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+            <div className={`w-2 h-2 sm:w-2.5 sm:h-2.5 ${colors.premium.bg} ${colors.premium.border} rounded-sm mr-1`}></div>
             <span>Premium</span>
           </div>
-          <div className="flex items-center">
-            <div className={`w-2.5 h-2.5 ${colors.vip.bg} ${colors.vip.border} rounded-sm mr-1`}></div>
+          <div className="flex items-center px-1.5 py-0.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+            <div className={`w-2 h-2 sm:w-2.5 sm:h-2.5 ${colors.vip.bg} ${colors.vip.border} rounded-sm mr-1`}></div>
             <span>VIP</span>
           </div>
-          <div className="flex items-center">
-            <div className={`w-2.5 h-2.5 ${colors.accessible.bg} ${colors.accessible.border} rounded-sm mr-1`}></div>
+          <div className="flex items-center px-1.5 py-0.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+            <div className={`w-2 h-2 sm:w-2.5 sm:h-2.5 ${colors.accessible.bg} ${colors.accessible.border} rounded-sm mr-1`}></div>
             <span>Accessible</span>
           </div>
-          <div className="flex items-center">
-            <div className={`w-2.5 h-2.5 bg-gray-300 border border-gray-400 rounded-sm mr-1`}></div>
+          <div className="flex items-center px-1.5 py-0.5 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
+            <div className={`w-2 h-2 sm:w-2.5 sm:h-2.5 bg-gray-300 border border-gray-400 rounded-sm mr-1`}></div>
             <span>Unavailable</span>
           </div>
         </div>
