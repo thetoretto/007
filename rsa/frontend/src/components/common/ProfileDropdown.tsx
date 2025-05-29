@@ -2,10 +2,11 @@ import '../../index.css';
 import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import useAuthStore from '../../store/authStore';
-import { ChevronDown, User, LogOut, LogIn, UserPlus } from 'lucide-react';
+import { ChevronDown, User as UserIcon, LogOut, LogIn, UserPlus, LayoutDashboard } from 'lucide-react';
 
 interface ProfileDropdownProps {
   className?: string;
+  // isMobile?: boolean; // Consider if specific mobile styling needed beyond responsive classes
 }
 
 const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => {
@@ -14,18 +15,15 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [scrolled, setScrolled] = useState(false);
+  const isNavbarTransparent = location.pathname === '/'; // Example: Navbar is transparent only on homepage
+  const [scrolled, setScrolled] = useState(window.scrollY > 20);
 
-  // Handle scrolling effect for styling
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
-    
     window.addEventListener('scroll', handleScroll);
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleLogout = () => {
@@ -34,16 +32,10 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
     navigate('/login');
   };
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleDropdown = () => setIsOpen(!isOpen);
 
-  // Close dropdown when route changes
-  useEffect(() => {
-    setIsOpen(false);
-  }, [location.pathname]);
+  useEffect(() => { setIsOpen(false); }, [location.pathname]);
 
-  // Close dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -51,133 +43,91 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Get initials for avatar placeholder
-  const getInitials = (firstName: string, lastName: string) => {
-    return (firstName?.[0] || '') + (lastName?.[0] || '');
+  const getInitials = (firstName?: string, lastName?: string) => {
+    return `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase() || '?';
   };
+  
+  // Determine text color based on navbar state (transparent on home, scrolled, or other pages)
+  let textColorClass = 'text-text-base dark:text-text-inverse'; // Default for solid navbar
+  if (isNavbarTransparent && !scrolled) {
+    textColorClass = 'text-white group-hover:text-opacity-80'; // For transparent navbar (e.g. homepage top)
+  }
+  let avatarBgColorClass = scrolled || !isNavbarTransparent 
+    ? 'bg-primary-soft text-primary dark:bg-primary-700 dark:text-primary-100' 
+    : 'bg-white/20 text-white';
+  let chevronColorClass = scrolled || !isNavbarTransparent 
+    ? 'text-text-muted dark:text-text-muted-dark' 
+    : 'text-white/70 group-hover:text-white';
+
+
+  const menuItemClass = "flex items-center w-full px-4 py-2.5 text-sm text-text-base dark:text-text-inverse hover:bg-base-200 dark:hover:bg-section-medium transition-colors duration-150";
+  const iconClass = "mr-2.5 h-5 w-5 text-primary dark:text-primary-300";
 
   return (
-    <div className={`relative ${className}`} ref={dropdownRef}>
+    <div className={`relative group ${className}`} ref={dropdownRef}>
       {user ? (
-        // Logged-in user view
         <button
           type="button"
-          className={`flex items-center text-sm rounded-full focus:outline-none ${
-            scrolled 
-              ? 'text-gray-700 dark:text-gray-300' 
-              : 'text-white dark:text-white'
-          }`}
+          className={`flex items-center text-sm rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:focus-visible:ring-offset-base-300 p-0.5 ${isNavbarTransparent && !scrolled ? 'hover:bg-white/10' : 'hover:bg-base-200 dark:hover:bg-section-medium'} transition-colors duration-150`}
           onClick={toggleDropdown}
+          aria-expanded={isOpen}
+          aria-haspopup="true"
         >
-          {/* User Avatar - we'll use initials since there's no avatar property */}
-          <div className={`h-8 w-8 rounded-full flex items-center justify-center ${
-            scrolled 
-              ? 'bg-primary-100 text-primary-800 dark:bg-primary-800 dark:text-primary-100' 
-              : 'bg-white/20 text-white dark:bg-gray-800/50'
-          }`}>
-            <span className="font-medium text-sm">
-              {getInitials(user.firstName, user.lastName)}
-            </span>
+          <div className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-medium ${avatarBgColorClass} transition-colors duration-150`}>
+            {getInitials(user.firstName, user.lastName)}
           </div>
-          <span className={`ml-2 hidden sm:inline transition-colors duration-200 ${
-            scrolled 
-              ? 'text-gray-700 dark:text-gray-300' 
-              : 'text-white dark:text-gray-200'
-          }`}>
+          <span className={`ml-2 hidden md:inline ${textColorClass} transition-colors duration-150`}>
             {user.firstName}
           </span>
-          <ChevronDown className={`ml-1 h-4 w-4 hidden sm:inline transition-colors duration-200 ${
-            scrolled 
-              ? 'text-gray-500 dark:text-gray-400' 
-              : 'text-gray-200 dark:text-gray-400'
-          }`} />
+          <ChevronDown className={`ml-1 h-4 w-4 hidden md:inline ${chevronColorClass} transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
         </button>
       ) : (
-        // Logged-out user view
         <button
           type="button"
-          className={`flex items-center gap-1 transition-colors duration-200 ${
-            scrolled 
-              ? 'text-gray-700 hover:text-primary-800 dark:text-gray-300 dark:hover:text-primary-200' 
-              : 'text-white hover:text-white/80 dark:text-gray-200 dark:hover:text-white'
-          }`}
+          className={`btn btn-ghost btn-sm flex items-center gap-1.5 ${textColorClass} ${isNavbarTransparent && !scrolled ? 'hover:bg-white/10' : 'hover:bg-base-200 dark:hover:bg-section-medium'} transition-colors duration-150 px-2 sm:px-3`}
           onClick={toggleDropdown}
+          aria-expanded={isOpen}
+          aria-haspopup="true"
         >
-          <User className="h-5 w-5" />
+          <UserIcon className={`h-5 w-5 ${textColorClass}`} />
           <span className="hidden sm:inline">Account</span>
-          <ChevronDown className="ml-1 h-4 w-4 hidden sm:inline" />
+          <ChevronDown className={`ml-0.5 h-4 w-4 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
         </button>
       )}
 
-      {/* Dropdown Menu */}
       {isOpen && (
         <div
-          className="origin-top-right absolute right-0 mt-2 w-48 rounded-lg shadow-lg py-1 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-20"
+          className="origin-top-right absolute right-0 mt-2 w-56 rounded-lg shadow-xl py-1.5 bg-base-100 dark:bg-section-dark ring-1 ring-black/5 dark:ring-white/10 focus:outline-none z-30 animate-fadeInUpSm"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="user-menu-button"
         >
           {user ? (
-            // Dropdown items for logged-in user
             <>
-              <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-700">
-                <p className="text-sm font-medium text-gray-800 dark:text-white truncate">{user.firstName} {user.lastName}</p>
-                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
+              <div className="px-4 py-2.5 border-b border-border dark:border-border-dark mb-1">
+                <p className="text-sm font-semibold text-text-base dark:text-text-inverse truncate" title={user.email}>{user.firstName} {user.lastName}</p>
+                <p className="text-xs text-text-muted dark:text-text-muted-dark truncate">{user.email}</p>
               </div>
-              <Link
-                to={user.role === 'admin' ? '/admin/dashboard' : user.role === 'driver' ? '/driver/dashboard' : '/passenger/dashboard'}
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-primary-200"
-                role="menuitem"
-                onClick={() => setIsOpen(false)}
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="mr-2 h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                </svg>
-                My Dashboard
+              <Link to={user.role === 'admin' ? '/admin/dashboard' : user.role === 'driver' ? '/driver/dashboard' : '/passenger/dashboard'} className={menuItemClass} role="menuitem" onClick={() => setIsOpen(false)}>
+                <LayoutDashboard className={iconClass} /> My Dashboard
               </Link>
-              <Link
-                to="/profile"
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-primary-200"
-                role="menuitem"
-                onClick={() => setIsOpen(false)}
-              >
-                <User className="mr-2 h-4 w-4" />
-                Your Profile
+              <Link to="/profile" className={menuItemClass} role="menuitem" onClick={() => setIsOpen(false)}>
+                <UserIcon className={iconClass} /> Your Profile
               </Link>
-              <button
-                onClick={handleLogout}
-                className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-primary-200"
-                role="menuitem"
-              >
-                <LogOut className="mr-2 h-4 w-4" />
-                Sign out
+              <button onClick={handleLogout} className={`${menuItemClass} text-error dark:text-error`} role="menuitem">
+                <LogOut className={`${iconClass} text-error dark:text-error`} /> Sign out
               </button>
             </>
           ) : (
-            // Dropdown items for logged-out user
             <>
-              <Link
-                to="/login"
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-primary-200"
-                role="menuitem"
-                onClick={() => setIsOpen(false)}
-              >
-                <LogIn className="mr-2 h-4 w-4" />
-                Login
+              <Link to="/login" className={menuItemClass} role="menuitem" onClick={() => setIsOpen(false)}>
+                <LogIn className={iconClass} /> Login
               </Link>
-              <Link
-                to="/register"
-                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-primary-200"
-                role="menuitem"
-                onClick={() => setIsOpen(false)}
-              >
-                <UserPlus className="mr-2 h-4 w-4" />
-                Sign Up
+              <Link to="/register" className={menuItemClass} role="menuitem" onClick={() => setIsOpen(false)}>
+                <UserPlus className={iconClass} /> Sign Up
               </Link>
             </>
           )}
