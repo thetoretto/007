@@ -382,7 +382,6 @@ exports.deleteUser = async (req, res, next) => {
  * @access  Private
  */
 exports.getUserBookings = async (req, res, next) => {
-    const { images, status, sortBy, page, limit } = req.query; // Destructure to satisfy linter
     try {
         let targetUserId;
         if (req.params.id) { // Admin getting bookings for a specific user

@@ -385,7 +385,7 @@ exports.getReviewStatistics = async (req, res, next) => {
         let sumOfRatings = 0;
 
         stats.forEach(stat => {
-            if (ratingCounts.hasOwnProperty(stat._id)) {
+            if (Object.prototype.hasOwnProperty.call(ratingCounts, stat._id)) {
                 ratingCounts[stat._id] = stat.count;
                 totalReviews += stat.count;
                 sumOfRatings += stat._id * stat.count;

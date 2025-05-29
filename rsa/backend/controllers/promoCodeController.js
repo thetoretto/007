@@ -4,7 +4,6 @@ const { AppError } = require('../middleware/errorHandler');
 const { createLogger } = require('../utils/logger');
 
 const logger = createLogger('PromoCodeController');
-const moment = require('moment');
 
 /**
  * @desc    Create a new promo code

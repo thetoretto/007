@@ -6,16 +6,17 @@ const rateLimit = require('express-rate-limit');
 const compression = require('compression');
 require('dotenv').config();
 
+// Import routes
 const authRoutes = require('./routes/auth');
-const userRoutes = require('./routes/users');
-const hotpointRoutes = require('./routes/hotpoints');
-const routeRoutes = require('./routes/routes');
-const tripRoutes = require('./routes/trips');
-const bookingRoutes = require('./routes/bookings');
-const paymentRoutes = require('./routes/payments');
-const vehicleRoutes = require('./routes/vehicles');
-const driverRoutes = require('./routes/drivers');
-const adminRoutes = require('./routes/admin');
+// const userRoutes = require('./routes/users');
+// const hotpointRoutes = require('./routes/hotpoints');
+// const routeRoutes = require('./routes/routes');
+// const tripRoutes = require('./routes/trips');
+// const bookingRoutes = require('./routes/bookings');
+// const paymentRoutes = require('./routes/payments');
+// const vehicleRoutes = require('./routes/vehicles');
+// const driverRoutes = require('./routes/drivers');
+// const adminRoutes = require('./routes/admin');
 
 // Import middleware
 const { errorHandler } = require('./middleware/errorHandler');
@@ -65,15 +66,15 @@ app.get('/health', (req, res) => {
 
 // API routes
 app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/hotpoints', hotpointRoutes);
-app.use('/api/routes', routeRoutes);
-app.use('/api/trips', tripRoutes);
-app.use('/api/bookings', bookingRoutes);
-app.use('/api/payments', paymentRoutes);
-app.use('/api/vehicles', vehicleRoutes);
-app.use('/api/admin/drivers', driverRoutes);
-app.use('/api/admin', adminRoutes);
+// app.use('/api/users', userRoutes);
+// app.use('/api/hotpoints', hotpointRoutes);
+// app.use('/api/routes', routeRoutes);
+// app.use('/api/trips', tripRoutes);
+// app.use('/api/bookings', bookingRoutes);
+// app.use('/api/payments', paymentRoutes);
+// app.use('/api/vehicles', vehicleRoutes);
+// app.use('/api/admin/drivers', driverRoutes);
+// app.use('/api/admin', adminRoutes);
 
 // Welcome route
 app.get('/', (req, res) => {

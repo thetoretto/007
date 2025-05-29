@@ -1,14 +1,32 @@
 import '../../index.css';
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import useAuthStore from '../../store/authStore';
 import { ChevronDown, User, LogOut, LogIn, UserPlus } from 'lucide-react';
 
-const ProfileDropdown: React.FC = () => {
+interface ProfileDropdownProps {
+  className?: string;
+}
+
+const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => {
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Handle scrolling effect for styling
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   const handleLogout = () => {
     logout();
@@ -17,16 +35,18 @@ const ProfileDropdown: React.FC = () => {
   };
 
   const toggleDropdown = () => {
-    console.log('ProfileDropdown: toggleDropdown called. Current isOpen:', isOpen);
     setIsOpen(!isOpen);
-    console.log('ProfileDropdown: new isOpen state:', !isOpen);
   };
+
+  // Close dropdown when route changes
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
 
   // Close dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        console.log('ProfileDropdown: Clicked outside, closing dropdown.');
         setIsOpen(false);
       }
     };
@@ -36,38 +56,56 @@ const ProfileDropdown: React.FC = () => {
     };
   }, []);
 
-  console.log('ProfileDropdown: Rendering, isOpen:', isOpen, 'User:', user);
+  // Get initials for avatar placeholder
+  const getInitials = (firstName: string, lastName: string) => {
+    return (firstName?.[0] || '') + (lastName?.[0] || '');
+  };
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className={`relative ${className}`} ref={dropdownRef}>
       {user ? (
         // Logged-in user view
         <button
           type="button"
-          className="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-primary-200 dark:focus:ring-offset-background-dark"
+          className={`flex items-center text-sm rounded-full focus:outline-none ${
+            scrolled 
+              ? 'text-gray-700 dark:text-gray-300' 
+              : 'text-white dark:text-white'
+          }`}
           onClick={toggleDropdown}
         >
-          {user.avatar ? (
-            <img
-              className="h-8 w-8 rounded-full"
-              src={user.avatar}
-              alt={`${user.firstName} ${user.lastName}`}
-            />
-          ) : (
-            <div className="h-8 w-8 rounded-full bg-primary-100 dark:bg-primary-800 flex items-center justify-center">
-              <span className="text-primary-800 dark:text-primary-100 font-medium text-sm">
-                {user.firstName?.[0]}{user.lastName?.[0]}
-              </span>
-            </div>
-          )}
-          <span className="ml-2 hidden sm:inline text-text-base hover:text-primary dark:text-text-inverse dark:hover:text-primary-200">{user.firstName}</span>
-          <ChevronDown className="ml-1 h-4 w-4 text-text-muted dark:text-text-inverse hidden sm:inline" />
+          {/* User Avatar - we'll use initials since there's no avatar property */}
+          <div className={`h-8 w-8 rounded-full flex items-center justify-center ${
+            scrolled 
+              ? 'bg-primary-100 text-primary-800 dark:bg-primary-800 dark:text-primary-100' 
+              : 'bg-white/20 text-white dark:bg-gray-800/50'
+          }`}>
+            <span className="font-medium text-sm">
+              {getInitials(user.firstName, user.lastName)}
+            </span>
+          </div>
+          <span className={`ml-2 hidden sm:inline transition-colors duration-200 ${
+            scrolled 
+              ? 'text-gray-700 dark:text-gray-300' 
+              : 'text-white dark:text-gray-200'
+          }`}>
+            {user.firstName}
+          </span>
+          <ChevronDown className={`ml-1 h-4 w-4 hidden sm:inline transition-colors duration-200 ${
+            scrolled 
+              ? 'text-gray-500 dark:text-gray-400' 
+              : 'text-gray-200 dark:text-gray-400'
+          }`} />
         </button>
       ) : (
         // Logged-out user view
         <button
           type="button"
-          className="flex items-center gap-1 text-text-base hover:text-primary dark:text-text-inverse dark:hover:text-primary-200"
+          className={`flex items-center gap-1 transition-colors duration-200 ${
+            scrolled 
+              ? 'text-gray-700 hover:text-primary-800 dark:text-gray-300 dark:hover:text-primary-200' 
+              : 'text-white hover:text-white/80 dark:text-gray-200 dark:hover:text-white'
+          }`}
           onClick={toggleDropdown}
         >
           <User className="h-5 w-5" />
@@ -79,7 +117,7 @@ const ProfileDropdown: React.FC = () => {
       {/* Dropdown Menu */}
       {isOpen && (
         <div
-          className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 card ring-1 ring-black ring-opacity-5 focus:outline-none z-20"
+          className="origin-top-right absolute right-0 mt-2 w-48 rounded-lg shadow-lg py-1 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-20"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="user-menu-button"
@@ -87,13 +125,13 @@ const ProfileDropdown: React.FC = () => {
           {user ? (
             // Dropdown items for logged-in user
             <>
-              <div className="px-4 py-2 border-b border-gray-100 dark:border-primary-800">
-                <p className="text-sm font-medium text-text-base dark:text-text-inverse truncate">{user.firstName} {user.lastName}</p>
-                <p className="text-xs text-text-muted dark:text-primary-200 truncate">{user.email}</p>
+              <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-700">
+                <p className="text-sm font-medium text-gray-800 dark:text-white truncate">{user.firstName} {user.lastName}</p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">{user.email}</p>
               </div>
               <Link
                 to="/profile"
-                className="flex items-center px-4 py-2 text-sm text-text-base hover:bg-section-light hover:text-primary dark:text-text-inverse dark:hover:bg-primary-900 dark:hover:text-primary-200"
+                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-primary-200"
                 role="menuitem"
                 onClick={() => setIsOpen(false)}
               >
@@ -102,7 +140,7 @@ const ProfileDropdown: React.FC = () => {
               </Link>
               <button
                 onClick={handleLogout}
-                className="flex items-center w-full text-left px-4 py-2 text-sm text-text-base hover:bg-section-light hover:text-primary dark:text-text-inverse dark:hover:bg-primary-900 dark:hover:text-primary-200"
+                className="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-primary-200"
                 role="menuitem"
               >
                 <LogOut className="mr-2 h-4 w-4" />
@@ -114,7 +152,7 @@ const ProfileDropdown: React.FC = () => {
             <>
               <Link
                 to="/login"
-                className="flex items-center px-4 py-2 text-sm text-text-base hover:bg-section-light hover:text-primary dark:text-text-inverse dark:hover:bg-primary-900 dark:hover:text-primary-200"
+                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-primary-200"
                 role="menuitem"
                 onClick={() => setIsOpen(false)}
               >
@@ -123,7 +161,7 @@ const ProfileDropdown: React.FC = () => {
               </Link>
               <Link
                 to="/register"
-                className="flex items-center px-4 py-2 text-sm text-text-base hover:bg-section-light hover:text-primary dark:text-text-inverse dark:hover:bg-primary-900 dark:hover:text-primary-200"
+                className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-primary-200"
                 role="menuitem"
                 onClick={() => setIsOpen(false)}
               >

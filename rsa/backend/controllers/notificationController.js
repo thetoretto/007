@@ -1,6 +1,6 @@
 const Notification = require('../models/Notification'); // Assuming Notification model exists or will be created
 const User = require('../models/User');
-const { AppError, ValidationError, NotFoundError, AuthorizationError } = require('../middleware/errorHandler');
+const { AppError, ValidationError, NotFoundError } = require('../middleware/errorHandler');
 const { createLogger } = require('../utils/logger');
 const APIFeatures = require('../utils/apiFeatures');
 // const { sendPushNotification, sendEmailNotification, sendSMSNotification } = require('../services/notificationService'); // Example service
