@@ -179,87 +179,87 @@ const AdminDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
       <Navbar />
-      <main className="container-app mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-16 md:pt-20">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">Admin Dashboard</h1>
+      <main className="container-app py-8 md:py-12">
+        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-gray-900 dark:text-white transition-colors duration-300">Admin Dashboard</h1>
         
         {/* Quick Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="card bg-base-100 dark:bg-section-dark p-6 rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 transition-all hover:shadow-md">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-text-muted dark:text-text-muted-dark">Total Trips</p>
-              <div className="p-2 rounded-full bg-primary-50 dark:bg-primary-900">
-                <Calendar className="h-6 w-6 text-primary dark:text-primary-200" />
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Total Trips</p>
+              <div className="icon-badge icon-badge-md icon-badge-primary">
+                <Calendar className="h-5 w-5" />
               </div>
             </div>
-            <p className="text-3xl font-semibold text-text-base dark:text-text-inverse">{adminData.totalTrips}</p>
-            <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1 capitalize">For {timePeriod} Period</p>
+            <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{adminData.totalTrips}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 capitalize transition-colors duration-300">For {timePeriod} Period</p>
           </div>
 
-          <div className="card bg-base-100 dark:bg-section-dark p-6 rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 transition-all hover:shadow-md">
+          <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-text-muted dark:text-text-muted-dark">Total Passengers</p>
-              <div className="p-2 rounded-full bg-green-50 dark:bg-green-900">
-                <Users className="h-6 w-6 text-green-500 dark:text-green-400" />
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Total Passengers</p>
+              <div className="icon-badge icon-badge-md bg-secondary-100 text-secondary-600 dark:bg-secondary-900 dark:text-secondary-400">
+                <Users className="h-5 w-5" />
               </div>
             </div>
-            <p className="text-3xl font-semibold text-text-base dark:text-text-inverse">{adminData.totalPassengers}</p>
-            <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1 capitalize">For {timePeriod} Period</p>
+            <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{adminData.totalPassengers}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 capitalize transition-colors duration-300">For {timePeriod} Period</p>
           </div>
           
-          <div className="card bg-base-100 dark:bg-section-dark p-6 rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 transition-all hover:shadow-md">
+          <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-text-muted dark:text-text-muted-dark">Upcoming Trips</p>
-              <div className="p-2 rounded-full bg-blue-50 dark:bg-blue-900">
-                <Clock className="h-6 w-6 text-blue-500 dark:text-blue-400" />
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Upcoming Trips</p>
+              <div className="icon-badge icon-badge-md bg-info-light text-info dark:bg-info-dark dark:text-info-light">
+                <Clock className="h-5 w-5" />
               </div>
             </div>
-            <p className="text-3xl font-semibold text-text-base dark:text-text-inverse">{upcomingTripsCount}</p>
-            <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1">Scheduled for the future</p>
+            <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{upcomingTripsCount}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300">Scheduled for the future</p>
         </div>
 
-          <div className="card bg-base-100 dark:bg-section-dark p-6 rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 transition-all hover:shadow-md">
+          <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-text-muted dark:text-text-muted-dark">Total Routes</p>
-              <div className="p-2 rounded-full bg-purple-50 dark:bg-purple-900">
-                <Map className="h-6 w-6 text-purple-500 dark:text-purple-400" />
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Total Routes</p>
+              <div className="icon-badge icon-badge-md bg-accent-gold-light text-accent-gold-dark dark:bg-accent-gold-darker dark:text-accent-gold-light">
+                <Map className="h-5 w-5" />
               </div>
           </div>
-            <p className="text-3xl font-semibold text-text-base dark:text-text-inverse">{adminData.activeRoutes.length}</p>
-            <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1">Active in this period</p>
+            <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{adminData.activeRoutes.length}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300">Active in this period</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
         {/* Best Performing Drivers */}
-          <div className="card bg-base-100 dark:bg-section-dark p-6 rounded-lg shadow-sm border border-primary-100 dark:border-primary-800">
-            <h2 className="text-xl font-semibold text-text-base dark:text-text-inverse mb-4 flex items-center">
-              <User className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
+          <div className="card p-6">
+            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+              <User className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
               Top Drivers
             </h2>
           {adminData.bestPerformingDrivers.length > 0 ? (
             <ul className="space-y-4">
               {adminData.bestPerformingDrivers.map((driver, index) => (
-                  <li key={driver.id} className="flex items-center p-3  dark:bg-primary-900/10 rounded-lg hover:bg-section-medium dark:hover:bg-primary-900/20 transition-colors">
-                    <div className="relative">
+                  <li key={driver.id} className="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                    <div className="relative flex-shrink-0">
                       <img 
                         src={driver.avatar || `https://ui-avatars.com/api/?name=${driver.name.replace(' ', '+')}&background=random`} 
                         alt={driver.name} 
-                        className="h-10 w-10 rounded-full object-cover border-2 border-primary-100 dark:border-primary-800"
+                        className="h-10 w-10 rounded-full object-cover border-2 border-primary-200 dark:border-primary-700 transition-colors duration-300"
                       />
                       {index < 3 && (
                         <div className={`absolute -top-1 -right-1 h-5 w-5 rounded-full flex items-center justify-center text-xs font-bold text-white
-                          ${index === 0 ? 'bg-yellow-500' : index === 1 ? 'bg-gray-400' : 'bg-amber-700'}`}>
+                          ${index === 0 ? 'bg-accent-gold-medium' : index === 1 ? 'bg-gray-400' : 'bg-earth-clay'}`}>
                           {index + 1}
                         </div>
                       )}
                     </div>
-                    <div className="ml-3">
-                      <p className="font-medium text-text-base dark:text-text-inverse">{driver.name}</p>
-                      <div className="flex items-center text-xs text-text-muted dark:text-text-muted-dark">
-                      <Star className="h-3 w-3 text-yellow-400 mr-1" /> {driver.rating.toFixed(1)}
-                      <span className="mx-1.5">•</span>
+                    <div className="ml-4">
+                      <p className="font-medium text-gray-900 dark:text-white transition-colors duration-300">{driver.name}</p>
+                      <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">
+                      <Star className="h-4 w-4 text-accent-gold mr-1 transition-colors duration-300" /> {driver.rating.toFixed(1)}
+                      <span className="mx-1.5 text-gray-400 dark:text-gray-500 transition-colors duration-300">•</span>
                       {driver.completedTrips} trips
                     </div>
                   </div>
@@ -267,55 +267,55 @@ const AdminDashboard: React.FC = () => {
               ))}
             </ul>
           ) : (
-              <div className="text-center py-8  dark:bg-section-medium rounded-lg">
-                <p className="text-text-muted dark:text-text-muted-dark">No driver data for this period</p>
+              <div className="text-center py-8 bg-gray-100 dark:bg-gray-700 rounded-lg transition-colors duration-300">
+                <p className="text-gray-600 dark:text-gray-300 transition-colors duration-300">No driver data for this period</p>
               </div>
           )}
             
-            <Link to="/admin/drivers" className="mt-4 text-sm text-primary dark:text-primary-200 hover:underline flex items-center justify-end">
+            <Link to="/admin/drivers" className="mt-6 text-sm font-medium text-primary-600 dark:text-primary-400 hover:underline flex items-center justify-end transition-colors duration-300">
               View all drivers <ArrowRight className="h-4 w-4 ml-1" />
             </Link>
         </div>
 
         {/* Active Routes */}
-          <div className="lg:col-span-2 card bg-base-100 dark:bg-section-dark p-6 rounded-lg shadow-sm border border-primary-100 dark:border-primary-800">
-            <h2 className="text-xl font-semibold text-text-base dark:text-text-inverse mb-4 flex items-center">
-              <Map className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
+          <div className="lg:col-span-2 card p-6">
+            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+              <Map className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
               Most Active Routes
             </h2>
           {adminData.activeRoutes.length > 0 ? (
             <div className="space-y-3">
               {adminData.activeRoutes.map(route => (
-                  <div key={route.name} className="p-4  dark:bg-primary-900/10 rounded-lg hover:bg-section-medium dark:hover:bg-primary-900/20 transition-colors">
+                  <div key={route.name} className="p-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                   <div className="flex items-center justify-between">
-                      <p className="font-medium text-text-base dark:text-text-inverse truncate max-w-[70%]">{route.name}</p>
-                      <span className="text-sm font-semibold text-primary dark:text-primary-200 whitespace-nowrap">{route.count} trips</span>
+                      <p className="font-medium text-gray-900 dark:text-white transition-colors duration-300 truncate max-w-[70%]">{route.name}</p>
+                      <span className="text-sm font-semibold text-primary-600 dark:text-primary-400 transition-colors duration-300 whitespace-nowrap">{route.count} trips</span>
                   </div>
-                    <div className="text-xs text-text-muted dark:text-text-muted-dark mt-2 flex items-center">
-                      <MapPin size={12} className="inline mr-1"/> {route.origin} 
-                      <TrendingUp size={12} className="inline mx-2"/> 
-                      <Navigation size={12} className="inline mr-1"/> {route.destination}
+                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-2 flex items-center transition-colors duration-300">
+                      <MapPin size={12} className="inline mr-1 text-primary-500 dark:text-primary-400 transition-colors duration-300"/> {route.origin} 
+                      <ArrowRight size={12} className="inline mx-2 text-gray-400 dark:text-gray-500 transition-colors duration-300"/> 
+                      <MapPin size={12} className="inline mr-1 text-primary-500 dark:text-primary-400 transition-colors duration-300"/> {route.destination}
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-              <div className="text-center py-8  dark:bg-section-medium rounded-lg">
-                <p className="text-text-muted dark:text-text-muted-dark">No route data for this period</p>
+              <div className="text-center py-8 bg-gray-100 dark:bg-gray-700 rounded-lg transition-colors duration-300">
+                <p className="text-gray-600 dark:text-gray-300 transition-colors duration-300">No route data for this period</p>
               </div>
             )}
             
-            <Link to="/admin/routes" className="mt-4 text-sm text-primary dark:text-primary-200 hover:underline flex items-center justify-end">
+            <Link to="/admin/routes" className="mt-6 text-sm font-medium text-primary-600 dark:text-primary-400 hover:underline flex items-center justify-end transition-colors duration-300">
               Manage routes <ArrowRight className="h-4 w-4 ml-1" />
             </Link>
           </div>
         </div>
 
         {/* Recent Trips List */}
-        <div className="card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 overflow-hidden mb-8">
-          <div className="px-6 py-4 border-b border-primary-100 dark:border-primary-800 flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-text-base dark:text-text-inverse flex items-center">
-              <Calendar className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
+        <div className="card overflow-hidden mb-12">
+          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300 flex justify-between items-center">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+              <Calendar className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
               Manage Trips
             </h2>
             <div className="flex items-center">
@@ -324,11 +324,11 @@ const AdminDashboard: React.FC = () => {
                   setTripToEdit(null);
                   setIsTripModalOpen(true);
                 }}
-                className="btn btn-primary btn-sm mr-3 flex items-center gap-2"
+                className="btn btn-primary btn-sm mr-4 flex items-center gap-2"
               >
                 <Plus className="h-4 w-4" /> New Trip
               </button>
-              <span className="text-sm text-text-muted dark:text-text-muted-dark">
+              <span className="text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
                 Showing {sortedTrips.slice(0,5).length} of {sortedTrips.length} trips
               </span>
         </div>
@@ -336,29 +336,29 @@ const AdminDashboard: React.FC = () => {
 
           <div className="overflow-x-auto">
           {sortedTrips.length > 0 ? (
-              <table className="min-w-full divide-y divide-primary-100 dark:divide-primary-800">
-                <thead className=" dark:bg-section-medium">
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
+                <thead className="bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
                   <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted-dark uppercase tracking-wider">Route</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted-dark uppercase tracking-wider">Date & Time</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted-dark uppercase tracking-wider">Status</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted-dark uppercase tracking-wider">Onboarding</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted-dark uppercase tracking-wider">Driver</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-text-muted dark:text-text-muted-dark uppercase tracking-wider">Vehicle</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Route</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Date & Time</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Status</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Onboarding</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Driver</th>
+                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Vehicle</th>
                   <th scope="col" className="relative px-6 py-3">
                     <span className="sr-only">Actions</span>
                   </th>
                 </tr>
               </thead>
-                <tbody className="bg-base-100 dark:bg-section-dark divide-y divide-primary-100 dark:divide-primary-800">
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
                 {sortedTrips.slice(0, 10).map((trip) => (
                     <tr 
                       key={trip.id} 
-                      className={`hover: dark:hover:bg-section-medium transition-colors cursor-pointer ${selectedTrip?.id === trip.id ? 'bg-primary-50 dark:bg-primary-900/20' : ''}`} 
+                      className={`hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer ${selectedTrip?.id === trip.id ? 'bg-primary-50 dark:bg-gray-700' : ''}`} 
                       onClick={() => setSelectedTrip(trip.id === selectedTrip?.id ? null : trip)}
                     >
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-text-base dark:text-text-inverse">{trip.fromLocation} to {trip.toLocation}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted dark:text-text-muted-dark">{trip.date} at {trip.time}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white transition-colors duration-300">{trip.fromLocation} to {trip.toLocation}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">{trip.date} at {trip.time}</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                         <span className={`badge ${
                           trip.status === 'completed' ? 'badge-success' :
@@ -366,29 +366,29 @@ const AdminDashboard: React.FC = () => {
                           trip.status === 'scheduled' ? 'badge-warning' :
                           trip.status === 'pending_approval' ? 'badge-warning' :
                           trip.status === 'cancelled' ? 'badge-error' :
-                          'badge-ghost'}`}>
+                          'badge-gray'}`}>
                         {trip.status.charAt(0).toUpperCase() + trip.status.slice(1).replace('_', ' ')}
                       </span>
                     </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted dark:text-text-muted-dark">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
                         <div className="flex items-center">
-                          <Users className="h-4 w-4 mr-1 text-primary dark:text-primary-200" />
+                          <Users className="h-4 w-4 mr-1 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
                       {`${trip.checkedInCount || 0} / ${trip.confirmedBookings || 0} (${trip.totalBookingsForTrip || 0} total)`}
                         </div>
                     </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted dark:text-text-muted-dark">{trip.driverId || 'Not assigned'}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-text-muted dark:text-text-muted-dark">{mockVehicles.find(v => v.id === trip.vehicleId)?.model || 'N/A'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">{trip.driverId || 'Not assigned'}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">{mockVehicles.find(v => v.id === trip.vehicleId)?.model || 'N/A'}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex items-center justify-end space-x-2">
                           <button 
                             onClick={(e) => { e.stopPropagation(); openEditModal(trip); }} 
-                            className="btn btn-ghost btn-sm text-primary dark:text-primary-200 p-1"
+                            className="btn btn-ghost btn-sm text-primary-600 dark:text-primary-400 p-1"
                           >
                             <Edit size={16}/>
                           </button>
                           <button 
                             onClick={(e) => { e.stopPropagation(); handleDeleteTrip(trip.id); }} 
-                            className="btn btn-ghost btn-sm text-red-500 dark:text-red-400 p-1"
+                            className="btn btn-ghost btn-sm text-error dark:text-error-light p-1"
                           >
                             <Trash2 size={16}/>
                           </button>
@@ -399,26 +399,26 @@ const AdminDashboard: React.FC = () => {
               </tbody>
             </table>
           ) : (
-            <div className="text-center py-12">
-                <Calendar className="mx-auto h-12 w-12 text-text-muted dark:text-text-muted-dark" />
-                <h3 className="mt-2 text-sm font-medium text-text-base dark:text-text-inverse">No trips found</h3>
-                <p className="mt-1 text-sm text-text-muted dark:text-text-muted-dark">Create the first trip using the button above.</p>
+            <div className="text-center py-12 bg-gray-100 dark:bg-gray-700 rounded-lg transition-colors duration-300">
+                <Calendar className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 transition-colors duration-300" />
+                <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white transition-colors duration-300">No trips found</h3>
+                <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">Create the first trip using the button above.</p>
                 <button
                   onClick={() => {
                     setTripToEdit(null);
                     setIsTripModalOpen(true);
                   }}
-                  className="mt-4 btn btn-primary"
+                  className="mt-4 btn btn-primary inline-flex items-center gap-2"
                 >
-                  <Plus className="h-4 w-4 mr-2" /> Create Trip
+                  <Plus className="h-4 w-4" /> Create Trip
                 </button>
             </div>
           )}
       </div>
 
           {sortedTrips.length > 10 && (
-            <div className="px-6 py-3 border-t border-primary-100 dark:border-primary-800 flex justify-center">
-              <Link to="/admin/trips" className="btn btn-ghost btn-sm text-primary dark:text-primary-200 flex items-center gap-2">
+            <div className="px-6 py-3 border-t border-gray-200 dark:border-gray-700 transition-colors duration-300 flex justify-center">
+              <Link to="/admin/trips" className="btn btn-ghost btn-sm text-primary-600 dark:text-primary-400 flex items-center gap-2 transition-colors duration-300">
                 View all trips <ArrowRight className="h-4 w-4" />
               </Link>
             </div>

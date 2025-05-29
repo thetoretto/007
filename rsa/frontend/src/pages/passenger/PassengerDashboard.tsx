@@ -127,27 +127,27 @@ const PassengerDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
       <Navbar />
       <ToastContainer />
-      <main className="container-app mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-16 md:pt-20">
+      <main className="container-app py-8 md:py-12">
         {/* Header with greeting and search */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div className="flex-1 min-w-0 mb-4 md:mb-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-text-base dark:text-text-inverse">Passenger Dashboard</h1>
-            <p className="mt-1 text-sm text-text-muted dark:text-text-muted-dark">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white transition-colors duration-300">Passenger Dashboard</h1>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
               {user && `Welcome back, ${user.firstName} ${user.lastName}`}
             </p>
           </div>
           <div className="flex flex-wrap gap-3 items-center">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-text-muted dark:text-text-muted-dark" />
+                <Search className="h-4 w-4 text-gray-600 dark:text-gray-300 transition-colors duration-300" />
               </div>
               <input
                 type="text"
                 placeholder="Search routes..."
-                className="input input-bordered pl-10 pr-4 py-2 w-full md:w-64"
+                className="form-input block w-full pl-10 pr-4 py-2 text-gray-900 dark:text-white dark:bg-gray-700 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 transition-colors duration-300"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -161,61 +161,61 @@ const PassengerDashboard: React.FC = () => {
 
         {/* Quick Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="card bg-base-100 dark:bg-section-dark p-6 rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 transition-all hover:shadow-md">
+          <div className="card p-6 card-interactive hover:shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-text-muted dark:text-text-muted-dark">Total Trips</p>
-              <div className="p-2 rounded-full bg-primary-50 dark:bg-primary-900">
-                <Calendar className="h-6 w-6 text-primary dark:text-primary-200" />
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Total Trips</p>
+              <div className="icon-badge icon-badge-md bg-primary-light text-primary dark:bg-primary-dark dark:text-primary-light">
+                <Calendar className="h-6 w-6" />
               </div>
             </div>
-            <p className="text-3xl font-semibold text-text-base dark:text-text-inverse">{dummyTripStats.total}</p>
-            <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1">Lifetime trips</p>
+            <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{dummyTripStats.total}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300">Lifetime trips</p>
           </div>
 
-          <div className="card bg-base-100 dark:bg-section-dark p-6 rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 transition-all hover:shadow-md">
+          <div className="card p-6 card-interactive hover:shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-text-muted dark:text-text-muted-dark">Upcoming</p>
-              <div className="p-2 rounded-full bg-blue-50 dark:bg-blue-900">
-                <Clock className="h-6 w-6 text-blue-500 dark:text-blue-400" />
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Upcoming</p>
+              <div className="icon-badge icon-badge-md bg-info-light text-info dark:bg-info-dark dark:text-info-light">
+                <Clock className="h-6 w-6" />
               </div>
             </div>
-            <p className="text-3xl font-semibold text-text-base dark:text-text-inverse">{dummyTripStats.upcoming}</p>
-            <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1">Scheduled trips</p>
+            <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{dummyTripStats.upcoming}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300">Scheduled trips</p>
           </div>
           
-          <div className="card bg-base-100 dark:bg-section-dark p-6 rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 transition-all hover:shadow-md">
+          <div className="card p-6 card-interactive hover:shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-text-muted dark:text-text-muted-dark">Completed</p>
-              <div className="p-2 rounded-full bg-green-50 dark:bg-green-900">
-                <CheckCircle className="h-6 w-6 text-green-500 dark:text-green-400" />
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Completed</p>
+              <div className="icon-badge icon-badge-md bg-success-light text-success dark:bg-success-dark dark:text-success-light">
+                <CheckCircle className="h-6 w-6" />
               </div>
             </div>
-            <p className="text-3xl font-semibold text-text-base dark:text-text-inverse">{dummyTripStats.completed}</p>
-            <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1">Successfully completed</p>
+            <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{dummyTripStats.completed}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300">Successfully completed</p>
           </div>
           
-          <div className="card bg-base-100 dark:bg-section-dark p-6 rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 transition-all hover:shadow-md">
+          <div className="card p-6 card-interactive hover:shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-text-muted dark:text-text-muted-dark">Cancelled</p>
-              <div className="p-2 rounded-full bg-red-50 dark:bg-red-900">
-                <XCircle className="h-6 w-6 text-red-500 dark:text-red-400" />
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Cancelled</p>
+              <div className="icon-badge icon-badge-md bg-error-light text-error dark:bg-error-dark dark:text-error-light">
+                <XCircle className="h-6 w-6" />
               </div>
             </div>
-            <p className="text-3xl font-semibold text-text-base dark:text-text-inverse">{dummyTripStats.cancelled}</p>
-            <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1">Cancelled trips</p>
+            <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{dummyTripStats.cancelled}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300">Cancelled trips</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Upcoming Trips */}
           <div className="lg:col-span-2">
-            <div className="card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 overflow-hidden mb-8">
-              <div className="px-6 py-4 border-b border-primary-100 dark:border-primary-800 flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-text-base dark:text-text-inverse flex items-center">
-                  <Calendar className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
+            <div className="card overflow-hidden mb-8">
+              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300 flex justify-between items-center">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+                  <Calendar className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
                   Upcoming Trips
                 </h2>
-                <Link to="/passenger/trips" className="btn btn-ghost btn-sm text-primary dark:text-primary-200 flex items-center gap-2">
+                <Link to="/passenger/trips" className="btn btn-ghost btn-sm text-primary-600 dark:text-primary-400 flex items-center gap-2 transition-colors duration-300">
                   View all <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -223,39 +223,39 @@ const PassengerDashboard: React.FC = () => {
               <div className="overflow-hidden">
                 {isLoading ? (
                   <div className="p-8 text-center">
-                    <p className="text-text-muted dark:text-text-muted-dark">Loading your trips...</p>
+                    <p className="text-gray-600 dark:text-gray-300 transition-colors duration-300">Loading your trips...</p>
                   </div>
                 ) : upcomingBookings.length > 0 ? (
-                  <div className="divide-y divide-primary-100 dark:divide-primary-800">
+                  <div className="divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
                     {upcomingBookings.map((booking) => (
                       <Link
                         key={booking.id}
                         to={`/passenger/trips/${booking.id}`}
-                        className="block p-6 hover:bg-section-light dark:hover:bg-section-medium transition-colors"
+                        className="block p-6 card-interactive hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-300"
                       >
                         <div className="flex items-center justify-between">
                           <div>
-                            <h3 className="text-base font-medium text-text-base dark:text-text-inverse">
+                            <h3 className="text-base font-medium text-gray-900 dark:text-white transition-colors duration-300">
                               {booking.route?.origin?.name || 'Origin'} to {booking.route?.destination?.name || 'Destination'}
                             </h3>
-                            <div className="mt-1 flex items-center text-sm text-text-muted dark:text-text-muted-dark">
+                            <div className="mt-1 flex items-center text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
                               <Calendar className="h-4 w-4 mr-1" />
                               <span>{booking.trip?.date && booking.trip?.time ? formatDate(booking.trip.date, booking.trip.time) : 'Date TBD'}</span>
                             </div>
                             <div className="mt-1 flex items-center">
                               {getStatusBadge(booking.status)}
                               
-                              <span className="ml-3 text-xs text-text-muted dark:text-text-muted-dark">
+                              <span className="ml-3 text-xs text-gray-600 dark:text-gray-300 transition-colors duration-300">
                                 {booking.trip?.vehicle?.model ? `${booking.trip.vehicle.model}` : 'Vehicle TBD'}
                               </span>
                             </div>
                           </div>
 
                           <div className="flex flex-col items-end">
-                            <span className="text-lg font-semibold text-primary dark:text-primary-200">
+                            <span className="text-lg font-semibold text-primary-600 dark:text-primary-400 transition-colors duration-300">
                               ${booking.trip?.price?.toFixed(2) || '0.00'}
                             </span>
-                            <div className="flex items-center text-xs text-text-muted dark:text-text-muted-dark mt-1">
+                            <div className="flex items-center text-xs text-gray-600 dark:text-gray-300 mt-1 transition-colors duration-300">
                               <span>Seat{(booking.seats && booking.seats.length > 1) ? 's' : ''} {booking.seats && booking.seats.length > 0 ? booking.seats.length : 'TBD'}</span>
                               <ChevronRight className="h-4 w-4 ml-1" />
                             </div>
@@ -265,12 +265,12 @@ const PassengerDashboard: React.FC = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-12">
-                    <div className="mx-auto h-12 w-12 bg-section-light dark:bg-section-medium rounded-full flex items-center justify-center">
-                      <Calendar className="h-6 w-6 text-text-muted dark:text-text-muted-dark" />
+                  <div className="text-center py-12 card">
+                    <div className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 transition-colors duration-300">
+                      <Calendar className="h-6 w-6" />
                     </div>
-                    <h3 className="mt-2 text-sm font-medium text-text-base dark:text-text-inverse">No upcoming trips</h3>
-                    <p className="mt-1 text-sm text-text-muted dark:text-text-muted-dark">
+                    <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white transition-colors duration-300">No upcoming trips</h3>
+                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
                       You don't have any upcoming trips scheduled.
                     </p>
                     <Link to="/book" className="btn btn-primary mt-4">
@@ -282,32 +282,32 @@ const PassengerDashboard: React.FC = () => {
             </div>
 
             {/* Travel History */}
-            <div className="card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 overflow-hidden">
-              <div className="px-6 py-4 border-b border-primary-100 dark:border-primary-800 flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-text-base dark:text-text-inverse flex items-center">
-                  <TrendingUp className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
+            <div className="card overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300 flex justify-between items-center">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+                  <TrendingUp className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
                   Recent Travel History
                 </h2>
-                <Link to="/passenger/trips" className="btn btn-ghost btn-sm text-primary dark:text-primary-200 flex items-center gap-2">
+                <Link to="/passenger/trips" className="btn btn-ghost btn-sm text-primary-600 dark:text-primary-400 flex items-center gap-2 transition-colors duration-300">
                   View all <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
 
               <div className="overflow-hidden">
                 {pastBookings.length > 0 ? (
-                  <div className="divide-y divide-primary-100 dark:divide-primary-800">
+                  <div className="divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
                     {pastBookings.map((booking) => (
                       <Link
                         key={booking.id}
                         to={`/passenger/trips/${booking.id}`}
-                        className="block p-6 hover:bg-section-light dark:hover:bg-section-medium transition-colors"
+                        className="block p-6 card-interactive hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-300"
                       >
                         <div className="flex items-center justify-between">
                           <div>
-                            <h3 className="text-base font-medium text-text-base dark:text-text-inverse">
+                            <h3 className="text-base font-medium text-gray-900 dark:text-white transition-colors duration-300">
                               {booking.route?.origin?.name || 'Origin'} to {booking.route?.destination?.name || 'Destination'}
                             </h3>
-                            <div className="mt-1 flex items-center text-sm text-text-muted dark:text-text-muted-dark">
+                            <div className="mt-1 flex items-center text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
                               <Calendar className="h-4 w-4 mr-1" />
                               <span>{booking.trip?.date && booking.trip?.time ? formatDate(booking.trip.date, booking.trip.time) : 'Date N/A'}</span>
                             </div>
@@ -317,11 +317,11 @@ const PassengerDashboard: React.FC = () => {
                           </div>
 
                           <div className="flex flex-col items-end">
-                            <span className="text-lg font-semibold text-text-base dark:text-text-inverse">
+                            <span className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300">
                               ${booking.trip?.price?.toFixed(2) || '0.00'}
                             </span>
                             {booking.status === 'completed' && (
-                              <div className="flex items-center text-xs text-yellow-500 mt-1">
+                              <div className="flex items-center text-xs text-warning-600 dark:text-warning-400 mt-1 transition-colors duration-300">
                                 <Star className="h-4 w-4 mr-1 fill-current" />
                                 <Star className="h-4 w-4 mr-1 fill-current" />
                                 <Star className="h-4 w-4 mr-1 fill-current" />
@@ -335,8 +335,8 @@ const PassengerDashboard: React.FC = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8">
-                    <p className="text-text-muted dark:text-text-muted-dark">No travel history found.</p>
+                  <div className="text-center py-8 card">
+                    <p className="text-gray-600 dark:text-gray-300 transition-colors duration-300">No travel history found.</p>
                   </div>
                 )}
               </div>
@@ -346,10 +346,10 @@ const PassengerDashboard: React.FC = () => {
           {/* Right Sidebar */}
           <div>
             {/* Popular Routes */}
-            <div className="card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 overflow-hidden mb-8">
-              <div className="px-6 py-4 border-b border-primary-100 dark:border-primary-800">
-                <h2 className="text-lg font-semibold text-text-base dark:text-text-inverse flex items-center">
-                  <MapPin className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
+            <div className="card overflow-hidden mb-8">
+              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+                  <MapPin className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
                   Popular Routes
                 </h2>
               </div>
@@ -359,20 +359,20 @@ const PassengerDashboard: React.FC = () => {
                     <Link
                       key={route.id}
                       to={`/passenger/booking?from=${route.origin}&to=${route.destination}`}
-                      className="block p-3 bg-section-light dark:bg-section-medium rounded-lg hover:bg-section-medium dark:hover:bg-section-dark transition-all"
+                      className="block p-3 card-interactive hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-300"
                     >
                       <div className="flex justify-between items-start">
                         <div>
-                          <p className="font-medium text-text-base dark:text-text-inverse">{route.origin} to {route.destination}</p>
-                          <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1">
+                          <p className="font-medium text-gray-900 dark:text-white transition-colors duration-300">{route.origin} to {route.destination}</p>
+                          <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 transition-colors duration-300">
                             {route.count} trips this month
                           </p>
                         </div>
-                        <span className="text-lg font-semibold text-primary dark:text-primary-200">
+                        <span className="text-lg font-semibold text-primary-600 dark:text-primary-400 transition-colors duration-300">
                           ${route.price}
                         </span>
                       </div>
-                      <div className="mt-2 flex items-center justify-end text-xs text-primary dark:text-primary-200">
+                      <div className="mt-2 flex items-center justify-end text-primary-600 dark:text-primary-400 text-xs transition-colors duration-300">
                         <span>Book now</span>
                         <ArrowRight className="h-3.5 w-3.5 ml-1" />
                       </div>
@@ -383,31 +383,26 @@ const PassengerDashboard: React.FC = () => {
             </div>
 
             {/* Recent Activities */}
-            <div className="card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 overflow-hidden mb-8">
-              <div className="px-6 py-4 border-b border-primary-100 dark:border-primary-800">
-                <h2 className="text-lg font-semibold text-text-base dark:text-text-inverse flex items-center">
-                  <Activity className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
+            <div className="card overflow-hidden mb-8">
+              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+                  <Activity className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
                   Recent Activities
                 </h2>
               </div>
-              <div className="px-4 py-2 divide-y divide-primary-100 dark:divide-primary-800">
+              <div className="px-4 py-2 divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
                 {recentActivities.map(activity => (
                   <div key={activity.id} className="py-3">
                     <div className="flex items-start">
-                      <div className={`p-2 rounded-full ${
-                        activity.type === 'booking' ? 'bg-blue-50 text-blue-500 dark:bg-blue-900 dark:text-blue-300' :
-                        activity.type === 'payment' ? 'bg-green-50 text-green-500 dark:bg-green-900 dark:text-green-300' :
-                        activity.type === 'review' ? 'bg-yellow-50 text-yellow-500 dark:bg-yellow-900 dark:text-yellow-300' :
-                        'bg-red-50 text-red-500 dark:bg-red-900 dark:text-red-300'
-                      } mr-3`}>
+                      <div className={`icon-badge icon-badge-sm ${activity.type === 'booking' ? 'bg-info-light text-info dark:bg-info-dark dark:text-info-light' : activity.type === 'payment' ? 'bg-success-light text-success dark:bg-success-dark dark:text-success-light' : activity.type === 'review' ? 'bg-warning-light text-warning dark:bg-warning-dark dark:text-warning-light' : 'bg-error-light text-error dark:bg-error-dark dark:text-error-light'} mr-3 transition-colors duration-300`}>
                         {activity.type === 'booking' ? <Ticket className="h-4 w-4" /> :
                          activity.type === 'payment' ? <CreditCard className="h-4 w-4" /> :
                          activity.type === 'review' ? <Star className="h-4 w-4" /> :
                          <XCircle className="h-4 w-4" />}
                       </div>
                       <div>
-                        <p className="text-sm text-text-base dark:text-text-inverse">{activity.description}</p>
-                        <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1">
+                        <p className="text-sm text-gray-900 dark:text-white transition-colors duration-300">{activity.description}</p>
+                        <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 transition-colors duration-300">
                           {new Date(activity.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
                         </p>
                       </div>
@@ -418,10 +413,10 @@ const PassengerDashboard: React.FC = () => {
             </div>
 
             {/* Quick Actions */}
-            <div className="card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 overflow-hidden">
-              <div className="px-6 py-4 border-b border-primary-100 dark:border-primary-800">
-                <h2 className="text-lg font-semibold text-text-base dark:text-text-inverse flex items-center">
-                  <Zap className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
+            <div className="card overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+                  <Zap className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
                   Quick Actions
                 </h2>
               </div>
@@ -435,7 +430,7 @@ const PassengerDashboard: React.FC = () => {
                     <Calendar className="h-5 w-5" />
                     View All Trips
                   </Link>
-                  <Link to="/profile" className="btn btn-outline btn-secondary w-full flex items-center justify-center gap-2">
+                  <Link to="/profile" className="btn btn-outline w-full flex items-center justify-center gap-2">
                     <User className="h-5 w-5" />
                     Edit Profile
                   </Link>

@@ -70,16 +70,16 @@ const TripDetailsPage: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg text-gray-600">Loading trip details...</p>
+        <p className="text-lg text-gray-600 dark:text-gray-300 transition-colors duration-300">Loading trip details...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
         <Navbar />
-        <p className="text-lg text-red-600 mt-20">Error: {error}</p>
+        <p className="text-lg text-red-600 dark:text-red-400 mt-20 transition-colors duration-300">Error: {error}</p>
         <Link to="/passenger/dashboard" className="mt-4 btn btn-primary">
           Back to Dashboard
         </Link>
@@ -89,9 +89,9 @@ const TripDetailsPage: React.FC = () => {
 
   if (!booking) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
         <Navbar />
-        <p className="text-lg text-gray-600 mt-20">No booking details found for this trip.</p>
+        <p className="text-lg text-gray-600 dark:text-gray-300 mt-20 transition-colors duration-300">No booking details found for this trip.</p>
         <Link to="/passenger/dashboard" className="mt-4 btn btn-primary">
           Back to Dashboard
         </Link>
@@ -100,33 +100,33 @@ const TripDetailsPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
       <Navbar />
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="container-app max-w-4xl py-8 md:py-12">
         <button
           onClick={() => navigate(-1)} // Go back to the previous page
-          className="mb-6 inline-flex items-center text-sm font-medium text-primary-600 hover:text-primary-800"
+          className="mb-6 inline-flex items-center text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-200 transition-colors duration-300"
         >
           <ArrowLeft className="h-4 w-4 mr-1.5" />
           Back
         </button>
 
-        <div className="bg-white shadow-xl rounded-lg overflow-hidden">
-          <div className="p-6 sm:p-8">
+        <div className="card overflow-hidden shadow-lg">
+          <div className="p-6 sm:p-8 card-body">
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-0">
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-0 transition-colors duration-300">
                 Trip Details
               </h1>
               <div className="flex space-x-2">
                 <button
                   onClick={handlePrint}
-                  className="btn btn-outline btn-sm inline-flex items-center"
+                  className="btn btn-outline btn-sm inline-flex items-center text-gray-600 dark:text-gray-300"
                 >
                   <Printer className="h-4 w-4 mr-1.5" /> Print
                 </button>
                 <button
                   onClick={handleShare}
-                  className="btn btn-outline btn-sm inline-flex items-center"
+                  className="btn btn-outline btn-sm inline-flex items-center text-gray-600 dark:text-gray-300"
                 >
                   <Share2 className="h-4 w-4 mr-1.5" /> Share
                 </button>

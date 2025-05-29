@@ -12,7 +12,7 @@ import SkeletonCard from '../../components/common/SkeletonCard';
 // Define a simple Card component to use until UI library issues are resolved
 const Card: React.FC<React.PropsWithChildren<{className?: string, key?: string}>> = ({ children, className = '', key }) => {
   return (
-    <div key={key} className={`bg-white rounded-lg shadow-sm overflow-hidden ${className}`}>
+    <div key={key} className={`card overflow-hidden ${className}`}>
       {children}
     </div>
   );
@@ -306,14 +306,14 @@ const TripsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-background-dark">
+    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
       <Navbar/> 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="container-app py-8 md:py-12">
         {/* Header with back button */}
         <div className="mb-6 flex items-center">
           <Link 
             to="/passenger/dashboard" 
-            className="btn btn-ghost btn-sm gap-2 mb-4"
+            className="btn btn-ghost btn-sm gap-2"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to Dashboard

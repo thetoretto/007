@@ -213,15 +213,15 @@ const DriverDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
       <Navbar />
       <ToastContainer />
-      <main className="container-app mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-16 md:pt-20">
+      <main className="container-app py-8 md:py-12">
         {/* Header with actions */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div className="flex-1 min-w-0 mb-4 md:mb-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-text-base dark:text-text-inverse">Driver Dashboard</h1>
-            <p className="mt-1 text-sm text-text-muted dark:text-text-muted-dark">
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white transition-colors duration-300">Driver Dashboard</h1>
+            <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
             {user && `Welcome back, ${user.firstName} ${user.lastName}`}
           </p>
         </div>
@@ -239,29 +239,29 @@ const DriverDashboard: React.FC = () => {
 
       {/* Available Trips Section */}
       {availableTrips.length > 0 && (
-          <div className="mb-8 card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 p-6">
-            <h2 className="text-xl font-semibold mb-4 text-text-base dark:text-text-inverse flex items-center">
-              <Truck className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
+          <div className="mb-8 card p-6">
+            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+              <Truck className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
               Available Trips for Claiming
             </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {availableTrips.map(trip => (
-                <div key={trip.id} className="card bg-section-light dark:bg-section-medium rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 p-4 hover:shadow-md transition-all">
+                <div key={trip.id} className="card p-4 card-interactive card-hover-border">
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-semibold text-text-base dark:text-text-inverse">{trip.fromLocation || ''} to {trip.toLocation || ''}</h3>
+                    <h3 className="font-semibold text-gray-900 dark:text-white transition-colors duration-300">{trip.fromLocation || ''} to {trip.toLocation || ''}</h3>
                     <span className="badge badge-sm badge-warning">
                       {trip.status.replace('_', ' ')}
                     </span>
                   </div>
                   <div className="space-y-1 mb-3">
-                    <p className="text-sm text-text-muted dark:text-text-muted-dark flex items-center">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 flex items-center transition-colors duration-300">
                       <Calendar className="h-4 w-4 mr-1" /> {trip.date} at {trip.time}
                     </p>
-                    <p className="text-sm text-text-muted dark:text-text-muted-dark flex items-center">
+                    <p className="text-sm text-gray-600 dark:text-gray-300 flex items-center transition-colors duration-300">
                       <Truck className="h-4 w-4 mr-1" /> {getVehicleInfo(trip)}
                     </p>
                     {trip.price && (
-                      <p className="text-sm text-text-muted dark:text-text-muted-dark flex items-center">
+                      <p className="text-sm text-gray-600 dark:text-gray-300 flex items-center transition-colors duration-300">
                         <DollarSign className="h-4 w-4 mr-1" /> ${trip.price.toFixed(2)}
                       </p>
                     )}
@@ -280,18 +280,18 @@ const DriverDashboard: React.FC = () => {
       )}
 
       {/* Trip Statistics Section */}
-        <div className="mb-8 card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 p-6">
+        <div className="mb-8 card p-6">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-semibold text-text-base dark:text-text-inverse flex items-center">
-              <BarChart className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+              <BarChart className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
               Trip Statistics
             </h2>
-            <div className="flex items-center bg-section-light dark:bg-section-medium rounded-lg p-2">
-              <Filter className="h-5 w-5 text-text-muted dark:text-text-muted-dark mr-2" />
+            <div className="flex items-center">
+              <Filter className="h-5 w-5 text-gray-600 dark:text-gray-300 mr-2 transition-colors duration-300" />
             <select
               value={timePeriod}
               onChange={(e) => setTimePeriod(e.target.value as 'daily' | 'weekly' | 'monthly' | 'yearly')}
-                className="select select-bordered select-sm focus:ring-0 focus:outline-none text-text-base dark:text-text-inverse bg-transparent"
+                className="form-select block w-full text-sm rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:focus:ring-primary-500 dark:focus:border-primary-500 transition-colors duration-300"
             >
               <option value="daily">Daily</option>
               <option value="weekly">Weekly</option>
@@ -301,69 +301,69 @@ const DriverDashboard: React.FC = () => {
           </div>
         </div>
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="card bg-section-light dark:bg-section-medium p-4 rounded-lg border border-primary-100 dark:border-primary-800 transition-all hover:shadow-sm">
+            <div className="card p-4 card-interactive hover:shadow-sm">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm font-medium text-text-muted dark:text-text-muted-dark">Scheduled</p>
-                <div className="p-2 rounded-full bg-blue-50 dark:bg-blue-900">
-                  <Clock className="h-5 w-5 text-blue-500 dark:text-blue-400" />
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Scheduled</p>
+                <div className="icon-badge icon-badge-md bg-info-light text-info dark:bg-info-dark dark:text-info-light">
+                  <Clock className="h-5 w-5" />
                 </div>
               </div>
-              <p className="text-3xl font-semibold text-text-base dark:text-text-inverse">{scheduledTripsForPeriod}</p>
-              <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1 capitalize">For {timePeriod} Period</p>
+              <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{scheduledTripsForPeriod}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 capitalize transition-colors duration-300">For {timePeriod} Period</p>
             </div>
-            <div className="card bg-section-light dark:bg-section-medium p-4 rounded-lg border border-primary-100 dark:border-primary-800 transition-all hover:shadow-sm">
+            <div className="card p-4 card-interactive hover:shadow-sm">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm font-medium text-text-muted dark:text-text-muted-dark">Completed</p>
-                <div className="p-2 rounded-full bg-green-50 dark:bg-green-900">
-                  <CheckCircle className="h-5 w-5 text-green-500 dark:text-green-400" />
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Completed</p>
+                <div className="icon-badge icon-badge-md bg-success-light text-success dark:bg-success-dark dark:text-success-light">
+                  <CheckCircle className="h-5 w-5" />
                 </div>
               </div>
-              <p className="text-3xl font-semibold text-text-base dark:text-text-inverse">{completedTripsForPeriod}</p>
-              <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1 capitalize">For {timePeriod} Period</p>
+              <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{completedTripsForPeriod}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 capitalize transition-colors duration-300">For {timePeriod} Period</p>
             </div>
-            <div className="card bg-section-light dark:bg-section-medium p-4 rounded-lg border border-primary-100 dark:border-primary-800 transition-all hover:shadow-sm">
+            <div className="card p-4 card-interactive hover:shadow-sm">
               <div className="flex items-center justify-between mb-2">
-                <p className="text-sm font-medium text-text-muted dark:text-text-muted-dark">Cancelled</p>
-                <div className="p-2 rounded-full bg-red-50 dark:bg-red-900">
-                  <AlertCircle className="h-5 w-5 text-red-500 dark:text-red-400" />
+                <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Cancelled</p>
+                <div className="icon-badge icon-badge-md bg-error-light text-error dark:bg-error-dark dark:text-error-light">
+                  <AlertCircle className="h-5 w-5" />
           </div>
           </div>
-              <p className="text-3xl font-semibold text-text-base dark:text-text-inverse">{cancelledTripsForPeriod}</p>
-              <p className="text-xs text-text-muted dark:text-text-muted-dark mt-1 capitalize">For {timePeriod} Period</p>
+              <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{cancelledTripsForPeriod}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 capitalize transition-colors duration-300">For {timePeriod} Period</p>
           </div>
         </div>
       </div>
 
       {/* Income Section */}
-        <div className="mb-8 card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 p-6">
+        <div className="mb-8 card p-6">
         <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-semibold text-text-base dark:text-text-inverse flex items-center">
-              <DollarSign className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+              <DollarSign className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
               Income ({timePeriod.charAt(0).toUpperCase() + timePeriod.slice(1)})
             </h2>
             <button 
               onClick={toggleShowIncome} 
-              className="btn btn-ghost btn-sm flex items-center gap-2"
+              className="btn btn-ghost btn-sm flex items-center gap-2 text-gray-600 dark:text-gray-300"
             >
               {showIncome ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             {showIncome ? 'Hide' : 'Show'} Income
           </button>
         </div>
         {showIncome ? (
-            <div className="bg-yellow-50 dark:bg-yellow-900/20 p-6 rounded-lg border border-yellow-200 dark:border-yellow-800">
+            <div className="bg-warning-light dark:bg-warning-dark/20 p-6 rounded-lg border border-warning-200 dark:border-warning-800 transition-colors duration-300">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-yellow-700 dark:text-yellow-200 mb-1">Total Earnings</p>
-                  <p className="text-3xl font-bold text-yellow-600 dark:text-yellow-300 flex items-center">
+                  <p className="text-sm text-warning-700 dark:text-warning-200 mb-1 transition-colors duration-300">Total Earnings</p>
+                  <p className="text-3xl font-bold text-warning-600 dark:text-warning-300 flex items-center transition-colors duration-300">
                     <DollarSign className="h-7 w-7 mr-1" />
               {driverIncome.toFixed(2)}
             </p>
                 </div>
-                <div className="p-3 bg-yellow-100 dark:bg-yellow-800 rounded-full">
-                  <DollarSign className="h-8 w-8 text-yellow-600 dark:text-yellow-300" />
+                <div className="icon-badge icon-badge-lg bg-warning-light text-warning dark:bg-warning-dark dark:text-warning-light">
+                  <DollarSign className="h-8 w-8" />
                 </div>
               </div>
-              <div className="mt-4 pt-4 border-t border-yellow-200 dark:border-yellow-800 text-sm text-yellow-700 dark:text-yellow-200">
+              <div className="mt-4 pt-4 border-t border-warning-200 dark:border-warning-800 text-sm text-warning-700 dark:text-warning-200 transition-colors duration-300">
                 <p className="flex justify-between mb-1">
                   <span>Trips completed:</span>
                   <span className="font-medium">{completedTripsForPeriod}</span>
@@ -375,21 +375,21 @@ const DriverDashboard: React.FC = () => {
               </div>
           </div>
         ) : (
-            <div className="text-center py-10 bg-section-light dark:bg-section-medium rounded-lg border border-dashed border-primary-200 dark:border-primary-800">
-              <div className="mx-auto h-12 w-12 text-text-muted dark:text-text-muted-dark">
+            <div className="text-center py-10 card">
+              <div className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 transition-colors duration-300">
                 <DollarSign className="h-12 w-12" />
               </div>
-              <p className="mt-2 text-text-muted dark:text-text-muted-dark">Income is hidden. Click 'Show Income' and enter password to view.</p>
+              <p className="mt-2 text-gray-600 dark:text-gray-300 transition-colors duration-300">Income is hidden. Click 'Show Income' and enter password to view.</p>
           </div>
         )}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
-            <div className="card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 overflow-hidden mb-8">
-              <div className="px-6 py-4 border-b border-primary-100 dark:border-primary-800 flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-text-base dark:text-text-inverse flex items-center">
-                  <Calendar className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
+            <div className="card overflow-hidden mb-8">
+              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300 flex justify-between items-center">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+                  <Calendar className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
                   Upcoming Trips
                 </h2>
                 <button 
@@ -402,21 +402,21 @@ const DriverDashboard: React.FC = () => {
 
             <div className="overflow-hidden">
               {upcomingDetailedTrips.length > 0 ? (
-                  <div className="divide-y divide-primary-100 dark:divide-primary-800">
+                  <div className="divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
                   {upcomingDetailedTrips.map((trip) => (
                     <div
                       key={trip.id}
-                        className={`cursor-pointer p-6 transition-colors hover:bg-section-light dark:hover:bg-section-medium ${
-                          selectedTrip?.id === trip.id ? 'bg-primary-50 dark:bg-primary-900/20' : ''
+                        className={`cursor-pointer p-6 transition-colors hover:bg-gray-50 dark:hover:bg-gray-700 ${
+                          selectedTrip?.id === trip.id ? 'bg-primary-50 dark:bg-gray-700' : ''
                         }`}
                       onClick={() => setSelectedTrip(trip.id === selectedTrip?.id ? null : trip)}
                     >
                       <div className="flex items-center justify-between">
                         <div>
-                            <h3 className="text-base font-medium text-text-base dark:text-text-inverse">
+                            <h3 className="text-base font-medium text-gray-900 dark:text-white transition-colors duration-300">
                             {trip.fromLocation} to {trip.toLocation}
                           </h3>
-                            <div className="mt-1 flex items-center text-sm text-text-muted dark:text-text-muted-dark">
+                            <div className="mt-1 flex items-center text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
                             <Calendar className="h-4 w-4 mr-1" />
                             <span>{trip.date}</span>
                             <span className="mx-2">•</span>
@@ -431,7 +431,7 @@ const DriverDashboard: React.FC = () => {
                                 'badge-warning'
                               }`}>{trip.status.charAt(0).toUpperCase() + trip.status.slice(1).replace('_', ' ')}</span>
                               
-                              <span className="ml-3 text-xs text-text-muted dark:text-text-muted-dark flex items-center">
+                              <span className="ml-3 text-xs text-gray-600 dark:text-gray-300 flex items-center transition-colors duration-300">
                                 <Users className="h-4 w-4 mr-1" />
                                 {trip.confirmedBookings || 0} confirmed / {trip.totalBookings || 0} total
                               </span>
@@ -439,14 +439,14 @@ const DriverDashboard: React.FC = () => {
                         </div>
 
                         <div className="flex flex-col items-end">
-                            <div className="flex items-center text-sm text-text-muted dark:text-text-muted-dark">
+                            <div className="flex items-center text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
                               <Users className="h-4 w-4 mr-1" />
                               <span>
                                 {trip.confirmedBookings || 0} / {getSeatCapacity(trip)} seats
                             </span>
                           </div>
                           {trip.pendingBookings > 0 && (
-                              <div className="mt-1 flex items-center text-xs text-yellow-600 dark:text-yellow-400">
+                              <div className="mt-1 flex items-center text-xs text-warning-600 dark:text-warning-400 transition-colors duration-300">
                               <AlertCircle className="h-3 w-3 mr-1" />
                               <span>{trip.pendingBookings} pending</span>
                             </div>
@@ -455,16 +455,16 @@ const DriverDashboard: React.FC = () => {
                       </div>
 
                       {selectedTrip?.id === trip.id && (
-                          <div className="mt-4 pt-4 border-t border-primary-100 dark:border-primary-800 animate-fade-in">
+                          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 animate-fade-in transition-colors duration-300">
                           <div className="mb-4 flex justify-between items-center">
-                              <h4 className="font-medium text-text-base dark:text-text-inverse">Passenger List & Actions</h4>
+                              <h4 className="font-medium text-gray-900 dark:text-white transition-colors duration-300">Passenger List & Actions</h4>
                             <div className="flex space-x-2">
                               <button
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   openEditModal(trip);
                                 }}
-                                  className="btn btn-ghost btn-sm flex items-center gap-2"
+                                  className="btn btn-ghost btn-sm flex items-center gap-2 text-primary-600 dark:text-primary-400"
                               >
                                   <Edit size={12} /> Edit
                               </button>
@@ -484,14 +484,14 @@ const DriverDashboard: React.FC = () => {
 
                           {/* Passenger List */}                          
                             {trip.bookings && trip.bookings.length > 0 ? (
-                              <div className="divide-y divide-primary-100 dark:divide-primary-800 max-h-60 overflow-y-auto pr-2">
+                              <div className="divide-y divide-gray-200 dark:divide-gray-700 max-h-60 overflow-y-auto pr-2 transition-colors duration-300">
                               {trip.bookings.map((booking) => (
                                   <div key={booking.id} className="py-3 flex items-center justify-between">
                                   <div>
-                                      <p className="font-medium text-sm text-text-base dark:text-text-inverse">
+                                      <p className="font-medium text-gray-900 dark:text-white transition-colors duration-300">
                                       {booking.passenger?.firstName} {booking.passenger?.lastName}
                                     </p>
-                                      <p className="text-xs text-text-muted dark:text-text-muted-dark">
+                                      <p className="text-xs text-gray-600 dark:text-gray-300 transition-colors duration-300">
                                         Seat {formatSeatInfo(booking)}
                                         {hasDoorstepPickup(booking) && ' • Doorstep Pickup'}
                                     </p>
@@ -522,8 +522,8 @@ const DriverDashboard: React.FC = () => {
                               ))}
                             </div>
                           ) : (
-                              <div className="text-center py-6 bg-section-light dark:bg-section-medium rounded-lg">
-                                <p className="text-text-muted dark:text-text-muted-dark">
+                              <div className="text-center py-6 card">
+                                <p className="text-gray-600 dark:text-gray-300 transition-colors duration-300">
                               No bookings for this trip yet.
                             </p>
                               </div>
@@ -534,12 +534,12 @@ const DriverDashboard: React.FC = () => {
                   ))}
                 </div>
               ) : (
-                <div className="text-center py-12">
-                    <div className="mx-auto h-12 w-12 bg-section-light dark:bg-section-medium rounded-full flex items-center justify-center">
-                      <Calendar className="h-6 w-6 text-text-muted dark:text-text-muted-dark" />
+                <div className="text-center py-12 card">
+                    <div className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 transition-colors duration-300">
+                      <Calendar className="h-6 w-6" />
                   </div>
-                    <h3 className="mt-2 text-sm font-medium text-text-base dark:text-text-inverse">No upcoming trips</h3>
-                    <p className="mt-1 text-sm text-text-muted dark:text-text-muted-dark">
+                    <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white transition-colors duration-300">No upcoming trips</h3>
+                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
                     You don't have any scheduled trips starting soon.
                   </p>
                   <div className="mt-6">
@@ -556,39 +556,39 @@ const DriverDashboard: React.FC = () => {
 
         {/* Right Sidebar */}
         <div>
-            <div className="card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 overflow-hidden mb-8">
-              <div className="px-6 py-4 border-b border-primary-100 dark:border-primary-800">
-                <h2 className="text-lg font-semibold text-text-base dark:text-text-inverse flex items-center">
-                  <Clock className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
+            <div className="card overflow-hidden mb-8">
+              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+                  <Clock className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
                   Daily Summary
                 </h2>
             </div>
               <div className="p-4">
               <div className="grid grid-cols-2 gap-4">
-                  <div className="card bg-section-light dark:bg-section-medium p-3 rounded-lg">
-                    <p className="text-xs text-text-muted dark:text-text-muted-dark mb-1">Trips Today</p>
-                    <p className="text-2xl font-bold text-primary dark:text-primary-200">{totalTripsToday}</p>
+                  <div className="card p-3">
+                    <p className="text-xs font-medium text-gray-600 dark:text-gray-300 mb-1 transition-colors duration-300">Trips Today</p>
+                    <p className="text-2xl font-bold text-primary-600 dark:text-primary-400 transition-colors duration-300">{totalTripsToday}</p>
                 </div>
-                  <div className="card bg-section-light dark:bg-section-medium p-3 rounded-lg">
-                    <p className="text-xs text-text-muted dark:text-text-muted-dark mb-1">Passengers</p>
-                    <p className="text-2xl font-bold text-primary dark:text-primary-200">{totalPassengers}</p>
+                  <div className="card p-3">
+                    <p className="text-xs font-medium text-gray-600 dark:text-gray-300 mb-1 transition-colors duration-300">Passengers</p>
+                    <p className="text-2xl font-bold text-primary-600 dark:text-primary-400 transition-colors duration-300">{totalPassengers}</p>
                 </div>
-                  <div className="card bg-section-light dark:bg-section-medium p-3 rounded-lg">
-                    <p className="text-xs text-text-muted dark:text-text-muted-dark mb-1">Completed</p>
-                    <p className="text-2xl font-bold text-green-500 dark:text-green-400">{completedTrips}</p>
+                  <div className="card p-3">
+                    <p className="text-xs font-medium text-gray-600 dark:text-gray-300 mb-1 transition-colors duration-300">Completed</p>
+                    <p className="text-2xl font-bold text-success-600 dark:text-success-400 transition-colors duration-300">{completedTrips}</p>
                 </div>
-                  <div className="card bg-section-light dark:bg-section-medium p-3 rounded-lg">
-                    <p className="text-xs text-text-muted dark:text-text-muted-dark mb-1">Upcoming</p>
-                    <p className="text-2xl font-bold text-blue-500 dark:text-blue-400">{upcomingTripsCount}</p>
+                  <div className="card p-3">
+                    <p className="text-xs font-medium text-gray-600 dark:text-gray-300 mb-1 transition-colors duration-300">Upcoming</p>
+                    <p className="text-2xl font-bold text-info-600 dark:text-info-400 transition-colors duration-300">{upcomingTripsCount}</p>
                 </div>
               </div>
             </div>
           </div>
 
-            <div className="card bg-base-100 dark:bg-section-dark rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 overflow-hidden">
-              <div className="px-6 py-4 border-b border-primary-100 dark:border-primary-800">
-                <h2 className="text-lg font-semibold text-text-base dark:text-text-inverse flex items-center">
-                  <Settings className="h-5 w-5 mr-2 text-primary dark:text-primary-200" />
+            <div className="card overflow-hidden">
+              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+                  <Settings className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
                   Quick Actions
                 </h2>
             </div>
@@ -610,18 +610,18 @@ const DriverDashboard: React.FC = () => {
                 </button>
                 <Link
                     to="/driver/vehicles"
-                    className="btn btn-outline btn-secondary w-full flex items-center justify-center gap-2"
+                    className="btn btn-outline w-full flex items-center justify-center gap-2"
                   >
                     <Truck className="h-5 w-5" />
                   Manage Vehicles
                 </Link>
               </div>
 
-                <div className="mt-6 p-4 bg-primary-50 dark:bg-primary-900/20 rounded-lg border border-primary-100 dark:border-primary-800 flex items-start">
-                  <Info className="h-5 w-5 text-primary dark:text-primary-200 mr-2 mt-0.5 flex-shrink-0" />
+                <div className="mt-6 p-4 bg-info-light dark:bg-info-dark/20 rounded-lg border border-info-200 dark:border-info-800 transition-colors duration-300 flex items-start">
+                  <Info className="h-5 w-5 text-info-600 dark:text-info-400 mr-2 mt-0.5 flex-shrink-0 transition-colors duration-300" />
                 <div>
-                    <p className="text-sm text-primary-700 dark:text-primary-300 font-medium">Remember</p>
-                    <p className="text-xs text-primary-600 dark:text-primary-400 mt-1">
+                    <p className="text-sm text-info-700 dark:text-info-300 font-medium transition-colors duration-300">Remember</p>
+                    <p className="text-xs text-info-600 dark:text-info-400 mt-1 transition-colors duration-300">
                     Always check passenger tickets and verify their identity before allowing boarding.
                   </p>
                 </div>

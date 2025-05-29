@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Map, Calendar, CreditCard, Users, Clock, Star, MapPin, Target, Shield, CheckCircle, ArrowRight } from 'lucide-react';
+import { Map, Calendar, CreditCard, Users, Clock, Star, MapPin, Target, Shield, CheckCircle, ArrowRight, Moon, Sun } from 'lucide-react';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
 import '../index.css';
@@ -8,7 +8,6 @@ import '../index.css';
 const HomePage: React.FC = () => {
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
-  const [isScrolled, setIsScrolled] = useState(false);
   const [animateHero, setAnimateHero] = useState(false);
 
   // Popular destinations for suggestions
@@ -22,7 +21,6 @@ const HomePage: React.FC = () => {
 
     // Handle scroll animations
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
       
       // Find all elements with animate-on-scroll class
       const animatedElements = document.querySelectorAll('.animate-on-scroll');
@@ -64,49 +62,48 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
+    <div>
       <Navbar />
-
-      {/* Enhanced Hero Section */}
+      {/* Hero Section - full width */}
       <section className="relative h-screen overflow-hidden">
         {/* Background with enhanced light/dark mode support */}
-        <div className="absolute inset-0 bg-gradient-to-b from-primary-800 to-primary-900 dark:from-gray-900 dark:to-black z-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-primary-500 via-primary-600 to-primary-700 dark:from-gray-900 dark:via-gray-800 dark:to-primary-900 transition-all duration-500"></div>
         
-        {/* Abstract shapes for visual interest - visible in both modes but with different opacities */}
-        <div className="absolute top-20 right-[10%] w-64 h-64 rounded-full bg-primary-600/10 dark:bg-primary-400/5 blur-3xl"></div>
-        <div className="absolute bottom-20 left-[5%] w-80 h-80 rounded-full bg-accent-kente-gold/10 dark:bg-accent-kente-gold/5 blur-3xl"></div>
+        {/* Abstract shapes for visual interest - using new color system */}
+        <div className="absolute top-20 right-[10%] w-72 h-72 rounded-full bg-primary-500/10 dark:bg-primary-700/10 blur-3xl transition-all duration-500 opacity-70 dark:opacity-50"></div>
+        <div className="absolute -bottom-20 left-[5%] w-96 h-96 rounded-full bg-darkBlue-500/5 dark:bg-darkBlue-700/5 blur-3xl transition-all duration-500 opacity-60 dark:opacity-40"></div>
         
         {/* Subtle pattern overlay */}
-        <div className="absolute inset-0 bg-[url('/images/pattern-dots.svg')] bg-repeat opacity-[0.03] dark:opacity-[0.02] z-0"></div>
+        <div className="absolute inset-0 hero-pattern-overlay z-0"></div>
         
         {/* Content */}
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 h-full flex items-center">
+        <div className="container-app relative z-10 h-full flex items-center">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 w-full">
             {/* Left side - Hero text with enhanced animations */}
-            <div className={`text-center lg:text-left space-y-6 ${animateHero ? 'animate-fade-in' : 'opacity-0'}`}>
-              <div className="inline-flex items-center px-3 py-1 rounded-full bg-white/10 dark:bg-white/5 backdrop-blur-sm border border-white/20 text-white text-xs">
-                <span className="mr-2 flex-shrink-0 w-2 h-2 rounded-full bg-accent-kente-gold animate-pulse"></span>
+            <div className={`text-center lg:text-left space-y-6 ${animateHero ? 'animate-slide-up' : 'opacity-0'}`}>
+              <div className="inline-flex items-center px-3 py-1 rounded-full glass-effect text-white dark:text-gray-200 text-xs transition-all duration-300">
+                <span className="mr-2 flex-shrink-0 w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
                 Africa's Premier Ride-Sharing Platform
               </div>
               
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
-                Travel Across Africa <span className="text-accent-kente-gold">Effortlessly</span>
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white dark:text-gray-50 leading-tight transition-colors duration-300">
+                Travel Across Africa <span className="text-primary-400 dark:text-primary-300">Effortlessly</span>
               </h1>
               
-              <p className="text-lg text-gray-200 dark:text-gray-300 leading-relaxed max-w-xl mx-auto lg:mx-0">
+              <p className="text-lg text-gray-200 dark:text-gray-300 leading-relaxed max-w-xl mx-auto lg:mx-0 transition-colors duration-300">
                 Safe, affordable, and convenient transportation connecting major cities across Africa.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center lg:justify-start">
                 <Link 
                   to="/book" 
-                  className="px-8 py-3 bg-accent-kente-gold text-black font-medium rounded-lg hover:opacity-90 transition-all shadow-lg hover:shadow-accent-kente-gold/20 hover:-translate-y-0.5 active:translate-y-0"
+                  className="btn btn-primary btn-lg hover:-translate-y-0.5 active:translate-y-0"
                 >
                   Book Now
                 </Link>
                 <a 
                   href="#how-it-works" 
-                  className="px-8 py-3 bg-white/10 text-white border border-white/20 font-medium rounded-lg hover:bg-white/20 transition-all"
+                  className="btn btn-outline border-white/50 text-white hover:bg-white/20 dark:border-gray-600/50 dark:text-gray-200 dark:hover:bg-gray-700/30 px-8 py-3 transition-all"
                 >
                   How It Works
                 </a>
@@ -118,8 +115,8 @@ const HomePage: React.FC = () => {
                   { icon: Map, text: "25+ Cities" },
                   { icon: Star, text: "4.9 Rating" }
                 ].map((item, i) => (
-                  <div key={i} className="flex items-center space-x-2 text-white bg-white/5 dark:bg-white/10 backdrop-blur-sm px-3 py-1.5 rounded-full border border-white/10">
-                    <item.icon className="h-4 w-4 text-accent-kente-gold" />
+                  <div key={i} className="flex items-center space-x-2 text-white dark:text-gray-200 glass-effect px-3 py-1.5 rounded-full transition-all duration-300">
+                    <item.icon className="h-4 w-4 text-primary-400 dark:text-primary-300" />
                     <span className="text-sm font-medium">{item.text}</span>
                   </div>
                 ))}
@@ -127,26 +124,26 @@ const HomePage: React.FC = () => {
             </div>
 
             {/* Right side - Enhanced Booking form */}
-            <div className={`w-full max-w-md mx-auto lg:ml-auto ${animateHero ? 'animate-fade-in-delayed' : 'opacity-0'}`}>
-              <div className="bg-white/10 dark:bg-gray-800/40 backdrop-blur-md p-6 rounded-2xl border border-white/20 dark:border-gray-700/50 shadow-xl relative overflow-hidden">
+            <div className={`w-full max-w-md mx-auto lg:ml-auto ${animateHero ? 'animate-slide-up animation-delay-300' : 'opacity-0'}`}>
+              <div className="glass-card p-6 sm:p-8 relative overflow-hidden transition-all duration-300">
                 {/* Decorative element */}
-                <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-accent-kente-gold/20 blur-3xl pointer-events-none"></div>
+                <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-primary-500/10 dark:bg-primary-700/10 blur-3xl pointer-events-none opacity-70 dark:opacity-50"></div>
                 
-                <h2 className="text-xl font-semibold text-white mb-5 text-center relative z-10">Find Your Ride</h2>
+                <h2 className="text-xl font-semibold text-white dark:text-gray-100 mb-5 text-center relative z-10">Find Your Ride</h2>
                 
                 <div className="space-y-4 relative z-10">
                   {/* Origin */}
                   <div>
-                    <label htmlFor="origin" className="block text-white text-sm mb-1">From</label>
+                    <label htmlFor="origin" className="block text-white dark:text-gray-200 text-sm mb-1">From</label>
                     <div className="relative">
                       <div className="absolute left-3 top-1/2 -translate-y-1/2">
-                        <MapPin className="text-accent-kente-gold h-5 w-5" />
+                        <MapPin className="text-primary-400 dark:text-primary-300 h-5 w-5" />
                       </div>
                       <input
                         id="origin"
                         type="text"
                         placeholder="Enter starting point"
-                        className="w-full pl-10 py-3 bg-white/5 dark:bg-gray-900/50 text-white border border-white/20 dark:border-gray-700/50 rounded-lg focus:ring-2 focus:ring-accent-kente-gold/50 focus:border-accent-kente-gold transition-all"
+                        className="w-full pl-10 py-3 bg-white/5 dark:bg-black/10 text-white dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-500 border border-white/20 dark:border-gray-700/30 rounded-lg focus:ring-2 focus:ring-primary-500/70 dark:focus:ring-primary-400/70 focus:border-primary-500/50 dark:focus:border-primary-400/50 transition-all"
                         value={origin}
                         onChange={(e) => setOrigin(e.target.value)}
                       />
@@ -155,16 +152,16 @@ const HomePage: React.FC = () => {
                   
                   {/* Destination */}
                   <div>
-                    <label htmlFor="destination" className="block text-white text-sm mb-1">To</label>
+                    <label htmlFor="destination" className="block text-white dark:text-gray-200 text-sm mb-1">To</label>
                     <div className="relative">
                       <div className="absolute left-3 top-1/2 -translate-y-1/2">
-                        <Target className="text-accent-kente-gold h-5 w-5" />
+                        <Target className="text-primary-400 dark:text-primary-300 h-5 w-5" />
                       </div>
                       <input
                         id="destination"
                         type="text"
                         placeholder="Where are you going?"
-                        className="w-full pl-10 py-3 bg-white/5 dark:bg-gray-900/50 text-white border border-white/20 dark:border-gray-700/50 rounded-lg focus:ring-2 focus:ring-accent-kente-gold/50 focus:border-accent-kente-gold transition-all"
+                        className="w-full pl-10 py-3 bg-white/5 dark:bg-black/10 text-white dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-500 border border-white/20 dark:border-gray-700/30 rounded-lg focus:ring-2 focus:ring-primary-500/70 dark:focus:ring-primary-400/70 focus:border-primary-500/50 dark:focus:border-primary-400/50 transition-all"
                         value={destination}
                         onChange={(e) => setDestination(e.target.value)}
                       />
@@ -177,7 +174,7 @@ const HomePage: React.FC = () => {
                     disabled={!origin || !destination}
                     className={`w-full py-3 rounded-lg font-medium mt-2 transition-all ${
                       origin && destination 
-                        ? 'bg-accent-kente-gold text-black hover:opacity-90 shadow-lg hover:shadow-accent-kente-gold/20 hover:-translate-y-0.5 active:translate-y-0' 
+                        ? 'bg-primary-600 text-white hover:bg-primary-700 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0' 
                         : 'bg-gray-600/50 text-gray-400 cursor-not-allowed'
                     }`}
                   >
@@ -186,12 +183,12 @@ const HomePage: React.FC = () => {
                   
                   {/* Popular destinations */}
                   <div>
-                    <p className="text-white/70 text-xs mb-2">Popular destinations:</p>
+                    <p className="text-white/70 dark:text-gray-400/70 text-xs mb-2">Popular destinations:</p>
                     <div className="flex flex-wrap gap-2">
                       {popularDestinations.map((city, i) => (
                         <button 
                           key={i} 
-                          className="px-2 py-1 text-xs bg-white/5 dark:bg-white/10 hover:bg-accent-kente-gold/20 text-white/80 hover:text-white rounded-full transition-colors border border-white/10"
+                          className="px-2 py-1 text-xs bg-white/10 hover:bg-white/20 dark:bg-black/20 dark:hover:bg-black/30 text-white/80 hover:text-white dark:text-gray-300/80 dark:hover:text-gray-200 rounded-full transition-colors"
                           onClick={() => handleQuickBooking(city)}
                         >
                           {city}
@@ -203,11 +200,11 @@ const HomePage: React.FC = () => {
                   {/* Extra info */}
                   <div className="pt-2 flex justify-between text-xs text-white/60">
                     <div className="flex items-center">
-                      <Clock size={12} className="mr-1 text-accent-kente-gold" />
+                      <Clock size={12} className="mr-1 text-primary-400 dark:text-primary-300" />
                       <span>24/7 Service</span>
                     </div>
                     <div className="flex items-center">
-                      <Shield size={12} className="mr-1 text-accent-kente-gold" />
+                      <Shield size={12} className="mr-1 text-primary-400 dark:text-primary-300" />
                       <span>Secure Booking</span>
                     </div>
                   </div>
@@ -219,7 +216,7 @@ const HomePage: React.FC = () => {
         
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <a href="#how-it-works" className="flex flex-col items-center text-white/70 hover:text-white">
+          <a href="#how-it-works" className="flex flex-col items-center text-white/70 hover:text-white transition-colors">
             <span className="text-sm mb-1">Discover More</span>
             <div className="w-8 h-8 rounded-full border border-white/30 flex items-center justify-center">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -229,32 +226,27 @@ const HomePage: React.FC = () => {
           </a>
         </div>
       </section>
-
-      {/* Enhanced How It Works Section */}
-      <section id="how-it-works" className="py-24 bg-white dark:bg-gray-800 relative overflow-hidden">
-        {/* Background elements for visual interest */}
-        <div className="absolute top-0 right-0 w-72 h-72 bg-primary-100 dark:bg-primary-900/30 rounded-full blur-3xl opacity-70 dark:opacity-50"></div>
-        <div className="absolute bottom-0 left-0 w-72 h-72 bg-accent-kente-gold/10 dark:bg-accent-kente-gold/5 rounded-full blur-3xl"></div>
-        
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      {/* How It Works Section - container */}
+      <section id="how-it-works" className="section-padding bg-white dark:bg-gray-800 relative overflow-hidden transition-colors duration-300">
+        <div className="container-app">
           <div className="text-center mb-16">
-            <span className="px-4 py-1.5 rounded-full bg-primary-100 dark:bg-primary-900/60 text-primary-800 dark:text-primary-200 text-sm font-medium inline-block mb-4">
+            <span className="badge badge-primary inline-block mb-4">
               Simple 3-Step Process
             </span>
-            <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-gray-900 dark:text-white">
-              Book Your Ride in <span className="text-accent-kente-gold">Minutes</span>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-gray-900 dark:text-white transition-colors duration-300">
+              Book Your Ride in <span className="text-primary-600 dark:text-primary-400">Minutes</span>
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto text-lg">
+            <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-lg transition-colors duration-300">
               Our streamlined process makes booking transportation quick and hassle-free.
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 relative">
             {/* Connecting line between steps (desktop only) */}
-            <div className="absolute top-32 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-accent-kente-gold to-transparent hidden md:block">
-              <div className="absolute left-[16.67%] top-0 w-4 h-4 rounded-full bg-accent-kente-gold transform -translate-x-1/2 -translate-y-1/2"></div>
-              <div className="absolute left-1/2 top-0 w-4 h-4 rounded-full bg-accent-kente-gold transform -translate-x-1/2 -translate-y-1/2"></div>
-              <div className="absolute left-[83.33%] top-0 w-4 h-4 rounded-full bg-accent-kente-gold transform -translate-x-1/2 -translate-y-1/2"></div>
+            <div className="absolute top-32 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary-600 dark:via-primary-400 to-transparent hidden md:block">
+              <div className="absolute left-[16.67%] top-0 w-4 h-4 rounded-full bg-primary-600 dark:bg-primary-400 transform -translate-x-1/2 -translate-y-1/2"></div>
+              <div className="absolute left-1/2 top-0 w-4 h-4 rounded-full bg-primary-600 dark:bg-primary-400 transform -translate-x-1/2 -translate-y-1/2"></div>
+              <div className="absolute left-[83.33%] top-0 w-4 h-4 rounded-full bg-primary-600 dark:bg-primary-400 transform -translate-x-1/2 -translate-y-1/2"></div>
             </div>
             
             {[
@@ -276,18 +268,18 @@ const HomePage: React.FC = () => {
             ].map((step, index) => (
               <div 
                 key={index} 
-                className="bg-white dark:bg-gray-700 p-8 rounded-xl shadow-lg dark:shadow-none border border-gray-100 dark:border-gray-600 text-center group hover:shadow-xl hover:border-accent-kente-gold/30 transition-all duration-300 animate-on-scroll flex flex-col h-full"
+                className="feature-card animate-on-scroll group hover:border-primary-600 dark:hover:border-primary-400"
                 style={{ animationDelay: `${index * 150}ms` }}
               >
-                <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-primary-100 dark:bg-primary-800 mb-6 text-primary-800 dark:text-primary-100 group-hover:bg-accent-kente-gold/20 group-hover:text-accent-kente-gold transition-all mx-auto">
+                <div className="icon-badge icon-badge-lg icon-badge-primary group-hover:bg-primary-500/20 group-hover:text-primary-400 transition-all mx-auto">
                   <step.icon size={32} />
                 </div>
-                <h3 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white group-hover:text-accent-kente-gold transition-colors">{step.title}</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-6 flex-grow">{step.description}</p>
+                <h3 className="text-xl font-semibold mb-4 text-center text-gray-900 dark:text-white group-hover:text-primary-400 transition-colors duration-300">{step.title}</h3>
+                <p className="text-gray-600 dark:text-gray-300 mb-6 text-center transition-colors duration-300">{step.description}</p>
                 
                 {/* Step number indicator */}
-                <div className="flex items-center justify-center mt-auto pt-4 border-t border-gray-100 dark:border-gray-600">
-                  <div className="w-10 h-10 rounded-full bg-accent-kente-gold/10 dark:bg-accent-kente-gold/20 text-accent-kente-gold flex items-center justify-center font-bold group-hover:bg-accent-kente-gold group-hover:text-white transition-colors">
+                <div className="flex items-center justify-center mt-auto pt-4 border-t border-gray-200 dark:border-gray-700 transition-colors duration-300">
+                  <div className="w-10 h-10 rounded-full bg-primary-500/10 dark:bg-primary-500/20 text-primary-400 flex items-center justify-center font-bold group-hover:bg-primary-500 group-hover:text-white transition-colors">
                     {index + 1}
                   </div>
                 </div>
@@ -296,24 +288,23 @@ const HomePage: React.FC = () => {
           </div>
           
           <div className="mt-16 text-center">
-            <button className="px-8 py-3 bg-accent-kente-gold hover:bg-accent-kente-gold/90 text-white font-medium rounded-lg transition-colors shadow-lg hover:shadow-xl">
+            <button className="btn btn-primary btn-lg shadow-md hover:shadow-primary-600 hover:-translate-y-0.5 transition-all duration-300">
               Book Your Ride Now
             </button>
           </div>
         </div>
       </section>
-      
-      {/* New Features Section */}
-      <section className="py-24 bg-gray-50 dark:bg-gray-900 relative overflow-hidden">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      {/* Features Section - container */}
+      <section className="section-padding bg-gray-50 dark:bg-gray-900 relative overflow-hidden transition-colors duration-300">
+        <div className="container-app">
           <div className="text-center mb-16">
-            <span className="px-4 py-1.5 rounded-full bg-primary-100 dark:bg-primary-900/60 text-primary-800 dark:text-primary-200 text-sm font-medium inline-block mb-4">
+            <span className="badge badge-primary inline-block mb-4">
               Why Choose Us
             </span>
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white">
-              The Best Way to <span className="text-accent-kente-gold">Travel</span>
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-gray-900 dark:text-white transition-colors duration-300">
+              The Best Way to <span className="text-primary-400 dark:text-primary-300">Travel</span>
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+            <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto transition-colors duration-300">
               We provide exceptional service with features designed for your comfort and convenience.
             </p>
           </div>
@@ -338,49 +329,38 @@ const HomePage: React.FC = () => {
             ].map((feature, index) => (
               <div 
                 key={index} 
-                className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md dark:shadow-none border border-gray-100 dark:border-gray-700 animate-on-scroll"
+                className="feature-card animate-on-scroll hover:border-primary-600 dark:hover:border-primary-400"
                 style={{ animationDelay: `${index * 150}ms` }}
               >
-                <div className="text-accent-kente-gold mb-4">
-                  <feature.icon className="h-8 w-8" />
+                <div className="text-primary-400 dark:text-primary-300 mb-6">
+                  <feature.icon className="h-10 w-10 mx-auto" />
                 </div>
-                <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">{feature.title}</h3>
-                <p className="text-gray-600 dark:text-gray-400">{feature.description}</p>
+                <h3 className="text-xl font-semibold mb-3 text-center text-gray-900 dark:text-white transition-colors duration-300">{feature.title}</h3>
+                <p className="text-gray-600 dark:text-gray-300 text-center transition-colors duration-300">{feature.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
-
-      {/* Enhanced Call to Action */}
-      <section className="py-24 relative text-white overflow-hidden">
-        {/* Background with enhanced light/dark mode support */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary-800 to-primary-900 dark:from-gray-900 dark:to-black z-0"></div>
-        
-        {/* Abstract shapes for visual interest */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-accent-kente-gold/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-primary-700/10 rounded-full blur-3xl"></div>
-        
-        {/* Subtle pattern overlay */}
-        <div className="absolute inset-0 bg-[url('/images/pattern-dots.svg')] bg-repeat opacity-[0.03] z-0"></div>
-        
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+      {/* Call to Action Section - full width */}
+      <section className="section-padding hero-gradient-light dark:hero-gradient-dark text-white relative overflow-hidden transition-colors duration-300">
+        <div className="container-app">
           <div className="max-w-3xl mx-auto">
-            <span className="px-4 py-1.5 rounded-full bg-white/10 text-white text-sm font-medium inline-block mb-6 backdrop-blur-sm">
+            <span className="glass-effect px-4 py-1.5 rounded-full text-white text-sm font-medium inline-block mb-6">
               Limited Time Offer
             </span>
             
             <h2 className="text-4xl sm:text-5xl font-bold mb-6">
-              Ready to Travel with <span className="text-accent-kente-gold">Us?</span>
+              Ready to Travel with <span className="text-gradient-gold">Us?</span>
             </h2>
             
-            <p className="text-xl text-gray-300 mb-10 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-200 mb-10 max-w-2xl mx-auto transition-colors duration-300">
               Join thousands of satisfied customers across Africa and experience premium transportation services.
             </p>
             
             <Link 
               to="/book" 
-              className="inline-flex items-center px-8 py-4 bg-accent-kente-gold text-black font-medium rounded-lg hover:opacity-90 transition-all shadow-lg hover:shadow-accent-kente-gold/20 hover:-translate-y-0.5 active:translate-y-0 group"
+              className="btn btn-primary btn-lg group hover:-translate-y-0.5 active:translate-y-0"
             >
               Book Your Ride Now
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
@@ -392,19 +372,18 @@ const HomePage: React.FC = () => {
                 { number: "25+", text: "African Cities" },
                 { number: "4.9", text: "Customer Rating" }
               ].map((stat, index) => (
-                <div key={index} className="bg-white/5 backdrop-blur-sm p-4 rounded-lg border border-white/10">
-                  <div className="text-2xl font-bold text-accent-kente-gold">{stat.number}</div>
-                  <div className="text-sm text-gray-300">{stat.text}</div>
+                <div key={index} className="glass-effect p-4 rounded-lg transition-all duration-300">
+                  <div className="text-2xl font-bold text-primary-400">{stat.number}</div>
+                  <div className="text-sm text-gray-200">{stat.text}</div>
                 </div>
               ))}
             </div>
           </div>
         </div>
       </section>
-
       <Footer />
     </div>
   );
 };
 
-export default HomePage; 
+export default HomePage;

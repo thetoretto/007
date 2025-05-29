@@ -202,51 +202,52 @@ const UserManagement: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
       <Navbar />
       <ToastContainer position="top-right" />
 
-      <main className="container-app mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-16 md:pt-20">
+      <main className="container-app py-8 md:py-12">
         {/* Dashboard Stats Section */}
-        <div className="mb-6 sm:mb-8">
-          <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-4">User Overview</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+        <div className="mb-8 md:mb-12">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-gray-900 dark:text-white transition-colors duration-300">User Overview</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {Object.entries(userStats).map(([key, value]) => (
-              <div key={key} className="card p-3 sm:p-4 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 dark:bg-gray-800">
-                <h3 className="text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400 capitalize truncate">{key === 'total' ? 'Total Users' : key}</h3>
-                <p className="mt-1 text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-gray-100">{value}</p>
+              <div key={key} className="card p-4">
+                <h3 className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 capitalize truncate transition-colors duration-300">{key === 'total' ? 'Total Users' : key}</h3>
+                <p className="mt-1 text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{value}</p>
               </div>
             ))}
           </div>
         </div>
 
         {/* User Management Table Section */}
+        <div className="mb-8 md:mb-12">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
           <div className="flex-1 min-w-0 mb-4 sm:mb-0">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center">
-              <Users className="h-7 w-7 mr-2 text-primary-600" />
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+                <Users className="h-7 w-7 mr-3 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
               User Management
             </h1>
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
               Manage all users across the platform
             </p>
           </div>
           <div className="mt-4 flex sm:mt-0 sm:ml-4">
             <button 
               onClick={openAddModal} 
-              className="btn btn-primary inline-flex items-center w-full sm:w-auto justify-center"
+                className="btn btn-primary inline-flex items-center w-full sm:w-auto justify-center gap-2"
               disabled={isLoading}
             >
-              <UserPlus className="h-4 w-4 mr-2" />
+                <UserPlus className="h-4 w-4" />
               Add User
             </button>
           </div>
         </div>
 
-        <div className="card rounded-lg shadow-sm overflow-hidden mb-8 dark:bg-gray-800">
-          <div className="px-4 sm:px-6 lg:px-8 py-4 border-b border-gray-200 dark:border-gray-700">
+          <div className="card rounded-lg shadow-sm overflow-hidden">
+            <div className="px-4 sm:px-6 lg:px-8 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <h2 className="text-lg font-medium text-gray-900 dark:text-gray-100">Users ({filteredUsers.length})</h2>
+                <h2 className="text-lg font-medium text-gray-900 dark:text-white transition-colors duration-300">Users ({filteredUsers.length})</h2>
 
               <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full md:w-auto">
                 {/* Role Filter */}
@@ -254,7 +255,7 @@ const UserManagement: React.FC = () => {
                   <label htmlFor="role-filter" className="sr-only">Role:</label>
                   <select
                     id="role-filter"
-                    className="form-select block w-full sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      className="form-select block w-full text-sm rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:focus:ring-primary-500 dark:focus:border-primary-500 transition-colors duration-300"
                     value={roleFilter}
                     onChange={handleRoleFilterChange}
                   >
@@ -270,7 +271,7 @@ const UserManagement: React.FC = () => {
                   <label htmlFor="status-filter" className="sr-only">Status:</label>
                   <select
                     id="status-filter"
-                    className="form-select block w-full sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      className="form-select block w-full text-sm rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:focus:ring-primary-500 dark:focus:border-primary-500 transition-colors duration-300"
                     value={statusFilter}
                     onChange={handleStatusFilterChange}
                   >
@@ -281,13 +282,13 @@ const UserManagement: React.FC = () => {
                 </div>
 
                 {/* Search Input */}
-                <div className="relative flex-1 sm:flex-none">
+                  <div className="relative flex-1 sm:flex-none md:w-48">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Search className="h-4 w-4 text-gray-400" />
+                      <Search className="h-4 w-4 text-gray-400 dark:text-gray-500 transition-colors duration-300" />
                   </div>
                   <input
                     type="text"
-                    className="form-input pl-10 pr-4 py-2 block w-full sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      className="form-input pl-10 pr-4 py-2 block w-full text-sm rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:focus:ring-primary-500 dark:focus:border-primary-500 transition-colors duration-300"
                     placeholder="Search users..."
                     value={searchTerm}
                     onChange={handleSearch}
@@ -298,29 +299,29 @@ const UserManagement: React.FC = () => {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="bg-gray-50 dark:bg-gray-700">
-                <tr>
-                  <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
-                  <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden md:table-cell">Email</th>
-                  <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Role</th>
-                  <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden sm:table-cell">Status</th>
-                  <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden lg:table-cell">Joined</th>
-                  <th scope="col" className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
+              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
+                <thead className="bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
+                  <tr>
+                    <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Name</th>
+                    <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell transition-colors duration-300">Email</th>
+                    <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Role</th>
+                    <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell transition-colors duration-300">Status</th>
+                    <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell transition-colors duration-300">Joined</th>
+                    <th scope="col" className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Actions</th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
                 {isLoading && filteredUsers.length === 0 && (
                   <tr>
-                    <td colSpan={6} className="px-6 py-10 text-center text-sm text-gray-500 dark:text-gray-400">
-                      <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600 mb-2"></div>
+                      <td colSpan={6} className="px-6 py-10 text-center text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
+                        <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600 dark:border-primary-400 mb-2 transition-colors duration-300"></div>
                       <div>Loading users...</div>
                     </td>
                   </tr>
                 )}
                 {!isLoading && filteredUsers.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-6 py-10 text-center text-sm text-gray-500 dark:text-gray-400">
+                      <td colSpan={6} className="px-6 py-10 text-center text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
                       No users found matching your criteria.
                     </td>
                   </tr>
@@ -329,54 +330,58 @@ const UserManagement: React.FC = () => {
                     <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                       <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-700 flex items-center justify-center">
-                            <span className="text-primary-800 dark:text-primary-100 font-medium">
+                            <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-700 flex items-center justify-center transition-colors duration-300">
+                              <span className="text-primary-800 dark:text-primary-100 font-medium transition-colors duration-300">
                               {u.firstName?.[0]?.toUpperCase()}{u.lastName?.[0]?.toUpperCase()}
                             </span>
                           </div>
                           <div className="ml-3 sm:ml-4">
-                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{u.firstName} {u.lastName}</div>
-                            <div className="text-xs text-gray-500 dark:text-gray-400 md:hidden">{u.email}</div>
+                              <div className="text-sm font-medium text-gray-900 dark:text-white transition-colors duration-300">{u.firstName} {u.lastName}</div>
+                              <div className="text-xs text-gray-600 dark:text-gray-400 md:hidden transition-colors duration-300">{u.email}</div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden md:table-cell">{u.email}</td>
+                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 hidden md:table-cell transition-colors duration-300">{u.email}</td>
                       <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${u.role === 'admin' ? 'bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-100' : u.role === 'driver' ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' : 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100'}`}>
+                          <span className={`badge ${
+                            u.role === 'admin' ? 'badge-error' : // Using error badge for admin role for visibility
+                            u.role === 'driver' ? 'badge-success' :
+                            'badge-primary' // Using primary badge for passenger role
+                          }`}>
                           {u.role}
                         </span>
                       </td>
                       <td className="px-4 sm:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
                         <button 
                           onClick={() => handleToggleUserStatus(u.id, u.status as UserStatus)}
-                          className={`px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full transition-opacity hover:opacity-80 ${u.status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' : 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'}`}
+                            className={`px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full transition-opacity hover:opacity-80 transition-colors duration-300 ${u.status === 'active' ? 'badge-success' : 'badge-error'}`}
                           aria-label={`Toggle status for ${u.firstName} ${u.lastName}, current status ${u.status}`}
                         >
                           {u.status}
                         </button>
                       </td>
-                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden lg:table-cell">
+                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 hidden lg:table-cell transition-colors duration-300">
                         {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}
                       </td>
                       <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <div className="flex justify-end items-center space-x-1 sm:space-x-2">
                           <button
                             onClick={() => openEditModal(u)}
-                            className="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                              className="btn btn-ghost btn-sm text-primary-600 dark:text-primary-400 p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
                             title="Edit User"
                           >
                             <Edit className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => handleDeleteUser(u.id)}
-                            className="text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300 p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700"
+                              className="btn btn-ghost btn-sm text-error dark:text-error-light p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
                             title="Delete User"
                           >
                             <Trash2 className="h-4 w-4" />
                           </button>
                           <button
                             onClick={() => handleToggleUserStatus(u.id, u.status as UserStatus)}
-                            className={`sm:hidden p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 ${u.status === 'active' ? 'text-green-600' : 'text-red-600'}`}
+                              className={`sm:hidden p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300 ${u.status === 'active' ? 'text-success' : 'text-error'}`}
                             title={u.status === 'active' ? "Deactivate User" : "Activate User"}
                           >
                             {u.status === 'active' ? <CheckCircle className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
@@ -388,38 +393,39 @@ const UserManagement: React.FC = () => {
                 )}
               </tbody>
             </table>
+            </div>
           </div>
         </div>
 
         {/* Add User Modal */}
         <Modal isOpen={isAddModalOpen} onClose={closeAddModal} title="Add New User" size="lg">
-          <form onSubmit={handleAddUser} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <form onSubmit={handleAddUser} className="space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">First Name</label>
+                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">First Name</label>
                 <input type="text" name="firstName" id="firstName" value={newUser.firstName || ''} onChange={(e) => handleInputChange(e, false)} className="mt-1 form-input w-full" required placeholder="John" />
               </div>
               <div>
-                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Last Name</label>
+                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">Last Name</label>
                 <input type="text" name="lastName" id="lastName" value={newUser.lastName || ''} onChange={(e) => handleInputChange(e, false)} className="mt-1 form-input w-full" required placeholder="Doe" />
               </div>
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">Email</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-4 w-4 text-gray-400" />
+                  <Mail className="h-4 w-4 text-gray-400 dark:text-gray-500 transition-colors duration-300" />
                 </div>
                 <input type="email" name="email" id="email" value={newUser.email || ''} onChange={(e) => handleInputChange(e, false)} className="mt-1 form-input w-full pl-10" required placeholder="john.doe@example.com" />
               </div>
             </div>
             <div>
-              <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Phone Number</label>
+              <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">Phone Number</label>
               <input type="tel" name="phoneNumber" id="phoneNumber" value={newUser.phoneNumber || ''} onChange={(e) => handleInputChange(e, false)} className="mt-1 form-input w-full" required placeholder="+1234567890" />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="role" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Role</label>
+                <label htmlFor="role" className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">Role</label>
                 <select name="role" id="role" value={newUser.role || 'passenger'} onChange={(e) => handleInputChange(e, false)} className="mt-1 form-select w-full">
                   <option value="passenger">Passenger</option>
                   <option value="driver">Driver</option>
@@ -427,10 +433,10 @@ const UserManagement: React.FC = () => {
                 </select>
               </div>
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Password</label>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">Password</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Key className="h-4 w-4 text-gray-400" />
+                    <Key className="h-4 w-4 text-gray-400 dark:text-gray-500 transition-colors duration-300" />
                   </div>
                   <input type="password" name="password" id="password" value={newUser.password || ''} onChange={(e) => handleInputChange(e, false)} className="mt-1 form-input w-full pl-10" required placeholder="••••••••" />
                 </div>
@@ -438,8 +444,8 @@ const UserManagement: React.FC = () => {
             </div>
             <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
               <button type="button" onClick={closeAddModal} className="btn btn-ghost w-full sm:w-auto" disabled={isLoading}>Cancel</button>
-              <button type="submit" className="btn btn-primary inline-flex items-center justify-center w-full sm:w-auto" disabled={isLoading}>
-                {isLoading ? <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div> : <UserPlus size={16} className="mr-1"/>}
+              <button type="submit" className="btn btn-primary inline-flex items-center justify-center w-full sm:w-auto gap-2" disabled={isLoading}>
+                {isLoading ? <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div> : <UserPlus size={16} />}
                 Add User
               </button>
             </div>
@@ -449,29 +455,29 @@ const UserManagement: React.FC = () => {
         {/* Edit User Modal */}
         <Modal isOpen={isEditModalOpen} onClose={closeEditModal} title="Edit User" size="lg">
           {editingUser && (
-            <form onSubmit={handleEditUser} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <form onSubmit={handleEditUser} className="space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="editFirstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">First Name</label>
+                  <label htmlFor="editFirstName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">First Name</label>
                   <input type="text" name="firstName" id="editFirstName" value={editingUser.firstName || ''} onChange={(e) => handleInputChange(e, true)} className="mt-1 form-input w-full" required />
                 </div>
                 <div>
-                  <label htmlFor="editLastName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Last Name</label>
+                  <label htmlFor="editLastName" className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">Last Name</label>
                   <input type="text" name="lastName" id="editLastName" value={editingUser.lastName || ''} onChange={(e) => handleInputChange(e, true)} className="mt-1 form-input w-full" required />
                 </div>
               </div>
               <div>
-                <label htmlFor="editEmail" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Email</label>
+                <label htmlFor="editEmail" className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">Email</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-4 w-4 text-gray-400" />
+                    <Mail className="h-4 w-4 text-gray-400 dark:text-gray-500 transition-colors duration-300" />
                   </div>
                   <input type="email" name="email" id="editEmail" value={editingUser.email || ''} onChange={(e) => handleInputChange(e, true)} className="mt-1 form-input w-full pl-10" required />
                 </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="editRole" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Role</label>
+                  <label htmlFor="editRole" className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">Role</label>
                   <select name="role" id="editRole" value={editingUser.role || 'passenger'} onChange={(e) => handleInputChange(e, true)} className="mt-1 form-select w-full">
                     <option value="passenger">Passenger</option>
                     <option value="driver">Driver</option>
@@ -479,7 +485,7 @@ const UserManagement: React.FC = () => {
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="editStatus" className="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
+                  <label htmlFor="editStatus" className="block text-sm font-medium text-gray-700 dark:text-gray-300 transition-colors duration-300">Status</label>
                   <select name="status" id="editStatus" value={editingUser.status || 'active'} onChange={(e) => handleInputChange(e, true)} className="mt-1 form-select w-full">
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
@@ -488,8 +494,8 @@ const UserManagement: React.FC = () => {
               </div>
               <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
                 <button type="button" onClick={closeEditModal} className="btn btn-ghost w-full sm:w-auto" disabled={isLoading}>Cancel</button>
-                <button type="submit" className="btn btn-primary inline-flex items-center justify-center w-full sm:w-auto" disabled={isLoading}>
-                  {isLoading ? <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div> : <Save size={16} className="mr-1"/>}
+                <button type="submit" className="btn btn-primary inline-flex items-center justify-center w-full sm:w-auto gap-2" disabled={isLoading}>
+                  {isLoading ? <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div> : <Save size={16} />}
                   Save Changes
                 </button>
               </div>

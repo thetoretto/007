@@ -389,22 +389,7 @@ const BookingPage: React.FC = () => {
         </div>
       )}
       
-      <div className="bg-white dark:bg-gray-800/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 py-2 sm:py-3 flex items-center">
-          <button 
-            onClick={navigateBack}
-            className="mr-2 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors text-gray-600 dark:text-gray-300"
-            aria-label={step > 1 && step < 6 ? 'Go back' : 'Go home'}
-          >
-            {(step > 1 && step < 6) ? <ArrowLeft className="h-5 w-5 sm:h-6 sm:w-6" /> : <Home className="h-5 w-5 sm:h-6 sm:w-6" />}
-          </button>
-          <h1 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-white">
-            {step === 1 ? 'Plan Your Trip' : step === 2 ? 'Select Your Ride' : step === 3 ? 'Choose Your Seat' : step === 4 ? 'Confirm Details' : step === 5 ? 'Secure Payment' : 'Booking Confirmed'}
-          </h1>
-        </div>
-      </div>
-      
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden pt-8">
         <div className="flex-1 max-w-4xl w-full mx-auto px-2 sm:px-4 py-2 sm:py-3 flex flex-col">
           {step < 6 && (
             <div className={`flex justify-between mb-3 sm:mb-4 px-1 sm:px-2 overflow-x-auto ${noScrollbarClass}`}>
@@ -523,7 +508,7 @@ const BookingPage: React.FC = () => {
                       ))}
                     </div>
                   </div>
-                  <button onClick={searchTrips} disabled={!origin || !destination || isSearching} className={`w-full rounded-lg py-3 sm:py-3.5 px-4 text-center text-white font-semibold text-base flex items-center justify-center transition-all duration-150 ${(origin && destination && !isSearching) ? 'bg-accent-kente-gold hover:bg-accent-kente-gold-dark active:scale-95 shadow-md hover:shadow-lg' : 'bg-gray-400 dark:bg-gray-600 cursor-not-allowed opacity-70'}`}>
+                  <button onClick={searchTrips} disabled={!origin || !destination || isSearching} className={`w-full btn btn-primary flex items-center justify-center ${(origin && destination && !isSearching) ? '' : 'opacity-70 cursor-not-allowed'}`}>
                     {isSearching ? (<><div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2.5"></div>Searching...</>) : (<>Find Available Trips <ChevronRight className="ml-1.5 h-5 w-5" /></>)}
                   </button>
                 </div>
@@ -532,7 +517,7 @@ const BookingPage: React.FC = () => {
                 <div className="mt-6 sm:mt-8 p-4 bg-white/80 dark:bg-gray-800/80 rounded-xl shadow border border-gray-200 dark:border-gray-700/50">
                   <div className="max-w-xl mx-auto">
                     <div className="text-center mb-3 sm:mb-4">
-                      <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300">Why Book With Us?</h3>
+                      <h3 className="text-sm font-semibold text-gray-900 dark:text-white">Why Book With Us?</h3>
                     </div>
                     <div className="grid grid-cols-3 gap-2 sm:gap-3">
                       {[{ icon: Shield, title: "Safe & Secure", desc: "Vetted drivers & payments" },{ icon: Clock, title: "Quick Booking", desc: "Book in minutes" },{ icon: CalendarCheck, title: "Flexible Travel", desc: "Many routes & times" }].map((item, i) => (
@@ -551,9 +536,9 @@ const BookingPage: React.FC = () => {
                 </div>
               )}
               {step === 2 && (
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-3 sm:p-4 md:p-5 border border-gray-200 dark:border-gray-700">
+                <div className="card p-3 sm:p-4 md:p-5">
                   <div className="flex justify-between items-center mb-3 sm:mb-4">
-                    <h2 className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-white">Select Your Trip</h2>
+                    <h2 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">Select Your Trip</h2>
                     <button onClick={() => moveToNextStep(1)} className="text-xs sm:text-sm text-accent-kente-gold hover:underline">Change Route</button>
                   </div>
                   {availableTrips.length === 0 && !isSearching ? (
@@ -582,9 +567,9 @@ const BookingPage: React.FC = () => {
                 </div>
               )}
               {step === 3 && selectedTrip && (
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden p-3 sm:p-4 md:p-5">
+                <div className="card overflow-hidden p-3 sm:p-4 md:p-5">
                   <div className="mb-4 sm:mb-5">
-                    <h2 className="text-lg sm:text-xl font-semibold mb-1 text-gray-800 dark:text-white">Choose Your Seat</h2>
+                    <h2 className="text-lg sm:text-xl font-semibold mb-1 text-gray-900 dark:text-white">Choose Your Seat</h2>
                     <div className="flex items-center flex-wrap gap-x-2 gap-y-1 text-xs sm:text-sm text-gray-600 dark:text-gray-400">
                       <div className="flex items-center"><MapPin className="h-3.5 w-3.5 text-accent-red mr-1" /><span className="truncate" title={selectedTrip.fromLocation}>{selectedTrip.fromLocation}</span></div>
                       <ChevronRight className="h-3.5 w-3.5 text-gray-400" />
@@ -614,16 +599,16 @@ const BookingPage: React.FC = () => {
                     />
                   </div>
                   {selectedSeat && (
-                    <div className="p-3 sm:p-4 mb-4 sm:mb-5 bg-accent-kente-gold/10 border border-accent-kente-gold/30 rounded-lg">
+                    <div className="p-3 sm:p-4 mb-4 sm:mb-5 bg-primary-100 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-800 rounded-lg">
                       <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2">
                         <div className="flex items-center">
-                          <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full ${selectedSeat.type === 'vip' ? 'bg-purple-500' : selectedSeat.type === 'premium' ? 'bg-blue-500' : 'bg-accent-kente-gold'} text-white flex items-center justify-center font-medium text-xs sm:text-sm mr-2 sm:mr-3`}>{selectedSeat.number}</div>
+                          <div className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full ${selectedSeat.type === 'vip' ? 'bg-darkBlue-600' : selectedSeat.type === 'premium' ? 'bg-darkBlue-500' : 'bg-primary-600'} text-white flex items-center justify-center font-medium text-xs sm:text-sm mr-2 sm:mr-3`}>{selectedSeat.number}</div>
                           <div>
-                            <div className="font-medium text-sm sm:text-base text-gray-800 dark:text-white">{selectedSeat.type.charAt(0).toUpperCase() + selectedSeat.type.slice(1)} Seat</div>
-                            <div className="text-xs text-gray-600 dark:text-gray-400">Selected seat</div>
+                            <div className="font-medium text-sm sm:text-base text-gray-900 dark:text-white">{selectedSeat.type.charAt(0).toUpperCase() + selectedSeat.type.slice(1)} Seat</div>
+                            <div className="text-xs text-gray-600 dark:text-gray-300">Selected seat</div>
                           </div>
                         </div>
-                        <div className="text-lg sm:text-xl font-bold text-accent-kente-gold text-right sm:text-left">${selectedSeat.price.toFixed(2)}</div>
+                        <div className="text-lg sm:text-xl font-bold text-primary-600 dark:text-primary-400 text-right sm:text-left">${selectedSeat.price.toFixed(2)}</div>
                       </div>
                     </div>
                   )}
@@ -631,19 +616,19 @@ const BookingPage: React.FC = () => {
                     <button onClick={() => moveToNextStep(2)} className="px-4 py-2.5 sm:px-5 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center justify-center text-sm sm:text-base order-2 sm:order-1 w-full sm:w-auto">
                       <ArrowLeft className="h-4 w-4 mr-2" /> Back to Trips
                     </button>
-                    <button onClick={() => moveToNextStep(4)} disabled={!selectedSeat} className={`px-5 py-2.5 sm:px-6 sm:py-3 rounded-lg flex items-center justify-center font-semibold text-sm sm:text-base order-1 sm:order-2 w-full sm:w-auto transition-all ${selectedSeat ? 'bg-accent-kente-gold hover:bg-accent-kente-gold-dark text-white shadow-md hover:shadow-lg active:scale-95' : 'bg-gray-400 dark:bg-gray-600 text-gray-700 dark:text-gray-300 cursor-not-allowed opacity-70'}`}>
+                    <button onClick={() => moveToNextStep(4)} disabled={!selectedSeat} className={`btn btn-primary flex items-center justify-center ${(selectedSeat) ? '' : 'opacity-70 cursor-not-allowed'}`}>
                       Continue <ChevronRight className="h-4 w-4 ml-2" />
                     </button>
                   </div>
                 </div>
               )}
               {step === 4 && selectedTrip && selectedSeat && (
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-5 md:p-6 border border-gray-200 dark:border-gray-700">
+                <div className="card p-4 sm:p-5 md:p-6">
                   <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-5 text-gray-800 dark:text-white">Passenger & Pickup</h2>
                   <div className="mb-4 sm:mb-5 p-3 sm:p-4 bg-gray-50 dark:bg-gray-700/60 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600">
                     <div className="flex items-center mb-3">
-                      <div className="h-7 w-7 sm:h-8 sm:h-8 bg-accent-kente-gold/10 text-accent-kente-gold rounded-full flex items-center justify-center mr-2.5 sm:mr-3 flex-shrink-0"><Info className="h-4 w-4" /></div>
-                      <h3 className="font-medium text-sm sm:text-base text-gray-800 dark:text-white">Trip Summary</h3>
+                      <div className="icon-badge icon-badge-md bg-primary-100 text-primary-600 dark:bg-primary-900/30 dark:text-primary-400 mr-2.5 sm:mr-3 flex-shrink-0"><Info className="h-4 w-4" /></div>
+                      <h3 className="font-medium text-sm sm:text-base text-gray-900 dark:text-white">Trip Summary</h3>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3 text-xs sm:text-sm">
                       {[{ label: "From", value: selectedTrip.fromLocation, icon: <MapPin className="h-4 w-4 text-accent-red mt-0.5" /> },{ label: "To", value: selectedTrip.toLocation, icon: <MapPin className="h-4 w-4 text-accent-kente-gold mt-0.5" /> },{ label: "Date & Time", value: `${new Date(selectedTrip.date).toLocaleDateString(undefined, {day: 'numeric', month: 'short', year: 'numeric'})} • ${selectedTrip.time}`, icon: <Calendar className="h-4 w-4 text-gray-500 dark:text-gray-400 mt-0.5" /> },{ label: "Seat", value: `#${selectedSeat.number} (${selectedSeat.type.charAt(0).toUpperCase() + selectedSeat.type.slice(1)})`, icon: <User className="h-4 w-4 text-gray-500 dark:text-gray-400 mt-0.5" /> }].map(detail => (
@@ -657,7 +642,7 @@ const BookingPage: React.FC = () => {
                       ))}
                       <div className="col-span-1 md:col-span-2 mt-2 pt-3 border-t border-gray-200 dark:border-gray-600 flex justify-between items-center">
                         <div className="text-gray-600 dark:text-gray-300 font-medium text-sm sm:text-base">Ticket Price:</div>
-                        <div className="text-base sm:text-lg font-bold text-accent-kente-gold">${selectedSeat.price.toFixed(2)}</div>
+                        <div className="text-base sm:text-lg font-bold text-primary-600 dark:text-primary-400">${selectedSeat.price.toFixed(2)}</div>
                       </div>
                     </div>
                   </div>
@@ -671,7 +656,7 @@ const BookingPage: React.FC = () => {
                   {hotPoints.length > 0 && (
                     <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-gray-50 dark:bg-gray-700/60 rounded-lg border border-gray-200 dark:border-gray-600">
                       <div className="flex items-center mb-2 sm:mb-3">
-                        <input type="checkbox" id="hotpoint-toggle" checked={isHotpointNeeded} onChange={toggleHotpoint} className="mr-2.5 h-4 w-4 sm:h-4 sm:w-4 text-accent-kente-gold focus:ring-accent-kente-gold rounded border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-700" />
+                        <input type="checkbox" id="hotpoint-toggle" checked={isHotpointNeeded} onChange={toggleHotpoint} className="mr-2.5 h-4 w-4 sm:h-4 sm:w-4 text-primary-600 focus:ring-primary-500 rounded border-gray-300 dark:border-gray-500 bg-white dark:bg-gray-700" />
                         <label htmlFor="hotpoint-toggle" className="font-medium text-sm sm:text-base text-gray-800 dark:text-white">Add doorstep pickup service?</label>
                       </div>
                       {isHotpointNeeded && (
@@ -682,9 +667,9 @@ const BookingPage: React.FC = () => {
                             {hotPoints.map(hp => <option key={hp.id} value={hp.id}>{hp.name} (+${hp.fee.toFixed(2)})</option>)}
                           </select>
                           {selectedHotpoint && (
-                            <div className="mt-2 p-2.5 bg-accent-kente-gold/10 rounded-md flex justify-between items-center text-sm">
-                              <div className="flex items-center"><MapPin className="h-4 w-4 text-accent-kente-gold mr-2" /><span className="font-medium text-gray-700 dark:text-gray-200">{selectedHotpoint.name}</span></div>
-                              <div className="font-medium text-accent-kente-gold">+${selectedHotpoint.fee.toFixed(2)}</div>
+                            <div className="mt-2 p-2.5 bg-primary-100 dark:bg-primary-900/30 rounded-md flex justify-between items-center text-sm">
+                              <div className="flex items-center"><MapPin className="h-4 w-4 text-primary-600 dark:text-primary-400 mr-2" /><span className="font-medium text-gray-900 dark:text-white">{selectedHotpoint.name}</span></div>
+                              <div className="font-medium text-primary-600 dark:text-primary-400">+${selectedHotpoint.fee.toFixed(2)}</div>
                             </div>
                           )}
                           {!selectedHotpoint && isHotpointNeeded && <p className="text-xs text-red-500 dark:text-red-400">Please select a pickup point.</p>}
@@ -696,25 +681,24 @@ const BookingPage: React.FC = () => {
                     <button onClick={() => moveToNextStep(3)} className="px-4 py-2.5 sm:px-5 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors flex items-center justify-center text-sm sm:text-base order-2 sm:order-1 w-full sm:w-auto">
                       <ArrowLeft className="h-4 w-4 mr-2" /> Back
                     </button>
-                    <button onClick={() => { if (isHotpointNeeded && !selectedHotpoint) { alert("Please select a pickup point or uncheck the 'Add doorstep pickup service' option."); return; } if (!ticketHolders[0]?.name?.trim()) { alert("Please enter the passenger's name."); return; } completeBooking(); }} className="px-5 py-2.5 sm:px-6 sm:py-3 bg-accent-kente-gold hover:bg-accent-kente-gold-dark text-white rounded-lg transition-all flex items-center justify-center font-semibold text-sm sm:text-base order-1 sm:order-2 w-full sm:w-auto shadow-md hover:shadow-lg active:scale-95">
+                    <button onClick={() => { if (isHotpointNeeded && !selectedHotpoint) { alert("Please select a pickup point or uncheck the 'Add doorstep pickup service' option."); return; } if (!ticketHolders[0]?.name?.trim()) { alert("Please enter the passenger's name."); return; } completeBooking(); }} className="btn btn-primary flex items-center justify-center order-1 sm:order-2 w-full sm:w-auto">
                       Continue to Payment <ChevronRight className="h-4 w-4 ml-2" />
                     </button>
                   </div>
                 </div>
               )}
               {step === 5 && selectedTrip && selectedSeat && (
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-5 md:p-6 border border-gray-200 dark:border-gray-700">
+                <div className="card p-4 sm:p-5 md:p-6">
                   <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-5 text-gray-800 dark:text-white">Complete Your Payment</h2>
                   <div className="mb-4 sm:mb-5 p-3 sm:p-4 bg-gray-50 dark:bg-gray-700/60 rounded-lg border border-gray-200 dark:border-gray-600">
                     <div className="flex items-center justify-between pb-3 mb-3 border-b border-gray-200 dark:border-gray-500">
-                      <div className="flex items-center">
-                        <div className="bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 h-7 w-7 sm:h-8 sm:w-8 rounded-full flex items-center justify-center mr-2.5 sm:mr-3 flex-shrink-0"><CheckCircle className="h-4 w-4" /></div>
-                        <div>
-                          <div className="font-medium text-sm sm:text-base text-gray-800 dark:text-white">Trip Summary</div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400 truncate" title={`${selectedTrip.fromLocation} to ${selectedTrip.toLocation}`}>{selectedTrip.fromLocation} → {selectedTrip.toLocation}</div>
-                        </div>
+                      <div className="flex items-center icon-badge icon-badge-md bg-success-light text-success dark:bg-success-dark dark:text-success-light mr-2.5 sm:mr-3 flex-shrink-0">
+                        <CheckCircle className="h-5 w-5" />
                       </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400 text-right">{new Date(selectedTrip.date).toLocaleDateString(undefined, {month: 'short', day: 'numeric'})} • {selectedTrip.time}</div>
+                        <div>
+                        <div className="font-medium text-sm sm:text-base text-gray-900 dark:text-white">Trip Summary</div>
+                        <div className="text-xs text-gray-600 dark:text-gray-300 truncate" title={`${selectedTrip.fromLocation} to ${selectedTrip.toLocation}`}>{selectedTrip.fromLocation} → {selectedTrip.toLocation}</div>
+                      </div>
                     </div>
                     <div className="space-y-1.5 text-sm">
                       <div className="flex justify-between"><span className="text-gray-600 dark:text-gray-300">Passenger:</span><span className="font-medium text-gray-800 dark:text-white">{ticketHolders[0]?.name || 'N/A'}</span></div>
@@ -723,7 +707,7 @@ const BookingPage: React.FC = () => {
                     </div>
                     <div className="flex justify-between items-center mt-3 pt-3 border-t border-gray-200 dark:border-gray-500">
                       <div className="text-sm sm:text-base font-semibold text-gray-800 dark:text-white">Total Amount:</div>
-                      <div className="text-lg sm:text-xl font-bold text-accent-kente-gold">${(selectedSeat.price + (selectedHotpoint?.fee || 0)).toFixed(2)}</div>
+                      <div className="text-lg sm:text-xl font-bold text-primary-600 dark:text-primary-400">${(selectedSeat.price + (selectedHotpoint?.fee || 0)).toFixed(2)}</div>
                     </div>
                   </div>
                   <PaymentForm onComplete={processPayment} amount={selectedSeat.price + (selectedHotpoint?.fee || 0)} isProcessing={isProcessingPayment} onCancel={() => moveToNextStep(4)} showProcessingIndicator={true} showTotalAmount={false} availableMethods={['airtel', 'momo', 'card']} className="border-0 p-0 shadow-none bg-transparent dark:bg-transparent" />

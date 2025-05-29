@@ -57,6 +57,12 @@ const Navbar: React.FC = () => {
       return [
         ...commonItems,
         { 
+          path: `${basePath}/statistics`, 
+          label: 'Statistics', 
+          icon: <BarChart2 className="h-5 w-5" />,
+          roles: ['admin']
+        },
+        { 
           path: `${basePath}/trips`, 
           label: 'Trip Management', 
           icon: <Clock className="h-5 w-5" />,
@@ -156,20 +162,23 @@ const Navbar: React.FC = () => {
   const navItems = isDashboard ? dashboardNavItems : mainNavItems;
 
   return (
-    <nav 
-      className={`fixed top-0 left-0 right-0 z-40 w-full transition-all duration-300 backdrop-blur-md ${
+    <nav
+      className={
         isDashboard
-          ? 'bg-background-light dark:bg-section-dark border-b border-primary-100 dark:border-primary-800'
-          : scrolled 
-            ? 'bg-white/90 dark:bg-gray-900/90 shadow-md' 
-            : 'bg-transparent dark:bg-transparent'
-      }`}
+          ? `fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-[95vw] max-w-4xl px-2 md:px-6 rounded-2xl border shadow-xl glass-navbar-dashboard mb-navbar-dashboard transition-all duration-300`
+          : `fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 backdrop-blur-md border-b ${
+              scrolled
+                ? 'bg-white/95 dark:bg-gray-900/95 border-gray-200 dark:border-gray-800 shadow-md dark:shadow-lg'
+                : 'bg-white/80 dark:bg-gray-900/80 border-transparent'
+            }`
+      }
+      style={isDashboard ? {backdropFilter: 'blur(18px)'} : {backdropFilter: 'blur(12px)'}}
     >
-      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 md:h-20">
+      <div className="container-app px-0">
+        <div className="flex items-center justify-between h-16 md:h-20 min-w-0 gap-x-4 overflow-hidden">
           {/* Logo */}
-          <div className="flex-shrink-0">
-            <Link to="/" className="flex items-center gap-2">
+          <div className="flex-shrink-0 min-w-0">
+            <Link to="/" className="flex items-center gap-2 whitespace-nowrap">
               <Bus className={`h-7 w-7 sm:h-8 sm:w-8 ${
                 isDashboard
                   ? 'text-primary dark:text-primary-200'
@@ -177,7 +186,7 @@ const Navbar: React.FC = () => {
                     ? 'text-primary-800 dark:text-primary-200' 
                     : 'text-white dark:text-white'
               }`} />
-              <span className={`text-lg font-semibold transition-colors duration-200 ${
+              <span className={`text-lg font-semibold transition-colors duration-200 whitespace-nowrap ${
                 isDashboard
                   ? 'text-text-base dark:text-text-inverse'
                   : scrolled 
@@ -196,15 +205,15 @@ const Navbar: React.FC = () => {
           </div>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:space-x-6 lg:space-x-8">
+          <div className="hidden md:flex md:items-center md:space-x-6 lg:space-x-8 min-w-0 flex-shrink">
             {navItems.map((item) => (
-              <div key={item.label} className="relative">
+              <div key={item.label} className="relative min-w-0 flex-shrink">
                 {item.submenu ? (
                   <>
                     <button
                       type="button"
                       onClick={() => setOpenDesktopSubmenu(openDesktopSubmenu === item.path ? null : item.path)}
-                      className={`flex items-center px-3 py-2 text-sm lg:text-base rounded-md ${
+                      className={`flex items-center px-3 py-2 text-sm lg:text-base rounded-md whitespace-nowrap ${
                         isDashboard
                           ? `text-text-base hover:text-primary dark:text-text-inverse dark:hover:text-primary-200 border-b-2 ${
                               item.submenu.some(sub => isActive(sub.path)) || openDesktopSubmenu === item.path
@@ -233,7 +242,7 @@ const Navbar: React.FC = () => {
                             key={sub.path}
                             to={sub.path}
                             onClick={() => setOpenDesktopSubmenu(null)}
-                            className={`block px-4 py-2 text-sm ${
+                            className={`block px-4 py-2 text-sm whitespace-nowrap ${
                               isActive(sub.path) 
                                 ? 'text-primary dark:text-primary-200 bg-section-light dark:bg-primary-900 font-medium' 
                                 : 'text-text-base dark:text-text-inverse hover:bg-section-light hover:text-primary dark:hover:bg-primary-900 dark:hover:text-primary-200'
@@ -249,7 +258,7 @@ const Navbar: React.FC = () => {
                   <Link 
                     key={item.path}
                     to={item.path} 
-                    className={`flex items-center px-3 py-2 text-sm font-medium transition-all duration-200 ${
+                    className={`flex items-center px-3 py-2 text-sm font-medium whitespace-nowrap transition-all duration-200 ${
                       isDashboard
                         ? `rounded-md text-text-base hover:text-primary dark:text-text-inverse dark:hover:text-primary-200 border-b-2 ${
                             isActive(item.path) 
@@ -426,7 +435,7 @@ const Navbar: React.FC = () => {
                 <Link 
                   to="/login" 
                   className={`block w-full text-left btn btn-outline ${
-                    isDashboard ? 'text-primary hover:bg-primary-50 dark:text-primary-200 dark:hover:bg-primary-700' : 'text-gray-700 dark:text-gray-200'
+                    isDashboard ? 'text-primary hover:bg-primary-50 dark:text-primary-200 dark:text-gray-200' : 'text-gray-700 dark:text-gray-200'
                   }`}
                 >
                   <LogIn size={16} className="mr-1.5 inline" /> Login

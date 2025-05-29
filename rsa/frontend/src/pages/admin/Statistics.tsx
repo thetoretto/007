@@ -142,41 +142,29 @@ const AdminStatistics: React.FC = () => {
   };
   
   return (
-    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
       <Navbar />
       <ToastContainer /> 
 
-      <main className="container-app mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-16 md:pt-20">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center">
-            <BarChart2 className="h-7 w-7 mr-2 text-primary-600" />
+      <main className="container-app py-8 md:py-12">
+        <div className="mb-8 md:mb-12">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+            <BarChart2 className="h-7 w-7 mr-3 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
             Statistics
           </h1>
-          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+          <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
             Platform-wide metrics and performance statistics
           </p>
         </div>
         
         {/* Time Period Filter */}
-        <div className="relative">
-          <div className="inline-flex items-center overflow-hidden rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800">
-            <div className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 flex items-center">
-              <Calendar size={16} className="mr-2" />
-              <span>{getTimePeriodLabel()}</span>
-            </div>
-
-            <div className="relative">
-              <button
-                className="h-full p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border-l border-gray-300 dark:border-gray-700"
-                aria-label="Select time period"
-              >
-                <ChevronDown size={16} />
-              </button>
-
+        <div className="mb-8 md:mb-12">
+          <label htmlFor="timePeriod" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">Select Period:</label>
+          <div className="relative inline-block">
               <select
                 id="timePeriod"
                 name="timePeriod"
-                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              className="form-select block w-full text-sm rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:focus:ring-primary-500 dark:focus:border-primary-500 pr-10 transition-colors duration-300"
                 value={timePeriod}
                 onChange={(e) => setTimePeriod(e.target.value as 'daily' | 'weekly' | 'monthly' | 'yearly')}
                 aria-label="Time period"
@@ -186,88 +174,82 @@ const AdminStatistics: React.FC = () => {
                 <option value="monthly">Monthly</option>
                 <option value="yearly">Yearly</option>
               </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300 transition-colors duration-300">
+              <ChevronDown size={16} />
             </div>
           </div>
         </div>
 
         {isLoading && (
           <div className="flex justify-center items-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600 dark:border-primary-400 transition-colors duration-300"></div>
           </div>
         )}
 
         {!isLoading && (
           <>
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-              <div className="card overflow-hidden shadow-sm rounded-lg bg-white dark:bg-gray-800">
-                <div className="p-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              <div className="card p-6">
                   <div className="flex items-center">
-                    <div className="flex-shrink-0 card rounded-md p-3 bg-blue-50 dark:bg-blue-900/30">
-                      <Activity className="h-6 w-6 text-primary-600 dark:text-primary-400" />
+                  <div className="flex-shrink-0 icon-badge icon-badge-md bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-400 transition-colors duration-300">
+                    <Activity className="h-5 w-5" />
                     </div>
-                    <div className="ml-5 w-0 flex-1">
+                  <div className="ml-4 w-0 flex-1">
                       <dl>
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Trips</dt>
+                      <dt className="text-sm font-medium text-gray-600 dark:text-gray-300 truncate transition-colors duration-300">Total Trips ({getTimePeriodLabel()})</dt>
                         <dd>
-                          <div className="text-lg font-medium text-gray-900 dark:text-gray-100">{totalTrips}</div>
+                        <div className="text-2xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{totalTrips}</div>
                         </dd>
                       </dl>
-                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="card overflow-hidden shadow-sm rounded-lg bg-white dark:bg-gray-800">
-                <div className="p-5">
+              <div className="card p-6">
                   <div className="flex items-center">
-                    <div className="flex-shrink-0 card rounded-md p-3 bg-indigo-50 dark:bg-indigo-900/30">
-                      <Users className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+                  <div className="flex-shrink-0 icon-badge icon-badge-md bg-secondary-100 text-secondary-600 dark:bg-secondary-900 dark:text-secondary-400 transition-colors duration-300">
+                    <Users className="h-5 w-5" />
                     </div>
-                    <div className="ml-5 w-0 flex-1">
+                  <div className="ml-4 w-0 flex-1">
                       <dl>
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Users</dt>
+                      <dt className="text-sm font-medium text-gray-600 dark:text-gray-300 truncate transition-colors duration-300">Total Passengers ({getTimePeriodLabel()})</dt>
                         <dd>
-                          <div className="text-lg font-medium text-gray-900 dark:text-gray-100">{mockDashboardStats.totalUsers}</div>
+                        <div className="text-2xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{mockDashboardStats.totalUsers}</div>
                         </dd>
                       </dl>
-                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="card overflow-hidden shadow-sm rounded-lg bg-white dark:bg-gray-800">
-                <div className="p-5">
+              <div className="card p-6">
                   <div className="flex items-center">
-                    <div className="flex-shrink-0 card rounded-md p-3 bg-green-50 dark:bg-green-900/30">
-                      <DollarSign className="h-6 w-6 text-green-600 dark:text-green-400" />
+                  <div className="flex-shrink-0 icon-badge icon-badge-md bg-success-light text-success dark:bg-success-dark dark:text-success-light transition-colors duration-300">
+                    <DollarSign className="h-5 w-5" />
                     </div>
-                    <div className="ml-5 w-0 flex-1">
+                  <div className="ml-4 w-0 flex-1">
                       <dl>
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Revenue</dt>
+                      <dt className="text-sm font-medium text-gray-600 dark:text-gray-300 truncate transition-colors duration-300">Total Revenue ({getTimePeriodLabel()})</dt>
                         <dd>
-                          <div className="text-lg font-medium text-gray-900 dark:text-gray-100">${totalRevenue.toFixed(2)}</div>
+                        <div className="text-2xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">${totalRevenue.toFixed(2)}</div>
                         </dd>
                       </dl>
-                    </div>
                   </div>
                 </div>
               </div>
 
-              <div className="card overflow-hidden shadow-sm rounded-lg bg-white dark:bg-gray-800">
-                <div className="p-5">
+              <div className="card p-6">
                   <div className="flex items-center">
-                    <div className="flex-shrink-0 card rounded-md p-3 bg-yellow-50 dark:bg-yellow-900/30">
-                      <TrendingUp className="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
+                  <div className="flex-shrink-0 icon-badge icon-badge-md bg-warning-light text-warning dark:bg-warning-dark dark:text-warning-light transition-colors duration-300">
+                    <TrendingUp className="h-5 w-5" />
                     </div>
-                    <div className="ml-5 w-0 flex-1">
+                  <div className="ml-4 w-0 flex-1">
                       <dl>
-                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Avg. Revenue Per Trip</dt>
+                      <dt className="text-sm font-medium text-gray-600 dark:text-gray-300 truncate transition-colors duration-300">Avg. Revenue Per Trip</dt>
                         <dd>
-                          <div className="text-lg font-medium text-gray-900 dark:text-gray-100">${avgRevenuePerTrip}</div>
+                        <div className="text-2xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">${avgRevenuePerTrip}</div>
                         </dd>
                       </dl>
-                    </div>
                   </div>
                 </div>
               </div>
