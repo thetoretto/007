@@ -9,6 +9,7 @@ import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Ba
 import { Users, Calendar, TrendingUp, Settings, User, Map, Activity, Plus, Edit, Trash2, Clock, Filter, Star, MapPin, Navigation, ArrowRight } from 'lucide-react';
 import TripForm from '../../components/trips/TripForm';
 import '../../index.css';
+import Navbar from '../../components/common/Navbar';
 
 // Enhanced mock data generation for Admin Dashboard
 const generateAdminMockData = (period: 'daily' | 'weekly' | 'monthly' | 'yearly', allTrips: Trip[]) => {
@@ -114,9 +115,6 @@ const AdminDashboard: React.FC = () => {
   const [timePeriod, setTimePeriod] = useState<'daily' | 'weekly' | 'monthly' | 'yearly'>('daily');
   const [adminData, setAdminData] = useState(generateAdminMockData(timePeriod, trips));
 
-  // Import the DashboardNavbar component
-  const DashboardNavbar = React.lazy(() => import('../../components/dashboard/DashboardNavbar'));
-
   useEffect(() => {
     fetchTripStoreTrips();
     fetchAllBookings();
@@ -181,47 +179,12 @@ const AdminDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background-light dark:bg-section-dark">
-      {/* Dashboard Navigation */}
-      <React.Suspense fallback={<div className="p-8 text-center">Loading navigation...</div>}>
-        <DashboardNavbar userRole="admin" />
-      </React.Suspense>
-
-      <div className="container-app mx-auto px-4 py-8">
-        {/* Header with actions */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-          <div className="flex-1 min-w-0 mb-4 md:mb-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-text-base dark:text-text-inverse">Admin Dashboard</h1>
-            <p className="mt-1 text-sm text-text-muted dark:text-text-muted-dark">
-            {user && `Welcome back, ${user.firstName} ${user.lastName}`}
-          </p>
-        </div>
-          <div className="flex flex-wrap gap-3 items-center">
-            <Link to="/admin/hotpoints" className="btn btn-primary flex items-center gap-2">
-              <MapPin className="h-4 w-4" />
-            Manage Hotpoints
-          </Link>
-            <Link to="/admin/reports" className="btn btn-secondary flex items-center gap-2">
-              <Activity className="h-4 w-4" />
-            Generate Reports
-          </Link>
-            <div className="flex items-center  dark:bg-section-dark rounded-lg p-2">
-              <Filter className="h-5 w-5 text-text-muted dark:text-text-muted-dark mr-2" />
-            <select
-              value={timePeriod}
-              onChange={(e) => setTimePeriod(e.target.value as 'daily' | 'weekly' | 'monthly' | 'yearly')}
-                className="select select-bordered select-sm focus:ring-0 focus:outline-none text-text-base dark:text-text-inverse bg-transparent"
-            >
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-              <option value="yearly">Yearly</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-        {/* Stats Cards */}
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+      <Navbar />
+      <main className="container-app mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-16 md:pt-20">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-8">Admin Dashboard</h1>
+        
+        {/* Quick Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="card bg-base-100 dark:bg-section-dark p-6 rounded-lg shadow-sm border border-primary-100 dark:border-primary-800 transition-all hover:shadow-md">
             <div className="flex items-center justify-between mb-4">
@@ -469,7 +432,7 @@ const AdminDashboard: React.FC = () => {
           onSubmit={handleTripFormSubmit}
         tripToEdit={tripToEdit}
       />
-      </div>
+      </main>
     </div>
   );
 };

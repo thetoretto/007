@@ -6,6 +6,7 @@ import useAuthStore from '../../store/authStore';
 import { useBookingStore, BookingWithDetails } from '../../store/bookingStore';
 import { getRandomRoutes, getRandomBookings } from '../../utils/mockData';
 import Navbar from '../../components/common/Navbar';
+import ToastContainer from '../../components/common/ToastContainer';
 
 // Dummy upcoming trips data
 const dummyTripStats = {
@@ -43,12 +44,12 @@ const PassengerDashboard: React.FC = () => {
   }, [user?.id, fetchBookingsByUserId]);
 
   // Get upcoming and past bookings
-  const upcomingBookings = useMemo(() => {
+  const upcomingBookings: BookingWithDetails[] = useMemo(() => {
     if (bookings.length === 0) {
       // If no bookings in store, generate some dummy ones
       return getRandomBookings(3).filter(b => 
         ['pending', 'confirmed', 'booked'].includes(b.status as string)
-      );
+      ) as BookingWithDetails[]; // Cast to store's BookingWithDetails
     }
     
     return bookings
@@ -56,12 +57,12 @@ const PassengerDashboard: React.FC = () => {
       .slice(0, 3);
   }, [bookings]);
 
-  const pastBookings = useMemo(() => {
+  const pastBookings: BookingWithDetails[] = useMemo(() => {
     if (bookings.length === 0) {
       // If no bookings in store, generate some dummy ones
       return getRandomBookings(3).filter(b => 
         ['completed', 'cancelled'].includes(b.status as string)
-      );
+      ) as BookingWithDetails[]; // Cast to store's BookingWithDetails
     }
     
     return bookings
@@ -126,10 +127,10 @@ const PassengerDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background-light dark:bg-section-dark">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
       <Navbar />
-      
-      <div className="container-app mx-auto px-4 py-8">
+      <ToastContainer />
+      <main className="container-app mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-16 md:pt-20">
         {/* Header with greeting and search */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div className="flex-1 min-w-0 mb-4 md:mb-0">
@@ -239,7 +240,7 @@ const PassengerDashboard: React.FC = () => {
                             </h3>
                             <div className="mt-1 flex items-center text-sm text-text-muted dark:text-text-muted-dark">
                               <Calendar className="h-4 w-4 mr-1" />
-                              <span>{booking.trip?.date ? formatDate(booking.trip.date, booking.trip.time) : 'Date TBD'}</span>
+                              <span>{booking.trip?.date && booking.trip?.time ? formatDate(booking.trip.date, booking.trip.time) : 'Date TBD'}</span>
                             </div>
                             <div className="mt-1 flex items-center">
                               {getStatusBadge(booking.status)}
@@ -255,7 +256,7 @@ const PassengerDashboard: React.FC = () => {
                               ${booking.trip?.price?.toFixed(2) || '0.00'}
                             </span>
                             <div className="flex items-center text-xs text-text-muted dark:text-text-muted-dark mt-1">
-                              <span>Seat {booking.seat || 'TBD'}</span>
+                              <span>Seat{(booking.seats && booking.seats.length > 1) ? 's' : ''} {booking.seats && booking.seats.length > 0 ? booking.seats.length : 'TBD'}</span>
                               <ChevronRight className="h-4 w-4 ml-1" />
                             </div>
                           </div>
@@ -308,7 +309,7 @@ const PassengerDashboard: React.FC = () => {
                             </h3>
                             <div className="mt-1 flex items-center text-sm text-text-muted dark:text-text-muted-dark">
                               <Calendar className="h-4 w-4 mr-1" />
-                              <span>{booking.trip?.date ? formatDate(booking.trip.date, booking.trip.time) : 'Date N/A'}</span>
+                              <span>{booking.trip?.date && booking.trip?.time ? formatDate(booking.trip.date, booking.trip.time) : 'Date N/A'}</span>
                             </div>
                             <div className="mt-1 flex items-center">
                               {getStatusBadge(booking.status)}
@@ -443,7 +444,7 @@ const PassengerDashboard: React.FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

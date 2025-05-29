@@ -8,6 +8,8 @@ import useTripStore, { Trip } from '../../store/tripStore';
 import QRScannerIcon from '../../components/icons/QRScannerIcon';
 import TripForm from '../../components/trips/TripForm';
 import PasswordConfirmationModal from '../../components/common/PasswordConfirmationModal';
+import Navbar from '../../components/common/Navbar';
+import ToastContainer from '../../components/common/ToastContainer';
 
 // Define BookingWithDetails interface for type safety
 interface BookingWithDetails {
@@ -31,9 +33,6 @@ const DriverDashboard: React.FC = () => {
   const [showIncome, setShowIncome] = useState(false);
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [timePeriod, setTimePeriod] = useState<'daily' | 'weekly' | 'monthly' | 'yearly'>('daily');
-
-  // Import the DashboardNavbar component
-  const DashboardNavbar = React.lazy(() => import('../../components/dashboard/DashboardNavbar'));
 
   useEffect(() => {
     fetchTrips(); // Fetch trips on component mount
@@ -214,13 +213,10 @@ const DriverDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background-light dark:bg-section-dark">
-      {/* Dashboard Navigation */}
-      <React.Suspense fallback={<div className="p-8 text-center">Loading navigation...</div>}>
-        <DashboardNavbar userRole="driver" />
-      </React.Suspense>
-
-      <div className="container-app mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+      <Navbar />
+      <ToastContainer />
+      <main className="container-app mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-16 md:pt-20">
         {/* Header with actions */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div className="flex-1 min-w-0 mb-4 md:mb-0">
@@ -650,7 +646,7 @@ const DriverDashboard: React.FC = () => {
         title="Confirm Password to View Income"
         message="Please enter your password to view your income details."
       />
-      </div>
+      </main>
     </div>
   );
 };

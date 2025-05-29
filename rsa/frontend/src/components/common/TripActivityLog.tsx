@@ -1,24 +1,21 @@
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
-import { Search, Filter, Calendar, ChevronDown, ChevronUp, CheckCircle, RefreshCw, XCircle, Clock, AlertCircle, Star, MapIcon, Download, Share2, ChevronLeft, ChevronRight, MapPin, DollarSign, Clock3, CalendarRange, Users } from 'lucide-react';
-import { TripActivity, TripStatus, DateFilter } from '../../types'; // Assuming types are defined here or adjust path
-import { mockTripActivities } from '../../utils/mockTripActivities'; // Import mock activities from utils
-import { parseActivityDate } from '../../utils/dateUtils'; // Assuming a utility file for date parsing
-import { getStatusText } from '../../utils/tripUtils'; // Assuming a utility file for status text
-import TripActivityItem from './TripActivityItem'; // Import the new component
+import { Search, Filter, Calendar, ChevronDown, ChevronUp, CheckCircle, RefreshCw, XCircle, Clock, AlertCircle, Star, MapIcon, Download, Share2, ChevronLeft, ChevronRight, MapPin, DollarSign, Clock3, CalendarRange, Users, ExternalLink } from 'lucide-react';
+import { mockTripActivities } from '../../utils/mockTripActivities'; // Keep if activities prop can be empty
+import TripActivityItem from './TripActivityItem';
 
-// Define trip status types
-type TripStatus = 'completed' | 'in-progress' | 'cancelled' | 'scheduled' | 'delayed';
-type DateFilter = 'all' | 'today' | 'week' | 'month';
+// Define trip status types specific to this log's display needs
+export type LogTripStatus = 'completed' | 'in-progress' | 'cancelled' | 'scheduled' | 'delayed';
+export type LogDateFilter = 'all' | 'today' | 'week' | 'month';
 
-// Trip activity interface
-interface TripActivity {
+// Trip activity interface specific to this log
+export interface LogTripActivity {
   id: string;
   fromLocation: string;
-  toLocation: string;
+  toLocation:string;
   date: string;
   time: string;
   price: number;
-  status: TripStatus;
+  status: LogTripStatus; // Use local LogTripStatus
   passengers: number;
   driver?: {
     name: string;
@@ -33,15 +30,15 @@ interface TripActivity {
 }
 
 interface TripActivityLogProps {
-  activities?: TripActivity[];
+  activities?: LogTripActivity[]; // Use local LogTripActivity
 }
 
 const TripActivityLog: React.FC<TripActivityLogProps> = ({
   activities = []
 }) => {
   const [expandedTrip, setExpandedTrip] = useState<string | null>(null);
-  const [statusFilter, setStatusFilter] = useState<TripStatus | 'all'>('all');
-  const [dateFilter, setDateFilter] = useState<DateFilter>('all');
+  const [statusFilter, setStatusFilter] = useState<LogTripStatus | 'all'>('all'); // Use local LogTripStatus
+  const [dateFilter, setDateFilter] = useState<LogDateFilter>('all'); // Use local LogDateFilter
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(1);
@@ -51,22 +48,14 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
   const tripActivities = activities.length > 0 ? activities : mockTripActivities;
 
   // Helper function to convert string date to Date object with time set to midnight
-  const parseActivityDate = useCallback((dateStr: string): Date => {
+  const parseLogActivityDate = useCallback((dateStr: string): Date => {
     const date = new Date(dateStr);
     date.setHours(0, 0, 0, 0);
     return date;
   }, []);
 
-  // Memoized filter functions for better performance
-
-
-
-
-
-
-
   // Get status text based on trip status
-  const getStatusText = (status: TripStatus) => {
+  const getLogStatusText = useCallback((status: LogTripStatus) => { // Renamed and used useCallback
     switch(status) {
       case 'completed':
         return 'Completed';
@@ -81,7 +70,7 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
       default:
         return 'Unknown';
     }
-  };
+  }, []);
 
   // Memoized filtered activities for better performance
   const filteredActivities = useMemo(() => {
@@ -96,7 +85,7 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
         (activity.driver?.name.toLowerCase().includes(normalizedQuery) || false) ||
         activity.paymentMethod?.toLowerCase().includes(normalizedQuery) ||
         activity.notes?.toLowerCase().includes(normalizedQuery) ||
-        getStatusText(activity.status).toLowerCase().includes(normalizedQuery)
+        getLogStatusText(activity.status).toLowerCase().includes(normalizedQuery) // Use renamed getLogStatusText
       );
     }
 
@@ -113,7 +102,7 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
       switch (dateFilter) {
         case 'today':
           result = result.filter(activity => {
-            const date = parseActivityDate(activity.date);
+            const date = parseLogActivityDate(activity.date); // Use renamed parseLogActivityDate
             return date.getTime() === today.getTime();
           });
           break;
@@ -122,7 +111,7 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
           const weekAgo = new Date(today);
           weekAgo.setDate(today.getDate() - 7);
           result = result.filter(activity => {
-            const date = parseActivityDate(activity.date);
+            const date = parseLogActivityDate(activity.date); // Use renamed parseLogActivityDate
             return date >= weekAgo && date <= today;
           });
           break;
@@ -132,7 +121,7 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
           const monthAgo = new Date(today);
           monthAgo.setMonth(today.getMonth() - 1);
           result = result.filter(activity => {
-            const date = parseActivityDate(activity.date);
+            const date = parseLogActivityDate(activity.date); // Use renamed parseLogActivityDate
             return date >= monthAgo && date <= today;
           });
           break;
@@ -141,7 +130,7 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
     }
 
     return result;
-  }, [tripActivities, searchQuery, statusFilter, dateFilter, parseActivityDate, getStatusText]);
+  }, [tripActivities, searchQuery, statusFilter, dateFilter, parseLogActivityDate, getLogStatusText]); // Updated dependencies
 
   // Calculate pagination
   const totalPages = Math.ceil(filteredActivities.length / itemsPerPage);
@@ -165,51 +154,48 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
   };
 
   // Get status icon based on trip status
-  const getStatusIcon = (status: TripStatus) => {
+  const getLogStatusIcon = useCallback((status: LogTripStatus) => { // Renamed
     switch(status) {
       case 'completed':
-        return <CheckCircle className="icon-sm text-success" />;
+        return <CheckCircle className="h-5 w-5 text-success" />;
       case 'in-progress':
-        return <RefreshCw className="icon-sm text-info animate-spin" />;
+        return <RefreshCw className="h-5 w-5 text-info animate-spin" />;
       case 'cancelled':
-        return <XCircle className="icon-sm text-error" />;
+        return <XCircle className="h-5 w-5 text-error" />;
       case 'scheduled':
-        return <Clock className="icon-sm text-secondary" />;
+        return <Clock className="h-5 w-5 text-secondary" />;
       case 'delayed':
-        return <AlertCircle className="icon-sm text-warning" />;
+        return <AlertCircle className="h-5 w-5 text-warning" />;
       default:
-        return <Clock className="icon-sm text-text-muted" />;
+        return <Clock className="h-5 w-5 text-text-muted dark:text-text-muted-dark" />;
     }
-  };
+  }, []);
 
   // Mapping for status badge classes
-  const statusBadgeClasses: Record<TripStatus, string> = {
-    'completed': 'badge status-completed',
-    'in-progress': 'badge status-in-progress',
-    'cancelled': 'badge status-cancelled',
-    'scheduled': 'badge status-scheduled',
-    'delayed': 'badge status-delayed',
+  const statusBadgeClasses: Record<LogTripStatus, string> = { // Use LogTripStatus
+    'completed': 'badge badge-success-soft',
+    'in-progress': 'badge badge-info-soft',
+    'cancelled': 'badge badge-error-soft',
+    'scheduled': 'badge badge-secondary-soft',
+    'delayed': 'badge badge-warning-soft',
   };
 
   // Function to get status badge class
-  const getStatusBadgeClass = useCallback((status: TripStatus): string => {
-    return statusBadgeClasses[status] || 'badge badge-gray'; // Default to gray if status is not found
+  const getLogStatusBadgeClass = useCallback((status: LogTripStatus): string => { // Renamed
+    return statusBadgeClasses[status] || 'badge badge-ghost'; // Default to ghost if status is not found
   }, []);
 
   // Share trip details with improved error handling
-  const handleShareTrip = useCallback(async (activity: TripActivity) => {
+  const handleShareTrip = useCallback(async (activity: LogTripActivity) => { // Use LogTripActivity
     try {
       if (navigator.share) {
         await navigator.share({
           title: `Trip from ${activity.fromLocation} to ${activity.toLocation}`,
-          text: `My trip on ${new Date(activity.date).toLocaleDateString()} at ${activity.time} with status: ${getStatusText(activity.status)}`,
-          url: window.location.href // Include current URL if applicable
+          text: `My trip on ${new Date(activity.date).toLocaleDateString()} at ${activity.time} with status: ${getLogStatusText(activity.status)}`, // Use getLogStatusText
+          url: window.location.href
         });
       } else {
-        // Fallback for browsers that don't support Web Share API
-        const tripDetails = `Trip from ${activity.fromLocation} to ${activity.toLocation} on ${new Date(activity.date).toLocaleDateString()} at ${activity.time}. Status: ${getStatusText(activity.status)}`;
-
-        // Try to use clipboard API as fallback
+        const tripDetails = `Trip from ${activity.fromLocation} to ${activity.toLocation} on ${new Date(activity.date).toLocaleDateString()} at ${activity.time}. Status: ${getLogStatusText(activity.status)}`; // Use getLogStatusText
         if (navigator.clipboard && navigator.clipboard.writeText) {
           await navigator.clipboard.writeText(tripDetails);
           alert("Trip details copied to clipboard!");
@@ -221,7 +207,7 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
       console.error('Error sharing trip details:', error);
       alert("There was an error sharing the trip details. Please try again.");
     }
-  }, [getStatusText]);
+  }, [getLogStatusText]); // Updated dependency
 
   // Mock download receipt with improved feedback
   const handleDownloadReceipt = useCallback((tripId: string, tripDate: string) => {
@@ -237,11 +223,9 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
   }, []);
 
   // Mock view on map with improved feedback
-  const handleViewOnMap = useCallback((activity: TripActivity) => {
+  const handleViewOnMap = useCallback((activity: LogTripActivity) => { // Use LogTripActivity
     try {
       console.log(`Viewing trip ${activity.id} on map`);
-      // In a real app, this would open a map view with the route
-      // For demo purposes, we'll just show an alert
       alert(`In a real app, this would show the trip route from ${activity.fromLocation} to ${activity.toLocation} on a map.\n\nTrip date: ${new Date(activity.date).toLocaleDateString()}\nDeparture time: ${activity.time}${activity.estimatedArrival ? `\nEstimated arrival: ${activity.estimatedArrival}` : ''}`);
     } catch (error) {
       console.error('Error viewing trip on map:', error);
@@ -250,151 +234,92 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
   }, []);
 
   return (
-    <div className="bg-card dark:bg-card-dark rounded-lg shadow-lg p-6 space-y-6">
-      <div className="border-b border-border-light dark:border-border-dark pb-4">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-4">
-          <h2 className="text-2xl font-semibold text-text-primary dark:text-text-primary-dark">Trip Activity Log</h2>
+    <div className="card bg-base-100 dark:bg-section-dark shadow-xl rounded-xl p-4 sm:p-6">
+      <div className="border-b border-border dark:border-border-dark pb-4 mb-4 sm:mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3 sm:gap-4">
+          <h2 className="text-xl sm:text-2xl font-semibold text-text-base dark:text-text-inverse">Trip Activity Log</h2>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="btn btn-secondary-outline flex items-center text-sm"
+            className="btn btn-outline btn-secondary flex items-center text-sm"
             aria-expanded={showFilters}
             aria-controls="filter-panel"
-            aria-label={showFilters ? "Hide filters" : "Show filters"}
           >
-            <Filter className="icon-sm mr-2" />
-            {showFilters ? 'Hide Filters' : 'Show Filters'}
+            <Filter className="h-4 w-4 mr-2" />
+            {showFilters ? 'Hide Filters' : 'Filters'}
           </button>
         </div>
 
-        {/* Search bar */}
         <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="icon-base text-text-muted" aria-hidden="true" />
-          </div>
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-text-muted dark:text-text-muted-dark pointer-events-none" />
           <input
-            type="text"
-            className="input w-full pl-10 pr-4 py-2 border border-border-light dark:border-border-dark rounded-md bg-background-light dark:bg-background-dark text-text-primary dark:text-text-primary-dark placeholder-text-muted focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
-            placeholder="Search by location, driver, status or payment method..."
+            type="search"
+            className="input input-bordered w-full pl-10 pr-4 py-2.5 bg-background-light dark:bg-background-dark text-text-base dark:text-text-inverse placeholder-text-muted dark:placeholder-text-muted-dark focus:ring-primary focus:border-primary"
+            placeholder="Search trips (e.g., Kigali, Driver John, Completed)"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             aria-label="Search trips"
           />
         </div>
 
-        {/* Filters */}
         {showFilters && (
           <div
             id="filter-panel"
-            className="mt-4 p-4 bg-background-alternate dark:bg-background-darkAlternate rounded-md space-y-4 animate-fadeIn"
+            className="mt-4 p-4 bg-base-200 dark:bg-section-medium rounded-lg space-y-4 animate-fadeIn"
             role="region"
-            aria-label="Trip filters"
           >
-            <div>
-              <p className="form-label flex items-center mb-2 text-text-secondary dark:text-text-secondary-dark font-medium">
-                <Calendar className="icon-sm mr-2 text-primary" aria-hidden="true" />
-                Date Filter
-              </p>
-              <div className="flex flex-wrap gap-3" role="group" aria-label="Date filter options">
-                <button
-                  onClick={() => setDateFilter('all')}
-                  className={dateFilter === 'all' ? 'badge badge-primary-filled' : 'badge badge-secondary-outline'}
-                  aria-pressed={dateFilter === 'all'}
-                  aria-label="Show all dates"
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="date-filter-select" className="form-label flex items-center mb-1.5 text-text-base dark:text-text-inverse font-medium">
+                  <CalendarRange className="h-5 w-5 mr-2 text-primary dark:text-primary-300" />
+                  Date Range
+                </label>
+                <select
+                  id="date-filter-select"
+                  value={dateFilter}
+                  onChange={(e) => setDateFilter(e.target.value as LogDateFilter)}
+                  className="select select-bordered w-full bg-background-light dark:bg-background-dark text-text-base dark:text-text-inverse focus:ring-primary focus:border-primary"
                 >
-                  All Dates
-                </button>
-                <button
-                  onClick={() => setDateFilter('today')}
-                  className={dateFilter === 'today' ? 'badge badge-primary-filled' : 'badge badge-secondary-outline'}
-                  aria-pressed={dateFilter === 'today'}
-                  aria-label="Show today's trips"
-                >
-                  Today
-                </button>
-                <button
-                  onClick={() => setDateFilter('week')}
-                  className={dateFilter === 'week' ? 'badge badge-primary-filled' : 'badge badge-secondary-outline'}
-                  aria-pressed={dateFilter === 'week'}
-                  aria-label="Show this week's trips"
-                >
-                  This Week
-                </button>
-                <button
-                  onClick={() => setDateFilter('month')}
-                  className={dateFilter === 'month' ? 'badge badge-primary-filled' : 'badge badge-secondary-outline'}
-                  aria-pressed={dateFilter === 'month'}
-                  aria-label="Show this month's trips"
-                >
-                  This Month
-                </button>
+                  <option value="all">All Dates</option>
+                  <option value="today">Today</option>
+                  <option value="week">This Week</option>
+                  <option value="month">This Month</option>
+                </select>
               </div>
-            </div>
 
-            <div>
-              <p className="form-label flex items-center mb-2 text-text-secondary dark:text-text-secondary-dark font-medium">
-                <Filter className="icon-sm mr-2 text-primary" aria-hidden="true" />
-                Status Filter
-              </p>
-              <div className="flex flex-wrap gap-3" role="group" aria-label="Status filter options">
-                <button
-                  onClick={() => setStatusFilter('all')}
-                  className={statusFilter === 'all' ? 'badge badge-primary-filled' : 'badge badge-secondary-outline'}
-                  aria-pressed={statusFilter === 'all'}
-                  aria-label="Show all statuses"
+              <div>
+                <label htmlFor="status-filter-select" className="form-label flex items-center mb-1.5 text-text-base dark:text-text-inverse font-medium">
+                  <Filter className="h-5 w-5 mr-2 text-primary dark:text-primary-300" />
+                  Trip Status
+                </label>
+                <select
+                  id="status-filter-select"
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value as LogTripStatus | 'all')}
+                  className="select select-bordered w-full bg-background-light dark:bg-background-dark text-text-base dark:text-text-inverse focus:ring-primary focus:border-primary"
                 >
-                  All
-                </button>
-                <button
-                  onClick={() => setStatusFilter('in-progress')}
-                  className={statusFilter === 'in-progress' ? 'badge status-in-progress-filled' : 'badge badge-secondary-outline'}
-                  aria-pressed={statusFilter === 'in-progress'}
-                  aria-label="Show in-progress trips"
-                >
-                  In Progress
-                </button>
-                <button
-                  onClick={() => setStatusFilter('completed')}
-                  className={statusFilter === 'completed' ? 'badge status-completed-filled' : 'badge badge-secondary-outline'}
-                  aria-pressed={statusFilter === 'completed'}
-                  aria-label="Show completed trips"
-                >
-                  Completed
-                </button>
-                <button
-                  onClick={() => setStatusFilter('scheduled')}
-                  className={statusFilter === 'scheduled' ? 'badge status-scheduled-filled' : 'badge badge-secondary-outline'}
-                  aria-pressed={statusFilter === 'scheduled'}
-                  aria-label="Show scheduled trips"
-                >
-                  Scheduled
-                </button>
-                <button
-                  onClick={() => setStatusFilter('delayed')}
-                  className={statusFilter === 'delayed' ? 'badge status-delayed-filled' : 'badge badge-secondary-outline'}
-                  aria-pressed={statusFilter === 'delayed'}
-                  aria-label="Show delayed trips"
-                >
-                  Delayed
-                </button>
-                <button
-                  onClick={() => setStatusFilter('cancelled')}
-                  className={statusFilter === 'cancelled' ? 'badge status-cancelled-filled' : 'badge badge-secondary-outline'}
-                  aria-pressed={statusFilter === 'cancelled'}
-                  aria-label="Show cancelled trips"
-                >
-                  Cancelled
-                </button>
+                  <option value="all">All Statuses</option>
+                  <option value="completed">Completed</option>
+                  <option value="in-progress">In Progress</option>
+                  <option value="scheduled">Scheduled</option>
+                  <option value="delayed">Delayed</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
               </div>
             </div>
           </div>
         )}
       </div>
 
-      {/* Activity list */}
-      <div className="divide-y divide-border-light dark:divide-border-dark" role="list" aria-label="Trip activities">
+      <div className="space-y-3 sm:space-y-4" role="list">
         {paginatedActivities.length === 0 ? (
-          <div className="p-8 text-center text-text-muted italic" role="status">
-            No trip activities match the selected filters.
+          <div className="p-6 sm:p-8 text-center rounded-lg bg-base-200 dark:bg-section-medium" role="status">
+            <MapPin className="h-12 w-12 mx-auto text-text-muted dark:text-text-muted-dark mb-3" />
+            <p className="text-lg font-medium text-text-base dark:text-text-inverse">No Trip Activities Found</p>
+            <p className="text-sm text-text-muted dark:text-text-muted-dark mt-1">
+              {searchQuery || statusFilter !== 'all' || dateFilter !== 'all' 
+                ? "Try adjusting your search or filters." 
+                : "There are no trip activities to display yet."}
+            </p>
           </div>
         ) : (
           paginatedActivities.map(activity => (
@@ -406,49 +331,44 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
               onShareTrip={handleShareTrip}
               onDownloadReceipt={handleDownloadReceipt}
               onViewOnMap={handleViewOnMap}
-              getStatusBadgeClass={getStatusBadgeClass}
+              getStatusBadgeClass={getLogStatusBadgeClass} // Use renamed
+              // Pass renamed getLogStatusIcon and getLogStatusText if TripActivityItem needs them directly
+              // For now, TripActivityItem defines its own getStatusIcon. getStatusText is passed from here via onShareTrip.
             />
           ))
         )}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
-        <div className="panel-footer flex flex-col sm:flex-row items-center justify-between gap-4 pt-4" role="navigation" aria-label="Pagination navigation">
-          <div className="text-sm text-text-secondary dark:text-text-secondary-dark">
-            Showing <span className="font-semibold">{(page - 1) * itemsPerPage + 1}</span>-<span className="font-semibold">{Math.min(page * itemsPerPage, filteredActivities.length)}</span> of <span className="font-semibold">{filteredActivities.length}</span> results
+        <div className="pt-4 sm:pt-6 mt-4 sm:mt-6 border-t border-border dark:border-border-dark flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4" role="navigation">
+          <div className="text-sm text-text-muted dark:text-text-muted-dark">
+            Page <span className="font-semibold text-text-base dark:text-text-inverse">{page}</span> of <span className="font-semibold text-text-base dark:text-text-inverse">{totalPages}</span>
+            <span className="hidden sm:inline"> ({filteredActivities.length} results)</span>
           </div>
-          <div className="flex space-x-2">
+          <div className="join shadow-sm rounded-lg">
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="btn btn-secondary-outline p-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+              className="join-item btn btn-outline btn-secondary btn-sm sm:btn-md disabled:opacity-60"
               aria-label="Previous page"
             >
-              <ChevronLeft className="icon-base" aria-hidden="true" />
+              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="hidden sm:inline ml-1">Prev</span>
             </button>
-            {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-              // Show pages around current page
-              const pageNum = Math.max(1, Math.min(page - 2 + i, totalPages));
-              return (
-                <button
-                  key={pageNum}
-                  onClick={() => setPage(pageNum)}
-                  className={`btn ${page === pageNum ? 'btn-primary-filled' : 'btn-secondary-outline'} p-2 rounded-md min-w-[36px]`}
-                  aria-label={`Page ${pageNum}`}
-                  aria-current={page === pageNum ? 'page' : undefined}
-                >
-                  {pageNum}
-                </button>
-              );
-            })}
+            
+            {/* Simplified Pagination: Prev, Current Page Indicator, Next */}
+            <button className="join-item btn btn-outline btn-secondary btn-sm sm:btn-md pointer-events-none">
+              {page}
+            </button>
+
             <button
               onClick={() => setPage(p => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="btn btn-secondary-outline p-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
+              className="join-item btn btn-outline btn-secondary btn-sm sm:btn-md disabled:opacity-60"
               aria-label="Next page"
             >
-              <ChevronRight className="icon-base" aria-hidden="true" />
+               <span className="hidden sm:inline mr-1">Next</span>
+              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
             </button>
           </div>
         </div>

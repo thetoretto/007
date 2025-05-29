@@ -47,7 +47,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => {
             navigate('/driver/dashboard');
             break;
           case 'passenger':
-            navigate(redirectTo || '/');
+            navigate(redirectTo || '/passenger/dashboard');
             break;
           default:
             navigate(redirectTo || '/');

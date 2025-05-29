@@ -1,117 +1,119 @@
 import React from 'react';
 import { useAuthStore } from '../../store/authStore';
-import { Calendar, Map, Users, Clock, AlertCircle, CheckCircle, Plus } from 'react-feather';
+import { Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { mockTimeSlots, mockVehicles, mockRoutes, getBookingsWithDetails } from '../../utils/mockData';
-import TripActivityLog from '../common/TripActivityLog';
-
-
-// Import the DashboardNavbar component
-const DashboardNavbar = React.lazy(() => import('./DashboardNavbar'));
+import { mockTimeSlots, mockVehicles, mockRoutes, getBookingsWithDetails, mockUsers } from '../../utils/mockData';
+import TripActivityLog, { LogTripActivity, LogTripStatus } from '../common/TripActivityLog';
+import Navbar from '../common/Navbar';
+import { Route as RouteType, Vehicle as VehicleType, User as UserType, Booking as BookingType } from '../../types';
 
 const TripManagement: React.FC = () => {
   const { user } = useAuthStore();
-  const [selectedTrip, setSelectedTrip] = React.useState<string | null>(null);
 
-  // Use mockVehicles directly instead of maintaining a separate state
-  const [trips, setTrips] = React.useState(mockTimeSlots.map(ts => ({
-    ...ts,
-    id: ts.id || `trip-${Math.random().toString(36).substr(2, 9)}`,
-    vehicleId: ts.vehicleId || 'v1',
-    driverId: ts.driverId || user?.id, // Add driverId to track trip ownership
-    passengers: 8,
-    status: 'upcoming',
-    availableSeats: mockVehicles.find(v => v.id === (ts.vehicleId || 'v1'))?.capacity || 16
-  })));
-  
-  // Create tripsWithDetails array that enhances each trip with its associated vehicle
-  const tripsWithDetails = trips.map((trip) => ({
-    ...trip,
-    vehicle: mockVehicles.find((v) => v.id === trip.vehicleId),
-  }));
+  const logActivities: LogTripActivity[] = React.useMemo(() => {
+    return mockTimeSlots.map((ts: any) => {
+      const vehicle = mockVehicles.find(v => v.id === ts.vehicleId);
+      const route = mockRoutes.find(r => r.id === ts.routeId);
+      const driverUser = mockUsers.find(u => u.id === ts.driverId);
+      const bookingsForSlot = getBookingsWithDetails().filter(b => b.timeSlot?.id === ts.id);
 
-  // Trip handlers
-  const handleAddTrip = (newTrip: any) => {
-    setTrips([...trips, newTrip]);
-  };
+      let status: LogTripStatus = 'scheduled'; 
+      if (ts.status && typeof ts.status === 'string') {
+        const tsStatus = ts.status.toLowerCase();
+        if (['completed', 'in-progress', 'cancelled', 'scheduled', 'delayed'].includes(tsStatus)) {
+          status = tsStatus as LogTripStatus;
+        }
+      }
+      
+      const passengersCount = bookingsForSlot.reduce((acc, b) => acc + (b.seats?.length || 1), 0);
 
-  const handleEditTrip = (tripId: string, updatedTrip: any) => {
-    setTrips(trips.map(t => t.id === tripId ? { ...t, ...updatedTrip } : t));
-  };
+      let paymentMethod = 'N/A';
+      if (bookingsForSlot.length > 0) {
+        const firstBooking = bookingsForSlot[0];
+        if ((firstBooking as any).paymentDetails?.method) {
+            paymentMethod = (firstBooking as any).paymentDetails.method;
+        } else if (firstBooking.passenger?.paymentMethods && firstBooking.passenger.paymentMethods.length > 0) {
+            paymentMethod = firstBooking.passenger.paymentMethods[0].type;
+        }
+      }
 
-  const handleDeleteTrip = (tripId: string) => {
-    setTrips(trips.filter(t => t.id !== tripId));
-  };
+      const isValidStartTime = ts.startTime && typeof ts.startTime === 'string' && ts.startTime.trim() !== '';
+      const startDate = isValidStartTime ? new Date(ts.startTime) : new Date(); // Fallback to current date if startTime is invalid
 
-  // Get all bookings with details
-  const allBookings = getBookingsWithDetails();
+      // Ensure date is valid before calling toISOString or toLocaleTimeString
+      let dateString = 'N/A';
+      let timeString = 'N/A';
 
-  // Group bookings by trip (timeSlotId)
-  const tripGroups = allBookings.reduce((groups: { [key: string]: typeof allBookings }, booking) => {
-    const key = booking.timeSlotId;
-    if (!groups[key]) {
-      groups[key] = [];
-    }
-    groups[key].push(booking);
-    return groups;
-  }, {});
+      if (!isNaN(startDate.getTime())) { // Check if startDate is a valid date
+        dateString = startDate.toISOString().split('T')[0];
+        timeString = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
 
-  // Get trip details from tripsWithDetails instead of trips
-  const detailedTrips = tripsWithDetails.map(trip => {
-    try {
-      const route = mockRoutes.find(r => r.id === trip.routeId);
-      const bookingsForTrip = tripGroups[trip.id] || [];
+      const isValidEndTime = ts.endTime && typeof ts.endTime === 'string' && ts.endTime.trim() !== '';
+      const endDate = isValidEndTime ? new Date(ts.endTime) : null;
+      let estimatedArrivalTimeString;
+      if (endDate && !isNaN(endDate.getTime())){
+        estimatedArrivalTimeString = endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      }
 
       return {
-        ...trip,
-        route,
-        bookings: bookingsForTrip,
-        pendingBookings: bookingsForTrip.filter(b => b.status === 'pending').length,
-        confirmedBookings: bookingsForTrip.filter(b => b.status === 'confirmed').length,
-        totalBookings: bookingsForTrip.length,
+        id: ts.id || `trip-${Math.random().toString(36).substr(2, 9)}`,
+        fromLocation: route?.origin.name || 'Unknown Origin',
+        toLocation: route?.destination.name || 'Unknown Destination',
+        date: dateString,
+        time: timeString,
+        price: ts.pricePerSeat || 50, 
+        status: status,
+        passengers: passengersCount,
+        driver: driverUser ? {
+          name: `${driverUser.firstName} ${driverUser.lastName}`,
+          rating: (driverUser as any).rating || 4.5,
+          vehicleInfo: vehicle ? `${vehicle.brand} ${vehicle.model} (${vehicle.licensePlate})` : 'N/A',
+        } : undefined,
+        lastUpdated: new Date().toISOString(), 
+        estimatedArrival: estimatedArrivalTimeString,
+        paymentMethod: paymentMethod, 
+        notes: ts.notes || (status === 'delayed' ? 'Traffic congestion reported.' : undefined),
+        progressPercentage: status === 'in-progress' ? Math.floor(Math.random() * 80) + 10 : (status === 'completed' ? 100 : 0),
       };
-    } catch (error) {
-      console.error(`Error processing trip ${trip.id}:`, error);
-      return trip;
-    }
-  });
+    });
+  }, []); 
 
-  // Filter trips based on user role
-  const filteredTrips = React.useMemo(() => {
+  const filteredLogActivities = React.useMemo(() => {
     if (user?.role === 'admin') {
-      return detailedTrips; // Admin sees all trips
-    } else if (user?.role === 'driver' && user?.id) {
-      return detailedTrips.filter(trip => trip.driverId === user.id); // Driver sees only their trips
+      return logActivities;
+    } else if (user?.role === 'driver' && user.id) {
+      return logActivities.filter(activity => {
+        const originalTimeSlot = mockTimeSlots.find(ts => ts.id === activity.id);
+        return (originalTimeSlot as any)?.driverId === user.id;
+      });
     }
     return [];
-  }, [detailedTrips, user]);
+  }, [logActivities, user]);
 
-  // Determine the new trip route based on user role
   const newTripRoute = user?.role === 'admin' ? '/admin/trips/new' : '/driver/trips/new';
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Add the horizontal navigation bar */}
-      <React.Suspense fallback={<div>Loading...</div>}>
-        <DashboardNavbar userRole={user?.role || 'driver'} />
-      </React.Suspense>
-      
-      <div className="md:flex md:items-center md:justify-between mb-6">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-3xl font-bold text-gray-900">Trip Management</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            {user?.role === 'admin' ? 'Manage all trips' : 'Manage your trips'}
-          </p>
+    <div className="min-h-screen bg-base-200 dark:bg-base-300">
+      <Navbar />
+      <main className="container-app mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-16 md:pt-20">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
+          <div className="flex-1 min-w-0">
+            <h1 className="text-2xl sm:text-3xl font-bold text-text-base dark:text-text-inverse">Trip Management</h1>
+            <p className="mt-1 text-sm text-text-muted dark:text-text-muted-dark">
+              {user?.role === 'admin' ? 'Oversee and manage all scheduled trips and activities.' : 'View and manage your assigned trips and activities.'}
+            </p>
+          </div>
+          <div className="flex-shrink-0">
+            <Link to={newTripRoute} className="btn btn-primary flex items-center gap-2">
+              <Plus className="h-5 w-5" />
+              New Trip
+            </Link>
+          </div>
         </div>
-        <div className="mt-4 flex md:mt-0 md:ml-4">
-          <Link to={newTripRoute} className="btn btn-primary">
-            <Plus className="h-4 w-4 mr-2" />
-            New Trip
-          </Link>
-        </div>
-      </div>
 
-      <TripActivityLog/>
+        <TripActivityLog activities={filteredLogActivities} />
+      </main>
     </div>
   );
 };

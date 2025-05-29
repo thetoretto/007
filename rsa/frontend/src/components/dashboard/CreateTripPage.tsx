@@ -6,7 +6,7 @@ import useVehicleStore, { Vehicle } from '../../store/vehicleStore';
 import useTripStore, { Trip } from '../../store/tripStore';
 import useHotPointStore, { HotPoint } from '../../store/hotPointStore'; // No longer needed here, TripForm handles it
 import { mockRoutes, Route as AppRoute } from '../../utils/mockData'; // No longer needed here, TripForm handles it
-import DashboardNavbar from './DashboardNavbar';
+import Navbar from '../common/Navbar';
 import Footer from '../common/Footer';
 import { Calendar, Clock, MapPinIcon, Truck, Save, CheckSquare, Square } from 'lucide-react'; // Icons are in TripForm
 import TripForm from '../trips/TripForm'; // Import the unified TripForm
@@ -49,8 +49,8 @@ const CreateTripPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50">
-      <DashboardNavbar userRole={user?.role || ''} />
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
       <main className="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
         <h1 className="text-3xl font-bold text-gray-900 mb-8">Create New Trip</h1>
         {/* Render the unified TripForm component */}

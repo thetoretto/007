@@ -2,7 +2,7 @@ import '../../index.css';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import useAuthStore from '../../store/authStore';
-import { Menu, X, Bus, Home, BookOpen, Phone, User } from 'lucide-react';
+import { Menu, X, Bus, BarChart2, Users, Clock, Settings, ChevronDown, LogIn, UserPlus } from 'lucide-react';
 import ProfileDropdown from './ProfileDropdown';
 import ThemeToggle from './ThemeToggle';
 
@@ -12,6 +12,7 @@ interface NavItem {
   icon?: React.ReactNode;
   roles?: string[];
   isButton?: boolean;
+  submenu?: { path: string; label: string }[];
 }
 
 const Navbar: React.FC = () => {
@@ -20,35 +21,109 @@ const Navbar: React.FC = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [openDesktopSubmenu, setOpenDesktopSubmenu] = useState<string | null>(null);
+  const [openMobileSubmenu, setOpenMobileSubmenu] = useState<string | null>(null);
 
-  // Simplified navigation items
-  const navItems: NavItem[] = [
-    { path: '/', label: 'Home' },
-    { path: '/book', label: 'Book a Ride' },
-    { path: '/contact', label: 'Contact' },
+  const isDashboard = location.pathname.includes('/dashboard') || 
+                      location.pathname.includes('/admin') || 
+                      location.pathname.includes('/driver') || 
+                      location.pathname.includes('/passenger');
+
+  // Main navigation items
+  const mainNavItems: NavItem[] = [
+    { path: '/', label: 'Home', icon: <Bus className="h-5 w-5" /> },
+    { path: '/book', label: 'Book a Ride', icon: <Bus className="h-5 w-5" /> },
+    { path: '/contact', label: 'Contact', icon: <Bus className="h-5 w-5" /> },
   ];
 
-  // User-specific items that will be in profile dropdown
-  const userNavItems: NavItem[] = [
-    { 
-      path: '/passenger/dashboard', 
-      label: 'Dashboard', 
-      roles: ['passenger'],
-      icon: <User className="h-4 w-4" />
-    },
-    { 
-      path: '/driver/dashboard', 
-      label: 'Driver Portal', 
-      roles: ['driver'],
-      icon: <User className="h-4 w-4" />
-    },
-    { 
-      path: '/admin/dashboard', 
-      label: 'Admin Panel', 
-      roles: ['admin'],
-      icon: <User className="h-4 w-4" />
+  // Dashboard navigation items based on user role
+  const getDashboardNavItems = (): NavItem[] => {
+    if (!user) return [];
+
+    const basePath = user.role === 'admin' ? '/admin' : 
+                    user.role === 'driver' ? '/driver' : 
+                    '/passenger';
+
+    const commonItems = [
+      { 
+        path: `${basePath}/dashboard`, 
+        label: 'Dashboard', 
+        icon: <BarChart2 className="h-5 w-5" />,
+        roles: ['passenger', 'driver', 'admin']
+      },
+    ];
+
+    if (user.role === 'admin') {
+      return [
+        ...commonItems,
+        { 
+          path: `${basePath}/trips`, 
+          label: 'Trip Management', 
+          icon: <Clock className="h-5 w-5" />,
+          roles: ['admin']
+        },
+        { 
+          path: `${basePath}/users`,
+          label: 'Users',
+          icon: <Users className="h-5 w-5" />,
+          roles: ['admin'],
+          submenu: [
+            { path: `${basePath}/users`, label: 'User Management' },
+            { path: `${basePath}/users/registered`, label: 'Registered Users' }
+          ]
+        },
+        {
+          path: `${basePath}/settings`,
+          label: 'Settings',
+          icon: <Settings className="h-5 w-5" />,
+          roles: ['admin'],
+          submenu: [
+            { path: `${basePath}/hotpoints`, label: 'Hot Points Management' },
+            { path: `${basePath}/routes`, label: 'Route Management' },
+            { path: `${basePath}/vehicle`, label: 'Vehicle Management' }
+          ]
+        },
+      ];
+    } else if (user.role === 'driver') {
+      return [
+        ...commonItems,
+        { 
+          path: `${basePath}/trips`, 
+          label: 'Trip Management', 
+          icon: <Clock className="h-5 w-5" />,
+          roles: ['driver']
+        },
+        {
+          path: `${basePath}/settings`,
+          label: 'Settings',
+          icon: <Settings className="h-5 w-5" />,
+          roles: ['driver'],
+          submenu: [
+            { path: `${basePath}/vehicle`, label: 'Vehicle Management' }
+          ]
+        },
+      ];
     }
-  ];
+
+    // Passenger-specific navigation items
+    return [
+      ...commonItems,
+      { 
+        path: `${basePath}/trips`, 
+        label: 'My Trips', 
+        icon: <Clock className="h-5 w-5" />,
+        roles: ['passenger']
+      },
+      {
+        path: `${basePath}/settings`,
+        label: 'Settings',
+        icon: <Settings className="h-5 w-5" />,
+        roles: ['passenger']
+      },
+    ];
+  };
+
+  const dashboardNavItems = getDashboardNavItems();
 
   // Handle scrolling effect
   useEffect(() => {
@@ -65,92 +140,184 @@ const Navbar: React.FC = () => {
   // Close menu when location changes
   useEffect(() => {
     setIsMenuOpen(false);
+    setOpenDesktopSubmenu(null);
+    setOpenMobileSubmenu(null);
   }, [location.pathname]);
 
   // Check if a path is active (exact match or starts with)
   const isActive = (path: string) => {
-    return location.pathname === path || 
-           (path !== '/' && location.pathname.startsWith(path));
+    if (path === '/') {
+      return location.pathname === path;
+    }
+    return location.pathname === path || location.pathname.startsWith(path);
   };
 
-  // Filter nav items based on user role
-  const filteredUserNavItems = userNavItems.filter(item => {
-    if (!item.roles) return true;
-    if (!user) return false;
-    return item.roles.includes(user.role);
-  });
+  // Get the appropriate nav items based on whether we're in a dashboard or main site
+  const navItems = isDashboard ? dashboardNavItems : mainNavItems;
 
   return (
     <nav 
       className={`fixed top-0 left-0 right-0 z-40 w-full transition-all duration-300 backdrop-blur-md ${
-        scrolled 
-          ? 'bg-white/90 dark:bg-gray-900/90 shadow-md' 
-          : 'bg-transparent dark:bg-transparent'
+        isDashboard
+          ? 'bg-background-light dark:bg-section-dark border-b border-primary-100 dark:border-primary-800'
+          : scrolled 
+            ? 'bg-white/90 dark:bg-gray-900/90 shadow-md' 
+            : 'bg-transparent dark:bg-transparent'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+      <div className="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
             <Link to="/" className="flex items-center gap-2">
-              <Bus className={`h-6 w-6 ${
-                scrolled ? 'text-primary-800 dark:text-primary-200' : 'text-white dark:text-white'
+              <Bus className={`h-7 w-7 sm:h-8 sm:w-8 ${
+                isDashboard
+                  ? 'text-primary dark:text-primary-200'
+                  : scrolled 
+                    ? 'text-primary-800 dark:text-primary-200' 
+                    : 'text-white dark:text-white'
               }`} />
               <span className={`text-lg font-semibold transition-colors duration-200 ${
-                scrolled ? 'text-primary-900 dark:text-white' : 'text-white'
+                isDashboard
+                  ? 'text-text-base dark:text-text-inverse'
+                  : scrolled 
+                    ? 'text-primary-900 dark:text-white' 
+                    : 'text-white'
               }`}>
-                RideBooker
+                {isDashboard && user ? (
+                  user.role === 'admin' ? 'Admin Panel' : 
+                  user.role === 'driver' ? 'Driver Portal' : 
+                  'Passenger Dashboard'
+                ) : (
+                  'RideBooker'
+                )}
               </span>
             </Link>
           </div>
           
           {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:space-x-8">
+          <div className="hidden md:flex md:items-center md:space-x-6 lg:space-x-8">
             {navItems.map((item) => (
-              <Link 
-                key={item.path}
-                to={item.path} 
-                className={`px-3 py-2 text-sm font-medium transition-all duration-200 ${
-                  isActive(item.path)
-                    ? scrolled 
-                      ? 'text-primary-800 dark:text-primary-200 border-b-2 border-primary-800 dark:border-primary-200' 
-                      : 'text-white dark:text-white border-b-2 border-white'
-                    : scrolled
-                      ? 'text-gray-700 dark:text-gray-300 hover:text-primary-800 dark:hover:text-primary-200' 
-                      : 'text-gray-200 hover:text-white dark:text-gray-300 dark:hover:text-white'
-                }`}
-              >
-                {item.label}
-              </Link>
+              <div key={item.label} className="relative">
+                {item.submenu ? (
+                  <>
+                    <button
+                      type="button"
+                      onClick={() => setOpenDesktopSubmenu(openDesktopSubmenu === item.path ? null : item.path)}
+                      className={`flex items-center px-3 py-2 text-sm lg:text-base rounded-md ${
+                        isDashboard
+                          ? `text-text-base hover:text-primary dark:text-text-inverse dark:hover:text-primary-200 border-b-2 ${
+                              item.submenu.some(sub => isActive(sub.path)) || openDesktopSubmenu === item.path
+                                ? 'border-primary dark:border-primary-200 font-medium' 
+                                : 'border-transparent'
+                            }`
+                          : `${
+                              isActive(item.path)
+                                ? scrolled 
+                                  ? 'text-primary-800 dark:text-primary-200 border-b-2 border-primary-800 dark:border-primary-200' 
+                                  : 'text-white dark:text-white border-b-2 border-white'
+                                : scrolled
+                                  ? 'text-gray-700 dark:text-gray-300 hover:text-primary-800 dark:hover:text-primary-200' 
+                                  : 'text-gray-200 hover:text-white dark:text-gray-300 dark:hover:text-white'
+                            }`
+                      } transition-all duration-200`}
+                    >
+                      {item.icon && <span className="mr-1.5">{item.icon}</span>}
+                      {item.label}
+                      <ChevronDown className={`ml-1 h-4 w-4 transition-transform duration-200 ${openDesktopSubmenu === item.path ? 'transform rotate-180' : ''}`} />
+                    </button>
+                    {openDesktopSubmenu === item.path && (
+                      <div className="absolute z-20 mt-2 w-56 origin-top-right bg-background-light dark:bg-section-dark rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                        {item.submenu.map((sub) => (
+                          <Link
+                            key={sub.path}
+                            to={sub.path}
+                            onClick={() => setOpenDesktopSubmenu(null)}
+                            className={`block px-4 py-2 text-sm ${
+                              isActive(sub.path) 
+                                ? 'text-primary dark:text-primary-200 bg-section-light dark:bg-primary-900 font-medium' 
+                                : 'text-text-base dark:text-text-inverse hover:bg-section-light hover:text-primary dark:hover:bg-primary-900 dark:hover:text-primary-200'
+                            } transition-colors duration-200`}
+                          >
+                            {sub.label}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <Link 
+                    key={item.path}
+                    to={item.path} 
+                    className={`flex items-center px-3 py-2 text-sm font-medium transition-all duration-200 ${
+                      isDashboard
+                        ? `rounded-md text-text-base hover:text-primary dark:text-text-inverse dark:hover:text-primary-200 border-b-2 ${
+                            isActive(item.path) 
+                              ? 'border-primary dark:border-primary-200 font-medium' 
+                              : 'border-transparent'
+                          }`
+                        : `${
+                            isActive(item.path)
+                              ? scrolled 
+                                ? 'text-primary-800 dark:text-primary-200 border-b-2 border-primary-800 dark:border-primary-200' 
+                                : 'text-white dark:text-white border-b-2 border-white'
+                              : scrolled
+                                ? 'text-gray-700 dark:text-gray-300 hover:text-primary-800 dark:hover:text-primary-200' 
+                                : 'text-gray-200 hover:text-white dark:text-gray-300 dark:hover:text-white'
+                          }`
+                    }`}
+                  >
+                    {item.icon && <span className="mr-1.5">{item.icon}</span>}
+                    {item.label}
+                  </Link>
+                )}
+              </div>
             ))}
+            {isDashboard && <ThemeToggle />}
           </div>
           
-          {/* Desktop Right Side */}
-          <div className="hidden md:flex md:items-center md:space-x-4">
-            <ThemeToggle 
-              size="sm" 
-              showLabel={false} 
-              className={scrolled ? '' : 'bg-white/10 text-white hover:bg-white/20 dark:bg-gray-900/30 dark:hover:bg-gray-900/50'} 
-            />
-            <ProfileDropdown />
+          {/* Right side: Profile/Login & Theme Toggle (Desktop) */}
+          <div className="hidden md:flex items-center space-x-3">
+            {!isDashboard && <ThemeToggle />}
+            {user ? (
+              <ProfileDropdown />
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Link 
+                  to="/login" 
+                  className={`btn btn-sm btn-outline flex items-center ${
+                    scrolled || isDashboard ? 'text-primary hover:bg-primary-50 dark:text-primary-200 dark:hover:bg-primary-700' : 'text-white hover:bg-white/10'
+                  }`}
+                >
+                  <LogIn size={16} className="mr-1.5" />
+                  Login
+                </Link>
+                <Link 
+                  to="/register" 
+                  className={`btn btn-sm flex items-center ${
+                    scrolled || isDashboard ? 'btn-primary' : 'bg-white/20 hover:bg-white/30 text-white'
+                  }`}
+                >
+                  <UserPlus size={16} className="mr-1.5" />
+                  Sign Up
+                </Link>
+              </div>
+            )}
           </div>
           
-          {/* Mobile menu button */}
-          <div className="flex items-center space-x-4 md:hidden">
-            <ThemeToggle 
-              size="sm" 
-              showLabel={false} 
-              className={scrolled ? '' : 'bg-white/10 text-white hover:bg-white/20 dark:bg-gray-900/30 dark:hover:bg-gray-900/50'} 
-            />
+          {/* Mobile Menu Button */}
+          <div className="md:hidden flex items-center">
+            <ThemeToggle />
             <button
-              type="button"
-              className={`inline-flex items-center justify-center p-2 rounded-md ${
-                scrolled 
-                  ? 'text-gray-700 hover:text-primary-800 hover:bg-gray-100 dark:text-gray-300 dark:hover:text-primary-200 dark:hover:bg-gray-800' 
-                  : 'text-white hover:text-white hover:bg-white/10 dark:text-gray-300 dark:hover:text-white dark:hover:bg-gray-800/20'
-              } focus:outline-none`}
-              aria-expanded={isMenuOpen ? 'true' : 'false'}
               onClick={() => setIsMenuOpen(!isMenuOpen)}
+              type="button"
+              className={`ml-2 inline-flex items-center justify-center p-2 rounded-md focus:outline-none transition-colors duration-200 ${
+                isDashboard ? 'text-text-base hover:bg-primary-50 dark:text-text-inverse dark:hover:bg-primary-800' : 
+                scrolled ? 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800' : 
+                'text-white hover:bg-white/10'
+              }`}
+              aria-controls="mobile-menu"
+              aria-expanded={isMenuOpen}
             >
               <span className="sr-only">Open main menu</span>
               {isMenuOpen ? (
@@ -163,41 +330,118 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile menu */}
-      <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
-          isMenuOpen ? 'max-h-screen opacity-100' : 'max-h-0 opacity-0'
-        }`}
+      {/* Mobile Menu */}
+      <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} absolute top-full left-0 right-0 w-full pb-3`}
+        id="mobile-menu"
       >
-        <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/95 dark:bg-gray-900/95 backdrop-blur-md shadow-lg">
+        <div className={`px-2 pt-2 pb-3 space-y-1 sm:px-3 ${
+          isDashboard 
+            ? 'bg-background-light dark:bg-section-dark shadow-lg border-t border-primary-100 dark:border-primary-800'
+            : 'bg-white dark:bg-gray-900 shadow-lg'
+        }`}>
           {navItems.map((item) => (
-            <Link
-              key={item.path}
-              to={item.path}
-              className={`block px-3 py-2 rounded-md text-base font-medium ${
-                isActive(item.path) 
-                ? 'text-primary-800 dark:text-primary-200 bg-gray-100 dark:bg-gray-800' 
-                : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-primary-800 dark:hover:bg-gray-800 dark:hover:text-primary-200'
-              } transition-colors duration-200`}
-            >
-              {item.label}
-            </Link>
-          ))}
-          
-          {filteredUserNavItems.length > 0 && (
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-2 mt-2">
-              {filteredUserNavItems.map((item) => (
+            <div key={item.label}>
+              {item.submenu ? (
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setOpenMobileSubmenu(openMobileSubmenu === item.path ? null : item.path)}
+                    className={`flex w-full items-center justify-between px-3 py-2 rounded-md text-base font-medium ${
+                      isDashboard
+                        ? `${
+                            item.submenu.some(sub => isActive(sub.path)) || openMobileSubmenu === item.path
+                              ? 'text-primary dark:text-primary-200 bg-section-light dark:bg-primary-900' 
+                              : 'text-text-base dark:text-text-inverse hover:bg-section-light hover:text-primary dark:hover:bg-primary-900 dark:hover:text-primary-200'
+                          }`
+                        : `${
+                            isActive(item.path) 
+                            ? 'text-primary-800 dark:text-primary-200 bg-gray-100 dark:bg-gray-800' 
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-primary-800 dark:hover:bg-gray-800 dark:hover:text-primary-200'
+                          }`
+                    } transition-colors duration-200`}
+                  >
+                    <span className="flex items-center">
+                      {item.icon && <span className="mr-2">{item.icon}</span>}
+                      {item.label}
+                    </span>
+                    <ChevronDown className={`h-5 w-5 transition-transform duration-200 ${openMobileSubmenu === item.path ? 'transform rotate-180' : ''}`} />
+                  </button>
+                  {openMobileSubmenu === item.path && (
+                    <div className="mt-1 space-y-1 pl-10 pr-4">
+                      {item.submenu.map((sub) => (
+                        <Link
+                          key={sub.path}
+                          to={sub.path}
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            setOpenMobileSubmenu(null);
+                          }}
+                          className={`block py-2 px-3 text-sm rounded-md ${
+                            isActive(sub.path) 
+                              ? 'text-primary dark:text-primary-200 bg-section-light dark:bg-primary-900 font-medium' 
+                              : 'text-text-base dark:text-text-inverse hover:bg-section-light hover:text-primary dark:hover:bg-primary-900 dark:hover:text-primary-200'
+                          } transition-colors duration-200`}
+                        >
+                          {sub.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </>
+              ) : (
                 <Link
-                  key={item.path}
                   to={item.path}
-                  className="flex items-center px-3 py-2 rounded-md text-base font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-primary-800 dark:hover:bg-gray-800 dark:hover:text-primary-200 transition-colors duration-200"
+                  onClick={() => {
+                    setIsMenuOpen(false);
+                    setOpenMobileSubmenu(null);
+                  }}
+                  className={`flex items-center px-3 py-2 rounded-md text-base font-medium ${
+                    isDashboard
+                      ? `${
+                          isActive(item.path) 
+                            ? 'text-primary dark:text-primary-200 bg-section-light dark:bg-primary-900' 
+                            : 'text-text-base dark:text-text-inverse hover:bg-section-light hover:text-primary dark:hover:bg-primary-900 dark:hover:text-primary-200'
+                        }`
+                      : `${
+                          isActive(item.path) 
+                            ? 'text-primary-800 dark:text-primary-200 bg-gray-100 dark:bg-gray-800' 
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-primary-800 dark:hover:bg-gray-800 dark:hover:text-primary-200'
+                        }`
+                  } transition-colors duration-200`}
                 >
                   {item.icon && <span className="mr-2">{item.icon}</span>}
                   {item.label}
                 </Link>
-              ))}
+              )}
             </div>
-          )}
+          ))}
+          {/* Login/Signup or Profile for Mobile */}
+          <div className="pt-4 pb-2 border-t border-gray-200 dark:border-gray-700">
+            {user ? (
+              <div className="px-2">
+                <ProfileDropdown />
+              </div>
+            ) : (
+              <div className="px-2 space-y-2">
+                <Link 
+                  to="/login" 
+                  className={`block w-full text-left btn btn-outline ${
+                    isDashboard ? 'text-primary hover:bg-primary-50 dark:text-primary-200 dark:hover:bg-primary-700' : 'text-gray-700 dark:text-gray-200'
+                  }`}
+                >
+                  <LogIn size={16} className="mr-1.5 inline" /> Login
+                </Link>
+                <Link 
+                  to="/register" 
+                  className={`block w-full text-left btn ${
+                    isDashboard ? 'btn-primary' : 'bg-primary-600 hover:bg-primary-700 text-white'
+                  }`}
+                >
+                  <UserPlus size={16} className="mr-1.5 inline" /> Sign Up
+                </Link>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>

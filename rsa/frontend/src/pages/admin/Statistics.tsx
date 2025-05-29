@@ -1,15 +1,25 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import useAuthStore from '../../store/authStore';
-import useTripStore, { Trip } from '../../store/tripStore'; // Added
-import { Activity, TrendingUp, BarChart2, Users, DollarSign, CreditCard, MapPin, Navigation, Filter as FilterIcon } from 'react-feather'; // react-feather for consistency, added new icons
-import { mockTimeSlots, mockVehicles, mockRoutes, getBookingsWithDetails, mockDashboardStats, mockUsers } from '../../utils/mockData'; // Added mockUsers
+import useTripStore, { Trip } from '../../store/tripStore';
+import { 
+  Activity, 
+  TrendingUp, 
+  BarChart2, 
+  Users, 
+  DollarSign, 
+  CreditCard, 
+  MapPin, 
+  Navigation, 
+  Filter as FilterIcon,
+  Calendar,
+  ChevronDown
+} from 'react-feather';
+import { mockTimeSlots, mockVehicles, mockRoutes, getBookingsWithDetails, mockDashboardStats, mockUsers } from '../../utils/mockData';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
+import Navbar from '../../components/common/Navbar';
+import ToastContainer from '../../components/common/ToastContainer';
 
-// Import the DashboardNavbar component
-const DashboardNavbar = React.lazy(() => import('../../components/dashboard/DashboardNavbar'));
-import '../../index.css';
-
-// Mock data for existing statistics (remains)
+// Mock data for existing statistics
 const mockTripStats = [
   { date: '2023-06-01', trips: 8, revenue: 640 },
   { date: '2023-06-02', trips: 10, revenue: 800 },
@@ -26,7 +36,7 @@ const mockUserStats = [
   { name: 'Admins', value: 5, color: '#f59e0b' },
 ];
 
-// Copied and adapted from AdminDashboard.tsx
+// Generate statistics page data
 const generateStatisticsPageData = (period: 'daily' | 'weekly' | 'monthly' | 'yearly', allTrips: Trip[]) => {
   const now = new Date();
 
@@ -95,311 +105,430 @@ const generateStatisticsPageData = (period: 'daily' | 'weekly' | 'monthly' | 'ye
 
 const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
-const Statistics: React.FC = () => {
+const AdminStatistics: React.FC = () => {
   const { user } = useAuthStore();
   const { trips, fetchTrips } = useTripStore();
   const [timePeriod, setTimePeriod] = useState<'daily' | 'weekly' | 'monthly' | 'yearly'>('monthly');
   const [statsPageData, setStatsPageData] = useState(generateStatisticsPageData(timePeriod, trips));
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    fetchTrips();
+    const loadData = async () => {
+      setIsLoading(true);
+      await fetchTrips();
+      setIsLoading(false);
+    };
+    loadData();
   }, [fetchTrips]);
 
   useEffect(() => {
     setStatsPageData(generateStatisticsPageData(timePeriod, trips));
   }, [timePeriod, trips]);
   
-  // Calculate some summary statistics (remains)
+  // Calculate summary statistics
   const totalTrips = mockTripStats.reduce((sum, day) => sum + day.trips, 0);
   const totalRevenue = mockTripStats.reduce((sum, day) => sum + day.revenue, 0);
   const avgRevenuePerTrip = totalTrips > 0 ? (totalRevenue / totalTrips).toFixed(2) : '0';
+
+  // Get time period label
+  const getTimePeriodLabel = () => {
+    switch (timePeriod) {
+      case 'daily': return 'Today';
+      case 'weekly': return 'This Week';
+      case 'monthly': return 'This Month';
+      case 'yearly': return 'This Year';
+      default: return 'This Month';
+    }
+  };
   
   return (
-    <div className="container-app py-8">
-      <React.Suspense fallback={<div>Loading...</div>}>
-        <DashboardNavbar userRole="admin" />
-      </React.Suspense>
-      
-      <div className="md:flex md:items-center md:justify-between mb-6">
-        <div className="flex-1 min-w-0">
-          <h1 className="text-3xl font-bold text-gray-900">Statistics</h1>
-          <p className="mt-1 text-sm text-gray-500">
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+      <Navbar />
+      <ToastContainer /> 
+
+      <main className="container-app mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-16 md:pt-20">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center">
+            <BarChart2 className="h-7 w-7 mr-2 text-primary-600" />
+            Statistics
+          </h1>
+          <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
             Platform-wide metrics and performance statistics
           </p>
         </div>
-        {/* Time Period Filter */}
-        <div className="mt-4 md:mt-0 md:ml-4">
-          <div className="flex items-center">
-            <FilterIcon className="h-5 w-5 text-gray-400 mr-2" />
-            <select
-              id="timePeriod"
-              name="timePeriod"
-              className="form-select pl-8 py-2 text-sm"
-              value={timePeriod}
-              onChange={(e) => setTimePeriod(e.target.value as 'daily' | 'weekly' | 'monthly' | 'yearly')}
-            >
-              <option value="daily">Daily</option>
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-              <option value="yearly">Yearly</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      {/* Stats Cards (remains) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <div className="card overflow-hidden shadow-sm rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 card rounded-md p-3">
-                <Activity className="h-6 w-6 text-primary-600" />
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Total Trips</dt>
-                  <dd>
-                    <div className="text-lg font-medium text-gray-900">{totalTrips}</div>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="card overflow-hidden shadow-sm rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 card rounded-md p-3">
-                <Users className="h-6 w-6 text-primary-600" />
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Total Users</dt>
-                  <dd>
-                    <div className="text-lg font-medium text-gray-900">{mockDashboardStats.totalUsers}</div>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="card overflow-hidden shadow-sm rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 card rounded-md p-3">
-                <DollarSign className="h-6 w-6 text-primary-600" />
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Total Revenue</dt>
-                  <dd>
-                    <div className="text-lg font-medium text-gray-900">${totalRevenue.toFixed(2)}</div>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="card overflow-hidden shadow-sm rounded-lg">
-          <div className="p-5">
-            <div className="flex items-center">
-              <div className="flex-shrink-0 card rounded-md p-3">
-                <TrendingUp className="h-6 w-6 text-primary-600" />
-              </div>
-              <div className="ml-5 w-0 flex-1">
-                <dl>
-                  <dt className="text-sm font-medium text-gray-500 truncate">Avg. Revenue Per Trip</dt>
-                  <dd>
-                    <div className="text-lg font-medium text-gray-900">${avgRevenuePerTrip}</div>
-                  </dd>
-                </dl>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      {/* Charts Section (existing charts remain) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-        <div className="card rounded-lg shadow-sm p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-medium text-gray-900">Daily Trip & Revenue Statistics</h2>
-            <div className="flex items-center space-x-2">
-              <span className="text-xs text-gray-500">Last 7 days</span>
-              <TrendingUp className="h-4 w-4 text-gray-400" />
-            </div>
-          </div>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={mockTripStats}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis
-                  dataKey="date"
-                  axisLine={false}
-                  tickLine={false}
-                  tickFormatter={(value) => value.split('-')[2]}
-                  dy={10}
-                />
-                <YAxis axisLine={false} tickLine={false} width={30} />
-                <Tooltip />
-                <Line
-                  type="monotone"
-                  dataKey="trips"
-                  stroke="#3b82f6"
-                  strokeWidth={2}
-                  dot={false}
-                  activeDot={{ r: 6 }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="revenue"
-                  stroke="#10b981"
-                  strokeWidth={2}
-                  dot={false}
-                  activeDot={{ r: 6 }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
         
-        <div className="card rounded-lg shadow-sm p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-medium text-gray-900">User Distribution</h2>
-            <div className="flex items-center space-x-2">
-              <span className="text-xs text-gray-500">By user type</span>
-              <Users className="h-4 w-4 text-gray-400" />
+        {/* Time Period Filter */}
+        <div className="relative">
+          <div className="inline-flex items-center overflow-hidden rounded-md border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800">
+            <div className="px-4 py-2 text-sm text-gray-600 dark:text-gray-300 flex items-center">
+              <Calendar size={16} className="mr-2" />
+              <span>{getTimePeriodLabel()}</span>
             </div>
-          </div>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={mockUserStats}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                  label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-                >
-                  {mockUserStats.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
 
-      {/* New Charts Section: Driver Origins, Popular Destinations, Payment Overview */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-        {/* Driver Origins */}
-        <div className="card rounded-lg shadow-sm p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-medium text-gray-900">Driver Common Origins</h2>
-            <MapPin className="h-5 w-5 text-gray-400" />
-          </div>
-          <div className="h-80">
-            {statsPageData.driverOriginData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart data={statsPageData.driverOriginData} layout="vertical" margin={{ top: 5, right: 20, left: 80, bottom: 5 }}>
-                  <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                  <XAxis type="number" axisLine={false} tickLine={false} />
-                  <YAxis dataKey="name" type="category" axisLine={false} tickLine={false} width={100} tick={{ fontSize: 12 }} />
-                  <Tooltip formatter={(value) => [value, 'Trips from here']} />
-                  <Bar dataKey="value" fill="#8884d8" barSize={15} radius={[0, 4, 4, 0]}>
-                    {statsPageData.driverOriginData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Bar>
-                </BarChart>
-              </ResponsiveContainer>
-            ) : (
-              <p className="text-sm text-gray-500 flex items-center justify-center h-full">No origin data for this period.</p>
-            )}
+            <div className="relative">
+              <button
+                className="h-full p-2 text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 border-l border-gray-300 dark:border-gray-700"
+                aria-label="Select time period"
+              >
+                <ChevronDown size={16} />
+              </button>
+
+              <select
+                id="timePeriod"
+                name="timePeriod"
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                value={timePeriod}
+                onChange={(e) => setTimePeriod(e.target.value as 'daily' | 'weekly' | 'monthly' | 'yearly')}
+                aria-label="Time period"
+              >
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+                <option value="yearly">Yearly</option>
+              </select>
+            </div>
           </div>
         </div>
 
-        {/* Popular Destinations */}
-        <div className="card rounded-lg shadow-sm p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-medium text-gray-900">Popular Destinations</h2>
-            <Navigation className="h-5 w-5 text-gray-400" />
+        {isLoading && (
+          <div className="flex justify-center items-center py-12">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600"></div>
           </div>
-          <div className="h-80">
-            {statsPageData.destinationData.length > 0 ? (
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={statsPageData.destinationData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={80}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
-                  >
-                    {statsPageData.destinationData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Tooltip formatter={(value, name) => [value, name]} />
-                </PieChart>
-              </ResponsiveContainer>
-            ) : (
-              <p className="text-sm text-gray-500 flex items-center justify-center h-full">No destination data for this period.</p>
-            )}
-          </div>
-        </div>
+        )}
 
-        {/* Simulated Payment Overview */}
-        <div className="card rounded-lg shadow-sm p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-medium text-gray-900">Payment Overview</h2>
-            <CreditCard className="h-5 w-5 text-gray-400" />
-          </div>
-          <div className="space-y-3 mt-2">
-            <div className="flex justify-between items-baseline">
-              <span className="text-sm text-gray-500">Total Transactions:</span>
-              <span className="text-lg font-semibold text-gray-900">{statsPageData.simulatedPayments.totalTransactions}</span>
+        {!isLoading && (
+          <>
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              <div className="card overflow-hidden shadow-sm rounded-lg bg-white dark:bg-gray-800">
+                <div className="p-5">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0 card rounded-md p-3 bg-blue-50 dark:bg-blue-900/30">
+                      <Activity className="h-6 w-6 text-primary-600 dark:text-primary-400" />
+                    </div>
+                    <div className="ml-5 w-0 flex-1">
+                      <dl>
+                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Trips</dt>
+                        <dd>
+                          <div className="text-lg font-medium text-gray-900 dark:text-gray-100">{totalTrips}</div>
+                        </dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="card overflow-hidden shadow-sm rounded-lg bg-white dark:bg-gray-800">
+                <div className="p-5">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0 card rounded-md p-3 bg-indigo-50 dark:bg-indigo-900/30">
+                      <Users className="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
+                    </div>
+                    <div className="ml-5 w-0 flex-1">
+                      <dl>
+                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Users</dt>
+                        <dd>
+                          <div className="text-lg font-medium text-gray-900 dark:text-gray-100">{mockDashboardStats.totalUsers}</div>
+                        </dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="card overflow-hidden shadow-sm rounded-lg bg-white dark:bg-gray-800">
+                <div className="p-5">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0 card rounded-md p-3 bg-green-50 dark:bg-green-900/30">
+                      <DollarSign className="h-6 w-6 text-green-600 dark:text-green-400" />
+                    </div>
+                    <div className="ml-5 w-0 flex-1">
+                      <dl>
+                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Total Revenue</dt>
+                        <dd>
+                          <div className="text-lg font-medium text-gray-900 dark:text-gray-100">${totalRevenue.toFixed(2)}</div>
+                        </dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="card overflow-hidden shadow-sm rounded-lg bg-white dark:bg-gray-800">
+                <div className="p-5">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0 card rounded-md p-3 bg-yellow-50 dark:bg-yellow-900/30">
+                      <TrendingUp className="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
+                    </div>
+                    <div className="ml-5 w-0 flex-1">
+                      <dl>
+                        <dt className="text-sm font-medium text-gray-500 dark:text-gray-400 truncate">Avg. Revenue Per Trip</dt>
+                        <dd>
+                          <div className="text-lg font-medium text-gray-900 dark:text-gray-100">${avgRevenuePerTrip}</div>
+                        </dd>
+                      </dl>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div className="flex justify-between items-baseline">
-              <span className="text-sm text-gray-500">Total Value:</span>
-              <span className="text-lg font-semibold text-gray-900">${statsPageData.simulatedPayments.totalValue}</span>
+            
+            {/* Charts Section (existing charts remain) */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+              <div className="card rounded-lg shadow-sm p-4 sm:p-6 bg-white dark:bg-gray-800">
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-base sm:text-lg font-medium text-gray-900 dark:text-gray-100">Daily Trip & Revenue Statistics</h2>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs text-gray-500 dark:text-gray-400">Last 7 days</span>
+                    <TrendingUp className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+                  </div>
+                </div>
+                <div className="h-64 sm:h-80">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <LineChart data={mockTripStats}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e5e7eb" />
+                      <XAxis
+                        dataKey="date"
+                        axisLine={false}
+                        tickLine={false}
+                        tickFormatter={(value) => value.split('-')[2]}
+                        dy={10}
+                        tick={{ fill: '#6b7280', fontSize: 12 }}
+                      />
+                      <YAxis 
+                        axisLine={false} 
+                        tickLine={false} 
+                        width={30}
+                        tick={{ fill: '#6b7280', fontSize: 12 }}
+                      />
+                      <Tooltip 
+                        contentStyle={{ 
+                          backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                          borderRadius: '0.375rem',
+                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                          border: 'none'
+                        }}
+                        itemStyle={{ padding: '2px 0' }}
+                        formatter={(value, name) => [value, name === 'trips' ? 'Trips' : 'Revenue ($)']}
+                        labelFormatter={(label) => `Date: ${label}`}
+                      />
+                      <Line
+                        name="trips"
+                        type="monotone"
+                        dataKey="trips"
+                        stroke="#3b82f6"
+                        strokeWidth={2}
+                        dot={false}
+                        activeDot={{ r: 6 }}
+                      />
+                      <Line
+                        name="revenue"
+                        type="monotone"
+                        dataKey="revenue"
+                        stroke="#10b981"
+                        strokeWidth={2}
+                        dot={false}
+                        activeDot={{ r: 6 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+              
+              <div className="card rounded-lg shadow-sm p-4 sm:p-6 bg-white dark:bg-gray-800">
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-base sm:text-lg font-medium text-gray-900 dark:text-gray-100">User Distribution</h2>
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs text-gray-500 dark:text-gray-400">By user type</span>
+                    <Users className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+                  </div>
+                </div>
+                <div className="h-64 sm:h-80">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie
+                        data={mockUserStats}
+                        cx="50%"
+                        cy="50%"
+                        labelLine={false}
+                        outerRadius={80}
+                        fill="#8884d8"
+                        dataKey="value"
+                        label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
+                      >
+                        {mockUserStats.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        formatter={(value) => [`${value} users`, 'Count']}
+                        contentStyle={{ 
+                          backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                          borderRadius: '0.375rem',
+                          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                          border: 'none'
+                        }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
             </div>
-            <div className="flex justify-between items-baseline">
-              <span className="text-sm text-green-500">Successful Payments:</span>
-              <span className="text-lg font-semibold text-green-600">{statsPageData.simulatedPayments.successful}</span>
-            </div>
-            <div className="flex justify-between items-baseline">
-              <span className="text-sm text-red-500">Failed Payments:</span>
-              <span className="text-lg font-semibold text-red-600">{statsPageData.simulatedPayments.failed}</span>
-            </div>
-            <div className="pt-2">
-                <ResponsiveContainer width="100%" height={60}>
-                    <BarChart data={[{name: 'Payments', successful: statsPageData.simulatedPayments.successful, failed: statsPageData.simulatedPayments.failed }]}>
+
+            {/* New Charts Section: Driver Origins, Popular Destinations, Payment Overview */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+              {/* Driver Origins */}
+              <div className="card rounded-lg shadow-sm p-4 sm:p-6 bg-white dark:bg-gray-800">
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-base sm:text-lg font-medium text-gray-900 dark:text-gray-100">Driver Common Origins</h2>
+                  <MapPin className="h-5 w-5 text-gray-400 dark:text-gray-500" />
+                </div>
+                <div className="h-64 sm:h-80">
+                  {statsPageData.driverOriginData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <BarChart 
+                        data={statsPageData.driverOriginData} 
+                        layout="vertical" 
+                        margin={{ top: 5, right: 20, left: 40, bottom: 5 }}
+                      >
+                        <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e5e7eb" />
+                        <XAxis 
+                          type="number" 
+                          axisLine={false} 
+                          tickLine={false}
+                          tick={{ fill: '#6b7280', fontSize: 12 }}
+                        />
+                        <YAxis 
+                          dataKey="name" 
+                          type="category" 
+                          axisLine={false} 
+                          tickLine={false} 
+                          width={80} 
+                          tick={{ fill: '#6b7280', fontSize: 12 }}
+                        />
+                        <Tooltip 
+                          formatter={(value) => [value, 'Trips from here']}
+                          contentStyle={{ 
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                            borderRadius: '0.375rem',
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                            border: 'none'
+                          }}
+                        />
+                        <Bar dataKey="value" fill="#8884d8" barSize={15} radius={[0, 4, 4, 0]}>
+                          {statsPageData.driverOriginData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Bar>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      <div className="text-center">
+                        <MapPin className="h-12 w-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
+                        <p className="text-sm text-gray-500 dark:text-gray-400">No origin data for this period.</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Popular Destinations */}
+              <div className="card rounded-lg shadow-sm p-4 sm:p-6 bg-white dark:bg-gray-800">
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-base sm:text-lg font-medium text-gray-900 dark:text-gray-100">Popular Destinations</h2>
+                  <Navigation className="h-5 w-5 text-gray-400 dark:text-gray-500" />
+                </div>
+                <div className="h-64 sm:h-80">
+                  {statsPageData.destinationData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={statsPageData.destinationData}
+                          cx="50%"
+                          cy="50%"
+                          labelLine={false}
+                          outerRadius={80}
+                          fill="#8884d8"
+                          dataKey="value"
+                          label={({ name, percent }) => `${name} (${(percent * 100).toFixed(0)}%)`}
+                        >
+                          {statsPageData.destinationData.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip 
+                          formatter={(value, name) => [value, name]}
+                          contentStyle={{ 
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                            borderRadius: '0.375rem',
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                            border: 'none'
+                          }}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      <div className="text-center">
+                        <Navigation className="h-12 w-12 text-gray-300 dark:text-gray-600 mx-auto mb-3" />
+                        <p className="text-sm text-gray-500 dark:text-gray-400">No destination data for this period.</p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Simulated Payment Overview */}
+              <div className="card rounded-lg shadow-sm p-4 sm:p-6 bg-white dark:bg-gray-800">
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-base sm:text-lg font-medium text-gray-900 dark:text-gray-100">Payment Overview</h2>
+                  <CreditCard className="h-5 w-5 text-gray-400 dark:text-gray-500" />
+                </div>
+                <div className="space-y-3 mt-2">
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Total Transactions:</span>
+                    <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">{statsPageData.simulatedPayments.totalTransactions}</span>
+                  </div>
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-sm text-gray-500 dark:text-gray-400">Total Value:</span>
+                    <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">${statsPageData.simulatedPayments.totalValue}</span>
+                  </div>
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-sm text-green-500 dark:text-green-400">Successful Payments:</span>
+                    <span className="text-lg font-semibold text-green-600 dark:text-green-400">{statsPageData.simulatedPayments.successful}</span>
+                  </div>
+                  <div className="flex justify-between items-baseline">
+                    <span className="text-sm text-red-500 dark:text-red-400">Failed Payments:</span>
+                    <span className="text-lg font-semibold text-red-600 dark:text-red-400">{statsPageData.simulatedPayments.failed}</span>
+                  </div>
+                  <div className="pt-2">
+                    <ResponsiveContainer width="100%" height={60}>
+                      <BarChart data={[{name: 'Payments', successful: statsPageData.simulatedPayments.successful, failed: statsPageData.simulatedPayments.failed }]}>
                         <XAxis dataKey="name" hide/>
                         <YAxis hide/>
-                        <Tooltip />
+                        <Tooltip 
+                          formatter={(value, name) => [value, name === 'successful' ? 'Successful' : 'Failed']}
+                          contentStyle={{ 
+                            backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                            borderRadius: '0.375rem',
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+                            border: 'none'
+                          }}
+                        />
                         <Bar dataKey="successful" stackId="a" fill="#10b981" radius={[4,0,0,4]}/>
                         <Bar dataKey="failed" stackId="a" fill="#ef4444" radius={[0,4,4,0]}/>
-                    </BarChart>
-                </ResponsiveContainer>
+                      </BarChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-
+          </>
+        )}
+      </main>
     </div>
   );
 };
 
-export default Statistics;
+export default AdminStatistics;

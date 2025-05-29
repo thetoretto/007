@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuthStore from '../../store/authStore';
-import DashboardNavbar from '../dashboard/DashboardNavbar';
+import Navbar from './Navbar';
 import { User, Edit3, Shield, Phone, Mail, LogOut, AlertTriangle, CheckCircle } from 'lucide-react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -109,7 +109,7 @@ const ProfilePage: React.FC = () => {
 
   return (
     <div className="container-app flex-col min-h-screen ">
-      <DashboardNavbar />
+      <Navbar />
       <main className="flex-grow container-app py-8 sm:py-12">
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-800 mb-8 text-center">Your Profile</h1>
 
