@@ -11,46 +11,48 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const isDashboard = dashboardPaths.some((p) => location.pathname.startsWith(p));
   const isAuth = authPaths.some((p) => location.pathname.startsWith(p));
   const isHome = location.pathname === '/';
-  const isPublic = !isDashboard && !isAuth;
+  const isPublic = !isDashboard && !isAuth; // Variable for footer condition clarity
 
-  let layoutClasses = 'min-h-screen flex flex-col transition-colors duration-500';
-  let mainPadding = 'pt-24 pb-12 px-4 sm:px-6 lg:px-8'; // Default padding for public pages after navbar
-
+  // Determine classes for the main container div
+  let layoutContainerClasses = 'min-h-screen flex flex-col transition-colors duration-500';
   if (isDashboard) {
-    layoutClasses += ' bg-gray-100 dark:bg-surface-dark text-text-light dark:text-text-dark';
-    // Navbar is fixed, so main content needs padding. Footer is not typically in dashboard.
-    mainPadding = 'pt-24 pb-8 px-4 sm:px-6 lg:px-8'; // Increased top padding to prevent collision with navbar
+    layoutContainerClasses += ' bg-gray-100 dark:bg-surface-dark text-text-light dark:text-text-dark';
   } else if (isAuth) {
-    layoutClasses += ' bg-gradient-to-br from-primary-600 via-primary-700 to-darkBlue-800 dark:from-gray-900 dark:via-gray-800 dark:to-primary-900 text-white';
-    mainPadding = 'flex-grow flex flex-col items-center justify-center p-4'; // Auth pages are typically centered
+    layoutContainerClasses += ' bg-gradient-to-br from-primary-600 via-primary-700 to-darkBlue-800 dark:from-gray-900 dark:via-gray-800 dark:to-primary-900 text-white';
   } else if (isHome) {
-    // Homepage manages its own background. Layout provides fallback text colors.
-    layoutClasses += ' bg-transparent text-text-light dark:text-text-dark'; 
-    mainPadding = 'p-0'; // No padding, HomePage handles its own layout
+    layoutContainerClasses += ' bg-transparent text-text-light dark:text-text-dark';
   } else { // Other public pages
-    layoutClasses += ' bg-gray-50 dark:bg-gray-900 text-text-light dark:text-text-dark subtle-bg-gradient';
-    // Navbar is present, main content needs top padding
+    layoutContainerClasses += ' bg-gray-50 dark:bg-gray-900 text-text-light dark:text-text-dark subtle-bg-gradient';
   }
 
-  // Adjust mainPadding if Navbar is not present (Auth pages) or if it's dashboard (different navbar height/behavior)
+  // Determine classes for the main element
+  const mainClasses: string[] = [];
   if (isAuth) {
-    // mainPadding already set for auth
-  } else if (isDashboard) {
-    // mainPadding already set for dashboard
+    // Auth pages are typically centered and take available space
+    mainClasses.push('flex-grow', 'flex', 'flex-col', 'items-center', 'justify-center', 'p-4');
   } else {
-    // For public pages (including home if it had a standard navbar)
-    // The pt-navbar class (if Navbar is fixed/absolute) or direct padding is needed.
-    // Assuming Navbar height is accounted for by pt-24 or similar in mainPadding for public pages.
+    mainClasses.push('flex-grow'); // Ensure main content area takes available vertical space
+    if (isHome) {
+      mainClasses.push('p-0'); // HomePage handles its own layout and padding
+    } else {
+      // Common horizontal padding and top padding for Navbar for both dashboard and other public pages
+      mainClasses.push('pt-24', 'px-4', 'sm:px-6', 'lg:px-8'); 
+      if (isDashboard) {
+        mainClasses.push('pb-8'); // Dashboard specific bottom padding
+      } else { // Public pages (not home)
+        mainClasses.push('pb-12'); // Public specific bottom padding
+      }
+    }
   }
-
+  const mainClassString = mainClasses.join(' ');
 
   return (
-    <div className={layoutClasses}>
-      {!isAuth && <Navbar />}
-      <main className={` ${isAuth ? '' : 'flex-grow'} `} role="main">
+    <div className={layoutContainerClasses}>
+      {!isAuth && <Navbar />} 
+      <main className={mainClassString} role="main">
         {children}
       </main>
-      {isPublic && !isHome && <Footer />} {/* Footer on public pages, but not on home if it has its own full-page design */}
+      {isPublic && !isHome && <Footer />} {/* Footer on public pages (not auth, not dashboard) and not on home */}
     </div>
   );
 };

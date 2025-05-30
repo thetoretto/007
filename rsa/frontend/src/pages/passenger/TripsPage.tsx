@@ -16,6 +16,203 @@ const Card: React.FC<React.PropsWithChildren<{className?: string, key?: string}>
       {children}
     </div>
   );
+
+  // Modal Content
+  const renderModalContent = () => {
+    if (!selectedTrip) return null;
+
+    // Placeholder for trip details and actions
+    return (
+      <div>
+        <p className="text-gray-700 dark:text-gray-300 mb-2">
+          <strong>Route:</strong> {selectedTrip.route?.origin?.name} to {selectedTrip.route?.destination?.name}
+        </p>
+        <p className="text-gray-700 dark:text-gray-300 mb-2">
+          <strong>Date:</strong> {selectedTrip.trip?.date} at {selectedTrip.trip?.time}
+        </p>
+        <p className="text-gray-700 dark:text-gray-300 mb-4">
+          <strong>Status:</strong> {getStatusBadge(selectedTrip.status)}
+        </p>
+        
+        {/* Action Buttons Placeholder */}
+        <div className="mt-6 flex flex-col sm:flex-row sm:justify-end sm:space-x-3 space-y-2 sm:space-y-0">
+          <button 
+            onClick={closeTripModal} 
+            className="btn btn-outline w-full sm:w-auto"
+          >
+            Close
+          </button>
+          {/* Conditional Cancel Button - logic to be refined */}
+          {(selectedTrip.status === 'confirmed' || selectedTrip.status === 'booked') && (
+            <button 
+              onClick={() => alert('Two-step cancellation to be implemented!')} 
+              className="btn btn-error w-full sm:w-auto"
+            >
+              Cancel Trip
+            </button>
+          )}
+          <button 
+            onClick={() => alert('Share functionality to be implemented!')} 
+            className="btn btn-secondary w-full sm:w-auto"
+          >
+            Share
+          </button>
+          {/* Conditional Delete Button - logic to be refined */}
+          {selectedTrip.status === 'cancelled' && (
+             <button 
+              onClick={() => alert('Delete functionality to be implemented!')} 
+              className="btn btn-danger-outline w-full sm:w-auto"
+            >
+              Delete
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
+      {/* Navbar is handled by the main layout, spacing is managed by .glass-navbar-dashboard margins */}
+      {/* <Navbar /> Ensure Navbar is part of a layout component or add it here if needed */}
+      <div className="container-app py-8 md:py-12">
+        {/* Header with back button and title - This is duplicated, ensure it's correctly placed or remove if Navbar handles it */}
+        <div className="flex items-center justify-between mb-6">
+          <Link to="/passenger/dashboard" className="btn btn-ghost btn-sm flex items-center">
+            <ArrowLeft size={18} className="mr-1" />
+            Back to Dashboard
+          </Link>
+          <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-white flex-grow">My Trips</h1>
+          <div className="w-auto"></div> 
+        </div>
+
+        {/* Filter and Sort Controls - Existing UI */}
+        <div className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+            <div>
+              <label htmlFor="search-trip" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search className="h-4 w-4 text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  id="search-trip"
+                  placeholder="ID, Origin, Destination..."
+                  className="form-input w-full pl-10"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="filter-status" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+              <select 
+                id="filter-status" 
+                className="form-select w-full"
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+              >
+                <option value="all">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="booked">Booked</option> 
+                <option value="checked-in">Checked In</option>
+                <option value="validated">Validated</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="sort-trip" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sort By</label>
+              <select 
+                id="sort-trip" 
+                className="form-select w-full"
+                value={getCurrentSortValue()}
+                onChange={(e) => handleSortChange(e.target.value)}
+              >
+                <option value="dateDesc">Date (Newest First)</option>
+                <option value="dateAsc">Date (Oldest First)</option>
+                <option value="routeAsc">Route (A-Z)</option>
+                <option value="routeDesc">Route (Z-A)</option>
+                <option value="status">Status</option>
+              </select>
+            </div>
+            {/* Placeholder for Advanced Filters Button */}
+            <button className="btn btn-outline flex items-center justify-center lg:mt-7" onClick={() => alert('Advanced Filters UI to be implemented here.')}>
+              <ListFilter size={18} className="mr-2" /> Advanced Filters
+            </button>
+          </div>
+        </div>
+
+        {error && <p className="text-center py-10 text-red-500">Error loading trips: {error}</p>}
+
+        {isLoading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map(n => <SkeletonCard key={n} />)}
+          </div>
+        )}
+
+        {!isLoading && !error && sortedUserBookings.length === 0 && (
+          <div className="text-center py-10">
+            <Inbox className="mx-auto h-12 w-12 text-gray-400" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No Trips Found</h3>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">No trips match your current filters or you have no bookings yet. Try adjusting your search or check back later.</p>
+          </div>
+        )}
+
+        {!isLoading && !error && sortedUserBookings.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {sortedUserBookings.map((booking) => (
+              <Card 
+                key={booking.id} 
+                className="flex flex-col justify-between bg-white dark:bg-card-dark shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg overflow-hidden cursor-pointer"
+                onClick={() => openTripModal(booking)}
+              >
+                <div className="px-4 py-4 sm:px-6 lg:px-8">
+                  <div className="flex items-center justify-between">
+                    <p className="truncate text-md font-semibold text-primary-600">
+                      {booking.route?.origin?.name} to {booking.route?.destination?.name}
+                    </p>
+                    <div className="ml-2 flex flex-shrink-0">
+                      {getStatusBadge(booking.status)}
+                    </div>
+                  </div>
+                  <div className="mt-2 sm:flex sm:justify-between">
+                    <div className="sm:flex">
+                      <p className="flex items-center text-sm text-gray-500">
+                        <CalendarDays className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                        {booking.trip?.date && booking.trip?.time ? 
+                          new Date(booking.trip.date + 'T' + booking.trip.time).toLocaleDateString([], {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        }) : 'Date N/A'} at {booking.trip?.time || 'Time N/A'}
+                      </p>
+                      <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-4">
+                        <Users className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                        {booking.passenger?.firstName} {booking.passenger?.lastName}
+                      </p>
+                    </div>
+                    <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                      <Tag className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                      Booking ID: {booking.id}
+                    </div>
+                  </div>
+                  {/* Direct cancel button removed from card, will be in modal */}
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Trip Details Modal */}
+      <Modal isOpen={isModalOpen} onClose={closeTripModal} title="Trip Details">
+        {renderModalContent()}
+      </Modal>
+    </div>
+  );
 };
 
 enum TripFilter {
@@ -50,7 +247,240 @@ type VehicleType = typeof ALL_VEHICLE_TYPES[number];
 const ALL_AMENITIES = ['WiFi', 'Air Conditioning', 'Pet Friendly', 'Wheelchair Accessible', 'Extra Luggage'] as const;
 type Amenity = typeof ALL_AMENITIES[number];
 
+// Basic Modal Component (can be moved to a separate file later)
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+  title?: string;
+}
+
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 transition-opacity duration-300 ease-in-out" onClick={onClose}>
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto transition-transform duration-300 ease-in-out scale-95 hover:scale-100" onClick={(e) => e.stopPropagation()}>
+        {title && <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white">{title}</h2>}
+        <button onClick={onClose} className="absolute top-3 right-3 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+          <XCircle size={24} />
+        </button>
+        {children}
+      </div>
+    </div>
+  );
+
+  // Modal Content
+  const renderModalContent = () => {
+    if (!selectedTrip) return null;
+
+    // Placeholder for trip details and actions
+    return (
+      <div>
+        <p className="text-gray-700 dark:text-gray-300 mb-2">
+          <strong>Route:</strong> {selectedTrip.route?.origin?.name} to {selectedTrip.route?.destination?.name}
+        </p>
+        <p className="text-gray-700 dark:text-gray-300 mb-2">
+          <strong>Date:</strong> {selectedTrip.trip?.date} at {selectedTrip.trip?.time}
+        </p>
+        <p className="text-gray-700 dark:text-gray-300 mb-4">
+          <strong>Status:</strong> {getStatusBadge(selectedTrip.status)}
+        </p>
+        
+        {/* Action Buttons Placeholder */}
+        <div className="mt-6 flex flex-col sm:flex-row sm:justify-end sm:space-x-3 space-y-2 sm:space-y-0">
+          <button 
+            onClick={closeTripModal} 
+            className="btn btn-outline w-full sm:w-auto"
+          >
+            Close
+          </button>
+          {/* Conditional Cancel Button - logic to be refined */}
+          {(selectedTrip.status === 'confirmed' || selectedTrip.status === 'booked') && (
+            <button 
+              onClick={() => alert('Two-step cancellation to be implemented!')} 
+              className="btn btn-error w-full sm:w-auto"
+            >
+              Cancel Trip
+            </button>
+          )}
+          <button 
+            onClick={() => alert('Share functionality to be implemented!')} 
+            className="btn btn-secondary w-full sm:w-auto"
+          >
+            Share
+          </button>
+          {/* Conditional Delete Button - logic to be refined */}
+          {selectedTrip.status === 'cancelled' && (
+             <button 
+              onClick={() => alert('Delete functionality to be implemented!')} 
+              className="btn btn-danger-outline w-full sm:w-auto"
+            >
+              Delete
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
+      {/* Navbar is handled by the main layout, spacing is managed by .glass-navbar-dashboard margins */}
+      {/* <Navbar /> Ensure Navbar is part of a layout component or add it here if needed */}
+      <div className="container-app py-8 md:py-12">
+        {/* Header with back button and title - This is duplicated, ensure it's correctly placed or remove if Navbar handles it */}
+        <div className="flex items-center justify-between mb-6">
+          <Link to="/passenger/dashboard" className="btn btn-ghost btn-sm flex items-center">
+            <ArrowLeft size={18} className="mr-1" />
+            Back to Dashboard
+          </Link>
+          <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-white flex-grow">My Trips</h1>
+          <div className="w-auto"></div> 
+        </div>
+
+        {/* Filter and Sort Controls - Existing UI */}
+        <div className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+            <div>
+              <label htmlFor="search-trip" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search className="h-4 w-4 text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  id="search-trip"
+                  placeholder="ID, Origin, Destination..."
+                  className="form-input w-full pl-10"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="filter-status" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+              <select 
+                id="filter-status" 
+                className="form-select w-full"
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+              >
+                <option value="all">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="booked">Booked</option>
+                <option value="checked-in">Checked In</option>
+                <option value="validated">Validated</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="sort-trip" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sort By</label>
+              <select 
+                id="sort-trip" 
+                className="form-select w-full"
+                value={getCurrentSortValue()}
+                onChange={(e) => handleSortChange(e.target.value)}
+              >
+                <option value="dateDesc">Date (Newest First)</option>
+                <option value="dateAsc">Date (Oldest First)</option>
+                <option value="routeAsc">Route (A-Z)</option>
+                <option value="routeDesc">Route (Z-A)</option>
+                <option value="status">Status</option>
+              </select>
+            </div>
+            {/* Placeholder for Advanced Filters Button */}
+            <button className="btn btn-outline flex items-center justify-center lg:mt-7" onClick={() => alert('Advanced Filters UI to be implemented here.')}>
+              <ListFilter size={18} className="mr-2" /> Advanced Filters
+            </button>
+          </div>
+        </div>
+
+        {error && <p className="text-center py-10 text-red-500">Error loading trips: {error}</p>}
+
+        {isLoading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map(n => <SkeletonCard key={n} />)}
+          </div>
+        )}
+
+        {!isLoading && !error && sortedUserBookings.length === 0 && (
+          <div className="text-center py-10">
+            <Inbox className="mx-auto h-12 w-12 text-gray-400" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No Trips Found</h3>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">No trips match your current filters or you have no bookings yet. Try adjusting your search or check back later.</p>
+          </div>
+        )}
+
+        {!isLoading && !error && sortedUserBookings.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {sortedUserBookings.map((booking) => (
+              <Card 
+                key={booking.id} 
+                className="flex flex-col justify-between bg-white dark:bg-card-dark shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg overflow-hidden cursor-pointer"
+                onClick={() => openTripModal(booking)}
+              >
+                <div className="px-4 py-4 sm:px-6 lg:px-8">
+                  <div className="flex items-center justify-between">
+                    <p className="truncate text-md font-semibold text-primary-600">
+                      {booking.route?.origin?.name} to {booking.route?.destination?.name}
+                    </p>
+                    <div className="ml-2 flex flex-shrink-0">
+                      {getStatusBadge(booking.status)}
+                    </div>
+                  </div>
+                  <div className="mt-2 sm:flex sm:justify-between">
+                    <div className="sm:flex">
+                      <p className="flex items-center text-sm text-gray-500">
+                        <CalendarDays className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                        {booking.trip?.date && booking.trip?.time ? 
+                          new Date(booking.trip.date + 'T' + booking.trip.time).toLocaleDateString([], {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        }) : 'Date N/A'} at {booking.trip?.time || 'Time N/A'}
+                      </p>
+                      <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-4">
+                        <Users className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                        {booking.passenger?.firstName} {booking.passenger?.lastName}
+                      </p>
+                    </div>
+                    <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                      <Tag className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                      Booking ID: {booking.id}
+                    </div>
+                  </div>
+                  {/* Direct cancel button removed from card, will be in modal */}
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Trip Details Modal */}
+      <Modal isOpen={isModalOpen} onClose={closeTripModal} title="Trip Details">
+        {renderModalContent()}
+      </Modal>
+    </div>
+  );
+};
+
 const TripsPage: React.FC = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTrip, setSelectedTrip] = useState<BookingWithDetails | null>(null);
+
+  const openTripModal = (trip: BookingWithDetails) => {
+    setSelectedTrip(trip);
+    setIsModalOpen(true);
+  };
+
+  const closeTripModal = () => {
+    setIsModalOpen(false);
+    setSelectedTrip(null);
+  };
   const { user } = useAuthStore();
   const { bookings, fetchBookingsByUserId, isLoading, error } = useBookingStore(); // Use booking store
   const [activeFilter, setActiveFilter] = useState<TripFilter>(TripFilter.ALL);
@@ -306,19 +736,22 @@ const TripsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
-      <Navbar/> 
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
+      {/* Navbar is handled by the main layout, spacing is managed by .glass-navbar-dashboard margins */}
+      {/* <Navbar /> Ensure Navbar is part of a layout component or add it here if needed */}
       <div className="container-app py-8 md:py-12">
-        {/* Header with back button */}
-        <div className="mb-6 flex items-center">
-          <Link 
-            to="/passenger/dashboard" 
-            className="btn btn-ghost btn-sm gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
+        {/* Header with back button and title */}
+        <div className="flex items-center justify-between mb-6">
+          <Link to="/passenger/dashboard" className="btn btn-ghost btn-sm flex items-center">
+            <ArrowLeft size={18} className="mr-1" />
             Back to Dashboard
           </Link>
+          <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-white flex-grow">My Trips</h1>
+          {/* Placeholder for potential right-aligned actions */}
+          <div className="w-auto"></div> 
         </div>
+        {/* Header with back button */}
+    
 
         {/* Advanced Filter UI elements would go here. Example: */}
         {/* <div className="mb-6 p-4 bg-white rounded shadow dark:bg-gray-800"> */}
@@ -349,7 +782,11 @@ const TripsPage: React.FC = () => {
         {!isLoading && !error && sortedUserBookings.length > 0 && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {sortedUserBookings.map((booking) => (
-              <Card key={booking.id} className="flex flex-col justify-between bg-white dark:bg-card-dark shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg overflow-hidden">
+              <Card 
+                key={booking.id} 
+                className="flex flex-col justify-between bg-white dark:bg-card-dark shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg overflow-hidden cursor-pointer"
+                onClick={() => openTripModal(booking)}
+              >
                 <div className="px-4 py-4 sm:px-6 lg:px-8">
                   <div className="flex items-center justify-between">
                     <p className="truncate text-md font-semibold text-primary-600">
@@ -380,27 +817,210 @@ const TripsPage: React.FC = () => {
                       Booking ID: {booking.id}
                     </div>
                   </div>
-                  {(booking.status === 'confirmed' || booking.status === 'booked') && (
-                      <div className="mt-3 flex space-x-3">
-                          <button 
-                              onClick={(e) => { 
-                                  e.preventDefault(); 
-                                  e.stopPropagation(); 
-                                  handleCancelBooking(booking.id); 
-                              }}
-                              className="btn btn-error btn-xs"
-                              aria-label={`Cancel booking ${booking.id}`}
-                          >
-                              <XCircle className="h-4 w-4 mr-1" /> Cancel Booking
-                          </button>
-                      </div>
-                  )}
+                  {/* Direct cancel button removed from card, will be in modal */}
                 </div>
               </Card>
             ))}
           </div>
         )}
       </div>
+    </div>
+  );
+
+  // Modal Content
+  const renderModalContent = () => {
+    if (!selectedTrip) return null;
+
+    // Placeholder for trip details and actions
+    return (
+      <div>
+        <p className="text-gray-700 dark:text-gray-300 mb-2">
+          <strong>Route:</strong> {selectedTrip.route?.origin?.name} to {selectedTrip.route?.destination?.name}
+        </p>
+        <p className="text-gray-700 dark:text-gray-300 mb-2">
+          <strong>Date:</strong> {selectedTrip.trip?.date} at {selectedTrip.trip?.time}
+        </p>
+        <p className="text-gray-700 dark:text-gray-300 mb-4">
+          <strong>Status:</strong> {getStatusBadge(selectedTrip.status)}
+        </p>
+        
+        {/* Action Buttons Placeholder */}
+        <div className="mt-6 flex flex-col sm:flex-row sm:justify-end sm:space-x-3 space-y-2 sm:space-y-0">
+          <button 
+            onClick={closeTripModal} 
+            className="btn btn-outline w-full sm:w-auto"
+          >
+            Close
+          </button>
+          {/* Conditional Cancel Button - logic to be refined */}
+          {(selectedTrip.status === 'confirmed' || selectedTrip.status === 'booked') && (
+            <button 
+              onClick={() => alert('Two-step cancellation to be implemented!')} 
+              className="btn btn-error w-full sm:w-auto"
+            >
+              Cancel Trip
+            </button>
+          )}
+          <button 
+            onClick={() => alert('Share functionality to be implemented!')} 
+            className="btn btn-secondary w-full sm:w-auto"
+          >
+            Share
+          </button>
+          {/* Conditional Delete Button - logic to be refined */}
+          {selectedTrip.status === 'cancelled' && (
+             <button 
+              onClick={() => alert('Delete functionality to be implemented!')} 
+              className="btn btn-danger-outline w-full sm:w-auto"
+            >
+              Delete
+            </button>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
+      {/* Navbar is handled by the main layout, spacing is managed by .glass-navbar-dashboard margins */}
+      {/* <Navbar /> Ensure Navbar is part of a layout component or add it here if needed */}
+      <div className="container-app py-8 md:py-12">
+        {/* Header with back button and title - This is duplicated, ensure it's correctly placed or remove if Navbar handles it */}
+        <div className="flex items-center justify-between mb-6">
+          <Link to="/passenger/dashboard" className="btn btn-ghost btn-sm flex items-center">
+            <ArrowLeft size={18} className="mr-1" />
+            Back to Dashboard
+          </Link>
+          <h1 className="text-3xl font-bold text-center text-gray-900 dark:text-white flex-grow">My Trips</h1>
+          <div className="w-auto"></div> 
+        </div>
+
+        {/* Filter and Sort Controls - Existing UI */}
+        <div className="mb-6 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-md">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+            <div>
+              <label htmlFor="search-trip" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search className="h-4 w-4 text-gray-400" />
+                </div>
+                <input
+                  type="text"
+                  id="search-trip"
+                  placeholder="ID, Origin, Destination..."
+                  className="form-input w-full pl-10"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+            </div>
+            <div>
+              <label htmlFor="filter-status" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Status</label>
+              <select 
+                id="filter-status" 
+                className="form-select w-full"
+                value={filterStatus}
+                onChange={(e) => setFilterStatus(e.target.value)}
+              >
+                <option value="all">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="booked">Booked</option>
+                <option value="checked-in">Checked In</option>
+                <option value="validated">Validated</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="sort-trip" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Sort By</label>
+              <select 
+                id="sort-trip" 
+                className="form-select w-full"
+                value={getCurrentSortValue()}
+                onChange={(e) => handleSortChange(e.target.value)}
+              >
+                <option value="dateDesc">Date (Newest First)</option>
+                <option value="dateAsc">Date (Oldest First)</option>
+                <option value="routeAsc">Route (A-Z)</option>
+                <option value="routeDesc">Route (Z-A)</option>
+                <option value="status">Status</option>
+              </select>
+            </div>
+            {/* Placeholder for Advanced Filters Button */}
+            <button className="btn btn-outline flex items-center justify-center lg:mt-7" onClick={() => alert('Advanced Filters UI to be implemented here.')}>
+              <ListFilter size={18} className="mr-2" /> Advanced Filters
+            </button>
+          </div>
+        </div>
+
+        {error && <p className="text-center py-10 text-red-500">Error loading trips: {error}</p>}
+
+        {isLoading && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[1, 2, 3].map(n => <SkeletonCard key={n} />)}
+          </div>
+        )}
+
+        {!isLoading && !error && sortedUserBookings.length === 0 && (
+          <div className="text-center py-10">
+            <Inbox className="mx-auto h-12 w-12 text-gray-400" />
+            <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-gray-100">No Trips Found</h3>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">No trips match your current filters or you have no bookings yet. Try adjusting your search or check back later.</p>
+          </div>
+        )}
+
+        {!isLoading && !error && sortedUserBookings.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {sortedUserBookings.map((booking) => (
+              <Card 
+                key={booking.id} 
+                className="flex flex-col justify-between bg-white dark:bg-card-dark shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-lg overflow-hidden cursor-pointer"
+                onClick={() => openTripModal(booking)}
+              >
+                <div className="px-4 py-4 sm:px-6 lg:px-8">
+                  <div className="flex items-center justify-between">
+                    <p className="truncate text-md font-semibold text-primary-600">
+                      {booking.route?.origin?.name} to {booking.route?.destination?.name}
+                    </p>
+                    <div className="ml-2 flex flex-shrink-0">
+                      {getStatusBadge(booking.status)}
+                    </div>
+                  </div>
+                  <div className="mt-2 sm:flex sm:justify-between">
+                    <div className="sm:flex">
+                      <p className="flex items-center text-sm text-gray-500">
+                        <CalendarDays className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                        {booking.trip?.date && booking.trip?.time ? 
+                          new Date(booking.trip.date + 'T' + booking.trip.time).toLocaleDateString([], {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        }) : 'Date N/A'} at {booking.trip?.time || 'Time N/A'}
+                      </p>
+                      <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-4">
+                        <Users className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                        {booking.passenger?.firstName} {booking.passenger?.lastName}
+                      </p>
+                    </div>
+                    <div className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0">
+                      <Tag className="flex-shrink-0 mr-1.5 h-4 w-4 text-gray-400" />
+                      Booking ID: {booking.id}
+                    </div>
+                  </div>
+                  {/* Direct cancel button removed from card, will be in modal */}
+                </div>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Trip Details Modal */}
+      <Modal isOpen={isModalOpen} onClose={closeTripModal} title="Trip Details">
+        {renderModalContent()}
+      </Modal>
     </div>
   );
 };

@@ -18,7 +18,6 @@ import FloatingThemeToggle from './components/common/FloatingThemeToggle';
 
 // Lazy-loaded components
 
-const DriverStatistics = lazy(() => import('./pages/driver/Statistics'));
 
 const TripManagement = lazy(() => import('./components/dashboard/TripManagement')); 
 const TripActivityLog = lazy(() => import('./components/common/TripActivityLog'));
@@ -130,19 +129,8 @@ function App() {
               />
             } 
           />
-          <Route 
-            path="/driver/statistics" 
-            element={
-              <ProtectedRoute 
-                element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <DriverStatistics />
-                  </Suspense>
-                } 
-                allowedRoles={['driver']} 
-              />
-            } 
-          />
+
+      
           {/* Driver Vehicle Management Route */}
           <Route 
             path="/driver/vehicle" // Path updated to /driver/vehicle

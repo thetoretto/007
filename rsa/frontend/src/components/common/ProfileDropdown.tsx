@@ -15,16 +15,16 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const isNavbarTransparent = location.pathname === '/'; // Example: Navbar is transparent only on homepage
-  const [scrolled, setScrolled] = useState(window.scrollY > 20);
+  // const isNavbarTransparent = location.pathname === '/'; // Removed
+  // const [scrolled, setScrolled] = useState(window.scrollY > 20); // Removed
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  // useEffect(() => { // Removed scroll effect
+  //   const handleScroll = () => {
+  //     setScrolled(window.scrollY > 20);
+  //   };
+  //   window.addEventListener('scroll', handleScroll);
+  //   return () => window.removeEventListener('scroll', handleScroll);
+  // }, []);
 
   const handleLogout = () => {
     logout();
@@ -50,17 +50,9 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
     return `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase() || '?';
   };
   
-  // Determine text color based on navbar state (transparent on home, scrolled, or other pages)
-  let textColorClass = 'text-text-base dark:text-text-inverse'; // Default for solid navbar
-  if (isNavbarTransparent && !scrolled) {
-    textColorClass = 'text-white group-hover:text-opacity-80'; // For transparent navbar (e.g. homepage top)
-  }
-  let avatarBgColorClass = scrolled || !isNavbarTransparent 
-    ? 'bg-primary-soft text-primary dark:bg-primary-700 dark:text-primary-100' 
-    : 'bg-white/20 text-white';
-  let chevronColorClass = scrolled || !isNavbarTransparent 
-    ? 'text-text-muted dark:text-text-muted-dark' 
-    : 'text-white/70 group-hover:text-white';
+  const textColorClass = 'text-text-base dark:text-text-inverse'; 
+  const avatarBgColorClass = 'bg-primary-soft text-primary dark:bg-primary-700 dark:text-primary-100';
+  const chevronColorClass = 'text-text-muted dark:text-text-muted-dark';
 
 
   const menuItemClass = "flex items-center w-full px-4 py-2.5 text-sm text-text-base dark:text-text-inverse hover:bg-base-200 dark:hover:bg-section-medium transition-colors duration-150";
@@ -71,10 +63,11 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
       {user ? (
         <button
           type="button"
-          className={`flex items-center text-sm rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:focus-visible:ring-offset-base-300 p-0.5 ${isNavbarTransparent && !scrolled ? 'hover:bg-white/10' : 'hover:bg-base-200 dark:hover:bg-section-medium'} transition-colors duration-150`}
+          className={`flex items-center text-sm rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:focus-visible:ring-offset-base-300 p-0.5 hover:bg-base-200 dark:hover:bg-section-medium transition-colors duration-150`}
           onClick={toggleDropdown}
           aria-expanded={isOpen}
           aria-haspopup="true"
+          data-testid="profile-dropdown-button-user"
         >
           <div className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-medium ${avatarBgColorClass} transition-colors duration-150`}>
             {getInitials(user.firstName, user.lastName)}
@@ -87,10 +80,11 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
       ) : (
         <button
           type="button"
-          className={`btn btn-ghost btn-sm flex items-center gap-1.5 ${textColorClass} ${isNavbarTransparent && !scrolled ? 'hover:bg-white/10' : 'hover:bg-base-200 dark:hover:bg-section-medium'} transition-colors duration-150 px-2 sm:px-3`}
+          className={`btn btn-ghost btn-sm flex items-center gap-1.5 ${textColorClass} hover:bg-base-200 dark:hover:bg-section-medium transition-colors duration-150 px-2 sm:px-3`}
           onClick={toggleDropdown}
           aria-expanded={isOpen}
           aria-haspopup="true"
+          data-testid="profile-dropdown-button-guest"
         >
           <UserIcon className={`h-5 w-5 ${textColorClass}`} />
           <span className="hidden sm:inline">Account</span>
@@ -100,10 +94,11 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
 
       {isOpen && (
         <div
-          className="origin-top-right absolute right-0 mt-2 w-56 rounded-lg shadow-xl py-1.5 bg-base-100 dark:bg-section-dark ring-1 ring-black/5 dark:ring-white/10 focus:outline-none z-50 animate-fadeInUpSm"
+          className="origin-top-right absolute right-0 mt-2 w-56 rounded-lg shadow-xl py-1.5 ring-1 ring-black/5 dark:ring-white/10 focus:outline-none z-50 animate-fadeInUpSm"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="user-menu-button"
+          data-testid="profile-dropdown-menu"
         >
           {user ? (
             <>
@@ -111,22 +106,22 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
                 <p className="text-sm font-semibold text-text-base dark:text-text-inverse truncate" title={user.email}>{user.firstName} {user.lastName}</p>
                 <p className="text-xs text-text-muted dark:text-text-muted-dark truncate">{user.email}</p>
               </div>
-              <Link to={user.role === 'admin' ? '/admin/dashboard' : user.role === 'driver' ? '/driver/dashboard' : '/passenger/dashboard'} className={menuItemClass} role="menuitem" onClick={() => setIsOpen(false)}>
+              <Link to={user.role === 'admin' ? '/admin/dashboard' : user.role === 'driver' ? '/driver/dashboard' : '/passenger/dashboard'} className={menuItemClass} role="menuitem" onClick={() => setIsOpen(false)} data-testid="dashboard-link">
                 <LayoutDashboard className={iconClass} /> My Dashboard
               </Link>
-              <Link to="/profile" className={menuItemClass} role="menuitem" onClick={() => setIsOpen(false)}>
+              <Link to="/profile" className={menuItemClass} role="menuitem" onClick={() => setIsOpen(false)} data-testid="profile-link">
                 <UserIcon className={iconClass} /> Your Profile
               </Link>
-              <button onClick={handleLogout} className={`${menuItemClass} text-error dark:text-error`} role="menuitem">
+              <button onClick={handleLogout} className={`${menuItemClass} text-error dark:text-error`} role="menuitem" data-testid="logout-button">
                 <LogOut className={`${iconClass} text-error dark:text-error`} /> Sign out
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" className={menuItemClass} role="menuitem" onClick={() => setIsOpen(false)}>
+              <Link to="/login" className={menuItemClass} role="menuitem" onClick={() => setIsOpen(false)} data-testid="login-link">
                 <LogIn className={iconClass} /> Login
               </Link>
-              <Link to="/register" className={menuItemClass} role="menuitem" onClick={() => setIsOpen(false)}>
+              <Link to="/register" className={menuItemClass} role="menuitem" onClick={() => setIsOpen(false)} data-testid="register-link">
                 <UserPlus className={iconClass} /> Sign Up
               </Link>
             </>

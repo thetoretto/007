@@ -213,10 +213,11 @@ const DriverDashboard: React.FC = () => {
   };
 
   return (
-    <div className=" text-gray-900 dark:text-gray-50 transition-colors duration-300">
-      {/* Navbar is handled by the main layout, spacing is managed by .glass-navbar-dashboard margins */}
-      <ToastContainer /> {/* Keep ToastContainer if it's page-specific, or move to global layout if applicable */}
-      <main className="container-app pb-8 md:pb-12"> {/* Padding was adjusted, keep this */}
+    <div className=" text-gray-800 dark:text-gray-200 transition-colors duration-300">
+      <Navbar />
+      <ToastContainer />
+      {/* Main content with adjusted padding to accommodate fixed navbar */}
+      <main className="container-app py-8 md:py-12">
         {/* Header with actions - Restored */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div className="flex-1 min-w-0 mb-4 md:mb-0">

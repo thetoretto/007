@@ -177,10 +177,11 @@ const AdminHotPointManagement: React.FC<AdminHotPointManagementProps> = ({ mode 
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
+    <div className=" text-gray-900 dark:text-gray-50 transition-colors duration-300">
+      <Navbar /> {/* Ensured Navbar is included */}
       <ToastContainer />
 
-      <main className="container-app pt-24 pb-8 md:pt-28 md:pb-12">
+      <main className="container-app py-8 md:py-12"> {/* Adjusted padding */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
           <div className="flex-1 min-w-0">
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100 flex items-center">

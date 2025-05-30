@@ -6,10 +6,10 @@ import { useBookingStore } from '../../store/bookingStore';
 import { BookingStatus } from '../../store/bookingStore';
 import { mockUsers, mockRoutes as allMockRoutes, mockVehicles } from '../../utils/mockData';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { Users, Calendar, TrendingUp, Settings, User, Map, Activity, Plus, Edit, Trash2, Clock, Filter, Star, MapPin, Navigation, ArrowRight } from 'lucide-react';
+import { Users, Calendar, TrendingUp, Settings, User, Map, Activity, Plus, Edit, Trash2, Clock, Filter, Star, MapPin, Navigation, ArrowRight, LayoutDashboard } from 'lucide-react'; // Added LayoutDashboard
 import TripForm from '../../components/trips/TripForm';
 import '../../index.css';
-import Navbar from '../../components/common/Navbar';
+import Navbar from '../../components/common/Navbar'; // Ensured Navbar import
 
 // Enhanced mock data generation for Admin Dashboard
 const generateAdminMockData = (period: 'daily' | 'weekly' | 'monthly' | 'yearly', allTrips: Trip[]) => {
@@ -180,9 +180,15 @@ const AdminDashboard: React.FC = () => {
 
   return (
     <div className="text-gray-900 dark:text-gray-50 transition-colors duration-300">
-      {/* Navbar is handled by the main layout, spacing is managed by .glass-navbar-dashboard margins */}
-      <main className="container-app pb-8 md:pb-12"> {/* Removed pt-24 and md:pt-28 */}
-        <h1 className="text-3xl md:text-4xl font-bold mb-8 text-gray-900 dark:text-white transition-colors duration-300">Admin Dashboard</h1>
+      <Navbar />
+      <main className="container-app py-8 md:py-12"> {/* Adjusted padding and removed pt-navbar comment */} 
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+                <LayoutDashboard className="h-7 w-7 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
+                Admin Dashboard
+            </h1>
+            {/* Add any top-level actions or filters here if needed */}
+        </div>
         
         {/* Quick Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">

@@ -298,18 +298,14 @@ const Navbar: React.FC = () => {
               <div className="flex items-center space-x-2">
                 <Link 
                   to="/login" 
-                  className={`btn btn-sm btn-outline flex items-center transition-colors duration-200 ${
-                    scrolled || isDashboard ? 'text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/50' : 'text-white hover:bg-white/10 dark:text-white dark:hover:bg-white/10'
-                  }`}
+                  className={`btn btn-sm btn-outline flex items-center transition-colors duration-200 text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/50`}
                 >
                   <LogIn size={16} className="mr-1.5" />
                   Login
                 </Link>
                 <Link 
                   to="/register" 
-                  className={`btn btn-sm flex items-center transition-colors duration-200 ${
-                    scrolled || isDashboard ? 'bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-700 dark:hover:bg-primary-600 dark:text-white' : 'bg-white/20 hover:bg-white/30 text-white dark:bg-white/20 dark:hover:bg-white/30 dark:text-white'
-                  }`}
+                  className={`btn btn-sm flex items-center transition-colors duration-200 bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-700 dark:hover:bg-primary-600 dark:text-white`}
                 >
                   <UserPlus size={16} className="mr-1.5" />
                   Sign Up
@@ -438,17 +434,13 @@ const Navbar: React.FC = () => {
               <div className="px-2 space-y-2">
                 <Link 
                   to="/login" 
-                  className={`block w-full text-left btn btn-outline transition-colors duration-200 ${
-                    isDashboard ? 'text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/50' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800'
-                  }`}
+                  className={`block w-full text-left btn btn-outline transition-colors duration-200 text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/50`}
                 >
                   <LogIn size={16} className="mr-1.5 inline" /> Login
                 </Link>
                 <Link 
                   to="/register" 
-                  className={`block w-full text-left btn transition-colors duration-200 ${
-                    isDashboard ? 'bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-700 dark:hover:bg-primary-600 dark:text-white' : 'bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-700 dark:hover:bg-primary-600 dark:text-white'
-                  }`}
+                  className={`block w-full text-left btn transition-colors duration-200 bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-700 dark:hover:bg-primary-600 dark:text-white`}
                 >
                   <UserPlus size={16} className="mr-1.5 inline" /> Sign Up
                 </Link>

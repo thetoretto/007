@@ -127,10 +127,10 @@ const PassengerDashboard: React.FC = () => {
   };
 
   return (
-    <div className=" text-gray-900 dark:text-gray-50 transition-colors duration-300">
-      <Navbar />
+    <div className="text-gray-900 dark:text-gray-50 transition-colors duration-300">
+      {/* Navbar is fixed, so main content needs top padding */}
       <ToastContainer />
-      <main className="container-app py-8 md:py-12">
+      <main className="container-app pt-navbar pb-8 md:pb-12">
         {/* Header with greeting and search */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div className="flex-1 min-w-0 mb-4 md:mb-0">
@@ -444,4 +444,4 @@ const PassengerDashboard: React.FC = () => {
   );
 };
 
-export default PassengerDashboard; 
+export default PassengerDashboard;

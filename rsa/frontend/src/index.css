@@ -891,24 +891,28 @@
 /* Card-Style Dashboard Navbar */
 .glass-navbar-dashboard {
   background-color: var(--card-bg-light);
-  border: 1px solid var(--card-border-light);
+  /* border: 1px solid var(--card-border-light); */ /* Border removed for fixed full-width */
   color: var(--text-light-primary);
-  border-radius: 0.75rem; /* Ensure consistent border-radius */
-  /* Removed box-shadow, backdrop-filter */
+  /* border-radius: 0.75rem; */ /* Border-radius removed for full-width */
   transition: background-color 0.3s, border-color 0.3s;
-
-  /* Ensure it doesn't touch edges and is centered */
-  max-width: 1280px; /* max-w-7xl equivalent */
-  width: calc(100% - 2rem); /* Provides 1rem effective margin on each side if parent is full-width */
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 1.5rem; /* Space above the navbar card */
-  margin-bottom: 1.5rem; /* Space below the navbar card */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 50;
+  padding-left: 1rem; /* Add some padding if content is directly inside */
+  padding-right: 1rem;
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--border-light);
+  /* max-width, width calc, and margins are removed as it's now fixed and full-width */
 }
 .dark .glass-navbar-dashboard {
   background-color: var(--card-bg-dark);
-  border: 1px solid var(--card-border-dark);
+  /* border: 1px solid var(--card-border-dark); */ /* Border removed for fixed full-width */
   color: var(--text-dark-primary);
+  border-bottom: 1px solid var(--border-dark);
 }
 
 /* Responsive adjustments for card-style navbar (if any, can be added here) */

@@ -203,9 +203,10 @@ const UserManagement: React.FC = () => {
 
   return (
     <div className=" text-gray-900 dark:text-gray-50 transition-colors duration-300">
+      <Navbar />
       <ToastContainer />
 
-      <main className="container-app pt-24 pb-8 md:pt-28 md:pb-12">
+      <main className="container-app py-8 md:py-12">
         {/* Dashboard Stats Section */}
         <div className="mb-8 md:mb-12">
           <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-gray-900 dark:text-white transition-colors duration-300">User Overview</h2>
