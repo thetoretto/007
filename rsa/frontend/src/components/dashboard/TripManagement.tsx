@@ -4,7 +4,6 @@ import { Plus } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { mockTimeSlots, mockVehicles, mockRoutes, getBookingsWithDetails, mockUsers } from '../../utils/mockData';
 import TripActivityLog, { LogTripActivity, LogTripStatus } from '../common/TripActivityLog';
-import Navbar from '../common/Navbar';
 import { Route as RouteType, Vehicle as VehicleType, User as UserType, Booking as BookingType } from '../../types';
 
 const TripManagement: React.FC = () => {
@@ -95,7 +94,6 @@ const TripManagement: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-base-200 dark:bg-base-300">
-      <Navbar />
       <main className="container-app mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-16 md:pt-20">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
           <div className="flex-1 min-w-0">

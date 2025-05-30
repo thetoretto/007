@@ -82,7 +82,7 @@ const DriverStatistics: React.FC = () => {
   }, [routePerformanceData, sortKey, sortDirection]);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
+    <div className=" text-gray-900 dark:text-gray-50 transition-colors duration-300">
       <Navbar />
       <main className="container-app py-8 md:py-12">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">

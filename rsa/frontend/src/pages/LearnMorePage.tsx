@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Navbar from '../components/common/Navbar';
+
 import Footer from '../components/common/Footer';
 import { 
   ShieldCheck, 
@@ -197,7 +197,6 @@ const TestimonialCard: React.FC<Testimonial> = ({ name, role, text, rating, avat
 const LearnMorePage: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark">
-      <Navbar />
       <main className="flex-grow py-12 sm:py-20">
         <motion.div
           initial="hidden"

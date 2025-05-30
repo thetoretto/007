@@ -19,7 +19,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   if (isDashboard) {
     layoutClasses += ' bg-gray-100 dark:bg-surface-dark text-text-light dark:text-text-dark';
     // Navbar is fixed, so main content needs padding. Footer is not typically in dashboard.
-    mainPadding = 'py-8 px-4 sm:px-6 lg:px-8'; 
+    mainPadding = 'pt-24 pb-8 px-4 sm:px-6 lg:px-8'; // Increased top padding to prevent collision with navbar
   } else if (isAuth) {
     layoutClasses += ' bg-gradient-to-br from-primary-600 via-primary-700 to-darkBlue-800 dark:from-gray-900 dark:via-gray-800 dark:to-primary-900 text-white';
     mainPadding = 'flex-grow flex flex-col items-center justify-center p-4'; // Auth pages are typically centered
@@ -47,7 +47,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className={layoutClasses}>
       {!isAuth && <Navbar />}
-      <main className={`w-full ${mainPadding} ${isAuth ? '' : 'flex-grow'}`} role="main">
+      <main className={` ${isAuth ? '' : 'flex-grow'} `} role="main">
         {children}
       </main>
       {isPublic && !isHome && <Footer />} {/* Footer on public pages, but not on home if it has its own full-page design */}

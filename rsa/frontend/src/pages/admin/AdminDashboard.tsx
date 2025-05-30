@@ -179,9 +179,9 @@ const AdminDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
-      <Navbar />
-      <main className="container-app py-8 md:py-12">
+    <div className="text-gray-900 dark:text-gray-50 transition-colors duration-300">
+      {/* Navbar is handled by the main layout, spacing is managed by .glass-navbar-dashboard margins */}
+      <main className="container-app pb-8 md:pb-12"> {/* Removed pt-24 and md:pt-28 */}
         <h1 className="text-3xl md:text-4xl font-bold mb-8 text-gray-900 dark:text-white transition-colors duration-300">Admin Dashboard</h1>
         
         {/* Quick Stats */}

@@ -60,7 +60,7 @@ const BookingViewPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
+    <div className=" flex flex-col">
       {/* App-like header with back/home button */}
       <div className="bg-gradient-to-r from-accent-kente-gold-dark to-accent-kente-gold text-black sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4 flex items-center">

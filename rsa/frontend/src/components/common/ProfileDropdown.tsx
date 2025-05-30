@@ -100,7 +100,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
 
       {isOpen && (
         <div
-          className="origin-top-right absolute right-0 mt-2 w-56 rounded-lg shadow-xl py-1.5 bg-base-100 dark:bg-section-dark ring-1 ring-black/5 dark:ring-white/10 focus:outline-none z-30 animate-fadeInUpSm"
+          className="origin-top-right absolute right-0 mt-2 w-56 rounded-lg shadow-xl py-1.5 bg-base-100 dark:bg-section-dark ring-1 ring-black/5 dark:ring-white/10 focus:outline-none z-50 animate-fadeInUpSm"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="user-menu-button"

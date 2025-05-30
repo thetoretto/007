@@ -16,7 +16,6 @@ import {
 } from 'react-feather';
 import { mockTimeSlots, mockVehicles, mockRoutes, getBookingsWithDetails, mockDashboardStats, mockUsers } from '../../utils/mockData';
 import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, BarChart, Bar, PieChart, Pie, Cell } from 'recharts';
-import Navbar from '../../components/common/Navbar';
 import ToastContainer from '../../components/common/ToastContainer';
 
 // Mock data for existing statistics
@@ -142,11 +141,10 @@ const AdminStatistics: React.FC = () => {
   };
   
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
-      <Navbar />
-      <ToastContainer /> 
+    <div className="text-gray-900 dark:text-gray-50 transition-colors duration-300">
+  
 
-      <main className="container-app py-8 md:py-12">
+      <main className="container-app pb-8 md:pt-28 md:pb-12">
         <div className="mb-8 md:mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
             <BarChart2 className="h-7 w-7 mr-3 text-primary-600 dark:text-primary-400 transition-colors duration-300" />

@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-import Navbar from '../components/common/Navbar';
-import Footer from '../components/common/Footer';
 import { motion } from 'framer-motion';
 import { fadeInUp, staggerContainer } from '../utils/animations';
 import { 
@@ -111,7 +109,7 @@ const BecomeMemberPage: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark">
-      <Navbar />
+
       <main className="flex-grow container-app py-12 sm:py-20 px-4 sm:px-6 lg:px-8">
         <motion.div
           initial="hidden"
@@ -541,10 +539,15 @@ const BecomeMemberPage: React.FC = () => {
                   <p className="text-sm text-text-muted dark:text-primary-200 mb-4">
                     Sign in to your account to manage your profile, view ride requests, and track your earnings.
                   </p>
-                  <a href="/login" className="btn btn-secondary inline-flex items-center text-sm">
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-secondary w-full"
+                      >
+                  <a href="/login" className="inline-flex items-center ">
                     Sign In to Your Account
                     <ArrowRight className="ml-1.5 h-4 w-4" />
                   </a>
+                      </button>
                 </div>
               </div>
               
@@ -567,7 +570,6 @@ const BecomeMemberPage: React.FC = () => {
           </motion.div>
         </motion.div>
       </main>
-      <Footer />
     </div>
   );
 };

@@ -213,31 +213,31 @@ const DriverDashboard: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
-      <Navbar />
-      <ToastContainer />
-      <main className="container-app py-8 md:py-12">
-        {/* Header with actions */}
+    <div className=" text-gray-900 dark:text-gray-50 transition-colors duration-300">
+      {/* Navbar is handled by the main layout, spacing is managed by .glass-navbar-dashboard margins */}
+      <ToastContainer /> {/* Keep ToastContainer if it's page-specific, or move to global layout if applicable */}
+      <main className="container-app pb-8 md:pb-12"> {/* Padding was adjusted, keep this */}
+        {/* Header with actions - Restored */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div className="flex-1 min-w-0 mb-4 md:mb-0">
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white transition-colors duration-300">Driver Dashboard</h1>
             <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
-            {user && `Welcome back, ${user.firstName} ${user.lastName}`}
-          </p>
-        </div>
+              {user && `Welcome back, ${user.firstName} ${user.lastName}`}
+            </p>
+          </div>
           <div className="flex flex-wrap gap-3 items-center">
             <button onClick={openCreateModal} className="btn btn-primary flex items-center gap-2">
               <Plus className="h-4 w-4" />
-            New Trip
-          </button>
+              New Trip
+            </button>
             <Link to="/driver/check-in" className="btn btn-secondary flex items-center gap-2">
               <QRScannerIcon className="h-4 w-4" /> 
-            Validate Ticket
-          </Link>
+              Validate Ticket
+            </Link>
+          </div>
         </div>
-      </div>
 
-      {/* Available Trips Section */}
+        {/* Available Trips Section */}
       {availableTrips.length > 0 && (
           <div className="mb-8 card p-6">
             <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white transition-colors duration-300 flex items-center">

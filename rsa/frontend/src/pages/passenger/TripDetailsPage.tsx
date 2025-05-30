@@ -100,7 +100,7 @@ const TripDetailsPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
+    <div className=" text-gray-900 dark:text-gray-50 transition-colors duration-300">
       <Navbar />
       <div className="container-app max-w-4xl py-8 md:py-12">
         <button

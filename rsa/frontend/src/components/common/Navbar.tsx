@@ -2,6 +2,7 @@ import '../../index.css';
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import useAuthStore from '../../store/authStore';
+import useThemeStore from '../../store/themeStore';
 import { Menu, X, Bus, BarChart2, Users, Clock, Settings, ChevronDown, LogIn, UserPlus } from 'lucide-react';
 import ProfileDropdown from './ProfileDropdown';
 import ThemeToggle from './ThemeToggle';
@@ -17,6 +18,8 @@ interface NavItem {
 
 const Navbar: React.FC = () => {
   const { user } = useAuthStore();
+  const { theme } = useThemeStore();
+  const isDarkMode = theme === 'dark';
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -150,6 +153,12 @@ const Navbar: React.FC = () => {
     setOpenMobileSubmenu(null);
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (!isMenuOpen) {
+      setOpenMobileSubmenu(null); // Close mobile submenu when main mobile menu closes
+    }
+  }, [isMenuOpen]);
+
   // Check if a path is active (exact match or starts with)
   const isActive = (path: string) => {
     if (path === '/') {
@@ -165,33 +174,28 @@ const Navbar: React.FC = () => {
     <nav
       className={
         isDashboard
-          ? `fixed top-6 left-1/2 transform -translate-x-1/2 z-50 w-[95vw] max-w-4xl px-2 md:px-6 rounded-2xl border shadow-xl glass-navbar-dashboard mb-navbar-dashboard transition-all duration-300`
-          : `fixed top-0 left-0 right-0 z-50 w-full transition-all duration-300 backdrop-blur-md border-b ${
-              scrolled
-                ? 'bg-white/95 dark:bg-gray-900/95 border-gray-200 dark:border-gray-800 shadow-md dark:shadow-lg'
-                : 'bg-white/80 dark:bg-gray-900/80 border-transparent'
-            }`
+          ? `rounded-xl z-50 glass-navbar-dashboard transition-all duration-300 py-2` // Removed fixed, transform, width, max-w, mt, and shadow-md on scroll
+          : `fixed w-full top-0 z-50 transition-all duration-300 ${scrolled ? 'py-2 bg-white dark:bg-gray-900 shadow-md' : 'py-4 bg-transparent'}`
       }
-      style={isDashboard ? {backdropFilter: 'blur(18px)'} : {backdropFilter: 'blur(12px)'}}
     >
       <div className="container-app px-0">
-        <div className="flex items-center justify-between h-16 md:h-20 min-w-0 gap-x-4 overflow-hidden">
+        <div className="flex items-center justify-between h-16 md:h-20 min-w-0 gap-x-4">
           {/* Logo */}
           <div className="flex-shrink-0 min-w-0">
             <Link to="/" className="flex items-center gap-2 whitespace-nowrap">
               <Bus className={`h-7 w-7 sm:h-8 sm:w-8 ${
                 isDashboard
-                  ? 'text-primary dark:text-primary-200'
+                  ? 'text-primary-600 dark:text-primary-400'
                   : scrolled 
-                    ? 'text-primary-800 dark:text-primary-200' 
+                    ? 'text-primary-600 dark:text-primary-400' 
                     : 'text-white dark:text-white'
               }`} />
               <span className={`text-lg font-semibold transition-colors duration-200 whitespace-nowrap ${
                 isDashboard
-                  ? 'text-text-base dark:text-text-inverse'
+                  ? 'text-gray-900 dark:text-gray-100'
                   : scrolled 
-                    ? 'text-primary-900 dark:text-white' 
-                    : 'text-white'
+                    ? 'text-gray-900 dark:text-gray-100' 
+                    : 'text-white dark:text-white'
               }`}>
                 {isDashboard && user ? (
                   user.role === 'admin' ? 'Admin Panel' : 
@@ -215,18 +219,18 @@ const Navbar: React.FC = () => {
                       onClick={() => setOpenDesktopSubmenu(openDesktopSubmenu === item.path ? null : item.path)}
                       className={`flex items-center px-3 py-2 text-sm lg:text-base rounded-md whitespace-nowrap ${
                         isDashboard
-                          ? `text-text-base hover:text-primary dark:text-text-inverse dark:hover:text-primary-200 border-b-2 ${
+                          ? `text-gray-800 hover:text-primary-600 dark:text-gray-200 dark:hover:text-primary-400 border-b-2 ${
                               item.submenu.some(sub => isActive(sub.path)) || openDesktopSubmenu === item.path
-                                ? 'border-primary dark:border-primary-200 font-medium' 
+                                ? 'border-primary-600 dark:border-primary-400 font-medium' 
                                 : 'border-transparent'
                             }`
                           : `${
                               isActive(item.path)
                                 ? scrolled 
-                                  ? 'text-primary-800 dark:text-primary-200 border-b-2 border-primary-800 dark:border-primary-200' 
-                                  : 'text-white dark:text-white border-b-2 border-white'
+                                  ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400' 
+                                  : 'text-white dark:text-white border-b-2 border-white dark:border-white'
                                 : scrolled
-                                  ? 'text-gray-700 dark:text-gray-300 hover:text-primary-800 dark:hover:text-primary-200' 
+                                  ? 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400' 
                                   : 'text-gray-200 hover:text-white dark:text-gray-300 dark:hover:text-white'
                             }`
                       } transition-all duration-200`}
@@ -236,7 +240,7 @@ const Navbar: React.FC = () => {
                       <ChevronDown className={`ml-1 h-4 w-4 transition-transform duration-200 ${openDesktopSubmenu === item.path ? 'transform rotate-180' : ''}`} />
                     </button>
                     {openDesktopSubmenu === item.path && (
-                      <div className="absolute z-20 mt-2 w-56 origin-top-right bg-background-light dark:bg-section-dark rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <div className="absolute z-60 mt-2 w-56 origin-top-right bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black/5 dark:ring-white/10 focus:outline-none border border-gray-200/50 dark:border-gray-700/50">
                         {item.submenu.map((sub) => (
                           <Link
                             key={sub.path}
@@ -244,8 +248,8 @@ const Navbar: React.FC = () => {
                             onClick={() => setOpenDesktopSubmenu(null)}
                             className={`block px-4 py-2 text-sm whitespace-nowrap ${
                               isActive(sub.path) 
-                                ? 'text-primary dark:text-primary-200 bg-section-light dark:bg-primary-900 font-medium' 
-                                : 'text-text-base dark:text-text-inverse hover:bg-section-light hover:text-primary dark:hover:bg-primary-900 dark:hover:text-primary-200'
+                                ? 'text-primary-600 dark:text-primary-400 bg-gray-100 dark:bg-gray-700 font-medium' 
+                                : 'text-gray-800 dark:text-gray-200 hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-gray-700 dark:hover:text-primary-400'
                             } transition-colors duration-200`}
                           >
                             {sub.label}
@@ -258,20 +262,20 @@ const Navbar: React.FC = () => {
                   <Link 
                     key={item.path}
                     to={item.path} 
-                    className={`flex items-center px-3 py-2 text-sm font-medium whitespace-nowrap transition-all duration-200 ${
+                    className={`flex items-center px-3 py-2 text-sm whitespace-nowrap transition-all duration-200 ${
                       isDashboard
-                        ? `rounded-md text-text-base hover:text-primary dark:text-text-inverse dark:hover:text-primary-200 border-b-2 ${
+                        ? `rounded-md text-gray-800 hover:text-primary-600 dark:text-gray-200 dark:hover:text-primary-400 ${
                             isActive(item.path) 
-                              ? 'border-primary dark:border-primary-200 font-medium' 
-                              : 'border-transparent'
+                              ? 'font-medium text-primary-600 dark:text-primary-400 bg-gray-100 dark:bg-gray-700 border-b-2 border-primary-600 dark:border-primary-400' 
+                              : 'text-gray-800 dark:text-gray-200 border-b-2 border-transparent'
                           }`
                         : `${
                             isActive(item.path)
                               ? scrolled 
-                                ? 'text-primary-800 dark:text-primary-200 border-b-2 border-primary-800 dark:border-primary-200' 
-                                : 'text-white dark:text-white border-b-2 border-white'
+                                ? 'text-primary-600 dark:text-primary-400 border-b-2 border-primary-600 dark:border-primary-400' 
+                                : 'text-white dark:text-white border-b-2 border-white dark:border-white'
                               : scrolled
-                                ? 'text-gray-700 dark:text-gray-300 hover:text-primary-800 dark:hover:text-primary-200' 
+                                ? 'text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400' 
                                 : 'text-gray-200 hover:text-white dark:text-gray-300 dark:hover:text-white'
                           }`
                     }`}
@@ -294,8 +298,8 @@ const Navbar: React.FC = () => {
               <div className="flex items-center space-x-2">
                 <Link 
                   to="/login" 
-                  className={`btn btn-sm btn-outline flex items-center ${
-                    scrolled || isDashboard ? 'text-primary hover:bg-primary-50 dark:text-primary-200 dark:hover:bg-primary-700' : 'text-white hover:bg-white/10'
+                  className={`btn btn-sm btn-outline flex items-center transition-colors duration-200 ${
+                    scrolled || isDashboard ? 'text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/50' : 'text-white hover:bg-white/10 dark:text-white dark:hover:bg-white/10'
                   }`}
                 >
                   <LogIn size={16} className="mr-1.5" />
@@ -303,8 +307,8 @@ const Navbar: React.FC = () => {
                 </Link>
                 <Link 
                   to="/register" 
-                  className={`btn btn-sm flex items-center ${
-                    scrolled || isDashboard ? 'btn-primary' : 'bg-white/20 hover:bg-white/30 text-white'
+                  className={`btn btn-sm flex items-center transition-colors duration-200 ${
+                    scrolled || isDashboard ? 'bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-700 dark:hover:bg-primary-600 dark:text-white' : 'bg-white/20 hover:bg-white/30 text-white dark:bg-white/20 dark:hover:bg-white/30 dark:text-white'
                   }`}
                 >
                   <UserPlus size={16} className="mr-1.5" />
@@ -321,9 +325,9 @@ const Navbar: React.FC = () => {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               type="button"
               className={`ml-2 inline-flex items-center justify-center p-2 rounded-md focus:outline-none transition-colors duration-200 ${
-                isDashboard ? 'text-text-base hover:bg-primary-50 dark:text-text-inverse dark:hover:bg-primary-800' : 
+                isDashboard ? 'text-gray-800 hover:bg-primary-50 dark:text-gray-200 dark:hover:bg-primary-900/50' : 
                 scrolled ? 'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800' : 
-                'text-white hover:bg-white/10'
+                'text-white hover:bg-white/10 dark:text-white dark:hover:bg-white/10'
               }`}
               aria-controls="mobile-menu"
               aria-expanded={isMenuOpen}
@@ -340,13 +344,13 @@ const Navbar: React.FC = () => {
       </div>
 
       {/* Mobile Menu */}
-      <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} absolute top-full left-0 right-0 w-full pb-3`}
+      <div className={`md:hidden ${isMenuOpen ? 'block' : 'hidden'} absolute top-full left-0 right-0 w-full pb-3 z-60`}
         id="mobile-menu"
       >
-        <div className={`px-2 pt-2 pb-3 space-y-1 sm:px-3 ${
+        <div className={`px-2 pt-2 pb-3 space-y-1 sm:px-3 rounded-b-xl mx-2 ${
           isDashboard 
-            ? 'bg-background-light dark:bg-section-dark shadow-lg border-t border-primary-100 dark:border-primary-800'
-            : 'bg-white dark:bg-gray-900 shadow-lg'
+            ? 'glass-navbar-dashboard shadow-lg'
+            : 'bg-white dark:bg-gray-900 shadow-lg border-t border-gray-200/50 dark:border-gray-700/50'
         }`}>
           {navItems.map((item) => (
             <div key={item.label}>
@@ -359,13 +363,13 @@ const Navbar: React.FC = () => {
                       isDashboard
                         ? `${
                             item.submenu.some(sub => isActive(sub.path)) || openMobileSubmenu === item.path
-                              ? 'text-primary dark:text-primary-200 bg-section-light dark:bg-primary-900' 
-                              : 'text-text-base dark:text-text-inverse hover:bg-section-light hover:text-primary dark:hover:bg-primary-900 dark:hover:text-primary-200'
+                              ? 'text-primary-600 dark:text-primary-400 bg-gray-100 dark:bg-gray-700' 
+                              : 'text-gray-800 dark:text-gray-200 hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-gray-700 dark:hover:text-primary-400'
                           }`
                         : `${
                             isActive(item.path) 
-                            ? 'text-primary-800 dark:text-primary-200 bg-gray-100 dark:bg-gray-800' 
-                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-primary-800 dark:hover:bg-gray-800 dark:hover:text-primary-200'
+                            ? 'text-primary-600 dark:text-primary-400 bg-gray-100 dark:bg-gray-800' 
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-gray-800 dark:hover:text-primary-400'
                           }`
                     } transition-colors duration-200`}
                   >
@@ -387,8 +391,8 @@ const Navbar: React.FC = () => {
                           }}
                           className={`block py-2 px-3 text-sm rounded-md ${
                             isActive(sub.path) 
-                              ? 'text-primary dark:text-primary-200 bg-section-light dark:bg-primary-900 font-medium' 
-                              : 'text-text-base dark:text-text-inverse hover:bg-section-light hover:text-primary dark:hover:bg-primary-900 dark:hover:text-primary-200'
+                              ? 'text-primary-600 dark:text-primary-400 bg-gray-100 dark:bg-gray-700 font-medium' 
+                              : 'text-gray-800 dark:text-gray-200 hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-gray-700 dark:hover:text-primary-400'
                           } transition-colors duration-200`}
                         >
                           {sub.label}
@@ -408,13 +412,13 @@ const Navbar: React.FC = () => {
                     isDashboard
                       ? `${
                           isActive(item.path) 
-                            ? 'text-primary dark:text-primary-200 bg-section-light dark:bg-primary-900' 
-                            : 'text-text-base dark:text-text-inverse hover:bg-section-light hover:text-primary dark:hover:bg-primary-900 dark:hover:text-primary-200'
+                            ? 'text-primary-600 dark:text-primary-400 bg-gray-100 dark:bg-gray-700' 
+                            : 'text-gray-800 dark:text-gray-200 hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-gray-700 dark:hover:text-primary-400'
                         }`
                       : `${
                           isActive(item.path) 
-                            ? 'text-primary-800 dark:text-primary-200 bg-gray-100 dark:bg-gray-800' 
-                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-primary-800 dark:hover:bg-gray-800 dark:hover:text-primary-200'
+                            ? 'text-primary-600 dark:text-primary-400 bg-gray-100 dark:bg-gray-800' 
+                            : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-gray-800 dark:hover:text-primary-400'
                         }`
                   } transition-colors duration-200`}
                 >
@@ -425,7 +429,7 @@ const Navbar: React.FC = () => {
             </div>
           ))}
           {/* Login/Signup or Profile for Mobile */}
-          <div className="pt-4 pb-2 border-t border-gray-200 dark:border-gray-700">
+          <div className="pt-4 pb-2 border-t border-gray-200/50 dark:border-gray-700/50">
             {user ? (
               <div className="px-2">
                 <ProfileDropdown />
@@ -434,16 +438,16 @@ const Navbar: React.FC = () => {
               <div className="px-2 space-y-2">
                 <Link 
                   to="/login" 
-                  className={`block w-full text-left btn btn-outline ${
-                    isDashboard ? 'text-primary hover:bg-primary-50 dark:text-primary-200 dark:text-gray-200' : 'text-gray-700 dark:text-gray-200'
+                  className={`block w-full text-left btn btn-outline transition-colors duration-200 ${
+                    isDashboard ? 'text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/50' : 'text-gray-700 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-800'
                   }`}
                 >
                   <LogIn size={16} className="mr-1.5 inline" /> Login
                 </Link>
                 <Link 
                   to="/register" 
-                  className={`block w-full text-left btn ${
-                    isDashboard ? 'btn-primary' : 'bg-primary-600 hover:bg-primary-700 text-white'
+                  className={`block w-full text-left btn transition-colors duration-200 ${
+                    isDashboard ? 'bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-700 dark:hover:bg-primary-600 dark:text-white' : 'bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-700 dark:hover:bg-primary-600 dark:text-white'
                   }`}
                 >
                   <UserPlus size={16} className="mr-1.5 inline" /> Sign Up

@@ -66,11 +66,10 @@ const AdminRouteManagement: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
-      <Navbar />
+    <div className=" text-gray-900 dark:text-gray-50 transition-colors duration-300">
       <ToastContainer />
 
-      <main className="container-app py-8 md:py-12">
+      <main className="container-app pt-24 pb-8 md:pt-28 md:pb-12">
         <div className="mb-8 md:mb-12">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
             <div className="flex-1 min-w-0">
