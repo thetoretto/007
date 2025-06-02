@@ -109,7 +109,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => {
                     name="emailOrPhone"
                     type="text"
                     autoComplete="username"
-                    className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light  focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
+                    className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
                     disabled={loading}
                     placeholder="Enter your email or phone"
                   />

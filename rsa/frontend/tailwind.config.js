@@ -8,38 +8,36 @@ export default {
         sans: ['Inter var', 'sans-serif'],
       },
       colors: {
-        // Primary color - African Sunset Orange
+        // Primary color - Elegant Chartreuse
         // Carefully balanced for readability in both modes
         primary: {
-          50: '#FFF7ED',  // Lightest - for subtle backgrounds
-          100: '#FFEDD5',  // Very light - for hover states in light mode
-          200: '#FED7AA',  // Light - for secondary buttons
-          300: '#FDBA74',  // Medium light - for accents
-          400: '#FB923C',  // Medium - for secondary elements
-          500: '#F97316',  // Base - for primary elements
-          600: '#EA580C',  // Medium dark - for primary buttons
-          700: '#C2410C',  // Dark - for hover states in dark mode
-          800: '#9A3412',  // Very dark - for text on light backgrounds
-          900: '#7C2D12',  // Darkest - for emphasized text
+          50: '#f9fce9',  // Lightest - for subtle backgrounds
+          100: '#f1f6d2',  // Very light - for hover states in light mode
+          200: '#e5eeb6',  // Light - for secondary buttons
+          300: '#d5e38c',  // Medium light - for accents
+          400: '#c2d500',  // Medium - for secondary elements
+          500: '#b3c600',  // Base - for primary elements
+          600: '#a4b700',  // Medium dark - for primary buttons
+          700: '#8cae00',  // Dark - for hover states in dark mode
+          800: '#738f00',  // Very dark - for text on light backgrounds
+          900: '#5a7000',  // Darkest - for emphasized text
         },
         
-        // New Dark Blue color - Sleek and modern
-        darkBlue: {
-          50: '#E3F2FD',   // Lightest
-          100: '#BBDEFB',  // Very light
-          200: '#90CAF9',  // Light
-          300: '#64B5F6',  // Medium light
-          400: '#42A5F5',  // Medium
-          500: '#2196F3',  // Base
-          600: '#1E88E5',  // Medium dark
-          700: '#1976D2',  // Dark
-          800: '#1565C0',  // Very dark
-          900: '#0D47A1',  // Darkest
+        // Secondary color - Pale Yellow Tint
+        secondary: {
+          50: '#fdfef7',   // Lightest
+          100: '#f9fceb',  // Very light
+          200: '#f5f9de',  // Light
+          300: '#f1f6d2',  // Medium light
+          400: '#e9f0b8',  // Medium
+          500: '#e0ea9e',  // Base
+          600: '#d7e485',  // Medium dark
+          700: '#c9d96c',  // Dark
+          800: '#bace53',  // Very dark
+          900: '#acbe3a',  // Darkest
         },
         
-        // Neutral colors - Earth-inspired grays
-        // Carefully crafted for optimal readability in both themes
-        // Re-mapping to grayscale fitting white/darkBlue theme
+        // Neutral colors - Carefully crafted for optimal readability in both themes
         gray: {
           50: '#F9FAFB',   // Almost white - light mode background
           100: '#F3F4F6',  // Very light - card backgrounds in light mode
@@ -54,47 +52,60 @@ export default {
           950: '#030712',  // True black - for high contrast needs
         },
         
-        // Accent - Kente Gold (African traditional gold) - Re-mapping to Primary Orange
+        // Accent - Olive-Lime
         accent: {
-          gold: { // Keeping the name for class compatibility but using orange shades
-            light: '#FDBA74', // Map to primary-300
-            DEFAULT: '#F97316', // Map to primary-500
-            medium: '#FB923C', // Map to primary-400
-            dark: '#EA580C',   // Map to primary-600
-            darker: '#C2410C',  // Map to primary-700
+          lime: { // New name for the accent color
+            light: '#d5e38c', // Light olive-lime
+            DEFAULT: '#8cae00', // Base olive-lime
+            medium: '#a4b700', // Medium olive-lime
+            dark: '#738f00',   // Dark olive-lime
+            darker: '#5a7000',  // Darker olive-lime
           },
-          // Earth tones removed as requested
+        },
+        
+        // DarkBlue color - For UI elements previously using blue
+        darkBlue: {
+          50: '#f0f7ff',   // Lightest
+          100: '#e0f0fe',  // Very light
+          200: '#bae0fd',  // Light
+          300: '#7cc6fb',  // Medium light
+          400: '#36a9f8',  // Medium
+          500: '#0c8ee7',  // Base
+          600: '#0270c4',  // Medium dark
+          700: '#015a9e',  // Dark
+          800: '#064b81',  // Very dark
+          900: '#0a3e6a',  // Darkest
         },
         
         // Semantic colors - For feedback and status
-        // Re-mapping to shades of primary orange, dark blue, and white/gray
+        // Re-mapping to shades of primary chartreuse and secondary
         success: {
-          light: '#E3F2FD', // Map to darkBlue-50
-          DEFAULT: '#1E88E5', // Map to darkBlue-600
-          dark: '#1565C0', // Map to darkBlue-800
+          light: '#f1f6d2', // Light chartreuse
+          DEFAULT: '#8cae00', // Olive-lime accent
+          dark: '#5a7000', // Dark olive-lime
         },
         warning: {
-          light: '#FFEDD5', // Map to primary-100
-          DEFAULT: '#FB923C', // Map to primary-400
-          dark: '#EA580C', // Map to primary-600
+          light: '#f9fceb', // Very light secondary
+          DEFAULT: '#c2d500', // Primary chartreuse
+          dark: '#8cae00', // Olive-lime accent
         },
         error: {
-          light: '#FFEDD5', // Map to primary-100
-          DEFAULT: '#F97316', // Map to primary-500
-          dark: '#C2410C', // Map to primary-700
+          light: '#f1f6d2', // Light chartreuse
+          DEFAULT: '#c2d500', // Primary chartreuse
+          dark: '#8cae00', // Olive-lime accent
         },
         info: {
-          light: '#E3F2FD', // Map to darkBlue-50
-          DEFAULT: '#42A5F5', // Map to darkBlue-400
-          dark: '#1976D2', // Map to darkBlue-700
+          light: '#f9fceb', // Very light secondary
+          DEFAULT: '#c2d500', // Primary chartreuse
+          dark: '#8cae00', // Olive-lime accent
         },
         
         // Contextual background colors
         background: {
           light: '#FFFFFF',       // Pure white - light mode
           lightAlt: '#F9FAFB',    // Off-white - light mode secondary (gray-50)
-          dark: '#111827',        // Rich dark - dark mode primary (gray-900)
-          darkAlt: '#1F2937',     // Lighter dark - dark mode secondary (gray-800)
+          dark: '#111111',        // Deep charcoal - dark mode primary
+          darkAlt: '#2b2b2b',     // Lighter dark - dark mode secondary
         },
         
         // Surface colors for cards, etc.
@@ -108,34 +119,34 @@ export default {
         // Text colors - Optimized for readability
         text: {
           light: {
-            primary: '#111827',   // Near-black - for main text in light mode (gray-900)
-            secondary: '#4B5563', // Dark gray - for secondary text in light mode (gray-600)
+            primary: '#1a1a1a',   // Almost black - for main text in light mode
+            secondary: '#4d4d4d', // Dark gray - for secondary text in light mode
             tertiary: '#6B7280',  // Medium gray - for subtle text in light mode (gray-500)
             disabled: '#9CA3AF',  // Light gray - for disabled text in light mode (gray-400)
           },
           dark: {
-            primary: '#F9FAFB',   // Near-white - for main text in dark mode (gray-50)
-            secondary: '#E5E7EB', // Light gray - for secondary text in dark mode (gray-200)
+            primary: '#ffffff',   // White - for main text in dark mode
+            secondary: '#cccccc', // Light gray - for secondary text in dark mode
             tertiary: '#9CA3AF',  // Medium gray - for subtle text in dark mode (gray-400)
             disabled: '#6B7280',  // Dark gray - for disabled text in dark mode (gray-500)
           },
-          accent: '#F97316',      // Orange - for accent text (primary-500)
+          accent: '#8cae00',      // Olive-lime - for accent text
         },
         
         // Border colors
         border: {
-          light: '#E5E7EB',       // Light gray - for borders in light mode (gray-200)
-          lightFocus: '#FBBF24',  // Orange - for focus states in light mode (primary-500)
-          dark: '#374151',        // Dark gray - for borders in dark mode (gray-700)
-          darkFocus: '#FB923C',   // Orange - for focus states in dark mode (primary-400)
+          light: '#e6e6e6',       // Light gray - for borders in light mode
+          lightFocus: '#c2d500',  // Chartreuse - for focus states in light mode
+          dark: '#2b2b2b',        // Dark gray - for borders in dark mode
+          darkFocus: '#8cae00',   // Olive-lime - for focus states in dark mode
         },
       },
-      // Enhanced patterns with more balanced opacities - Keeping existing patterns but they might appear monochromatic
+      // Enhanced patterns with chartreuse and olive-lime colors
       patterns: {
-        kente: 'repeating-linear-gradient(45deg, #F97316 0, #F97316 10px, #1976D2 10px, #1976D2 20px, #C2410C 20px, #C2410C 30px, #0D47A1 30px, #0D47A1 40px)', /* primary-500, darkBlue-700, primary-700, darkBlue-900 */
+        kente: 'repeating-linear-gradient(45deg, #c2d500 0, #c2d500 10px, #8cae00 10px, #8cae00 20px, #a4b700 20px, #a4b700 30px, #5a7000 30px, #5a7000 40px)', /* primary, accent, primary-600, accent-darker */
         mudcloth: 'repeating-linear-gradient(90deg, rgba(27, 27, 27, 0.15) 0, rgba(27, 27, 27, 0.15) 2px, transparent 2px, transparent 10px)', // Keep as grayscale
       },
-      // Enhanced keyframes - Colors within keyframes need adjustment
+      // Enhanced keyframes with new colors
       keyframes: {
         fadeIn: {
           '0%': { opacity: '0' },
@@ -151,8 +162,8 @@ export default {
         },
         // Adjusting pulse colors to use the new palette
         'bg-pulse-slow': {
-          '0%, 100%': { 'background-color': '#EA580C' }, // primary-600
-          '50%': { 'background-color': '#FB923C' }, // primary-400
+          '0%, 100%': { 'background-color': '#a4b700' }, // primary-600
+          '50%': { 'background-color': '#c2d500' }, // primary-400
         },
         rotate: {
           '0%': { transform: 'rotate(0deg)' },
@@ -186,10 +197,10 @@ export default {
       },
       boxShadow: {
         // Using direct color values instead of theme()
-        'gold': '0 4px 6px -1px rgba(249, 115, 22, 0.2), 0 2px 4px -2px rgba(249, 115, 22, 0.1)', // primary-500
-        'gold-lg': '0 10px 15px -3px rgba(249, 115, 22, 0.2), 0 4px 6px -4px rgba(249, 115, 22, 0.1)', // primary-500
-        'gold-glow': '0 0 15px rgba(249, 115, 22, 0.5)', // primary-500
-        'inner-gold': 'inset 0 2px 4px 0 rgba(249, 115, 22, 0.25)', // primary-500
+        'chartreuse': '0 4px 6px -1px rgba(194, 213, 0, 0.2), 0 2px 4px -2px rgba(194, 213, 0, 0.1)', // primary-400
+        'chartreuse-lg': '0 10px 15px -3px rgba(194, 213, 0, 0.2), 0 4px 6px -4px rgba(194, 213, 0, 0.1)', // primary-400
+        'chartreuse-glow': '0 0 15px rgba(194, 213, 0, 0.5)', // primary-400
+        'inner-chartreuse': 'inset 0 2px 4px 0 rgba(194, 213, 0, 0.25)', // primary-400
         'card-light': '0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1)', // Keep as gray/black based
         'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05)', // Keep as gray/black based
         'card-dark': '0 1px 3px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.2)', // Keep as gray/black based
@@ -197,13 +208,13 @@ export default {
       },
       backgroundImage: {
         // Using direct color values instead of theme()
-        'gradient-gold': 'linear-gradient(to right, #FB923C, #F97316)', // primary-400 to primary-500
-        'gradient-gold-vertical': 'linear-gradient(to bottom, #FB923C, #F97316)', // primary-400 to primary-500
-        'gradient-primary': 'linear-gradient(to right, #F97316, #FB923C)', // primary-500 to primary-400
-        'gradient-dark': 'linear-gradient(to bottom, #111827, #1F2937)', // gray-900 to gray-800
+        'gradient-chartreuse': 'linear-gradient(to right, #c2d500, #8cae00)', // primary-400 to accent
+        'gradient-chartreuse-vertical': 'linear-gradient(to bottom, #c2d500, #8cae00)', // primary-400 to accent
+        'gradient-primary': 'linear-gradient(to right, #c2d500, #a4b700)', // primary-400 to primary-600
+        'gradient-dark': 'linear-gradient(to bottom, #111111, #2b2b2b)', // dark bg to dark bg alt
         'gradient-light': 'linear-gradient(to bottom, #FFFFFF, #F9FAFB)', // bg-light to bg-light-alt
-        'hero-light-gradient': 'linear-gradient(135deg, #F97316, #C2410C)', // primary-500 to primary-700
-        'hero-dark-gradient': 'linear-gradient(135deg, #111827, #1F2937)', // gray-900 to gray-800
+        'hero-light-gradient': 'linear-gradient(135deg, #c2d500, #8cae00)', // primary-400 to accent
+        'hero-dark-gradient': 'linear-gradient(135deg, #111111, #2b2b2b, #5a7000)', // dark bg, dark bg alt, accent-darker
       },
     },
   },

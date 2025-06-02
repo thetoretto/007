@@ -8,43 +8,43 @@
 
 /* ========= DESIGN TOKENS ========= */
 :root {
-  /* Primary Colors - African Sunset Orange (Keep) */
-  --primary-50: #FFF7ED;
-  --primary-100: #FFEDD5;
-  --primary-200: #FED7AA;
-  --primary-300: #FDBA74;
-  --primary-400: #FB923C;
-  --primary-500: #F97316;
-  --primary-600: #EA580C;
-  --primary-700: #C2410C;
-  --primary-800: #9A3412;
-  --primary-900: #7C2D12;
+  /* Primary Colors - Elegant Chartreuse */
+  --primary-50: #f9fce9;
+  --primary-100: #f1f6d2;
+  --primary-200: #e5eeb6;
+  --primary-300: #d5e38c;
+  --primary-400: #c2d500;
+  --primary-500: #b3c600;
+  --primary-600: #a4b700;
+  --primary-700: #8cae00;
+  --primary-800: #738f00;
+  --primary-900: #5a7000;
   
-  /* Secondary Colors - NOW Dark Blue */
-  --secondary-50: #E3F2FD;   /* darkBlue-50 */
-  --secondary-100: #BBDEFB;  /* darkBlue-100 */
-  --secondary-200: #90CAF9;  /* darkBlue-200 */
-  --secondary-300: #64B5F6;  /* darkBlue-300 */
-  --secondary-400: #42A5F5;  /* darkBlue-400 */
-  --secondary-500: #2196F3;  /* darkBlue-500 */
-  --secondary-600: #1E88E5;  /* darkBlue-600 */
-  --secondary-700: #1976D2;  /* darkBlue-700 */
-  --secondary-800: #1565C0;  /* darkBlue-800 */
-  --secondary-900: #0D47A1;  /* darkBlue-900 */
+  /* Secondary Colors - Pale Yellow Tint */
+  --secondary-50: #fdfef7;
+  --secondary-100: #f9fceb;
+  --secondary-200: #f5f9de;
+  --secondary-300: #f1f6d2;
+  --secondary-400: #e9f0b8;
+  --secondary-500: #e0ea9e;
+  --secondary-600: #d7e485;
+  --secondary-700: #c9d96c;
+  --secondary-800: #bace53;
+  --secondary-900: #acbe3a;
   
-  /* Accent - Kente Gold (Re-mapped to Primary Orange shades) */
-  --accent-gold-light: #FDBA74; /* primary-300 */
-  --accent-gold: #F97316; /* primary-500 */
-  --accent-gold-medium: #FB923C; /* primary-400 */
-  --accent-gold-dark: #EA580C; /* primary-600 */
-  --accent-gold-darker: #C2410C; /* primary-700 */
+  /* Accent - Olive-Lime */
+  --accent-lime-light: #d5e38c; /* primary-300 */
+  --accent-lime: #8cae00; /* accent DEFAULT */
+  --accent-lime-medium: #a4b700; /* primary-600 */
+  --accent-lime-dark: #738f00; /* accent dark */
+  --accent-lime-darker: #5a7000; /* accent darker */
   
-  /* Earth Tones - Removed as requested. Mapping to neutral gray/darkBlue for placeholders */
-  --earth-clay: #4B5563; /* gray-600 */
-  --earth-ochre: #F97316; /* primary-500 */
-  --earth-sand: #D1D5DB; /* gray-300 */
-  --earth-forest: #1565C0; /* darkBlue-800 */
-  --earth-coffee: #1F2937; /* gray-800 */
+  /* Earth Tones - Removed as requested. Mapping to neutral gray/lime for placeholders */
+  --earth-clay: #4d4d4d; /* text-light-secondary */
+  --earth-ochre: #c2d500; /* primary-400 */
+  --earth-sand: #f1f6d2; /* primary-100 */
+  --earth-forest: #738f00; /* primary-800 */
+  --earth-coffee: #2b2b2b; /* dark bg alt */
   
   /* Neutral Grays - Balanced for readability (Keep) */
   --gray-50: #F9FAFB;
@@ -60,51 +60,51 @@
   --gray-950: #030712;
   
   /* Semantic Colors - Re-mapped to new palette */
-  --success-light: #E3F2FD; /* darkBlue-50 */
-  --success: #1E88E5; /* darkBlue-600 */
-  --success-dark: #1565C0; /* darkBlue-800 */
+  --success-light: #f1f6d2; /* primary-100 */
+  --success: #8cae00; /* accent DEFAULT */
+  --success-dark: #5a7000; /* accent darker */
   
-  --warning-light: #FFEDD5; /* primary-100 */
-  --warning: #FB923C; /* primary-400 */
-  --warning-dark: #EA580C; /* primary-600 */
+  --warning-light: #f9fceb; /* secondary-100 */
+  --warning: #c2d500; /* primary-400 */
+  --warning-dark: #8cae00; /* accent DEFAULT */
   
-  --error-light: #FFEDD5; /* primary-100 */
-  --error: #F97316; /* primary-500 */
-  --error-dark: #C2410C; /* primary-700 */
+  --error-light: #f1f6d2; /* primary-100 */
+  --error: #c2d500; /* primary-400 */
+  --error-dark: #8cae00; /* accent DEFAULT */
   
-  --info-light: #E3F2FD; /* darkBlue-50 */
-  --info: #42A5F5; /* darkBlue-400 */
-  --info-dark: #1976D2; /* darkBlue-700 */
+  --info-light: #f9fceb; /* secondary-100 */
+  --info: #c2d500; /* primary-400 */
+  --info-dark: #8cae00; /* accent DEFAULT */
   
-  /* Background Colors (Keep using existing gray/white) */
-  --bg-light: #FFFFFF;
-  --bg-light-alt: #F9FAFB;
-  --bg-dark: #111827;
-  --bg-dark-alt: #1F2937;
+  /* Background Colors */
+  --bg-light: #FFFFFF; /* Pure white - light mode */
+  --bg-light-alt: #F9FAFB; /* Off-white - light mode secondary */
+  --bg-dark: #111111; /* Deep charcoal - dark mode */
+  --bg-dark-alt: #2b2b2b; /* Lighter dark - dark mode secondary */
   
-  /* Surface Colors (Keep using existing gray/white) */
-  --surface-light: #FFFFFF;
-  --surface-light-alt: #F3F4F6;
-  --surface-dark: #1F2937;
-  --surface-dark-alt: #374151;
+  /* Surface Colors */
+  --surface-light: #FFFFFF; /* Pure white - light mode cards */
+  --surface-light-alt: #F3F4F6; /* Off-white - light mode alt cards */
+  --surface-dark: #1F2937; /* Dark - dark mode cards */
+  --surface-dark-alt: #374151; /* Lighter dark - dark mode alt cards */
   
-  /* Text Colors - Light Mode (Keep using existing gray/dark) */
-  --text-light-primary: #111827;
-  --text-light-secondary: #4B5563;
-  --text-light-tertiary: #6B7280;
-  --text-light-disabled: #9CA3AF;
+  /* Text Colors - Light Mode */
+  --text-light-primary: #1a1a1a; /* Almost black - for main text in light mode */
+  --text-light-secondary: #4d4d4d; /* Dark gray - for secondary text in light mode */
+  --text-light-tertiary: #6B7280; /* Medium gray - for subtle text in light mode */
+  --text-light-disabled: #9CA3AF; /* Light gray - for disabled text in light mode */
   
-  /* Text Colors - Dark Mode (Keep using existing gray/light) */
-  --text-dark-primary: #F9FAFB;
-  --text-dark-secondary: #E5E7EB;
-  --text-dark-tertiary: #9CA3AF;
-  --text-dark-disabled: #6B7280;
+  /* Text Colors - Dark Mode */
+  --text-dark-primary: #ffffff; /* White - for main text in dark mode */
+  --text-dark-secondary: #cccccc; /* Light gray - for secondary text in dark mode */
+  --text-dark-tertiary: #9CA3AF; /* Medium gray - for subtle text in dark mode */
+  --text-dark-disabled: #6B7280; /* Dark gray - for disabled text in dark mode */
   
-  /* Border Colors (Keep using existing gray/primary) */
-  --border-light: #E5E7EB; /* --gray-200 */
-  --border-light-focus: #FBBF24;
-  --border-dark: #374151; /* --gray-700 */
-  --border-dark-focus: #F59E0B;
+  /* Border Colors */
+  --border-light: #e6e6e6; /* Light gray - for borders in light mode */
+  --border-light-focus: #c2d500; /* Chartreuse - for focus states in light mode */
+  --border-dark: #2b2b2b; /* Dark gray - for borders in dark mode */
+  --border-dark-focus: #8cae00; /* Olive-lime - for focus states in dark mode */
 
   /* Card Specific Colors */
   --card-bg-light: var(--surface-light); /* #FFFFFF */
@@ -112,28 +112,28 @@
   --card-bg-dark: var(--surface-dark); /* #1F2937 */
   --card-border-dark: var(--gray-700); /* #374151 */
   
-  /* Shadows - Adjusting Gold shadow to Primary Orange */
+  /* Shadows - Adjusting to Chartreuse */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
-  --shadow-gold: 0 4px 6px -1px rgba(249, 115, 22, 0.2), 0 2px 4px -2px rgba(249, 115, 22, 0.1); /* Using primary-500 */
+  --shadow-chartreuse: 0 4px 6px -1px rgba(194, 213, 0, 0.2), 0 2px 4px -2px rgba(194, 213, 0, 0.1); /* Using primary-400 */
   
-  /* Dark Mode Shadows - Adjusting Gold shadow to Primary Orange */
+  /* Dark Mode Shadows - Adjusting to Chartreuse */
   --shadow-dark-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-dark-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.2);
   --shadow-dark-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2);
   --shadow-dark-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
-  --shadow-dark-gold: 0 4px 6px -1px rgba(var(--primary-400-rgb), 0.2), 0 2px 4px -2px rgba(var(--primary-400-rgb), 0.15); /* Using primary-400 for dark gold shadow */
+  --shadow-dark-chartreuse: 0 4px 6px -1px rgba(140, 174, 0, 0.2), 0 2px 4px -2px rgba(140, 174, 0, 0.15); /* Using accent DEFAULT */
   
   /* Effects - Adjusting Gradients */
-  --gradient-gold: linear-gradient(to right, #FB923C, #F97316); /* primary-400 to primary-500 */
-  --gradient-gold-vertical: linear-gradient(to bottom, #FB923C, #F97316); /* primary-400 to primary-500 */
-  --gradient-primary: linear-gradient(to right, #F97316, #FB923C); /* primary-500 to primary-400 */
-  --gradient-dark: linear-gradient(to bottom, #111827, #1F2937); /* gray-900 to gray-800 */
+  --gradient-chartreuse: linear-gradient(to right, #c2d500, #8cae00); /* primary-400 to accent */
+  --gradient-chartreuse-vertical: linear-gradient(to bottom, #c2d500, #8cae00); /* primary-400 to accent */
+  --gradient-primary: linear-gradient(to right, #c2d500, #a4b700); /* primary-400 to primary-600 */
+  --gradient-dark: linear-gradient(to bottom, #111111, #2b2b2b); /* bg-dark to bg-dark-alt */
   --gradient-light: linear-gradient(to bottom, #FFFFFF, #F9FAFB); /* bg-light to bg-light-alt */
-  --hero-light-gradient: linear-gradient(135deg, #F97316, #C2410C); /* primary-500 to primary-700 */
-  --hero-dark-gradient: linear-gradient(135deg, var(--gray-900), var(--gray-800), var(--primary-900)); /* Deeper, richer dark gradient with a hint of primary */
+  --hero-light-gradient: linear-gradient(135deg, #c2d500, #8cae00); /* primary-400 to accent */
+  --hero-dark-gradient: linear-gradient(135deg, #111111, #2b2b2b, #5a7000); /* bg-dark, bg-dark-alt, accent-darker */
   
   /* Motion */
   --transition-fast: 150ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -157,7 +157,7 @@
   --shadow-md: var(--shadow-dark-md);
   --shadow-lg: var(--shadow-dark-lg);
   --shadow-xl: var(--shadow-dark-xl);
-  --shadow-gold: var(--shadow-dark-gold);
+  --shadow-chartreuse: var(--shadow-dark-chartreuse);
   
   color-scheme: dark;
 }
@@ -310,7 +310,7 @@
 
   .btn-secondary {
     @apply inline-flex items-center justify-center rounded-lg font-medium shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed;
-    /* Remap secondary (teal) to darkBlue */
+    /* Using darkBlue color */
     background-color: theme('colors.darkBlue.600');
     color: theme('colors.white');
     border: 1px solid theme('colors.darkBlue.700');
@@ -501,10 +501,16 @@
   }
 
   .badge-success {
-    /* Remap green to darkBlue */
-    @apply bg-darkBlue-100 text-darkBlue-800 dark:bg-darkBlue-900 dark:text-darkBlue-200;
-    background-color: theme('colors.darkBlue.100');
-    color: theme('colors.darkBlue.800');
+    /* Remap green to success colors */
+    @apply bg-success-light border-success text-success-dark dark:bg-success-dark dark:border-success dark:text-success-light;
+    background-color: theme('colors.success.light');
+    border-color: theme('colors.success.DEFAULT');
+    color: theme('colors.success.dark');
+    .dark & {
+      background-color: theme('colors.success.dark', '0.3');
+      border-color: theme('colors.success.DEFAULT');
+      color: theme('colors.success.light');
+    }
   }
 
   .badge-warning {
@@ -527,28 +533,28 @@
   }
 
   .alert-info {
-    /* Remap info blue to darkBlue */
-    @apply bg-darkBlue-50 border-darkBlue-200 text-darkBlue-800 dark:bg-darkBlue-900 dark:border-darkBlue-700 dark:text-darkBlue-200;
-    background-color: theme('colors.darkBlue.50');
-    border-color: theme('colors.darkBlue.200');
-    color: theme('colors.darkBlue.800');
+    /* Remap info blue to info colors */
+    @apply bg-info-light border-info text-info-dark dark:bg-info-dark dark:border-info dark:text-info-light;
+    background-color: theme('colors.info.light');
+    border-color: theme('colors.info.DEFAULT');
+    color: theme('colors.info.dark');
     .dark & {
-      background-color: theme('colors.darkBlue.900', '0.3');
-      border-color: theme('colors.darkBlue.700');
-      color: theme('colors.darkBlue.200');
+      background-color: theme('colors.info.dark', '0.3');
+      border-color: theme('colors.info.DEFAULT');
+      color: theme('colors.info.light');
     }
   }
 
   .alert-success {
-    /* Remap green to darkBlue */
-    @apply bg-darkBlue-50 border-darkBlue-200 text-darkBlue-800 dark:bg-darkBlue-900 dark:border-darkBlue-700 dark:text-darkBlue-200;
-    background-color: theme('colors.darkBlue.50');
-    border-color: theme('colors.darkBlue.200');
-    color: theme('colors.darkBlue.800');
-     .dark & {
-      background-color: theme('colors.darkBlue.900', '0.3');
-      border-color: theme('colors.darkBlue.700');
-      color: theme('colors.darkBlue.200');
+    /* Remap green to success colors */
+    @apply bg-success-light border-success text-success-dark dark:bg-success-dark dark:border-success dark:text-success-light;
+    background-color: theme('colors.success.light');
+    border-color: theme('colors.success.DEFAULT');
+    color: theme('colors.success.dark');
+    .dark & {
+      background-color: theme('colors.success.dark', '0.3');
+      border-color: theme('colors.success.DEFAULT');
+      color: theme('colors.success.light');
     }
   }
 
@@ -750,7 +756,7 @@
 
 /* Background Patterns - Kente pattern updated to new colors */
 .hero-pattern-overlay {
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); /* Keep white pattern overlay */
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); /* Keep white pattern overlay */
 }
 
 /* Hero Section Backgrounds (Keep using variables updated in :root) */

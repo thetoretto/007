@@ -112,7 +112,7 @@ const RegisterForm: React.FC = () => {
                       name="firstName"
                       type="text"
                       autoComplete="given-name"
-                      className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light  focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
+                      className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
                       disabled={loading}
                       placeholder="Your first name"
                     />
@@ -135,7 +135,7 @@ const RegisterForm: React.FC = () => {
                       name="lastName"
                       type="text"
                       autoComplete="family-name"
-                      className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light  focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
+                      className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
                       disabled={loading}
                       placeholder="Your last name"
                     />
@@ -158,7 +158,7 @@ const RegisterForm: React.FC = () => {
                     name="email"
                     type="email"
                     autoComplete="email"
-                    className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light  focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
+                    className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
                     disabled={loading}
                     placeholder="your.email@example.com"
                   />
@@ -180,7 +180,7 @@ const RegisterForm: React.FC = () => {
                     name="phoneNumber"
                     type="tel"
                     autoComplete="tel"
-                    className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light  focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
+                    className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
                     disabled={loading}
                     placeholder="+27 12 345 6789"
                   />
@@ -206,7 +206,7 @@ const RegisterForm: React.FC = () => {
                       name="password"
                       type={showPassword ? 'text' : 'password'}
                       autoComplete="new-password"
-                      className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light  focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
+                      className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
                       disabled={loading}
                       placeholder="Create a password"
                     />
@@ -240,7 +240,7 @@ const RegisterForm: React.FC = () => {
                       name="confirmPassword"
                       type={showConfirmPassword ? 'text' : 'password'}
                       autoComplete="new-password"
-                      className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light  focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
+                      className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
                       disabled={loading}
                       placeholder="Confirm your password"
                     />
