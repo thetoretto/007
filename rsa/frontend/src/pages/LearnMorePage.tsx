@@ -1,6 +1,4 @@
 import React, { useState } from 'react';
-
-import Footer from '../components/common/Footer';
 import { 
   ShieldCheck, 
   DollarSign, 
@@ -345,7 +343,6 @@ const LearnMorePage: React.FC = () => {
           </motion.div>
         </motion.div>
       </main>
-      <Footer />
     </div>
   );
 };

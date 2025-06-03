@@ -1,11 +1,21 @@
 import '../../index.css';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useContext } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Mail, Phone, MapPin, Bus, ArrowRight, ChevronRight, Heart } from 'lucide-react';
 import Logo from './Logo';
+import { TransitionContext } from '../../App';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
+  const navigate = useNavigate();
+  const { startPageTransition, isPending } = useContext(TransitionContext);
+  
+  // Custom navigation handler that uses startTransition
+  const handleNavigation = (path: string) => {
+    startPageTransition(() => {
+      navigate(path);
+    });
+  };
   
   return (
     <footer className="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800">
@@ -48,14 +58,21 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Logo and About */}
           <div className="lg:col-span-2">
-            <Link to="/" className="flex items-center gap-2 mb-6">
+            <a 
+              href="#" 
+              onClick={(e) => {
+                e.preventDefault();
+                handleNavigation('/');
+              }}
+              className="flex items-center gap-2 mb-6"
+            >
               <Logo 
                 variant="primary"
                 size="lg"
                 showText={true}
                 className=""
               />
-            </Link>
+            </a>
             <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-md">
               Providing safe, convenient, and affordable transportation services across Africa. Connecting cities and people with reliable rides.
             </p>
@@ -97,13 +114,17 @@ const Footer: React.FC = () => {
                 { path: '/booking', label: 'Book a Ride' }
               ].map((link) => (
                 <li key={link.path}>
-                  <Link 
-                    to={link.path} 
+                  <a 
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigation(link.path);
+                    }}
                     className="footer-link group"
                   >
                     <ChevronRight className="h-4 w-4 mr-1 text-primary-400 dark:text-primary-500 group-hover:translate-x-0.5 transition-transform" />
                     {link.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -122,13 +143,17 @@ const Footer: React.FC = () => {
                 { path: '/contact', label: 'Contact Us' }
               ].map((link) => (
                 <li key={link.path}>
-                  <Link 
-                    to={link.path} 
+                  <a 
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigation(link.path);
+                    }}
                     className="footer-link group"
                   >
                     <ChevronRight className="h-4 w-4 mr-1 text-primary-400 dark:text-primary-500 group-hover:translate-x-0.5 transition-transform" />
                     {link.label}
-                  </Link>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -178,15 +203,36 @@ const Footer: React.FC = () => {
               </p>
             </div>
             <div className="flex space-x-6">
-              <Link to="/terms" className="text-sm text-gray-600 hover:text-primary-800 dark:text-gray-400 dark:hover:text-primary-200 transition-colors">
+              <a 
+                href="#" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavigation('/terms');
+                }}
+                className="text-sm text-gray-600 hover:text-primary-800 dark:text-gray-400 dark:hover:text-primary-200 transition-colors"
+              >
                 Terms
-              </Link>
-              <Link to="/privacy" className="text-sm text-gray-600 hover:text-primary-800 dark:text-gray-400 dark:hover:text-primary-200 transition-colors">
+              </a>
+              <a 
+                href="#" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavigation('/privacy');
+                }}
+                className="text-sm text-gray-600 hover:text-primary-800 dark:text-gray-400 dark:hover:text-primary-200 transition-colors"
+              >
                 Privacy
-              </Link>
-              <Link to="/cookies" className="text-sm text-gray-600 hover:text-primary-800 dark:text-gray-400 dark:hover:text-primary-200 transition-colors">
+              </a>
+              <a 
+                href="#" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavigation('/cookies');
+                }}
+                className="text-sm text-gray-600 hover:text-primary-800 dark:text-gray-400 dark:hover:text-primary-200 transition-colors"
+              >
                 Cookies
-              </Link>
+              </a>
             </div>
           </div>
         </div>

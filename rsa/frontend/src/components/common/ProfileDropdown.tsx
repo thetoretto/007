@@ -1,6 +1,7 @@
 import '../../index.css';
-import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useRef, useEffect, useContext } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { TransitionContext } from '../../context/TransitionContext';
 import useAuthStore from '../../store/authStore';
 import { ChevronDown, User as UserIcon, LogOut, LogIn, UserPlus, LayoutDashboard } from 'lucide-react';
 
@@ -15,6 +16,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { startPageTransition, isPending } = useContext(TransitionContext);
   // const isNavbarTransparent = location.pathname === '/'; // Removed
   // const [scrolled, setScrolled] = useState(window.scrollY > 20); // Removed
 
@@ -26,10 +28,19 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
   //   return () => window.removeEventListener('scroll', handleScroll);
   // }, []);
 
+  const handleNavigation = (path: string) => {
+    setIsOpen(false);
+    startPageTransition(() => {
+      navigate(path);
+    });
+  };
+
   const handleLogout = () => {
     logout();
     setIsOpen(false);
-    navigate('/login');
+    startPageTransition(() => {
+      navigate('/login');
+    });
   };
 
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -59,7 +70,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
   const iconClass = "mr-2.5 h-5 w-5 text-primary dark:text-primary-300";
 
   return (
-    <div className={`relative group ${className}`} ref={dropdownRef}>
+    <div className={`relative group  ${className}`} ref={dropdownRef}>
       {user ? (
         <button
           type="button"
@@ -106,24 +117,60 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
                 <p className="text-sm font-semibold text-text-base dark:text-text-inverse truncate" title={user.email}>{user.firstName} {user.lastName}</p>
                 <p className="text-xs text-text-muted dark:text-text-muted-dark truncate">{user.email}</p>
               </div>
-              <Link to={user.role === 'admin' ? '/admin/dashboard' : user.role === 'driver' ? '/driver/dashboard' : '/passenger/dashboard'} className={menuItemClass} role="menuitem" onClick={() => setIsOpen(false)} data-testid="dashboard-link">
+              <a 
+                href="#" 
+                className={menuItemClass} 
+                role="menuitem" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavigation(user.role === 'admin' ? '/admin/dashboard' : user.role === 'driver' ? '/driver/dashboard' : '/passenger/dashboard');
+                }} 
+                data-testid="dashboard-link"
+              >
                 <LayoutDashboard className={iconClass} /> My Dashboard
-              </Link>
-              <Link to="/profile" className={menuItemClass} role="menuitem" onClick={() => setIsOpen(false)} data-testid="profile-link">
+              </a>
+              <a 
+                href="#" 
+                className={menuItemClass} 
+                role="menuitem" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavigation('/profile');
+                }} 
+                data-testid="profile-link"
+              >
                 <UserIcon className={iconClass} /> Your Profile
-              </Link>
+              </a>
               <button onClick={handleLogout} className={`${menuItemClass} text-error dark:text-error`} role="menuitem" data-testid="logout-button">
                 <LogOut className={`${iconClass} text-error dark:text-error`} /> Sign out
               </button>
             </>
           ) : (
             <>
-              <Link to="/login" className={menuItemClass} role="menuitem" onClick={() => setIsOpen(false)} data-testid="login-link">
+              <a 
+                href="#" 
+                className={menuItemClass} 
+                role="menuitem" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavigation('/login');
+                }} 
+                data-testid="login-link"
+              >
                 <LogIn className={iconClass} /> Login
-              </Link>
-              <Link to="/register" className={menuItemClass} role="menuitem" onClick={() => setIsOpen(false)} data-testid="register-link">
+              </a>
+              <a 
+                href="#" 
+                className={menuItemClass} 
+                role="menuitem" 
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleNavigation('/register');
+                }} 
+                data-testid="register-link"
+              >
                 <UserPlus className={iconClass} /> Sign Up
-              </Link>
+              </a>
             </>
           )}
         </div>

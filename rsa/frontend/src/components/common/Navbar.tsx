@@ -7,7 +7,7 @@ import { Menu, X, Bus, BarChart2, Users, Clock, Settings, ChevronDown, LogIn, Us
 import ProfileDropdown from './ProfileDropdown';
 import ThemeToggle from './ThemeToggle';
 import Logo from './Logo';
-import { TransitionContext } from '../../App';
+import { TransitionContext } from '../../context/TransitionContext';
 
 interface NavItem {
   path: string;
