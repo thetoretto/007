@@ -456,7 +456,7 @@ const TripViewer: React.FC<TripViewerProps> = ({
                       
                       <button 
                         onClick={(e) => handleBookTrip(trip, e)}
-                        className="ml-2 sm:ml-0 sm:mt-3 px-2.5 py-1.5 sm:px-3.5 sm:py-2 bg-accent-kente-gold hover:bg-accent-kente-gold-dark text-white text-xs sm:text-sm rounded-lg shadow-sm flex items-center transition-colors"
+                        className="btn btn-primary btn-sm sm:btn-md sm:btn-wide sm:btn-block sm:mt-2"
                       >
                         Book Now
                         <ArrowRight className="ml-1 h-3 w-3 sm:h-3.5 sm:w-3.5" />

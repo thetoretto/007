@@ -95,7 +95,7 @@
   --text-light-disabled: #9CA3AF; /* Light gray - for disabled text in light mode */
   
   /* Text Colors - Dark Mode */
-  --text-dark-primary: #ffffff; /* White - for main text in dark mode */
+  --text-dark-primary: #1f2937; /* White - for main text in dark mode */
   --text-dark-secondary: #cccccc; /* Light gray - for secondary text in dark mode */
   --text-dark-tertiary: #9CA3AF; /* Medium gray - for subtle text in dark mode */
   --text-dark-disabled: #6B7280; /* Dark gray - for disabled text in dark mode */
@@ -262,6 +262,7 @@
       padding-right: 2rem;
     }
   }
+}
 
   /* Button System */
   .btn {
@@ -283,182 +284,187 @@
 
   .btn-primary {
     @apply inline-flex items-center justify-center rounded-lg font-medium shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed;
-    background-color: theme('colors.primary.600');
-    color: theme('colors.white');
+    background-color: var(--gray-950);
+    /* color: theme('colors.gray.700'); */
+    border: 1px solid var(--primary-700);
     transition: all var(--transition-base);
+    color: var(--primary-700);
   }
 
   .btn-primary:hover {
-    background-color: theme('colors.primary.700');
+    background-color: var(--primary-700);
   }
 
   .btn-primary:focus {
-    ring-color: theme('colors.primary.500');
+    ring-color: var(--primary-700);
   }
 
   .dark .btn-primary {
-    background-color: theme('colors.primary.500');
+    background-color: var(--primary-700);
+    color: var(--gray-950);
   }
 
   .dark .btn-primary:hover {
-    background-color: theme('colors.primary.600');
+    background-color: var(--primary-700);
+    color: var(--text-dark-primary);
   }
 
   .dark .btn-primary:focus {
-    ring-color: theme('colors.primary.400');
+    ring-color: var(--primary-400);
   }
 
   .btn-secondary {
     @apply inline-flex items-center justify-center rounded-lg font-medium shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed;
     /* Using darkBlue color */
-    background-color: theme('colors.darkBlue.600');
-    color: theme('colors.white');
-    border: 1px solid theme('colors.darkBlue.700');
+    background-color: var(--primary-700);
+    color: var(--white);
+    border: 1px solid var(--primary-700);
     transition: all var(--transition-base);
   }
 
   .btn-secondary:hover {
-    background-color: theme('colors.darkBlue.700');
+    background-color: var(--gray-700);
   }
 
   .btn-secondary:focus {
-    ring-color: theme('colors.darkBlue.500');
+    ring-color: var(--gray-500);
   }
 
   .dark .btn-secondary {
-    background-color: theme('colors.darkBlue.700');
-    color: theme('colors.gray.200');
-    border-color: theme('colors.darkBlue.600');
+    background-color: var(--primary-800);
+    color: var(--primary-800);
+
   }
 
   .dark .btn-secondary:hover {
-    background-color: theme('colors.darkBlue.800');
+    background-color: var(--gray-800);
   }
 
   .dark .btn-secondary:focus {
-    ring-color: theme('colors.darkBlue.400');
+    ring-color: var(--gray-400);
   }
 
   .btn-accent {
     @apply inline-flex items-center justify-center rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed;
     /* Keep using theme('colors.accent.gold') which is now mapped to primary */
-    background-color: theme('colors.accent.gold.DEFAULT');
-    color: theme('colors.gray.900');
+    background-color: var(--accent-gold);
+    color: var(--gray-900);
     box-shadow: var(--shadow-md);
     transition: all var(--transition-base);
   }
 
   .btn-accent:hover {
-    background-color: theme('colors.accent.gold.medium');
+    background-color: var(--primary-300);
     box-shadow: var(--shadow-gold);
   }
 
   .btn-accent:focus {
-    ring-color: theme('colors.accent.gold.DEFAULT');
+    ring-color: var(--primary-300);
   }
 
   .dark .btn-accent {
-    background-color: theme('colors.accent.gold.medium');
-    color: theme('colors.gray.900');
+    background-color: var(--primary-300);
+    color: var(--gray-900);
     box-shadow: var(--shadow-md);
   }
   
   .dark .btn-accent:hover {
-    background-color: theme('colors.accent.gold.dark');
+    background-color: var(--primary-900);
     box-shadow: var(--shadow-dark-gold);
   }
   
   .dark .btn-accent:focus {
-    ring-color: theme('colors.accent.gold.DEFAULT');
+    ring-color: var(--primary-300);
   }
 
   .btn-outline {
     @apply inline-flex items-center justify-center rounded-lg font-medium shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed;
     background-color: transparent;
-    color: theme('colors.gray.700');
-    border: 1px solid theme('colors.gray.300');
+    color: var(--gray-700);
+    border: 1px solid var(--gray-300);
     transition: all var(--transition-base);
   }
 
   .btn-outline:hover {
-    background-color: theme('colors.gray.100');
-    color: theme('colors.gray.900');
+    background-color: var(--gray-100);
+    color: var(--gray-900);
   }
 
   .btn-outline:focus {
-    ring-color: theme('colors.gray.500');
+    ring-color: var(--gray-500);
   }
 
   .dark .btn-outline {
-    color: theme('colors.gray.300');
-    border-color: theme('colors.gray.600');
+    color: var(--gray-300);
+    border-color: var(--gray-600);
   }
 
   .dark .btn-outline:hover {
-    background-color: theme('colors.gray.800');
-    color: theme('colors.white');
+    background-color: var(--gray-800);
+    color: var(--white);
   }
 
   .dark .btn-outline:focus {
-    ring-color: theme('colors.gray.400');
+    ring-color: var(--gray-400);
   }
 
   .btn-primary-outline {
     @apply inline-flex items-center justify-center rounded-lg font-medium shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed;
     background-color: transparent;
-    color: theme('colors.primary.600');
-    border: 1px solid theme('colors.primary.500');
+    color: var(--primary-700);
+    border: 1px solid var(--primary-700);
     transition: all var(--transition-base);
   }
 
   .btn-primary-outline:hover {
-    background-color: theme('colors.primary.50');
+    background-color: var(--primary-700);
   }
 
   .btn-primary-outline:focus {
-    ring-color: theme('colors.primary.500');
+    ring-color: var(--primary-700);
   }
 
   .dark .btn-primary-outline {
-    color: theme('colors.primary.400');
-    border-color: theme('colors.primary.400');
+    color: var(--primary-700);
+    border-color: var(--primary-700);
   }
 
   .dark .btn-primary-outline:hover {
-    background-color: theme('colors.gray.800');
+    background-color: var(--primary-700);
   }
 
   .dark .btn-primary-outline:focus {
-    ring-color: theme('colors.primary.400');
+    ring-color: var(--primary-700);
   }
 
   .btn-ghost {
     @apply inline-flex items-center justify-center rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed;
     background-color: transparent;
-    color: theme('colors.gray.700');
+    color: var(--gray-700);
     transition: all var(--transition-base);
   }
 
   .btn-ghost:hover {
-    background-color: theme('colors.gray.100');
-    color: theme('colors.gray.900');
+    background-color: var(--gray-100);
+    color: var(--gray-900);
   }
 
   .btn-ghost:focus {
-    ring-color: theme('colors.gray.500');
+    ring-color: var(--gray-500);
   }
 
   .dark .btn-ghost {
-    color: theme('colors.gray.300');
+    color: var(--gray-300);
+    border-color: var(--gray-600);
   }
 
   .dark .btn-ghost:hover {
-    background-color: theme('colors.gray.800');
-    color: theme('colors.white');
+    background-color: var(--gray-800);
+    color: var(--white);
   }
-
+  
   .dark .btn-ghost:focus {
-    ring-color: theme('colors.gray.400');
+    ring-color: var(--gray-400);
   }
 
   /* Form Controls (Keep using gray/primary) */
@@ -503,13 +509,13 @@
   .badge-success {
     /* Remap green to success colors */
     @apply bg-success-light border-success text-success-dark dark:bg-success-dark dark:border-success dark:text-success-light;
-    background-color: theme('colors.success.light');
-    border-color: theme('colors.success.DEFAULT');
-    color: theme('colors.success.dark');
+    background-color: var(--success-light);
+    border-color: var(--success);
+    color: var(--success-dark);
     .dark & {
-      background-color: theme('colors.success.dark', '0.3');
-      border-color: theme('colors.success.DEFAULT');
-      color: theme('colors.success.light');
+      background-color: var(--success-dark);
+      border-color: var(--success);
+      color: var(--success-light);
     }
   }
 
@@ -535,26 +541,26 @@
   .alert-info {
     /* Remap info blue to info colors */
     @apply bg-info-light border-info text-info-dark dark:bg-info-dark dark:border-info dark:text-info-light;
-    background-color: theme('colors.info.light');
-    border-color: theme('colors.info.DEFAULT');
-    color: theme('colors.info.dark');
+    background-color: var(--info-light);
+    border-color: var(--info);
+    color: var(--info-dark);
     .dark & {
-      background-color: theme('colors.info.dark', '0.3');
-      border-color: theme('colors.info.DEFAULT');
-      color: theme('colors.info.light');
+      background-color: var(--info-dark);
+      border-color: var(--info);
+      color: var(--info-light);
     }
   }
 
   .alert-success {
     /* Remap green to success colors */
     @apply bg-success-light border-success text-success-dark dark:bg-success-dark dark:border-success dark:text-success-light;
-    background-color: theme('colors.success.light');
-    border-color: theme('colors.success.DEFAULT');
-    color: theme('colors.success.dark');
+    background-color: var(--success-light);
+    border-color: var(--success);
+    color: var(--success-dark);
     .dark & {
-      background-color: theme('colors.success.dark', '0.3');
-      border-color: theme('colors.success.DEFAULT');
-      color: theme('colors.success.light');
+      background-color: var(--success-dark);
+      border-color: var(--success);
+      color: var(--success-light);
     }
   }
 
@@ -622,11 +628,11 @@
   .feature-icon-accent {
     /* Remap accent yellow to primary orange */
     @apply bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-400;
-    background-color: theme('colors.primary.100');
-    color: theme('colors.primary.600');
+    background-color: var(--primary-100);
+    color: var(--primary-600);
     .dark & {
-      background-color: theme('colors.primary.900');
-      color: theme('colors.primary.400');
+      background-color: var(--primary-900);
+      color: var(--primary-400);
     }
   }
 
@@ -664,14 +670,13 @@
   .icon-badge-accent {
      /* Remap accent yellow to primary orange */
     @apply bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-400;
-    background-color: theme('colors.primary.100');
-    color: theme('colors.primary.600');
+    background-color: var(--primary-100);
+    color: var(--primary-600);
     .dark & {
-      background-color: theme('colors.primary.900');
-      color: theme('colors.primary.400');
+      background-color: var(--primary-900);
+      color: var(--primary-400);
     }
   }
-}
 
 /* ========= UTILITIES ========= */
 
@@ -684,7 +689,7 @@
 }
 
 .glass-card {
-  @apply bg-white/5 dark:bg-black/10 backdrop-blur-xl border border-white/10 dark:border-gray-700/20 shadow-xl rounded-2xl;
+  @apply bg-transparent dark:bg-black/10 backdrop-blur-xl border border-white/10 dark:border-gray-700/20 shadow-xl rounded-2xl;
 }
 
 .glass-navbar-dashboard {
@@ -750,14 +755,15 @@
 }
 
 .glass-card {
-  @apply backdrop-blur-md bg-white/80 border border-white/20 shadow-xl dark:bg-gray-900/80 dark:border-gray-800/30;
+  @apply backdrop-blur-md  border border-white/20 shadow-xl dark:bg-gray-900/80 dark:border-gray-800/30;
   transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* Background Patterns - Kente pattern updated to new colors */
 .hero-pattern-overlay {
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); /* Keep white pattern overlay */
+  background-image: url("data:image/svg+xml,%3Csvg%20width%3D%2260%22%20height%3D%2260%22%20viewBox%3D%220%200%2060%2060%22%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%3E%3Cg%20fill%3D%22none%22%20fill-rule%3D%22evenodd%22%3E%3Cg%20fill%3D%22%23ffffff%22%20fill-opacity%3D%220.05%22%3E%3Cpath%20d%3D%22M36%2034v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6%2034v-4H4v4H0v2h4v4h2V6h4V4H6z%22/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
+
 
 /* Hero Section Backgrounds (Keep using variables updated in :root) */
 .hero-gradient-light {

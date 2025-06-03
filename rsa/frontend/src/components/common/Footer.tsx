@@ -2,6 +2,7 @@ import '../../index.css';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Mail, Phone, MapPin, Bus, ArrowRight, ChevronRight, Heart } from 'lucide-react';
+import Logo from './Logo';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -48,10 +49,12 @@ const Footer: React.FC = () => {
           {/* Logo and About */}
           <div className="lg:col-span-2">
             <Link to="/" className="flex items-center gap-2 mb-6">
-              <Bus className="h-6 w-6 text-primary-800 dark:text-primary-200" />
-              <span className="text-xl font-bold text-gray-900 dark:text-white">
-                RideBooker
-              </span>
+              <Logo 
+                variant="primary"
+                size="lg"
+                showText={true}
+                className=""
+              />
             </Link>
             <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-md">
               Providing safe, convenient, and affordable transportation services across Africa. Connecting cities and people with reliable rides.

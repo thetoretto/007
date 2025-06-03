@@ -97,7 +97,7 @@ const HomePage: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-4 pt-4 justify-center lg:justify-start">
                 <Link 
                   to="/book" 
-                  className="btn btn-primary btn-lg hover:-translate-y-0.5 active:translate-y-0"
+                  className="btn btn-primary  btn-lg hover:-translate-y-0.5 active:translate-y-0"
                 >
                   Book Now
                 </Link>
@@ -127,7 +127,7 @@ const HomePage: React.FC = () => {
             <div className={`w-full max-w-md mx-auto lg:ml-auto ${animateHero ? 'animate-slide-up animation-delay-300' : 'opacity-0'}`}>
               <div className="glass-card p-6 sm:p-8 relative overflow-hidden transition-all duration-300">
                 {/* Decorative element */}
-                <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-primary-500/10 dark:bg-primary-700/10 blur-3xl pointer-events-none opacity-70 dark:opacity-50"></div>
+                <div className="absolute -top-24 -right-24 w-48 h-48 rounded-full bg-primary-700/10 dark:bg-primary-700/10 blur-3xl pointer-events-none  dark:opacity-50"></div>
                 
                 <h2 className="text-xl font-semibold text-white dark:text-gray-100 mb-5 text-center relative z-10">Find Your Ride</h2>
                 
@@ -172,7 +172,7 @@ const HomePage: React.FC = () => {
                   <button
                     onClick={navigateToBooking}
                     disabled={!origin || !destination}
-                    className={`w-full py-3 rounded-lg font-medium mt-2 transition-all ${
+                    className={`btn btn-primary w-full py-3 rounded-lg font-medium mt-2 transition-all ${
                       origin && destination 
                         ? 'bg-primary-600 text-white hover:bg-primary-700 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0' 
                         : 'bg-gray-600/50 text-gray-400 cursor-not-allowed'
@@ -288,7 +288,7 @@ const HomePage: React.FC = () => {
           </div>
           
           <div className="mt-16 text-center">
-            <button className="btn btn-primary btn-lg shadow-md hover:shadow-primary-600 hover:-translate-y-0.5 transition-all duration-300">
+            <button className="btn btn-secondary btn-lg shadow-md hover:shadow-primary-600 hover:-translate-y-0.5 transition-all duration-300">
               Book Your Ride Now
             </button>
           </div>

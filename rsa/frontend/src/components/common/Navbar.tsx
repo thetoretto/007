@@ -6,6 +6,7 @@ import useThemeStore from '../../store/themeStore';
 import { Menu, X, Bus, BarChart2, Users, Clock, Settings, ChevronDown, LogIn, UserPlus } from 'lucide-react';
 import ProfileDropdown from './ProfileDropdown';
 import ThemeToggle from './ThemeToggle';
+import Logo from './Logo';
 
 interface NavItem {
   path: string;
@@ -183,13 +184,18 @@ const Navbar: React.FC = () => {
           {/* Logo */}
           <div className="flex-shrink-0 min-w-0">
             <Link to="/" className="flex items-center gap-2 whitespace-nowrap">
-              <Bus className={`h-7 w-7 sm:h-8 sm:w-8 ${
-                isDashboard
-                  ? 'text-primary-600 dark:text-primary-400'
-                  : scrolled 
-                    ? 'text-primary-600 dark:text-primary-400' 
-                    : 'text-white dark:text-white'
-              }`} />
+              <Logo 
+                variant={
+                  isDashboard
+                    ? 'primary'
+                    : scrolled 
+                      ? 'primary' 
+                      : 'white'
+                }
+                size="lg"
+                showText={false}
+                className="h-7 w-7 sm:h-8 sm:w-8"
+              />
               <span className={`text-lg font-semibold transition-colors duration-200 whitespace-nowrap ${
                 isDashboard
                   ? 'text-gray-900 dark:text-gray-100'

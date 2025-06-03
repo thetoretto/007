@@ -508,9 +508,21 @@ const BookingPage: React.FC = () => {
                       ))}
                     </div>
                   </div>
-                  <button onClick={searchTrips} disabled={!origin || !destination || isSearching} className={`w-full btn btn-primary flex items-center justify-center ${(origin && destination && !isSearching) ? '' : 'opacity-70 cursor-not-allowed'}`}>
-                    {isSearching ? (<><div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full mr-2.5"></div>Searching...</>) : (<>Find Available Trips <ChevronRight className="ml-1.5 h-5 w-5" /></>)}
-                  </button>
+                  <button
+    onClick={searchTrips}
+    disabled={!origin || !destination || isSearching}
+    className={`btn btn-primary px-4 py-2 rounded flex items-center justify-center ${(origin && destination && !isSearching) ? '' : 'opacity-70 cursor-not-allowed'}`}
+  >
+    {isSearching ? (
+      <>
+        <div className="animate-spin border-2 border-white border-t-transparent rounded-full"></div>
+        Searching...
+      </>
+    ) : (
+      <>Find Available Trips <ChevronRight className="" /></>
+    )}
+  </button>
+
                 </div>
               )}
               {step === 1 && (

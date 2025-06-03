@@ -271,7 +271,7 @@ const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({
             <button
               type="button"
               onClick={handlePaymentSubmit}
-              className="w-full sm:w-auto px-4 py-2 sm:py-2.5 rounded-md shadow-sm text-xs sm:text-sm font-medium text-text-base bg-primary hover:bg-primary-800 dark:bg-primary dark:text-text-base dark:hover:bg-primary-800 flex items-center justify-center transition-colors"
+              className="btn btn-secondary sm:w-auto px-4 py-2 sm:py-2.5 rounded-md shadow-sm text-xs sm:text-sm font-medium text-text-base bg-primary hover:bg-primary-800 dark:bg-primary dark:text-text-base dark:hover:bg-primary-800 flex items-center justify-center transition-colors"
               disabled={isProcessing}
             >
               {isProcessing ? (

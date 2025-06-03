@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { ArrowLeft, ChevronRight } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import '../../index.css';
+import Logo from '../../components/common/Logo';
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -41,22 +42,12 @@ const RegisterPage: React.FC = () => {
             <div className="w-full max-w-lg">
               <div className="flex justify-center mb-8">
                 <Link to="/" className="inline-block">
-                  <span className="sr-only">RideBooker</span>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="icon-3xl text-primary dark:text-primary-400"
-                  >
-                    <path d="M6 17L6 3" />
-                    <path d="M18 17L18 3" />
-                    <path d="M6 11L18 11" />
-                    <path d="M6 17H18C19.1046 17 20 17.8954 20 19V21H4V19C4 17.8954 4.89543 17 6 17Z" />
-                  </svg>
+                  <Logo 
+                    variant="primary"
+                    size="xl"
+                    showText={true}
+                    className=""
+                  />
                 </Link>
               </div>
 
