@@ -240,7 +240,7 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
           <h2 className="text-xl sm:text-2xl font-semibold text-text-base dark:text-text-inverse">Trip Activity Log</h2>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="btn btn-outline btn-secondary flex items-center text-sm"
+            className="btn btn-outline btn-secondary flex items-center text-sm py-3 px-3"
             aria-expanded={showFilters}
             aria-controls="filter-panel"
           >
@@ -249,11 +249,11 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
           </button>
         </div>
 
-        <div className="relative">
+        <div className="relative flex ">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-text-muted dark:text-text-muted-dark pointer-events-none" />
           <input
             type="search"
-            className="input input-bordered w-full pl-10 pr-4 py-2.5 bg-background-light dark:bg-background-dark text-text-base dark:text-text-inverse placeholder-text-muted dark:placeholder-text-muted-dark focus:ring-primary focus:border-primary"
+            className="input input-other w-full pl-10 pr-4 py-2.5  dark:bg-background-dark text-text-base dark:text-text-inverse placeholder-text-muted dark:placeholder-text-muted-dark focus:ring-primary focus:border-primary"
             placeholder="Search trips (e.g., Kigali, Driver John, Completed)"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}

@@ -1,5 +1,5 @@
 import '../../index.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import useAuthStore from '../../store/authStore';
 import useThemeStore from '../../store/themeStore';
@@ -7,6 +7,7 @@ import { Menu, X, Bus, BarChart2, Users, Clock, Settings, ChevronDown, LogIn, Us
 import ProfileDropdown from './ProfileDropdown';
 import ThemeToggle from './ThemeToggle';
 import Logo from './Logo';
+import { TransitionContext } from '../../App';
 
 interface NavItem {
   path: string;
@@ -27,11 +28,19 @@ const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [openDesktopSubmenu, setOpenDesktopSubmenu] = useState<string | null>(null);
   const [openMobileSubmenu, setOpenMobileSubmenu] = useState<string | null>(null);
+  const { startPageTransition, isPending } = useContext(TransitionContext);
 
   const isDashboard = location.pathname.includes('/dashboard') || 
                       location.pathname.includes('/admin') || 
                       location.pathname.includes('/driver') || 
                       location.pathname.includes('/passenger');
+                      
+  // Custom navigation handler that uses startTransition
+  const handleNavigation = (path: string) => {
+    startPageTransition(() => {
+      navigate(path);
+    });
+  };
 
   // Main navigation items
   const mainNavItems: NavItem[] = [
@@ -248,10 +257,14 @@ const Navbar: React.FC = () => {
                     {openDesktopSubmenu === item.path && (
                       <div className="absolute z-60 mt-2 w-56 origin-top-right bg-white dark:bg-gray-800 rounded-md shadow-lg ring-1 ring-black/5 dark:ring-white/10 focus:outline-none border border-gray-200/50 dark:border-gray-700/50">
                         {item.submenu.map((sub) => (
-                          <Link
+                          <a
                             key={sub.path}
-                            to={sub.path}
-                            onClick={() => setOpenDesktopSubmenu(null)}
+                            href="#"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setOpenDesktopSubmenu(null);
+                              handleNavigation(sub.path);
+                            }}
                             className={`block px-4 py-2 text-sm whitespace-nowrap ${
                               isActive(sub.path) 
                                 ? 'text-primary-600 dark:text-primary-400 bg-gray-100 dark:bg-gray-700 font-medium' 
@@ -259,15 +272,19 @@ const Navbar: React.FC = () => {
                             } transition-colors duration-200`}
                           >
                             {sub.label}
-                          </Link>
+                          </a>
                         ))}
                       </div>
                     )}
                   </>
                 ) : (
-                  <Link 
+                  <a 
                     key={item.path}
-                    to={item.path} 
+                    href="#"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleNavigation(item.path);
+                    }}
                     className={`flex items-center px-3 py-2 text-sm whitespace-nowrap transition-all duration-200 ${
                       isDashboard
                         ? `rounded-md text-gray-800 hover:text-primary-600 dark:text-gray-200 dark:hover:text-primary-400 ${
@@ -288,7 +305,7 @@ const Navbar: React.FC = () => {
                   >
                     {item.icon && <span className="mr-1.5">{item.icon}</span>}
                     {item.label}
-                  </Link>
+                  </a>
                 )}
               </div>
             ))}
@@ -384,31 +401,35 @@ const Navbar: React.FC = () => {
                   {openMobileSubmenu === item.path && (
                     <div className="mt-1 space-y-1 pl-10 pr-4">
                       {item.submenu.map((sub) => (
-                        <Link
-                          key={sub.path}
-                          to={sub.path}
-                          onClick={() => {
-                            setIsMenuOpen(false);
-                            setOpenMobileSubmenu(null);
-                          }}
-                          className={`block py-2 px-3 text-sm rounded-md ${
+                        <a
+                        key={sub.path}
+                        href="#"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setIsMenuOpen(false);
+                          setOpenMobileSubmenu(null);
+                          handleNavigation(sub.path);
+                        }}
+                        className={`block px-4 py-3 text-sm ${
                             isActive(sub.path) 
                               ? 'text-primary-600 dark:text-primary-400 bg-gray-100 dark:bg-gray-700 font-medium' 
                               : 'text-gray-800 dark:text-gray-200 hover:bg-gray-100 hover:text-primary-600 dark:hover:bg-gray-700 dark:hover:text-primary-400'
                           } transition-colors duration-200`}
                         >
                           {sub.label}
-                        </Link>
-                      ))}
+                        </a>
+                        ))}
                     </div>
                   )}
                 </>
               ) : (
-                <Link
-                  to={item.path}
-                  onClick={() => {
+                <a
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
                     setIsMenuOpen(false);
                     setOpenMobileSubmenu(null);
+                    handleNavigation(item.path);
                   }}
                   className={`flex items-center px-3 py-2 rounded-md text-base font-medium ${
                     isDashboard
@@ -426,8 +447,8 @@ const Navbar: React.FC = () => {
                 >
                   {item.icon && <span className="mr-2">{item.icon}</span>}
                   {item.label}
-                </Link>
-              )}
+                </a>
+                )}
             </div>
           ))}
           {/* Login/Signup or Profile for Mobile */}
@@ -438,18 +459,28 @@ const Navbar: React.FC = () => {
               </div>
             ) : (
               <div className="px-2 space-y-2">
-                <Link 
-                  to="/login" 
+                <a 
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsMenuOpen(false);
+                    handleNavigation('/login');
+                  }}
                   className={`block w-full text-left btn btn-outline transition-colors duration-200 text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-900/50`}
                 >
                   <LogIn size={16} className="mr-1.5 inline" /> Login
-                </Link>
-                <Link 
-                  to="/register" 
+                </a>
+                <a 
+                  href="#"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setIsMenuOpen(false);
+                    handleNavigation('/register');
+                  }}
                   className={`block w-full text-left btn transition-colors duration-200 bg-primary-600 hover:bg-primary-700 text-white dark:bg-primary-700 dark:hover:bg-primary-600 dark:text-white`}
                 >
                   <UserPlus size={16} className="mr-1.5 inline" /> Sign Up
-                </Link>
+                </a>
               </div>
             )}
           </div>

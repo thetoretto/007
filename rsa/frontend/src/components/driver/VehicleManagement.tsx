@@ -153,7 +153,7 @@ const VehicleManagement: React.FC<VehicleManagementProps> = ({ userRole }) => {
         </div>
         <button
           onClick={() => handleOpenModal()}
-          className="btn btn-primary flex items-center gap-2 w-full sm:w-auto"
+          className="btn btn-accent flex items-center gap-2 w-full sm:w-auto py-3 px-4"
         >
           <Plus size={20} />
           Add Vehicle
@@ -172,7 +172,7 @@ const VehicleManagement: React.FC<VehicleManagementProps> = ({ userRole }) => {
             </p>
             <button
               onClick={() => handleOpenModal()}
-              className="btn btn-primary btn-sm mt-6"
+              className="btn btn-secondary  mt-6 py-3 px-4"
             >
               <Plus size={18} className="mr-1" />
               Add Your First Vehicle
@@ -309,10 +309,10 @@ const VehicleManagement: React.FC<VehicleManagementProps> = ({ userRole }) => {
               </div>
               
               <div className="flex justify-end space-x-3 pt-4 border-t border-border dark:border-border-dark mt-6">
-                <button type="button" onClick={handleCloseModal} className="btn btn-ghost" disabled={loading}>
+                <button type="button" onClick={handleCloseModal} className="btn btn-secondary py-3 px-4" disabled={loading}>
                   Cancel
                 </button>
-                <button type="submit" className="btn btn-primary flex items-center gap-2" disabled={loading}>
+                <button type="submit" className="btn btn-accent py-3 px-4 flex items-center gap-2" disabled={loading}>
                   {loading ? <span className="loading loading-spinner loading-xs"></span> : <Save size={18}/>}
                   {vehicleToEdit ? 'Update Vehicle' : 'Add Vehicle'}
                 </button>

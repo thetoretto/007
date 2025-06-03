@@ -140,19 +140,19 @@ const PassengerDashboard: React.FC = () => {
             </p>
           </div>
           <div className="flex flex-wrap gap-3 items-center">
-            <div className="relative">
+            <div className="relative flex ">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <Search className="h-4 w-4 text-gray-600 dark:text-gray-300 transition-colors duration-300" />
               </div>
               <input
                 type="text"
                 placeholder="Search routes..."
-                className="form-input block w-full pl-10 pr-4 py-2 text-gray-900 dark:text-white dark:bg-gray-700 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 transition-colors duration-300"
+                className="form-input block w-full  pr-4 py-2 text-gray-900 dark:text-white dark:bg-gray-700 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 transition-colors duration-300"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <Link to="/book" className="btn btn-primary flex items-center gap-2">
+            <Link to="/book" className="btn btn-accent py-3 px-4 flex items-center gap-2">
               <Ticket className="h-4 w-4" />
               Book a Trip
             </Link>
@@ -273,7 +273,7 @@ const PassengerDashboard: React.FC = () => {
                     <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
                       You don't have any upcoming trips scheduled.
                     </p>
-                    <Link to="/book" className="btn btn-primary mt-4">
+                    <Link to="/book" className="btn btn-accentmt-4">
                       Book a Trip
                     </Link>
                   </div>
@@ -422,7 +422,7 @@ const PassengerDashboard: React.FC = () => {
               </div>
               <div className="p-4">
                 <div className="space-y-3">
-                  <Link to="/book" className="btn btn-primary w-full flex items-center justify-center gap-2">
+                  <Link to="/book" className="btn btn-accentw-full flex items-center justify-center gap-2">
                     <Ticket className="h-5 w-5" />
                     Book New Trip
                   </Link>

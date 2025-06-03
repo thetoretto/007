@@ -64,7 +64,7 @@ const PasswordConfirmationModal: React.FC<PasswordConfirmationModalProps> = ({
             >
               Cancel
             </button>
-            <button type="submit" className="btn btn-primary">
+            <button type="submit" className="btn btn-primary py-3 px-4">
               Confirm
             </button>
           </div>

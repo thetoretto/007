@@ -235,7 +235,7 @@ const UserManagement: React.FC = () => {
           <div className="mt-4 flex sm:mt-0 sm:ml-4">
             <button 
               onClick={openAddModal} 
-                className="btn btn-primary inline-flex items-center w-full sm:w-auto justify-center gap-2"
+                className="btn btn-accent inline-flex items-center w-full sm:w-auto justify-center gap-2 py-3 px-4"
               disabled={isLoading}
             >
                 <UserPlus className="h-4 w-4" />
@@ -443,8 +443,8 @@ const UserManagement: React.FC = () => {
               </div>
             </div>
             <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
-              <button type="button" onClick={closeAddModal} className="btn btn-ghost w-full sm:w-auto" disabled={isLoading}>Cancel</button>
-              <button type="submit" className="btn btn-primary inline-flex items-center justify-center w-full sm:w-auto gap-2" disabled={isLoading}>
+              <button type="button" onClick={closeAddModal} className="btn btn-secondary py-3 px-4 w-full sm:w-auto" disabled={isLoading}>Cancel</button>
+              <button type="submit" className="btn btn-accent py-3 px-4 inline-flex items-center justify-center w-full sm:w-auto gap-2" disabled={isLoading}>
                 {isLoading ? <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div> : <UserPlus size={16} />}
                 Add User
               </button>
@@ -494,7 +494,7 @@ const UserManagement: React.FC = () => {
               </div>
               <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4">
                 <button type="button" onClick={closeEditModal} className="btn btn-ghost w-full sm:w-auto" disabled={isLoading}>Cancel</button>
-                <button type="submit" className="btn btn-primary inline-flex items-center justify-center w-full sm:w-auto gap-2" disabled={isLoading}>
+                <button type="submit" className="btn btn-accentinline-flex items-center justify-center w-full sm:w-auto gap-2" disabled={isLoading}>
                   {isLoading ? <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div> : <Save size={16} />}
                   Save Changes
                 </button>

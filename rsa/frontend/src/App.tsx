@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, lazy } from 'react';
+import React, { Suspense, useEffect, lazy, useTransition, createContext } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/common/Layout';
 import HomePage from './pages/HomePage';
@@ -58,263 +58,284 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element, allowedRoles =
   return <>{element}</>;
 };
 
+// Create a context for the transition function
+export const TransitionContext = createContext({
+  startPageTransition: (callback: () => void) => callback(),
+  isPending: false
+});
+
 function App() {
   const { checkAuth } = useAuthStore();
+  const [isPending, startTransition] = useTransition();
   
   useEffect(() => {
     // Check if the user is already authenticated
     checkAuth();
   }, [checkAuth]);
 
-  return (
-    <Router>
-      <FloatingThemeToggle position="bottom-right" />
-      <Layout>
-        <Routes>
-          {/* Public routes */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/book" element={<BookingPage />} />
-          <Route path="/contact" element={<ContactPage />} />
-          <Route path="/learn-more" element={<LearnMorePage />} />
-          <Route path="/become-member" element={<BecomeMemberPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/terms" element={<TermsPage />} />
-          <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/faq" element={<FAQPage />} />
-          <Route path="/cookies" element={<CookiesPage />} />
-          <Route 
-            path="/profile" 
-            element={
-              <ProtectedRoute 
-                element={
-                  <ErrorBoundary>
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <ProfilePage />
-                  </Suspense>
-                </ErrorBoundary>
-                } 
-                allowedRoles={['passenger', 'driver', 'admin']} 
-              />
-            }
-          />
-          
-          {/* Passenger routes */}
-          <Route 
-            path="/passenger/dashboard" 
-            element={<ProtectedRoute element={<PassengerDashboard />} allowedRoles={['passenger']} />} 
-          />
-          <Route 
-            path="/passenger/trips" 
-            element={<ProtectedRoute element={<TripsPage />} allowedRoles={['passenger']} />} 
-          />
-          <Route 
-            path="/passenger/trips/:tripId"
-            element={<ProtectedRoute element={<TripDetailsPage />} allowedRoles={['passenger', 'driver', 'admin']} />}
-          />
-          
-          {/* Driver routes */}
-          <Route 
-            path="/driver/dashboard" 
-            element={<ProtectedRoute element={<DriverDashboard />} allowedRoles={['driver']} />} 
-          />
-          <Route 
-            path="/driver/trips" 
-            element={
-              <ProtectedRoute 
-                element={
-                  <ErrorBoundary>
-                    <Suspense fallback={<div>Loading...</div>}>
-                      <TripManagement />
-                    </Suspense>
-                  </ErrorBoundary>
-                } 
-                allowedRoles={['driver']} 
-              />
-            } 
-          />
+  // Wrap route changes in startTransition
+  const startPageTransition = (callback: () => void) => {
+    startTransition(() => {
+      callback();
+    });
+  };
 
-      
-          {/* Driver Vehicle Management Route */}
-          <Route 
-            path="/driver/vehicle" // Path updated to /driver/vehicle
-            element={
-              <ProtectedRoute 
-                element={
-                  <ErrorBoundary>
+  return (
+    <TransitionContext.Provider value={{ startPageTransition, isPending }}>
+      <Router>
+        <FloatingThemeToggle position="bottom-right" />
+        {isPending && (
+          <div className="fixed top-0 left-0 w-full h-1 bg-primary-500 z-50">
+            <div className="h-full w-1/3 bg-accent-yellow animate-pulse"></div>
+          </div>
+        )}
+        <Layout>
+          <Routes>
+            {/* Public routes */}
+            <Route path="/" element={<HomePage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/book" element={<BookingPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            <Route path="/learn-more" element={<LearnMorePage />} />
+            <Route path="/become-member" element={<BecomeMemberPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/terms" element={<TermsPage />} />
+            <Route path="/privacy" element={<PrivacyPage />} />
+            <Route path="/faq" element={<FAQPage />} />
+            <Route path="/cookies" element={<CookiesPage />} />
+            <Route 
+              path="/profile" 
+              element={
+                <ProtectedRoute 
+                  element={
+                    <ErrorBoundary>
                     <Suspense fallback={<div>Loading...</div>}>
-                      <VehiclePage /> {/* Component updated to VehiclePage */}
+                      <ProfilePage />
                     </Suspense>
                   </ErrorBoundary>
-                } 
-                allowedRoles={['driver']} 
-              />
-            }
-          />
-          <Route 
-            path="/driver/trips/new" 
-            element={
-              <ProtectedRoute 
-                element={
-                  <ErrorBoundary>
-                    <Suspense fallback={<div>Loading...</div>}>
-                      <CreateTripPage />
-                    </Suspense>
-                  </ErrorBoundary>
-                } 
-                allowedRoles={['driver']} 
-              />
-            }
-          />
-          <Route 
-            path="/driver/check-in"
-            element={
-              <ProtectedRoute 
-                element={
-                  <ErrorBoundary>
-                    <Suspense fallback={<div>Loading...</div>}>
-                      <DriverCheckInPage />
-                    </Suspense>
-                  </ErrorBoundary>
-                } 
-                allowedRoles={['driver']} 
-              />
-            }
-          />
-          
-          {/* Admin routes */}
-          <Route 
-            path="/admin/dashboard" 
-            element={<ProtectedRoute element={<AdminDashboard />} allowedRoles={['admin']} />} 
-          />
-          <Route 
-            path="/admin/trips" 
-            element={
-              <ProtectedRoute 
-                element={
-                  <ErrorBoundary>
-                    <Suspense fallback={<div>Loading...</div>}>
-                      <TripManagement />
-                    </Suspense>
-                  </ErrorBoundary>
-                } 
-                allowedRoles={['admin']} 
-              />
-            } 
-          />
-          <Route 
-            path="/admin/statistics" 
-            element={
-              <ProtectedRoute 
-                element={
-                  <ErrorBoundary>
-                    <Suspense fallback={<div>Loading...</div>}>
-                      <AdminStatistics />
-                    </Suspense>
-                  </ErrorBoundary>
-                } 
-                allowedRoles={['admin']} 
-              />
-            } 
-          />
-          {/* Admin Vehicle Management Route */}
-          <Route 
-            path="/admin/vehicle" // Path for admin vehicle management
-            element={
-              <ProtectedRoute 
-                element={
-                  <ErrorBoundary>
-                    <Suspense fallback={<div>Loading...</div>}>
-                      <VehiclePage /> {/* Uses the same VehiclePage component */}
-                    </Suspense>
-                  </ErrorBoundary>
-                } 
-                allowedRoles={['admin']} 
-              />
-            }
-          />
-          <Route 
-            path="/admin/users" 
-            element={
-              <ProtectedRoute 
-                element={
-                  <ErrorBoundary>
-                    <Suspense fallback={<div>Loading...</div>}>
-                      <AdminUserManagement />
-                    </Suspense>
-                  </ErrorBoundary>
-                } 
-                allowedRoles={['admin']} 
-              />
-            } 
-          />
-          <Route
-            path="/admin/routes"
-            element={
-              <ProtectedRoute
-                element={
-                  <ErrorBoundary>
-                    <Suspense fallback={<div>Loading...</div>}>
-                      <AdminRouteManagement />
-                    </Suspense>
-                  </ErrorBoundary>
-                }
-                allowedRoles={['admin']}
-              />
-            }
-          />
-          <Route 
-            path="/admin/hotpoints"
-            element={
-              <ProtectedRoute 
-                element={
-                  <ErrorBoundary>
-                    <Suspense fallback={<div>Loading...</div>}>
-                      <AdminHotPointManagement />
-                    </Suspense>
-                  </ErrorBoundary>
-                } 
-                allowedRoles={['admin']} 
-              />
-            }
-          />
-          <Route 
-            path="/admin/hotpoints/create"
-            element={
-              <ProtectedRoute 
-                element={
-                  <ErrorBoundary>
-                    <Suspense fallback={<div>Loading...</div>}>
-                      <AdminHotPointManagement mode="create" />
-                    </Suspense>
-                  </ErrorBoundary>
-                } 
-                allowedRoles={['admin']} 
-              />
-            }
-          />
-          <Route 
-            path="/admin/trips/new" 
-            element={
-              <ProtectedRoute 
-                element={
-                  <ErrorBoundary>
-                    <Suspense fallback={<div>Loading...</div>}>
-                      <CreateTripPage />
-                    </Suspense>
-                  </ErrorBoundary>
-                } 
-                allowedRoles={['admin']} 
-              />
-            }
-          />
-          
-          {/* Fallback route */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Layout>
-    </Router>
+                  } 
+                  allowedRoles={['passenger', 'driver', 'admin']} 
+                />
+              }
+            />
+            
+            {/* Passenger routes */}
+            <Route 
+              path="/passenger/dashboard" 
+              element={<ProtectedRoute element={<PassengerDashboard />} allowedRoles={['passenger']} />} 
+            />
+            <Route 
+              path="/passenger/trips" 
+              element={<ProtectedRoute element={<TripsPage />} allowedRoles={['passenger']} />} 
+            />
+            <Route 
+              path="/passenger/trips/:tripId"
+              element={<ProtectedRoute element={<TripDetailsPage />} allowedRoles={['passenger', 'driver', 'admin']} />}
+            />
+            
+            {/* Driver routes */}
+            <Route 
+              path="/driver/dashboard" 
+              element={<ProtectedRoute element={<DriverDashboard />} allowedRoles={['driver']} />} 
+            />
+            <Route 
+              path="/driver/trips" 
+              element={
+                <ProtectedRoute 
+                  element={
+                    <ErrorBoundary>
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <TripManagement />
+                      </Suspense>
+                    </ErrorBoundary>
+                  } 
+                  allowedRoles={['driver']} 
+                />
+              } 
+            />
+    
+        
+            {/* Driver Vehicle Management Route */}
+            <Route 
+              path="/driver/vehicle" // Path updated to /driver/vehicle
+              element={
+                <ProtectedRoute 
+                  element={
+                    <ErrorBoundary>
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <VehiclePage /> {/* Component updated to VehiclePage */}
+                      </Suspense>
+                    </ErrorBoundary>
+                  } 
+                  allowedRoles={['driver']} 
+                />
+              }
+            />
+            <Route 
+              path="/driver/trips/new" 
+              element={
+                <ProtectedRoute 
+                  element={
+                    <ErrorBoundary>
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <CreateTripPage />
+                      </Suspense>
+                    </ErrorBoundary>
+                  } 
+                  allowedRoles={['driver']} 
+                />
+              }
+            />
+            <Route 
+              path="/driver/check-in"
+              element={
+                <ProtectedRoute 
+                  element={
+                    <ErrorBoundary>
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <DriverCheckInPage />
+                      </Suspense>
+                    </ErrorBoundary>
+                  } 
+                  allowedRoles={['driver']} 
+                />
+              }
+            />
+            
+            {/* Admin routes */}
+            <Route 
+              path="/admin/dashboard" 
+              element={<ProtectedRoute element={<AdminDashboard />} allowedRoles={['admin']} />} 
+            />
+            <Route 
+              path="/admin/trips" 
+              element={
+                <ProtectedRoute 
+                  element={
+                    <ErrorBoundary>
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <TripManagement />
+                      </Suspense>
+                    </ErrorBoundary>
+                  } 
+                  allowedRoles={['admin']} 
+                />
+              } 
+            />
+            <Route 
+              path="/admin/statistics" 
+              element={
+                <ProtectedRoute 
+                  element={
+                    <ErrorBoundary>
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <AdminStatistics />
+                      </Suspense>
+                    </ErrorBoundary>
+                  } 
+                  allowedRoles={['admin']} 
+                />
+              } 
+            />
+            {/* Admin Vehicle Management Route */}
+            <Route 
+              path="/admin/vehicle" // Path for admin vehicle management
+              element={
+                <ProtectedRoute 
+                  element={
+                    <ErrorBoundary>
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <VehiclePage /> {/* Uses the same VehiclePage component */}
+                      </Suspense>
+                    </ErrorBoundary>
+                  } 
+                  allowedRoles={['admin']} 
+                />
+              }
+            />
+            <Route 
+              path="/admin/users" 
+              element={
+                <ProtectedRoute 
+                  element={
+                    <ErrorBoundary>
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <AdminUserManagement />
+                      </Suspense>
+                    </ErrorBoundary>
+                  } 
+                  allowedRoles={['admin']} 
+                />
+              } 
+            />
+            <Route
+              path="/admin/routes"
+              element={
+                <ProtectedRoute
+                  element={
+                    <ErrorBoundary>
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <AdminRouteManagement />
+                      </Suspense>
+                    </ErrorBoundary>
+                  }
+                  allowedRoles={['admin']}
+                />
+              }
+            />
+            <Route 
+              path="/admin/hotpoints"
+              element={
+                <ProtectedRoute 
+                  element={
+                    <ErrorBoundary>
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <AdminHotPointManagement />
+                      </Suspense>
+                    </ErrorBoundary>
+                  } 
+                  allowedRoles={['admin']} 
+                />
+              }
+            />
+            <Route 
+              path="/admin/hotpoints/create"
+              element={
+                <ProtectedRoute 
+                  element={
+                    <ErrorBoundary>
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <AdminHotPointManagement mode="create" />
+                      </Suspense>
+                    </ErrorBoundary>
+                  } 
+                  allowedRoles={['admin']} 
+                />
+              }
+            />
+            <Route 
+              path="/admin/trips/new" 
+              element={
+                <ProtectedRoute 
+                  element={
+                    <ErrorBoundary>
+                      <Suspense fallback={<div>Loading...</div>}>
+                        <CreateTripPage />
+                      </Suspense>
+                    </ErrorBoundary>
+                  } 
+                  allowedRoles={['admin']} 
+                />
+              }
+            />
+            
+            {/* Fallback route */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Layout>
+      </Router>
+    </TransitionContext.Provider>
   );
 }
 

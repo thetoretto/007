@@ -152,7 +152,7 @@ const ProfilePage: React.FC = () => {
             {!editMode && (
               <button
                 onClick={() => { setEditMode(true); setShowPasswordForm(false); setShowDeactivateConfirm(false); }}
-                className="btn btn-outline btn-primary btn-sm mt-4 sm:mt-0 sm:ml-auto flex items-center gap-2 self-start sm:self-center"
+                className="btn btn-accent y-3 px-4 mt-4 sm:mt-0 sm:ml-auto flex items-center gap-2 self-start sm:self-center"
               >
                 <Edit3 size={16} /> Edit Profile
               </button>
@@ -197,7 +197,7 @@ const ProfilePage: React.FC = () => {
                     <button
                       type="submit"
                       disabled={loading || !dirty || !isValid}
-                      className="btn btn-primary w-full sm:flex-1 flex items-center justify-center gap-2"
+                      className="btn btn-accent py-3 px-4 w-full sm:flex-1 flex items-center justify-center gap-2"
                     >
                       {loading ? <LoadingSpinner size="small" /> : <Save size={18} />} Save Changes
                     </button>

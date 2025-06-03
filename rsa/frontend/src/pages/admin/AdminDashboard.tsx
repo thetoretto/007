@@ -330,7 +330,7 @@ const AdminDashboard: React.FC = () => {
                   setTripToEdit(null);
                   setIsTripModalOpen(true);
                 }}
-                className="btn btn-primary btn-sm mr-4 flex items-center gap-2"
+                className="btn btn-accent py-3 px-4 mr-4 flex items-center gap-2"
               >
                 <Plus className="h-4 w-4" /> New Trip
               </button>
@@ -414,7 +414,7 @@ const AdminDashboard: React.FC = () => {
                     setTripToEdit(null);
                     setIsTripModalOpen(true);
                   }}
-                  className="mt-4 btn btn-primary inline-flex items-center gap-2"
+                  className="mt-4 btn btn-accentinline-flex items-center gap-2"
                 >
                   <Plus className="h-4 w-4" /> Create Trip
                 </button>

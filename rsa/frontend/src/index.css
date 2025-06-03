@@ -316,10 +316,11 @@
   .btn-secondary {
     @apply inline-flex items-center justify-center rounded-lg font-medium shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed;
     /* Using darkBlue color */
-    background-color: var(--primary-700);
-    color: var(--white);
+    background-color: var(--primary-100);
+    color: var(--primary-700);
     border: 1px solid var(--primary-700);
     transition: all var(--transition-base);
+
   }
 
   .btn-secondary:hover {
@@ -331,7 +332,7 @@
   }
 
   .dark .btn-secondary {
-    background-color: var(--primary-800);
+    background-color: var(--primary-100);
     color: var(--primary-800);
 
   }
@@ -347,7 +348,7 @@
   .btn-accent {
     @apply inline-flex items-center justify-center rounded-lg font-medium transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-60 disabled:cursor-not-allowed;
     /* Keep using theme('colors.accent.gold') which is now mapped to primary */
-    background-color: var(--accent-gold);
+    background-color: var(--primary-500);
     color: var(--gray-900);
     box-shadow: var(--shadow-md);
     transition: all var(--transition-base);
@@ -468,12 +469,22 @@
   }
 
   /* Form Controls (Keep using gray/primary) */
+  .select-bordered{
+    @apply block w-full rounded-lg border py-3 px-2 ;
+  }  
+  .form-select{
+    @apply block w-full rounded-lg border py-3 px-2 ;
+
+  }
   .form-input {
     @apply block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 shadow-sm transition-all placeholder:text-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500 dark:focus:border-primary-500 dark:focus:ring-primary-500;
   }
+  .input-other {
+    @apply block w-full rounded-lg border border-gray-300  px-3 py-2 shadow-sm transition-all placeholder:text-gray-400 focus:border-primary-500 focus:outline-none focus:ring-1 focus:ring-primary-500 dark:border-gray-600  dark:text-white dark:placeholder:text-gray-500 dark:focus:border-primary-500 dark:focus:ring-primary-500;
+  }
 
   .form-label {
-    @apply mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300;
+    @apply mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300 py-2;
   }
 
   .form-error {

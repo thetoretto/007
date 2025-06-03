@@ -32,7 +32,7 @@ const Footer: React.FC = () => {
                 </div>
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-accent-kente-gold hover:bg-accent-kente-gold/90 text-black font-medium rounded-lg transition-all flex items-center justify-center shadow-sm hover:shadow"
+                  className="px-6 py-3 btn btn-accent hover:bg-accent-kente-gold/90 text-black font-medium rounded-lg transition-all flex items-center justify-center shadow-sm hover:shadow"
                 >
                   Subscribe
                   <ArrowRight className="ml-2 h-4 w-4" />

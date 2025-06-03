@@ -52,7 +52,7 @@ const TripActivityItem: React.FC<TripActivityItemProps> = ({
   };
 
   const constActionButtonClass = "btn btn-sm btn-outline flex items-center gap-2 transition-all duration-200";
-  const primaryActionButtonClass = "btn btn-sm btn-primary flex items-center gap-2 transition-all duration-200";
+  const primaryActionButtonClass = "btn btn-sm btn-accent flex items-center gap-2 transition-all duration-200";
 
 
   return (

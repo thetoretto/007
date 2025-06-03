@@ -227,11 +227,11 @@ const DriverDashboard: React.FC = () => {
             </p>
           </div>
           <div className="flex flex-wrap gap-3 items-center">
-            <button onClick={openCreateModal} className="btn btn-primary flex items-center gap-2">
+            <button onClick={openCreateModal} className="btn btn-accent flex items-center gap-1 px-2 py-3">
               <Plus className="h-4 w-4" />
               New Trip
             </button>
-            <Link to="/driver/check-in" className="btn btn-secondary flex items-center gap-2">
+            <Link to="/driver/check-in" className="btn btn-secondary flex items-center gap-2 px-4 py-3">
               <QRScannerIcon className="h-4 w-4" /> 
               Validate Ticket
             </Link>
@@ -395,7 +395,7 @@ const DriverDashboard: React.FC = () => {
                 </h2>
                 <button 
                   onClick={openCreateModal}
-                  className="btn btn-primary btn-sm flex items-center gap-2"
+                  className="btn btn-accent btn-sm flex items-center gap-2 py-3 px-4"
                 >
                   <Plus className="h-4 w-4" /> New Trip
                 </button>
@@ -544,7 +544,7 @@ const DriverDashboard: React.FC = () => {
                     You don't have any scheduled trips starting soon.
                   </p>
                   <div className="mt-6">
-                    <button onClick={openCreateModal} className="btn btn-primary">
+                    <button onClick={openCreateModal} className="btn btn-accent py-2 px-4   ">
                         <Plus className="h-4 w-4 mr-2" />
                       Create New Trip
                     </button>
@@ -597,21 +597,21 @@ const DriverDashboard: React.FC = () => {
               <div className="space-y-3">
                 <Link
                     to="/driver/scanner"
-                    className="btn btn-primary w-full flex items-center justify-center gap-2"
+                    className="btn btn-accentw-full flex items-center justify-center gap-2 py-2"
                 >
                     <QRScannerIcon className="h-5 w-5" />
                   Open QR Scanner
                 </Link>
                 <button
                   onClick={openCreateModal}
-                    className="btn btn-secondary w-full flex items-center justify-center gap-2"
+                    className="btn btn-secondary w-full flex items-center justify-center gap-2 py-2"
                 >
                     <Plus className="h-5 w-5" />
                   New Trip
                 </button>
                 <Link
                     to="/driver/vehicles"
-                    className="btn btn-outline w-full flex items-center justify-center gap-2"
+                    className="btn btn-accent w-full flex items-center justify-center gap-2 py-2"
                   >
                     <Truck className="h-5 w-5" />
                   Manage Vehicles

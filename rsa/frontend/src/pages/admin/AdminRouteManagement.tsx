@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../../components/common/Navbar';
-import Footer from '../../components/common/Footer';
 import { Route as RouteType } from '../../types';
 import { useAuthStore } from '../../store/authStore';
 import { MapPin, Plus, Edit2, Trash, X, Save, ChevronRight } from 'lucide-react';
@@ -81,7 +80,7 @@ const AdminRouteManagement: React.FC = () => {
                 </div>
                 <button
                   onClick={handleCreate}
-                  className="btn btn-primary w-full sm:w-auto inline-flex items-center justify-center gap-2"
+                  className="btn btn-accent w-full sm:w-auto inline-flex items-center justify-center gap-2 py-3 px-4"
                   disabled={isLoading}
                 >
                   <Plus size={16} />
@@ -148,7 +147,7 @@ const AdminRouteManagement: React.FC = () => {
                           <p className="text-gray-600 dark:text-gray-300 mb-4 transition-colors duration-300">No routes found.</p>
                           <button 
                             onClick={handleCreate}
-                            className="btn btn-primary btn-sm inline-flex items-center gap-2"
+                            className="btn btn-accentbtn-sm inline-flex items-center gap-2"
                           >
                              <Plus size={16} /> Create your first route
                           </button>
@@ -236,14 +235,14 @@ const AdminRouteManagement: React.FC = () => {
                   <button 
                     type="button" 
                     onClick={() => setIsModalOpen(false)} 
-                    className="btn btn-ghost w-full sm:w-auto mt-3 sm:mt-0"
+                    className="btn btn-secondary w-full sm:w-auto mt-3 sm:mt-0 py-3 px-4"
                     disabled={isLoading}
                   >
                     Cancel
                   </button>
                   <button 
                     type="submit" 
-                    className="btn btn-primary w-full sm:w-auto inline-flex items-center justify-center gap-2"
+                    className="btn btn-accent w-full sm:w-auto inline-flex items-center justify-center gap-2 py-3 px-4"
                     disabled={isLoading}
                   >
                     {isLoading ? (
@@ -260,7 +259,6 @@ const AdminRouteManagement: React.FC = () => {
         )}
       </main>
 
-      <Footer />
     </div>
   );
 };

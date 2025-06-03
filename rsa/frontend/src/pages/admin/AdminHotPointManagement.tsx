@@ -192,10 +192,10 @@ const AdminHotPointManagement: React.FC<AdminHotPointManagementProps> = ({ mode 
           <div className="mt-4 flex-1 sm:mt-0 sm:flex-none">
             <button
               onClick={openAddModal}
-              className="btn btn-primary inline-flex items-center w-full sm:w-auto justify-center"
+              className="btn btn-accent inline-flex items-center w-full sm:w-auto justify-center py-3 px-4"
             >
               <PlusCircle size={18} className="mr-2" />
-              Add New Hot Point
+              Add Hot Point
             </button>
           </div>
         </div>
@@ -376,13 +376,13 @@ const AdminHotPointManagement: React.FC<AdminHotPointManagementProps> = ({ mode 
             <button 
               type="button" 
               onClick={closeModal} 
-              className="btn btn-ghost mt-3 sm:mt-0 w-full sm:w-auto"
+              className="btn btn-secondary mt-3 sm:mt-0 w-full sm:w-auto py-3 px-4"
             >
               Cancel
             </button>
             <button 
               type="submit" 
-              className="btn btn-primary w-full sm:w-auto"
+              className="btn btn-accent w-full sm:w-auto py-3 px-4"
             >
               <Save size={18} className="mr-2" />
               {isEditModalOpen ? 'Save Changes' : 'Add Hot Point'}

@@ -103,7 +103,7 @@ const TripManagement: React.FC = () => {
             </p>
           </div>
           <div className="flex-shrink-0">
-            <Link to={newTripRoute} className="btn btn-primary flex items-center gap-2">
+            <Link to={newTripRoute} className="btn btn-accent flex items-center gap-2 py-3 px-4">
               <Plus className="h-5 w-5" />
               New Trip
             </Link>
