@@ -48,7 +48,7 @@ const passengerBenefits: Benefit[] = [
     icon: Leaf,
     title: 'Eco-Friendly',
     description: 'Reduce traffic congestion and your carbon footprint by sharing rides.',
-    detailedDescription: "Fewer cars on the road mean less CO2 emissions and reduced traffic jams. By choosing RideBooker, you're actively contributing to a greener planet and more sustainable urban environments.",
+    detailedDescription: "Fewer cars on the road mean less CO2 emissions and reduced traffic jams. By choosing GIGI move, you're actively contributing to a greener planet and more sustainable urban environments.",
     iconBgClass: "bg-accent-green bg-opacity-20",
     iconColorClass: "text-accent-green",
   },
@@ -67,7 +67,7 @@ const driverBenefits: Benefit[] = [
     icon: Clock,
     title: 'Flexibility & Control',
     description: 'Drive when you want, where you want. Set your own schedule and choose the trips that work best for you.',
-    detailedDescription: "As a RideBooker driver, you are your own boss. Accept ride requests that fit your schedule and preferences. Our platform empowers you with the tools to manage your availability and trips efficiently.",
+    detailedDescription: "As a GIGI move driver, you are your own boss. Accept ride requests that fit your schedule and preferences. Our platform empowers you with the tools to manage your availability and trips efficiently.",
     iconBgClass: "bg-accent-yellow bg-opacity-20",
     iconColorClass: "text-accent-yellow dark:text-accent-kente-gold",
   },
@@ -94,7 +94,7 @@ const testimonials: Testimonial[] = [
   {
     name: "Sarah M.",
     role: "Regular Passenger",
-    text: "I've been using RideBooker for my daily commute and it's been a game-changer. Saved money and made new friends!",
+    text: "I've been using GIGI move for my daily commute and it's been a game-changer. Saved money and made new friends!",
     rating: 5,
     avatar: "https://randomuser.me/api/portraits/women/65.jpg"
   },
@@ -215,7 +215,7 @@ const LearnMorePage: React.FC = () => {
               A Better Way to Travel Together
             </h1>
             <p className="mt-4 text-lg text-text-muted dark:text-primary-200 max-w-3xl mx-auto">
-              Discover how RideBooker makes travel better for everyone involved – safer journeys for passengers 
+              Discover how GIGI move makes travel better for everyone involved – safer journeys for passengers 
               and great opportunities for drivers.
             </p>
           </motion.div>
@@ -321,7 +321,7 @@ const LearnMorePage: React.FC = () => {
             <div className="relative z-10 max-w-3xl mx-auto text-center">
               <h2 className="text-3xl font-bold mb-4">Ready to experience the benefits?</h2>
               <p className="text-lg mb-8 text-primary-100">
-                Join thousands of people who are already enjoying the convenience, savings, and community of RideBooker.
+                Join thousands of people who are already enjoying the convenience, savings, and community of GIGI move.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
                 <motion.a 

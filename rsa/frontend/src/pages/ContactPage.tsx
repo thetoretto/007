@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, CheckCircle } from 'lucide-react';
 import '../index.css';
-import Navbar from '../components/common/Navbar';
-import Footer from '../components/common/Footer';
 import { motion } from 'framer-motion';
 
 const ContactPage: React.FC = () => {
@@ -47,8 +45,8 @@ const ContactPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark">
-      <Navbar />
+    <div className="flex flex-col min-h-screen ">
+  
       <main className="flex-grow py-12 sm:py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-lg mx-auto lg:max-w-5xl">
           <motion.div 
@@ -95,7 +93,7 @@ const ContactPage: React.FC = () => {
                     </div>
                     <div>
                       <p className="text-sm font-medium text-primary-100">Email</p>
-                      <p className="text-text-inverse">support@ridebooker.com</p>
+                      <p className="text-text-inverse">support@GIGI move.com</p>
                     </div>
                   </div>
                   <div className="flex items-start">
@@ -133,7 +131,7 @@ const ContactPage: React.FC = () => {
             </div>
 
             {/* Contact Form */}
-            <div className="p-8 lg:p-10 bg-background-light dark:bg-section-dark">
+            <div className="p-8 lg:p-10  bg-tranparent ">
               {isSubmitted ? (
                 <div className="h-full flex flex-col items-center justify-center text-center">
                   <motion.div
@@ -238,7 +236,7 @@ const ContactPage: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3 }}
-            className="mt-16 bg-section-light dark:bg-section-dark rounded-xl p-8 shadow-md text-center"
+            className="card mt-16  dark:bg-section-dark rounded-xl p-8 shadow-md text-center"
           >
             <h2 className="text-2xl font-semibold text-text-base dark:text-text-inverse mb-4">Visit Our Office</h2>
             <p className="text-text-muted dark:text-primary-200 mb-6">
@@ -257,7 +255,6 @@ const ContactPage: React.FC = () => {
           </motion.div>
         </div>
       </main>
-      <Footer />
     </div>
   );
 };

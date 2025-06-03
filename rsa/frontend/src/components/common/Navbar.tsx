@@ -208,7 +208,7 @@ const Navbar: React.FC = () => {
                   user.role === 'driver' ? 'Driver Portal' : 
                   'Passenger Dashboard'
                 ) : (
-                  'RideBooker'
+                  'GIGI move'
                 )}
               </span>
             </Link>

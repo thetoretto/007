@@ -60,7 +60,7 @@ const Logo: React.FC<LogoProps> = ({
         {!imageError ? (
           <img 
             src={logoSrc}
-            alt="RideBooker Logo"
+            alt="GIGI move Logo"
             className={`${currentSize.icon} object-contain`}
             onError={() => setImageError(true)}
           />
@@ -71,7 +71,7 @@ const Logo: React.FC<LogoProps> = ({
       
       {showText && (
         <span className={`font-bold ${currentSize.text} ${currentColor.text} whitespace-nowrap`}>
-          RideBooker
+          GIGI move
         </span>
       )}
     </div>

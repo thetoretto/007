@@ -15,6 +15,7 @@ import DriverDashboard from './pages/driver/DriverDashboard';
 import AdminDashboard from './pages/admin/AdminDashboard';
 import useAuthStore from './store/authStore';
 import FloatingThemeToggle from './components/common/FloatingThemeToggle';
+import ErrorBoundary from './components/common/ErrorBoundary';
 
 // Lazy-loaded components
 
@@ -88,9 +89,11 @@ function App() {
             element={
               <ProtectedRoute 
                 element={
+                  <ErrorBoundary>
                   <Suspense fallback={<div>Loading...</div>}>
                     <ProfilePage />
                   </Suspense>
+                </ErrorBoundary>
                 } 
                 allowedRoles={['passenger', 'driver', 'admin']} 
               />
@@ -121,9 +124,11 @@ function App() {
             element={
               <ProtectedRoute 
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <TripManagement />
-                  </Suspense>
+                  <ErrorBoundary>
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <TripManagement />
+                    </Suspense>
+                  </ErrorBoundary>
                 } 
                 allowedRoles={['driver']} 
               />
@@ -137,9 +142,11 @@ function App() {
             element={
               <ProtectedRoute 
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <VehiclePage /> {/* Component updated to VehiclePage */}
-                  </Suspense>
+                  <ErrorBoundary>
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <VehiclePage /> {/* Component updated to VehiclePage */}
+                    </Suspense>
+                  </ErrorBoundary>
                 } 
                 allowedRoles={['driver']} 
               />
@@ -150,9 +157,11 @@ function App() {
             element={
               <ProtectedRoute 
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <CreateTripPage />
-                  </Suspense>
+                  <ErrorBoundary>
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <CreateTripPage />
+                    </Suspense>
+                  </ErrorBoundary>
                 } 
                 allowedRoles={['driver']} 
               />
@@ -163,9 +172,11 @@ function App() {
             element={
               <ProtectedRoute 
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <DriverCheckInPage />
-                  </Suspense>
+                  <ErrorBoundary>
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <DriverCheckInPage />
+                    </Suspense>
+                  </ErrorBoundary>
                 } 
                 allowedRoles={['driver']} 
               />
@@ -182,9 +193,11 @@ function App() {
             element={
               <ProtectedRoute 
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <TripManagement />
-                  </Suspense>
+                  <ErrorBoundary>
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <TripManagement />
+                    </Suspense>
+                  </ErrorBoundary>
                 } 
                 allowedRoles={['admin']} 
               />
@@ -195,9 +208,11 @@ function App() {
             element={
               <ProtectedRoute 
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <AdminStatistics />
-                  </Suspense>
+                  <ErrorBoundary>
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <AdminStatistics />
+                    </Suspense>
+                  </ErrorBoundary>
                 } 
                 allowedRoles={['admin']} 
               />
@@ -209,9 +224,11 @@ function App() {
             element={
               <ProtectedRoute 
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <VehiclePage /> {/* Uses the same VehiclePage component */}
-                  </Suspense>
+                  <ErrorBoundary>
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <VehiclePage /> {/* Uses the same VehiclePage component */}
+                    </Suspense>
+                  </ErrorBoundary>
                 } 
                 allowedRoles={['admin']} 
               />
@@ -222,9 +239,11 @@ function App() {
             element={
               <ProtectedRoute 
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <AdminUserManagement />
-                  </Suspense>
+                  <ErrorBoundary>
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <AdminUserManagement />
+                    </Suspense>
+                  </ErrorBoundary>
                 } 
                 allowedRoles={['admin']} 
               />
@@ -235,9 +254,11 @@ function App() {
             element={
               <ProtectedRoute
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <AdminRouteManagement />
-                  </Suspense>
+                  <ErrorBoundary>
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <AdminRouteManagement />
+                    </Suspense>
+                  </ErrorBoundary>
                 }
                 allowedRoles={['admin']}
               />
@@ -248,9 +269,11 @@ function App() {
             element={
               <ProtectedRoute 
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <AdminHotPointManagement />
-                  </Suspense>
+                  <ErrorBoundary>
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <AdminHotPointManagement />
+                    </Suspense>
+                  </ErrorBoundary>
                 } 
                 allowedRoles={['admin']} 
               />
@@ -261,9 +284,11 @@ function App() {
             element={
               <ProtectedRoute 
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <AdminHotPointManagement mode="create" />
-                  </Suspense>
+                  <ErrorBoundary>
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <AdminHotPointManagement mode="create" />
+                    </Suspense>
+                  </ErrorBoundary>
                 } 
                 allowedRoles={['admin']} 
               />
@@ -274,9 +299,11 @@ function App() {
             element={
               <ProtectedRoute 
                 element={
-                  <Suspense fallback={<div>Loading...</div>}>
-                    <CreateTripPage />
-                  </Suspense>
+                  <ErrorBoundary>
+                    <Suspense fallback={<div>Loading...</div>}>
+                      <CreateTripPage />
+                    </Suspense>
+                  </ErrorBoundary>
                 } 
                 allowedRoles={['admin']} 
               />

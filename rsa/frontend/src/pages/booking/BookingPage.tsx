@@ -373,7 +373,7 @@ const BookingPage: React.FC = () => {
   }), []);
 
   return (
-    <div className="h-screen w-full flex flex-col bg-gradient-to-br from-gray-100 to-blue-50 dark:from-gray-900 dark:to-gray-800 overflow-hidden">
+    <div className=" flex flex-col   overflow-hidden">
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] backdrop-blur-sm">
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-xl flex flex-col items-center max-w-xs mx-auto">

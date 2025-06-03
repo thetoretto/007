@@ -34,7 +34,7 @@ const LoginPage: React.FC = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="max-w-md"
           >
-            <h1 className="text-4xl font-bold mb-6">Welcome to RideBooker</h1>
+            <h1 className="text-4xl font-bold mb-6">Welcome to GIGI move</h1>
             <p className="text-xl text-primary-100 mb-8">Connect with riders and drivers across Africa for safe, affordable transportation.</p>
             
             <div className="space-y-6">

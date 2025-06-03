@@ -153,10 +153,10 @@ const Footer: React.FC = () => {
               <li className="flex items-center">
                 <Mail className="h-5 w-5 text-primary-800 dark:text-primary-200 mr-2 flex-shrink-0" />
                 <a 
-                  href="mailto:info@ridebooker.com" 
+                  href="mailto:info@GIGI move.com" 
                   className="text-gray-600 hover:text-primary-800 dark:text-gray-300 dark:hover:text-primary-200 transition-colors"
                 >
-                  info@ridebooker.com
+                  info@GIGI move.com
                 </a>
               </li>
             </ul>
@@ -170,7 +170,7 @@ const Footer: React.FC = () => {
           <div className="flex flex-col md:flex-row justify-between items-center">
             <div className="flex items-center mb-4 md:mb-0">
               <p className="text-sm text-gray-600 dark:text-gray-400">
-                &copy; {currentYear} RideBooker. All rights reserved.
+                &copy; {currentYear} GIGI move. All rights reserved.
               </p>
               <span className="mx-2 text-gray-400 dark:text-gray-600">•</span>
               <p className="text-sm text-gray-600 dark:text-gray-400 flex items-center">

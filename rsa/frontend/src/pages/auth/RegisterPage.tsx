@@ -77,7 +77,7 @@ const RegisterPage: React.FC = () => {
             className="max-w-md"
           >
             <h1 className="text-4xl font-bold mb-6">Join Our Network</h1>
-            <p className="text-xl text-accent-100 mb-8">Create your account today and start your journey with RideBooker.</p>
+            <p className="text-xl text-accent-100 mb-8">Create your account today and start your journey with GIGI move.</p>
             
             <div className="mt-8 space-y-6">
               <div className="bg-white bg-opacity-10 rounded-xl p-6 shadow-lg backdrop-blur-sm">
@@ -88,7 +88,7 @@ const RegisterPage: React.FC = () => {
                     </svg>
                   ))}
                 </div>
-                <p className="text-lg italic mb-4">"RideBooker transformed my daily commute. Safe drivers, affordable prices, and the app is so easy to use!"</p>
+                <p className="text-lg italic mb-4">"GIGI move transformed my daily commute. Safe drivers, affordable prices, and the app is so easy to use!"</p>
                 <div className="flex items-center">
                   <div className="w-10 h-10 bg-accent-yellow bg-opacity-30 rounded-full flex items-center justify-center text-accent-kente-gold font-bold">
                     CN
