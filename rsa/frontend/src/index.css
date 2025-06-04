@@ -292,21 +292,22 @@
   }
 
   .btn-primary:hover {
-    background-color: var(--primary-700);
+    background-color:var(--primary-50);
+    teext:var(--earth-coffee);
   }
 
   .btn-primary:focus {
-    ring-color: var(--primary-700);
+    ring-color:var(--border-dark);
   }
 
   .dark .btn-primary {
-    background-color: var(--primary-700);
-    color: var(--gray-950);
+    background-color:var(--primary-400);
+    color:var(--earth-coffee); 
   }
 
   .dark .btn-primary:hover {
-    background-color: var(--primary-700);
-    color: var(--text-dark-primary);
+    background-color: var(--earth-clay);
+    color: var(--primary-400);
   }
 
   .dark .btn-primary:focus {

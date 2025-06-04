@@ -381,14 +381,14 @@ const TripForm: React.FC<TripFormProps> = ({ isOpen, onClose, tripToEdit, onSubm
             <button 
             type="button" 
             onClick={onClose} 
-            className="btn btn-secondary"
+            className="btn btn-secondary btn-lg"
             >
             Cancel
             </button>
         )}
         <button 
           type="submit" 
-          className={`btn btn-accent py-3 px4 ${isCreatePageContext ? 'w-full flex justify-center items-center' : ''}`}
+          className={`btn btn-accent btn-lg ${isCreatePageContext ? 'w-full flex justify-center items-center' : ''}`}
         >
           <Save className="h-4 w-4 mr-2" />
           {tripToEdit ? 'Update Trip' : 'Create Trip'}

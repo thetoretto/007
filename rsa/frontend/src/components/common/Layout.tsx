@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -8,52 +8,101 @@ const authPaths = ['/login', '/register', '/forgot', '/reset'];
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
+  const [isMobile, setIsMobile] = useState(false);
+  
+  // Responsive breakpoint detection
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   const isDashboard = dashboardPaths.some((p) => location.pathname.startsWith(p));
   const isAuth = authPaths.some((p) => location.pathname.startsWith(p));
   const isHome = location.pathname === '/';
-  const isPublic = !isDashboard && !isAuth; // Variable for footer condition clarity
+  const isPublic = !isDashboard && !isAuth;
 
-  // Determine classes for the main container div
-  let layoutContainerClasses = 'min-h-screen flex flex-col transition-colors duration-500';
-  if (isDashboard) {
-    layoutContainerClasses += ' bg-gray-100 dark:bg-surface-dark text-text-light dark:text-text-dark';
-  } else if (isAuth) {
-    layoutContainerClasses += ' bg-gradient-to-br from-primary-600 via-primary-700 to-darkBlue-800 dark:from-gray-900 dark:via-gray-800 dark:to-primary-900 text-white';
-  } else if (isHome) {
-    layoutContainerClasses += ' bg-transparent text-text-light dark:text-text-dark';
-  } else { // Other public pages
-    layoutContainerClasses += ' bg-gray-50 dark:bg-gray-900 text-text-light dark:text-text-dark subtle-bg-gradient';
-  }
-
-  // Determine classes for the main element
-  const mainClasses: string[] = [];
-  if (isAuth) {
-    // Auth pages are typically centered and take available space
-    mainClasses.push('flex-grow', 'flex', 'flex-col', 'items-center', 'justify-center', 'p-4');
-  } else {
-    mainClasses.push('flex-grow'); // Ensure main content area takes available vertical space
-    if (isHome) {
-      mainClasses.push('p-0'); // HomePage handles its own layout and padding
+  // Enhanced container classes with better responsive design
+  const getLayoutContainerClasses = () => {
+    const baseClasses = 'min-h-screen flex flex-col transition-all duration-300 ease-in-out relative';
+    
+    if (isDashboard) {
+      return `${baseClasses} bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100`;
+    } else if (isAuth) {
+      return `${baseClasses} bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 dark:from-gray-900 dark:via-gray-800 dark:to-primary-900 text-white overflow-hidden`;
+    } else if (isHome) {
+      return `${baseClasses} bg-transparent text-gray-900 dark:text-gray-100`;
     } else {
-      // Common horizontal padding and top padding for Navbar for both dashboard and other public pages
-      mainClasses.push('pt-24', 'px-4', 'sm:px-6', 'lg:px-8'); 
-      if (isDashboard) {
-        mainClasses.push('pb-8'); // Dashboard specific bottom padding
-      } else { // Public pages (not home)
-        mainClasses.push('pb-12'); // Public specific bottom padding
+      return `${baseClasses} bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100`;
+    }
+  };
+
+  // Enhanced main classes with better spacing and accessibility
+  const getMainClasses = () => {
+    const baseClasses = 'flex-grow w-full';
+    
+    if (isAuth) {
+      return `${baseClasses} flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8 min-h-screen`;
+    } else {
+      if (isHome) {
+        return `${baseClasses} p-0`; // HomePage handles its own layout
+      } else {
+        // Improved responsive spacing for non-home pages
+        const topPadding = isMobile ? 'pt-16' : 'pt-20'; // Adjust for mobile navbar height
+        const horizontalPadding = 'px-4 sm:px-6 lg:px-8 xl:px-12';
+        const bottomPadding = isDashboard ? 'pb-6 sm:pb-8' : 'pb-8 sm:pb-12';
+        
+        return `${baseClasses} ${topPadding} ${horizontalPadding} ${bottomPadding} max-w-full overflow-x-hidden`;
       }
     }
-  }
-  const mainClassString = mainClasses.join(' ');
+  };
+
+  // Skip link for accessibility
+  const SkipLink = () => (
+    <a
+      href="#main-content"
+      className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary-600 text-white px-4 py-2 rounded-md z-50 transition-all duration-200"
+    >
+      Skip to main content
+    </a>
+  );
 
   return (
-    <div className={layoutContainerClasses}>
-      {!isAuth && <Navbar />} 
-      <main className={mainClassString} role="main">
-        {children}
-      </main>
-      {isPublic && !isHome && <Footer />} {/* Footer on public pages (not auth, not dashboard) and not on home */}
-    </div>
+    <>
+      <SkipLink />
+      <div className={getLayoutContainerClasses()}>
+        {/* Navbar with improved responsive behavior */}
+        {!isAuth && (
+          <header className="relative z-40">
+            <Navbar />
+          </header>
+        )}
+        
+        {/* Main content area with enhanced accessibility */}
+        <main 
+          id="main-content"
+          className={getMainClasses()}
+          role="main"
+          aria-label={isAuth ? 'Authentication content' : isDashboard ? 'Dashboard content' : 'Main content'}
+          tabIndex={-1}
+        >
+          <div className={`w-full ${!isHome && !isAuth ? 'max-w-7xl mx-auto' : ''}`}>
+            {children}
+          </div>
+        </main>
+        
+        {/* Footer with improved conditional rendering */}
+        {isPublic && !isHome && (
+          <footer className="relative z-10">
+            <Footer />
+          </footer>
+        )}
+      </div>
+    </>
   );
 };
 
