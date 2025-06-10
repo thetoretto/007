@@ -84,21 +84,21 @@ const CustomSelect: React.FC<CustomSelectProps> = ({
         <div
           onClick={toggleDropdown}
           className={`flex items-center justify-between px-3 py-2 rounded-md border w-full cursor-pointer ${
-            isOpen 
-              ? 'border-primary-400 ring-1 ring-primary-400 dark:border-primary-300 dark:ring-primary-300' 
-              : 'border-primary-200 dark:border-primary-800'
+            isOpen
+              ? 'border-primary ring-1 ring-primary dark:border-primary dark:ring-primary'
+              : 'border-primary-300 dark:border-primary-700'
           } ${
-            error ? 'border-error dark:border-error' : ''
+            error ? 'border-accent dark:border-accent' : ''
           } ${
-            disabled 
-              ? 'bg-gray-100 dark:bg-gray-800' 
-              : 'bg-background-light dark:bg-section-dark hover:bg-primary-50 dark:hover:bg-primary-900/20'
+            disabled
+              ? 'bg-gray-100 dark:bg-gray-800'
+              : 'bg-light dark:bg-section-dark hover:bg-primary-100 dark:hover:bg-primary/20'
           }`}
           aria-haspopup="listbox"
           aria-expanded={isOpen}
           role="combobox"
         >
-          <span className={`block truncate ${selectedOption ? 'text-text-base dark:text-text-inverse' : 'text-gray-400 dark:text-gray-500'}`}>
+          <span className={`block truncate ${selectedOption ? 'text-light-primary dark:text-dark-primary' : 'text-gray-400 dark:text-gray-500'}`}>
             {selectedDisplay}
           </span>
           <ChevronDown className={`h-5 w-5 text-primary dark:text-primary-300 transition-transform duration-200 ${isOpen ? 'transform rotate-180' : ''}`} />

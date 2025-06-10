@@ -70,31 +70,31 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
     switch (type) {
       case 'success':
         return {
-          icon: <Check className="h-6 w-6 text-success dark:text-success" />,
-          bgColor: 'bg-success bg-opacity-10 dark:bg-success dark:bg-opacity-20',
-          borderColor: 'border-success',
-          confirmBgColor: 'bg-success hover:bg-success-darker text-accent-black dark:text-accent-black'
+          icon: <Check className="h-6 w-6 text-secondary" />,
+          bgColor: 'bg-secondary/10',
+          borderColor: 'border-secondary',
+          confirmBgColor: 'bg-secondary hover:bg-secondary-dark text-white'
         };
       case 'warning':
         return {
-          icon: <AlertTriangle className="h-6 w-6 text-warning dark:text-accent-yellow" />,
-          bgColor: 'bg-warning bg-opacity-10 dark:bg-warning dark:bg-opacity-20',
-          borderColor: 'border-warning',
-          confirmBgColor: 'bg-warning hover:bg-warning-darker text-accent-black dark:text-accent-black'
+          icon: <AlertTriangle className="h-6 w-6 text-primary" />,
+          bgColor: 'bg-primary/10',
+          borderColor: 'border-primary',
+          confirmBgColor: 'bg-primary hover:bg-primary-dark text-black'
         };
       case 'error':
         return {
-          icon: <AlertCircle className="h-6 w-6 text-error dark:text-error" />,
-          bgColor: 'bg-error bg-opacity-10 dark:bg-error dark:bg-opacity-20',
-          borderColor: 'border-error',
-          confirmBgColor: 'bg-error hover:bg-error-darker text-text-inverse'
+          icon: <AlertCircle className="h-6 w-6 text-accent" />,
+          bgColor: 'bg-accent/10',
+          borderColor: 'border-accent',
+          confirmBgColor: 'bg-accent hover:bg-accent-dark text-white'
         };
       default:
         return {
-          icon: <Info className="h-6 w-6 text-primary dark:text-primary-200" />,
-          bgColor: 'bg-primary-100 dark:bg-primary-900 dark:bg-opacity-30',
-          borderColor: 'border-primary dark:border-primary-200',
-          confirmBgColor: 'bg-primary hover:bg-primary-600 text-text-inverse dark:bg-primary-400 dark:hover:bg-primary-300 dark:text-text-base'
+          icon: <Info className="h-6 w-6 text-purple" />,
+          bgColor: 'bg-purple/10',
+          borderColor: 'border-purple',
+          confirmBgColor: 'bg-purple hover:bg-purple-dark text-black'
         };
     }
   };
@@ -102,10 +102,10 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   const typeStyles = getTypeStyles();
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-accent-black bg-opacity-50 dark:bg-opacity-70">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
       <div
         ref={modalRef}
-        className={`w-full max-w-md rounded-lg shadow-xl ${typeStyles.bgColor} border-l-4 ${typeStyles.borderColor} overflow-hidden transform transition-all bg-background-light dark:bg-section-dark`}
+        className={`w-full max-w-md card shadow-2xl ${typeStyles.bgColor} border-l-4 ${typeStyles.borderColor} overflow-hidden transform transition-all`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-headline"
@@ -113,7 +113,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
         <div className="relative">
           <button
             onClick={onClose}
-            className="absolute top-3 right-3 text-text-muted hover:text-primary dark:text-primary-200 dark:hover:text-primary-100"
+            className="absolute top-3 right-3 text-text-light-tertiary dark:text-text-dark-tertiary hover:text-text-light-primary dark:hover:text-text-dark-primary transition-colors duration-300"
             aria-label="Close"
           >
             <X className="h-5 w-5" />
@@ -124,11 +124,11 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
           <div className="flex items-start">
             <div className="flex-shrink-0 mr-3">{typeStyles.icon}</div>
             <div>
-              <h3 className="text-lg font-medium text-text-base dark:text-text-inverse" id="modal-headline">
+              <h3 className="text-lg font-medium text-text-light-primary dark:text-text-dark-primary" id="modal-headline">
                 {title}
               </h3>
               <div className="mt-2">
-                <p className="text-sm text-text-base dark:text-text-inverse">{message}</p>
+                <p className="text-sm text-text-light-secondary dark:text-text-dark-secondary">{message}</p>
               </div>
             </div>
           </div>
@@ -138,7 +138,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="w-full sm:w-auto px-4 py-2 border border-primary-100 dark:border-primary-800 rounded-md shadow-sm text-sm font-medium text-text-base dark:text-text-inverse bg-background-light dark:bg-section-dark hover:bg-section-light dark:hover:bg-primary-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-primary-200 dark:focus:ring-offset-background-dark"
+                className="btn btn-secondary w-full sm:w-auto"
               >
                 {cancelText}
               </button>
@@ -149,7 +149,7 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
                 onConfirm();
                 onClose();
               }}
-              className={`w-full sm:w-auto px-4 py-2 rounded-md shadow-sm text-sm font-medium ${typeStyles.confirmBgColor} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-primary-200 dark:focus:ring-offset-background-dark`}
+              className={`w-full sm:w-auto px-4 py-2 rounded-lg shadow-sm text-sm font-medium ${typeStyles.confirmBgColor} focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-300`}
             >
               {confirmText}
             </button>

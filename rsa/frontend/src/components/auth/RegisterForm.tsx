@@ -1,344 +1,386 @@
-import '../../index.css';
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import { Eye, EyeOff, UserPlus, Mail, Phone, User, Lock, FileCheck } from 'lucide-react';
+import { Eye, EyeOff, User, Mail, Phone, Lock, AlertCircle, UserPlus, ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import LoadingSpinner from '../common/LoadingSpinner';
-import { motion } from 'framer-motion';
 
-const RegisterSchema = Yup.object().shape({
-  firstName: Yup.string().required('First name is required'),
-  lastName: Yup.string().required('Last name is required'),
-  email: Yup.string().email('Invalid email address').required('Email is required'),
+interface RegisterFormProps {
+  redirectTo?: string;
+}
+
+// Step 1: Personal Information
+const step1Schema = Yup.object({
+  firstName: Yup.string()
+    .min(2, 'First name must be at least 2 characters')
+    .required('First name is required'),
+  lastName: Yup.string()
+    .min(2, 'Last name must be at least 2 characters')
+    .required('Last name is required'),
+  email: Yup.string()
+    .email('Invalid email address')
+    .required('Email is required'),
+});
+
+// Step 2: Contact & Security
+const step2Schema = Yup.object({
   phoneNumber: Yup.string()
-    .matches(/^\+?[1-9]\d{1,14}$/, 'Invalid phone number format (E.164 expected)')
+    .matches(/^\+?[\d\s\-\(\)]{10,}$/, 'Invalid phone number')
     .required('Phone number is required'),
   password: Yup.string()
     .min(8, 'Password must be at least 8 characters')
-    .required('Password is required')
-    .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      'Password must contain at least one uppercase letter, one lowercase letter, and one number'
-    ),
+    .matches(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .matches(/[a-z]/, 'Password must contain at least one lowercase letter')
+    .matches(/[0-9]/, 'Password must contain at least one number')
+    .required('Password is required'),
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password')], 'Passwords must match')
-    .required('Confirm password is required'),
-  termsAccepted: Yup.boolean().oneOf([true], 'You must accept the terms and conditions'),
+    .required('Please confirm your password'),
 });
 
-const RegisterForm: React.FC = () => {
+// Step 3: Terms & Preferences
+const step3Schema = Yup.object({
+  termsAccepted: Yup.boolean()
+    .oneOf([true], 'You must accept the terms and conditions'),
+});
+
+const RegisterForm: React.FC<RegisterFormProps> = ({ redirectTo }) => {
   const navigate = useNavigate();
   const { register, loading, error } = useAuthStore();
+  const [currentStep, setCurrentStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    password: '',
+    confirmPassword: '',
+    termsAccepted: false,
+  });
 
-  const handleSubmit = async (values: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    phoneNumber: string;
-    password: string;
-    confirmPassword: string;
-    termsAccepted: boolean;
-  }) => {
+  const totalSteps = 3;
+
+  const getStepSchema = (step: number) => {
+    switch (step) {
+      case 1: return step1Schema;
+      case 2: return step2Schema;
+      case 3: return step3Schema;
+      default: return step1Schema;
+    }
+  };
+
+  const handleNext = async (values: any) => {
+    setFormData({ ...formData, ...values });
+    if (currentStep < totalSteps) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentStep > 1) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const handleSubmit = async (values: any) => {
+    const finalData = { ...formData, ...values };
     try {
-      await register({
-        firstName: values.firstName,
-        lastName: values.lastName,
-        email: values.email,
-        phoneNumber: values.phoneNumber,
-        password: values.password,
-        role: 'passenger', // Default role for registration
-      });
-      navigate('/');
+      await register(
+        finalData.firstName,
+        finalData.lastName,
+        finalData.email,
+        finalData.phoneNumber,
+        finalData.password
+      );
+
+      // Navigate to the specified redirect path or dashboard
+      if (redirectTo) {
+        navigate(redirectTo);
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error) {
-      // Error is handled by the store
+      // Error is handled by the auth store
+      console.error('Registration failed:', error);
+    }
+  };
+
+  const renderStepContent = (step: number) => {
+    switch (step) {
+      case 1:
+        return (
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-center mb-6">Personal Information</h3>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="form-group">
+                <label className="form-label">
+                  <User size={16} />
+                  First Name
+                </label>
+                <div className="form-input-icon">
+                  <Field
+                    name="firstName"
+                    type="text"
+                    placeholder="Enter your first name"
+                    className="form-input"
+                  />
+                  <User size={16} className="icon" />
+                </div>
+                <ErrorMessage name="firstName" component="div" className="form-error" />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">
+                  <User size={16} />
+                  Last Name
+                </label>
+                <div className="form-input-icon">
+                  <Field
+                    name="lastName"
+                    type="text"
+                    placeholder="Enter your last name"
+                    className="form-input"
+                  />
+                  <User size={16} className="icon" />
+                </div>
+                <ErrorMessage name="lastName" component="div" className="form-error" />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">
+                <Mail size={16} />
+                Email Address
+              </label>
+              <div className="form-input-icon">
+                <Field
+                  name="email"
+                  type="email"
+                  placeholder="Enter your email address"
+                  className="form-input"
+                />
+                <Mail size={16} className="icon" />
+              </div>
+              <ErrorMessage name="email" component="div" className="form-error" />
+            </div>
+          </div>
+        );
+
+      case 2:
+        return (
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-center mb-6">Contact & Security</h3>
+
+            <div className="form-group">
+              <label className="form-label">
+                <Phone size={16} />
+                Phone Number
+              </label>
+              <div className="form-input-icon">
+                <Field
+                  name="phoneNumber"
+                  type="tel"
+                  placeholder="+27 12 345 6789"
+                  className="form-input"
+                />
+                <Phone size={16} className="icon" />
+              </div>
+              <ErrorMessage name="phoneNumber" component="div" className="form-error" />
+              <p className="text-xs text-gray-500 mt-1">Include country code (e.g., +27 for South Africa)</p>
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">
+                <Lock size={16} />
+                Password
+              </label>
+              <div className="form-input-icon">
+                <Field
+                  name="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Create a strong password"
+                  className="form-input"
+                  style={{ paddingRight: '3rem' }}
+                />
+                <Lock size={16} className="icon" />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+              <ErrorMessage name="password" component="div" className="form-error" />
+            </div>
+
+            <div className="form-group">
+              <label className="form-label">
+                <Lock size={16} />
+                Confirm Password
+              </label>
+              <div className="form-input-icon">
+                <Field
+                  name="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  placeholder="Confirm your password"
+                  className="form-input"
+                  style={{ paddingRight: '3rem' }}
+                />
+                <Lock size={16} className="icon" />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
+              <ErrorMessage name="confirmPassword" component="div" className="form-error" />
+            </div>
+          </div>
+        );
+
+      case 3:
+        return (
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold text-center mb-6">Terms & Conditions</h3>
+
+            <div className="form-group">
+              <div className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                <Field
+                  name="termsAccepted"
+                  type="checkbox"
+                  className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
+                />
+                <div className="flex-1">
+                  <label className="text-sm font-medium cursor-pointer">
+                    I agree to the{' '}
+                    <Link to="/terms" className="auth-link" target="_blank">
+                      Terms of Service
+                    </Link>
+                    {' '}and{' '}
+                    <Link to="/privacy" className="auth-link" target="_blank">
+                      Privacy Policy
+                    </Link>
+                  </label>
+                  <p className="text-xs text-gray-500 mt-1">
+                    By creating an account, you're joining a trusted community of travelers across Africa.
+                  </p>
+                </div>
+              </div>
+              <ErrorMessage name="termsAccepted" component="div" className="form-error" />
+            </div>
+
+            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
+              <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">What's next?</h4>
+              <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+                <li>• Verify your email address</li>
+                <li>• Complete your profile</li>
+                <li>• Start booking rides or become a driver</li>
+              </ul>
+            </div>
+          </div>
+        );
+
+      default:
+        return null;
     }
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-      className="w-full"
-    >
-      <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold text-text-base dark:text-text-inverse">Create Your Account</h2>
-        <p className="mt-2 text-text-muted dark:text-primary-200">Join our community of travelers across Africa</p>
-      </div>
-      
+    <div className="auth-form animate-slide-in">
+      {/* Error Display */}
       {error && (
-        <motion.div 
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: 'auto' }}
-          className="alert alert-danger mb-6 p-4 rounded-lg border border-error bg-error bg-opacity-10 text-error flex items-start"
-        >
-          <div className="flex-shrink-0 mr-2">
-            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-            </svg>
-          </div>
+        <div className="form-error animate-fade-in">
+          <AlertCircle size={16} />
           <span>{error}</span>
-        </motion.div>
+        </div>
       )}
-      
-      <div className="card p-6 sm:p-8 border border-primary-100 dark:border-primary-800 bg-background-light dark:bg-section-dark rounded-xl shadow-sm">
-        <Formik
-          initialValues={{
-            firstName: '',
-            lastName: '',
-            email: '',
-            phoneNumber: '',
-            password: '',
-            confirmPassword: '',
-            termsAccepted: false,
-          }}
-          validationSchema={RegisterSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ isValid, dirty }) => (
-            <Form className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="firstName" className="form-label mb-1.5 text-text-base dark:text-text-inverse">
-                    First Name
-                  </label>
-                  <div className="relative">
-                    <Field
-                      id="firstName"
-                      name="firstName"
-                      type="text"
-                      autoComplete="given-name"
-                      className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
-                      disabled={loading}
-                      placeholder="Your first name"
-                    />
-                  </div>
-                  <ErrorMessage
-                    name="firstName"
-                    component="div"
-                    className="mt-1 text-sm text-error"
-                  />
-                </div>
 
-                <div>
-                  <label htmlFor="lastName" className="form-label mb-1.5 text-text-base dark:text-text-inverse">
-                    Last Name
-                  </label>
-                  <div className="relative">
-
-                    <Field
-                      id="lastName"
-                      name="lastName"
-                      type="text"
-                      autoComplete="family-name"
-                      className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
-                      disabled={loading}
-                      placeholder="Your last name"
-                    />
-                  </div>
-                  <ErrorMessage
-                    name="lastName"
-                    component="div"
-                    className="mt-1 text-sm text-error"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label htmlFor="email" className="form-label mb-1.5 text-text-base dark:text-text-inverse">
-                  Email Address
-                </label>
-                <div className="relative">
-                  <Field
-                    id="email"
-                    name="email"
-                    type="email"
-                    autoComplete="email"
-                    className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
-                    disabled={loading}
-                    placeholder="your.email@example.com"
-                  />
-                </div>
-                <ErrorMessage
-                  name="email"
-                  component="div"
-                  className="mt-1 text-sm text-error"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="phoneNumber" className="form-label mb-1.5 text-text-base dark:text-text-inverse">
-                  Phone Number
-                </label>
-                <div className="relative">
-                  <Field
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    type="tel"
-                    autoComplete="tel"
-                    className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
-                    disabled={loading}
-                    placeholder="+27 12 345 6789"
-                  />
-                </div>
-                <p className="text-xs text-text-muted dark:text-primary-300 mt-1">
-                  Include country code (e.g., +27 for South Africa)
-                </p>
-                <ErrorMessage
-                  name="phoneNumber"
-                  component="div"
-                  className="mt-1 text-sm text-error"
-                />
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="password" className="form-label mb-1.5 text-text-base dark:text-text-inverse">
-                    Password
-                  </label>
-                  <div className="relative">
-                    <Field
-                      id="password"
-                      name="password"
-                      type={showPassword ? 'text' : 'password'}
-                      autoComplete="new-password"
-                      className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
-                      disabled={loading}
-                      placeholder="Create a password"
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                      onClick={() => setShowPassword(!showPassword)}
-                      aria-label={showPassword ? "Hide password" : "Show password"}
-                    >
-                      {showPassword ? (
-                        <EyeOff size={18} aria-hidden="true" />
-                      ) : (
-                        <Eye size={18} aria-hidden="true" />
-                      )}
-                    </button>
-                  </div>
-                  <ErrorMessage
-                    name="password"
-                    component="div"
-                    className="mt-1 text-sm text-error"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="confirmPassword" className="form-label mb-1.5 text-text-base dark:text-text-inverse">
-                    Confirm Password
-                  </label>
-                  <div className="relative">
-                    <Field
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      type={showConfirmPassword ? 'text' : 'password'}
-                      autoComplete="new-password"
-                      className="form-input pl-10 py-2.5 w-full border border-primary-200 dark:border-primary-700 bg-background-light focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-400 dark:focus:border-primary-400"
-                      disabled={loading}
-                      placeholder="Confirm your password"
-                    />
-                    <button
-                      type="button"
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-text-muted hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      aria-label={showConfirmPassword ? "Hide password" : "Show password"}
-                    >
-                      {showConfirmPassword ? (
-                        <EyeOff size={18} aria-hidden="true" />
-                      ) : (
-                        <Eye size={18} aria-hidden="true" />
-                      )}
-                    </button>
-                  </div>
-                  <ErrorMessage
-                    name="confirmPassword"
-                    component="div"
-                    className="mt-1 text-sm text-error"
-                  />
-                </div>
-              </div>
-
-              <div className="bg-secondary-50 dark:bg-primary-900 dark:bg-opacity-20 p-4 rounded-lg border border-primary-100 dark:border-primary-800">
-                <p className="text-sm font-medium text-text-base dark:text-primary-200 mb-2">
-                  Password requirements:
-                </p>
-                <ul className="text-xs text-text-muted dark:text-primary-300 space-y-1">
-                  <li className="flex items-center">
-                    <FileCheck size={16} className="mr-1.5 text-primary-600 dark:text-primary-400" />
-                    At least 8 characters
-                  </li>
-                  <li className="flex items-center">
-                    <FileCheck size={16} className="mr-1.5 text-primary-600 dark:text-primary-400" />
-                    At least one uppercase letter (A-Z)
-                  </li>
-                  <li className="flex items-center">
-                    <FileCheck size={16} className="mr-1.5 text-primary-600 dark:text-primary-400" />
-                    At least one lowercase letter (a-z)
-                  </li>
-                  <li className="flex items-center">
-                    <FileCheck size={16} className="mr-1.5 text-primary-600 dark:text-primary-400" />
-                    At least one number (0-9)
-                  </li>
-                </ul>
-              </div>
-
-              <div className="flex items-start">
-                <div className="flex items-center h-5">
-                  <Field
-                    id="termsAccepted"
-                    name="termsAccepted"
-                    type="checkbox"
-                    className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-primary-300 dark:border-primary-600 rounded transition-colors"
-                    disabled={loading}
-                  />
-                </div>
-                <div className="ml-3 text-sm">
-                  <label htmlFor="termsAccepted" className="font-medium text-text-base dark:text-text-inverse">
-                    I agree to the{' '}
-                    <Link to="/terms" className="text-primary dark:text-primary-300 hover:text-primary-700 dark:hover:text-primary-200 hover:underline">
-                      Terms of Service
-                    </Link>
-                    {' '}and{' '}
-                    <Link to="/privacy" className="text-primary dark:text-primary-300 hover:text-primary-700 dark:hover:text-primary-200 hover:underline">
-                      Privacy Policy
-                    </Link>
-                  </label>
-                  <ErrorMessage
-                    name="termsAccepted"
-                    component="div"
-                    className="mt-1 text-sm text-error"
-                  />
-                </div>
-              </div>
-
-              <motion.button
-                type="submit"
-                disabled={loading || !(isValid && dirty)}
-                className="btn btn-primary w-full flex items-center justify-center gap-2 py-2.5 text-base font-medium"
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.99 }}
-              >
-                {loading ? (
-                  <LoadingSpinner size="small" color="white" />
-                ) : (
-                  <>
-                    <UserPlus size={18} />
-                    <span>Create account</span>
-                  </>
-                )}
-              </motion.button>
-            </Form>
-          )}
-        </Formik>
+      {/* Step Indicator */}
+      <div className="step-indicator">
+        {Array.from({ length: totalSteps }, (_, index) => (
+          <div
+            key={index}
+            className={`step-dot ${
+              index + 1 < currentStep ? 'completed' :
+              index + 1 === currentStep ? 'active' : ''
+            }`}
+          />
+        ))}
       </div>
-    </motion.div>
+
+      <Formik
+        initialValues={formData}
+        validationSchema={getStepSchema(currentStep)}
+        onSubmit={currentStep === totalSteps ? handleSubmit : handleNext}
+        enableReinitialize
+      >
+        {({ values, isValid }) => (
+          <Form>
+            {renderStepContent(currentStep)}
+
+            {/* Navigation Buttons */}
+            <div className="flex justify-between pt-6">
+              {currentStep > 1 && (
+                <button
+                  type="button"
+                  onClick={handlePrevious}
+                  className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                >
+                  <ChevronLeft size={16} />
+                  Previous
+                </button>
+              )}
+
+              <div className="ml-auto">
+                {currentStep < totalSteps ? (
+                  <button
+                    type="submit"
+                    disabled={!isValid}
+                    className="auth-button flex items-center gap-2"
+                  >
+                    Next
+                    <ChevronRight size={16} />
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={loading || !isValid}
+                    className="auth-button flex items-center gap-2"
+                  >
+                    {loading ? (
+                      <>
+                        <LoadingSpinner size="small" color="white" />
+                        Creating Account...
+                      </>
+                    ) : (
+                      <>
+                        <UserPlus size={16} />
+                        Create Account
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Login Link */}
+            <div className="text-center pt-4">
+              <span className="text-sm text-gray-600">Already have an account? </span>
+              <Link to="/login" className="auth-link">
+                Sign in
+              </Link>
+            </div>
+          </Form>
+        )}
+      </Formik>
+    </div>
   );
 };
 

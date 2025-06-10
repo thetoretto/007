@@ -8,149 +8,139 @@ export default {
         sans: ['Inter var', 'sans-serif'],
       },
       colors: {
-        // Primary color - Elegant Chartreuse
-        // Carefully balanced for readability in both modes
+        // PALETTE COLORS ONLY - Exact colors from your palette
+
+        // Primary color - Yellow (#FEE46B)
         primary: {
-          50: '#f9fce9',  // Lightest - for subtle backgrounds
-          100: '#f1f6d2',  // Very light - for hover states in light mode
-          200: '#e5eeb6',  // Light - for secondary buttons
-          300: '#d5e38c',  // Medium light - for accents
-          400: '#c2d500',  // Medium - for secondary elements
-          500: '#b3c600',  // Base - for primary elements
-          600: '#a4b700',  // Medium dark - for primary buttons
-          700: '#8cae00',  // Dark - for hover states in dark mode
-          800: '#738f00',  // Very dark - for text on light backgrounds
-          900: '#5a7000',  // Darkest - for emphasized text
+          DEFAULT: '#fee46b',
+          light: 'rgba(254, 228, 107, 0.1)',
+          medium: 'rgba(254, 228, 107, 0.5)',
+          dark: 'rgba(254, 228, 107, 0.8)',
         },
-        
-        // Secondary color - Pale Yellow Tint
+
+        // Secondary color - Blue Gray (#94A9BC)
         secondary: {
-          50: '#fdfef7',   // Lightest
-          100: '#f9fceb',  // Very light
-          200: '#f5f9de',  // Light
-          300: '#f1f6d2',  // Medium light
-          400: '#e9f0b8',  // Medium
-          500: '#e0ea9e',  // Base
-          600: '#d7e485',  // Medium dark
-          700: '#c9d96c',  // Dark
-          800: '#bace53',  // Very dark
-          900: '#acbe3a',  // Darkest
+          DEFAULT: '#94a9bc',
+          light: 'rgba(148, 169, 188, 0.1)',
+          medium: 'rgba(148, 169, 188, 0.5)',
+          dark: 'rgba(148, 169, 188, 0.8)',
         },
-        
-        // Neutral colors - Carefully crafted for optimal readability in both themes
-        gray: {
-          50: '#F9FAFB',   // Almost white - light mode background
-          100: '#F3F4F6',  // Very light - card backgrounds in light mode
-          200: '#E5E7EB',  // Light - borders in light mode
-          300: '#D1D5DB',  // Medium light - disabled states
-          400: '#9CA3AF',  // Medium - placeholder text
-          500: '#6B7280',  // Base - subtle text in light mode
-          600: '#4B5563',  // Medium dark - body text in light mode
-          700: '#374151',  // Dark - headings in light mode / secondary text in dark mode
-          800: '#1F2937',  // Very dark - dark mode backgrounds
-          900: '#111827',  // Almost black - dark mode deeper backgrounds
-          950: '#030712',  // True black - for high contrast needs
-        },
-        
-        // Accent - Olive-Lime
+
+        // Accent color - Red (#DF0827)
         accent: {
-          lime: { // New name for the accent color
-            light: '#d5e38c', // Light olive-lime
-            DEFAULT: '#8cae00', // Base olive-lime
-            medium: '#a4b700', // Medium olive-lime
-            dark: '#738f00',   // Dark olive-lime
-            darker: '#5a7000',  // Darker olive-lime
-          },
+          DEFAULT: '#df0827',
+          light: 'rgba(223, 8, 39, 0.1)',
+          medium: 'rgba(223, 8, 39, 0.5)',
+          dark: 'rgba(223, 8, 39, 0.8)',
         },
-        
-        // DarkBlue color - For UI elements previously using blue
-        darkBlue: {
-          50: '#f0f7ff',   // Lightest
-          100: '#e0f0fe',  // Very light
-          200: '#bae0fd',  // Light
-          300: '#7cc6fb',  // Medium light
-          400: '#36a9f8',  // Medium
-          500: '#0c8ee7',  // Base
-          600: '#0270c4',  // Medium dark
-          700: '#015a9e',  // Dark
-          800: '#064b81',  // Very dark
-          900: '#0a3e6a',  // Darkest
+
+        // Purple accent (#E6DBEB)
+        purple: {
+          DEFAULT: '#e6dbeb',
+          light: 'rgba(230, 219, 235, 0.1)',
+          medium: 'rgba(230, 219, 235, 0.5)',
+          dark: 'rgba(230, 219, 235, 0.8)',
         },
-        
-        // Semantic colors - For feedback and status
-        // Re-mapping to shades of primary chartreuse and secondary
+
+        // Base colors - Only black, white, and palette colors
+        black: '#000000',
+        white: '#ffffff',
+        dark: '#171c22',    // Dark charcoal from palette
+        light: '#f8f3ef',   // Light cream from palette
+
+        // Simplified gray scale using only palette colors
+        gray: {
+          50: '#f8f3ef',    // Light cream
+          100: '#ffffff',   // White
+          200: 'rgba(148, 169, 188, 0.1)', // Secondary light
+          300: 'rgba(148, 169, 188, 0.3)', // Secondary medium-light
+          400: 'rgba(148, 169, 188, 0.5)', // Secondary medium
+          500: '#94a9bc',   // Secondary
+          600: 'rgba(148, 169, 188, 0.8)', // Secondary dark
+          700: 'rgba(23, 28, 34, 0.7)',    // Dark medium
+          800: 'rgba(23, 28, 34, 0.9)',    // Dark strong
+          900: '#171c22',   // Dark charcoal
+          950: '#000000',   // Black
+        },
+
+        // Semantic colors - Using only palette colors
         success: {
-          light: '#f1f6d2', // Light chartreuse
-          DEFAULT: '#8cae00', // Olive-lime accent
-          dark: '#5a7000', // Dark olive-lime
+          light: 'rgba(148, 169, 188, 0.1)', // Secondary light
+          DEFAULT: '#94a9bc', // Secondary (blue-gray)
+          dark: 'rgba(148, 169, 188, 0.8)', // Secondary dark
         },
         warning: {
-          light: '#f9fceb', // Very light secondary
-          DEFAULT: '#c2d500', // Primary chartreuse
-          dark: '#8cae00', // Olive-lime accent
+          light: 'rgba(254, 228, 107, 0.1)', // Primary light
+          DEFAULT: '#fee46b', // Primary (yellow)
+          dark: 'rgba(254, 228, 107, 0.8)', // Primary dark
         },
         error: {
-          light: '#f1f6d2', // Light chartreuse
-          DEFAULT: '#c2d500', // Primary chartreuse
-          dark: '#8cae00', // Olive-lime accent
+          light: 'rgba(223, 8, 39, 0.1)', // Accent light
+          DEFAULT: '#df0827', // Accent (red)
+          dark: 'rgba(223, 8, 39, 0.8)', // Accent dark
         },
         info: {
-          light: '#f9fceb', // Very light secondary
-          DEFAULT: '#c2d500', // Primary chartreuse
-          dark: '#8cae00', // Olive-lime accent
+          light: 'rgba(230, 219, 235, 0.1)', // Purple light
+          DEFAULT: '#e6dbeb', // Purple
+          dark: 'rgba(230, 219, 235, 0.8)', // Purple dark
         },
-        
-        // Contextual background colors
+
+        // Background colors - Only palette colors
         background: {
-          light: '#FFFFFF',       // Pure white - light mode
-          lightAlt: '#F9FAFB',    // Off-white - light mode secondary (gray-50)
-          dark: '#111111',        // Deep charcoal - dark mode primary
-          darkAlt: '#2b2b2b',     // Lighter dark - dark mode secondary
+          light: '#f8f3ef',    // Light cream from palette
+          lightAlt: '#ffffff', // White
+          dark: '#171c22',     // Dark charcoal from palette
+          darkAlt: '#000000',  // Black
         },
-        
-        // Surface colors for cards, etc.
+
+        // Surface colors - Only palette colors
         surface: {
-          light: '#FFFFFF',      // Pure white - light mode cards
-          lightAlt: '#F3F4F6',   // Off-white - light mode alt cards (gray-100)
-          dark: '#1F2937',       // Dark - dark mode cards (gray-800)
-          darkAlt: '#374151',    // Lighter dark - dark mode alt cards (gray-700)
+          light: '#ffffff',    // White
+          lightAlt: '#f8f3ef', // Light cream
+          dark: '#171c22',     // Dark charcoal
+          darkAlt: '#000000',  // Black
         },
-        
-        // Text colors - Optimized for readability
+
+        // Text colors - High contrast for accessibility
         text: {
           light: {
-            primary: '#1a1a1a',   // Almost black - for main text in light mode
-            secondary: '#4d4d4d', // Dark gray - for secondary text in light mode
-            tertiary: '#6B7280',  // Medium gray - for subtle text in light mode (gray-500)
-            disabled: '#9CA3AF',  // Light gray - for disabled text in light mode (gray-400)
+            primary: '#000000',   // Black - maximum contrast
+            secondary: '#171c22', // Dark charcoal - high contrast
+            tertiary: '#94a9bc',  // Secondary - medium contrast
+            disabled: 'rgba(148, 169, 188, 0.5)', // Secondary medium
           },
           dark: {
-            primary: '#ffffff',   // White - for main text in dark mode
-            secondary: '#cccccc', // Light gray - for secondary text in dark mode
-            tertiary: '#9CA3AF',  // Medium gray - for subtle text in dark mode (gray-400)
-            disabled: '#6B7280',  // Dark gray - for disabled text in dark mode (gray-500)
+            primary: '#ffffff',   // White - maximum contrast
+            secondary: '#f8f3ef', // Light cream - high contrast
+            tertiary: '#94a9bc',  // Secondary - medium contrast
+            disabled: 'rgba(148, 169, 188, 0.5)', // Secondary medium
           },
-          accent: '#8cae00',      // Olive-lime - for accent text
+          accent: '#fee46b',      // Primary yellow for accent text
         },
-        
-        // Border colors
+
+        // Border colors - Only palette colors
         border: {
-          light: '#e6e6e6',       // Light gray - for borders in light mode
-          lightFocus: '#c2d500',  // Chartreuse - for focus states in light mode
-          dark: '#2b2b2b',        // Dark gray - for borders in dark mode
-          darkFocus: '#8cae00',   // Olive-lime - for focus states in dark mode
+          light: 'rgba(148, 169, 188, 0.1)', // Secondary light
+          lightFocus: '#fee46b',  // Primary yellow
+          dark: 'rgba(148, 169, 188, 0.5)', // Secondary medium
+          darkFocus: '#fee46b',   // Primary yellow
         },
       },
-      // Enhanced patterns with chartreuse and olive-lime colors
-      patterns: {
-        kente: 'repeating-linear-gradient(45deg, #c2d500 0, #c2d500 10px, #8cae00 10px, #8cae00 20px, #a4b700 20px, #a4b700 30px, #5a7000 30px, #5a7000 40px)', /* primary, accent, primary-600, accent-darker */
-        mudcloth: 'repeating-linear-gradient(90deg, rgba(27, 27, 27, 0.15) 0, rgba(27, 27, 27, 0.15) 2px, transparent 2px, transparent 10px)', // Keep as grayscale
-      },
-      // Enhanced keyframes with new colors
+
+      // Enhanced keyframes with new colors and modern animations
       keyframes: {
+        // Basic animations
         fadeIn: {
           '0%': { opacity: '0' },
           '100%': { opacity: '1' },
+        },
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        fadeInDown: {
+          '0%': { opacity: '0', transform: 'translateY(-20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         slideUp: {
           '0%': { transform: 'translateY(12px)', opacity: '0' },
@@ -160,61 +150,316 @@ export default {
           '0%': { transform: 'translateX(-12px)', opacity: '0' },
           '100%': { transform: 'translateX(0)', opacity: '1' },
         },
-        // Adjusting pulse colors to use the new palette
-        'bg-pulse-slow': {
-          '0%, 100%': { 'background-color': '#a4b700' }, // primary-600
-          '50%': { 'background-color': '#c2d500' }, // primary-400
+        slideLeft: {
+          '0%': { transform: 'translateX(12px)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
         },
+
+        // Scale animations
+        scaleIn: {
+          '0%': { transform: 'scale(0.9)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        scaleOut: {
+          '0%': { transform: 'scale(1)', opacity: '1' },
+          '100%': { transform: 'scale(0.9)', opacity: '0' },
+        },
+
+        // Pulse animations with brand colors
+        'pulse-primary': {
+          '0%, 100%': { 'background-color': '#fbbf24', opacity: '1' },
+          '50%': { 'background-color': '#fee46b', opacity: '0.8' },
+        },
+        'pulse-accent': {
+          '0%, 100%': { 'background-color': '#dc2626', opacity: '1' },
+          '50%': { 'background-color': '#df0827', opacity: '0.8' },
+        },
+        'pulse-glow': {
+          '0%, 100%': { 'box-shadow': '0 0 5px rgba(254, 228, 107, 0.5)' },
+          '50%': { 'box-shadow': '0 0 20px rgba(254, 228, 107, 0.8)' },
+        },
+
+        // Rotation and movement
         rotate: {
           '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(360deg)' },
+        },
+        'rotate-reverse': {
+          '0%': { transform: 'rotate(360deg)' },
+          '100%': { transform: 'rotate(0deg)' },
         },
         wiggle: {
           '0%, 100%': { transform: 'rotate(-3deg)' },
           '50%': { transform: 'rotate(3deg)' },
         },
+        shake: {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-2px)' },
+          '20%, 40%, 60%, 80%': { transform: 'translateX(2px)' },
+        },
+
+        // Floating animations
+        float: {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-20px)' },
+        },
+        'float-slow': {
+          '0%, 100%': { transform: 'translateY(0px)' },
+          '50%': { transform: 'translateY(-10px)' },
+        },
+        'float-x': {
+          '0%, 100%': { transform: 'translateX(0px)' },
+          '50%': { transform: 'translateX(10px)' },
+        },
+
+        // Bounce animations
+        bounceIn: {
+          '0%': { transform: 'scale(0.3)', opacity: '0' },
+          '50%': { transform: 'scale(1.05)', opacity: '1' },
+          '70%': { transform: 'scale(0.9)' },
+          '100%': { transform: 'scale(1)' },
+        },
+        bounceOut: {
+          '0%': { transform: 'scale(1)', opacity: '1' },
+          '25%': { transform: 'scale(0.95)' },
+          '100%': { transform: 'scale(0.3)', opacity: '0' },
+        },
+
+
       },
       animation: {
-        'pulse-slow': 'bg-pulse-slow 3s ease-in-out infinite',
-        'spin-slow': 'rotate 3s linear infinite',
-        'spin-once': 'rotate 0.5s ease-in-out forwards',
-        'wiggle': 'wiggle 0.5s ease-in-out',
+        // Basic animations
         'fade-in': 'fadeIn 0.5s ease-in-out forwards',
+        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+        'fade-in-down': 'fadeInDown 0.6s ease-out forwards',
         'slide-up': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
         'slide-right': 'slideRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'slide-left': 'slideLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+
+        // Scale animations
+        'scale-in': 'scaleIn 0.3s ease-out forwards',
+        'scale-out': 'scaleOut 0.3s ease-in forwards',
+
+        // Pulse animations
+        'pulse-primary': 'pulse-primary 2s ease-in-out infinite',
+        'pulse-accent': 'pulse-accent 2s ease-in-out infinite',
+        'pulse-glow': 'pulse-glow 2s ease-in-out infinite',
+        'pulse-slow': 'pulse-primary 3s ease-in-out infinite',
+
+        // Rotation animations
+        'spin-slow': 'rotate 3s linear infinite',
+        'spin-reverse': 'rotate-reverse 3s linear infinite',
+        'spin-once': 'rotate 0.5s ease-in-out forwards',
+        'wiggle': 'wiggle 0.5s ease-in-out',
+        'shake': 'shake 0.5s ease-in-out',
+
+        // Float animations
+        'float': 'float 6s ease-in-out infinite',
+        'float-slow': 'float-slow 8s ease-in-out infinite',
+        'float-x': 'float-x 4s ease-in-out infinite',
+        'float-delayed': 'float 6s ease-in-out infinite 2s',
+
+        // Bounce animations
+        'bounce-in': 'bounceIn 0.6s ease-out forwards',
+        'bounce-out': 'bounceOut 0.6s ease-in forwards',
+
+
+
+        // Staggered animations
+        'fade-in-1': 'fadeIn 0.5s ease-in-out 0.1s forwards',
+        'fade-in-2': 'fadeIn 0.5s ease-in-out 0.2s forwards',
+        'fade-in-3': 'fadeIn 0.5s ease-in-out 0.3s forwards',
+        'fade-in-4': 'fadeIn 0.5s ease-in-out 0.4s forwards',
+        'slide-up-1': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards',
+        'slide-up-2': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s forwards',
+        'slide-up-3': 'slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards',
       },
       transitionProperty: {
         'height': 'height',
+        'width': 'width',
         'spacing': 'margin, padding',
-        'theme': 'background-color, border-color, color, fill, stroke',
+        'size': 'width, height',
+        'theme': 'background-color, border-color, color, fill, stroke, box-shadow, transform',
+        'colors': 'background-color, border-color, color, fill, stroke',
+        'transform': 'transform',
+        'opacity': 'opacity',
+        'shadow': 'box-shadow',
+        'filter': 'filter',
+        'backdrop': 'backdrop-filter',
+        'all': 'all',
       },
       transitionDuration: {
+        '50': '50ms',
+        '75': '75ms',
+        '100': '100ms',
+        '150': '150ms',
+        '200': '200ms',
+        '250': '250ms',
+        '300': '300ms',
+        '350': '350ms',
         '400': '400ms',
+        '450': '450ms',
+        '500': '500ms',
         '600': '600ms',
+        '700': '700ms',
+        '800': '800ms',
+        '900': '900ms',
+        '1000': '1000ms',
+        '1200': '1200ms',
+        '1500': '1500ms',
+        '2000': '2000ms',
       },
       transitionTimingFunction: {
+        'linear': 'linear',
+        'in': 'cubic-bezier(0.4, 0, 1, 1)',
+        'out': 'cubic-bezier(0, 0, 0.2, 1)',
+        'in-out': 'cubic-bezier(0.4, 0, 0.2, 1)',
         'smooth': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        'bounce': 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+        'elastic': 'cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+        'spring': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+        'ease-in-back': 'cubic-bezier(0.36, 0, 0.66, -0.56)',
+        'ease-out-back': 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+        'ease-in-out-back': 'cubic-bezier(0.68, -0.6, 0.32, 1.6)',
+      },
+      spacing: {
+        '18': '4.5rem',
+        '88': '22rem',
+        '128': '32rem',
+        '144': '36rem',
+      },
+      fontSize: {
+        '2xs': ['0.625rem', { lineHeight: '0.75rem' }],
+        'xs': ['0.75rem', { lineHeight: '1rem' }],
+        'sm': ['0.875rem', { lineHeight: '1.25rem' }],
+        'base': ['1rem', { lineHeight: '1.5rem' }],
+        'lg': ['1.125rem', { lineHeight: '1.75rem' }],
+        'xl': ['1.25rem', { lineHeight: '1.75rem' }],
+        '2xl': ['1.5rem', { lineHeight: '2rem' }],
+        '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
+        '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
+        '5xl': ['3rem', { lineHeight: '1' }],
+        '6xl': ['3.75rem', { lineHeight: '1' }],
+        '7xl': ['4.5rem', { lineHeight: '1' }],
+        '8xl': ['6rem', { lineHeight: '1' }],
+        '9xl': ['8rem', { lineHeight: '1' }],
       },
       boxShadow: {
-        // Using direct color values instead of theme()
-        'chartreuse': '0 4px 6px -1px rgba(194, 213, 0, 0.2), 0 2px 4px -2px rgba(194, 213, 0, 0.1)', // primary-400
-        'chartreuse-lg': '0 10px 15px -3px rgba(194, 213, 0, 0.2), 0 4px 6px -4px rgba(194, 213, 0, 0.1)', // primary-400
-        'chartreuse-glow': '0 0 15px rgba(194, 213, 0, 0.5)', // primary-400
-        'inner-chartreuse': 'inset 0 2px 4px 0 rgba(194, 213, 0, 0.25)', // primary-400
-        'card-light': '0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1)', // Keep as gray/black based
-        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05)', // Keep as gray/black based
-        'card-dark': '0 1px 3px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.2)', // Keep as gray/black based
-        'card-dark-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2)', // Keep as gray/black based
+        // Palette color shadows - Using exact palette colors
+        'primary': '0 4px 6px -1px rgba(254, 228, 107, 0.2), 0 2px 4px -2px rgba(254, 228, 107, 0.1)',
+        'primary-md': '0 6px 10px -2px rgba(254, 228, 107, 0.15), 0 2px 4px -2px rgba(254, 228, 107, 0.1)',
+        'primary-lg': '0 10px 15px -3px rgba(254, 228, 107, 0.2), 0 4px 6px -4px rgba(254, 228, 107, 0.1)',
+        'primary-xl': '0 20px 25px -5px rgba(254, 228, 107, 0.15), 0 8px 10px -6px rgba(254, 228, 107, 0.1)',
+        'primary-glow': '0 0 15px rgba(254, 228, 107, 0.5)',
+
+        'accent': '0 4px 6px -1px rgba(223, 8, 39, 0.2), 0 2px 4px -2px rgba(223, 8, 39, 0.1)',
+        'accent-md': '0 6px 10px -2px rgba(223, 8, 39, 0.15), 0 2px 4px -2px rgba(223, 8, 39, 0.1)',
+        'accent-lg': '0 10px 15px -3px rgba(223, 8, 39, 0.2), 0 4px 6px -4px rgba(223, 8, 39, 0.1)',
+        'accent-xl': '0 20px 25px -5px rgba(223, 8, 39, 0.15), 0 8px 10px -6px rgba(223, 8, 39, 0.1)',
+        'accent-glow': '0 0 15px rgba(223, 8, 39, 0.5)',
+
+        'secondary': '0 4px 6px -1px rgba(148, 169, 188, 0.2), 0 2px 4px -2px rgba(148, 169, 188, 0.1)',
+        'secondary-md': '0 6px 10px -2px rgba(148, 169, 188, 0.15), 0 2px 4px -2px rgba(148, 169, 188, 0.1)',
+        'secondary-lg': '0 10px 15px -3px rgba(148, 169, 188, 0.2), 0 4px 6px -4px rgba(148, 169, 188, 0.1)',
+        'secondary-xl': '0 20px 25px -5px rgba(148, 169, 188, 0.15), 0 8px 10px -6px rgba(148, 169, 188, 0.1)',
+        'secondary-glow': '0 0 15px rgba(148, 169, 188, 0.5)',
+
+        'purple': '0 4px 6px -1px rgba(230, 219, 235, 0.3), 0 2px 4px -2px rgba(230, 219, 235, 0.2)',
+        'purple-md': '0 6px 10px -2px rgba(230, 219, 235, 0.25), 0 2px 4px -2px rgba(230, 219, 235, 0.2)',
+        'purple-lg': '0 10px 15px -3px rgba(230, 219, 235, 0.3), 0 4px 6px -4px rgba(230, 219, 235, 0.2)',
+        'purple-xl': '0 20px 25px -5px rgba(230, 219, 235, 0.25), 0 8px 10px -6px rgba(230, 219, 235, 0.2)',
+        'purple-glow': '0 0 15px rgba(230, 219, 235, 0.5)',
+
+        // Standard shadows using black/white only
+        'card-light': '0 1px 3px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0, 0, 0, 0.1)',
+        'card-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.05)',
+        'card-hover-lg': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05)',
+        'card-dark': '0 1px 3px rgba(0, 0, 0, 0.25), 0 1px 2px rgba(0, 0, 0, 0.2)',
+        'card-dark-hover': '0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -4px rgba(0, 0, 0, 0.2)',
+        'card-dark-hover-lg': '0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2)',
+
+        // Glass effect shadows
+        'glass': '0 8px 32px rgba(0, 0, 0, 0.1), 0 4px 16px rgba(0, 0, 0, 0.05)',
+        'glass-lg': '0 12px 40px rgba(0, 0, 0, 0.12), 0 6px 20px rgba(0, 0, 0, 0.08)',
+        'glass-dark': '0 8px 32px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.2)',
+        'glass-dark-lg': '0 12px 40px rgba(0, 0, 0, 0.35), 0 6px 20px rgba(0, 0, 0, 0.25)',
+
+        // Floating elements
+        'float': '0 12px 24px -8px rgba(0, 0, 0, 0.15), 0 4px 8px -4px rgba(0, 0, 0, 0.1)',
+        'float-lg': '0 24px 48px -12px rgba(0, 0, 0, 0.18), 0 8px 16px -8px rgba(0, 0, 0, 0.12)',
+        'float-xl': '0 32px 64px -16px rgba(0, 0, 0, 0.2), 0 12px 24px -12px rgba(0, 0, 0, 0.15)',
       },
       backgroundImage: {
-        // Using direct color values instead of theme()
-        'gradient-chartreuse': 'linear-gradient(to right, #c2d500, #8cae00)', // primary-400 to accent
-        'gradient-chartreuse-vertical': 'linear-gradient(to bottom, #c2d500, #8cae00)', // primary-400 to accent
-        'gradient-primary': 'linear-gradient(to right, #c2d500, #a4b700)', // primary-400 to primary-600
-        'gradient-dark': 'linear-gradient(to bottom, #111111, #2b2b2b)', // dark bg to dark bg alt
-        'gradient-light': 'linear-gradient(to bottom, #FFFFFF, #F9FAFB)', // bg-light to bg-light-alt
-        'hero-light-gradient': 'linear-gradient(135deg, #c2d500, #8cae00)', // primary-400 to accent
-        'hero-dark-gradient': 'linear-gradient(135deg, #111111, #2b2b2b, #5a7000)', // dark bg, dark bg alt, accent-darker
+        // Pattern backgrounds using only palette colors
+        'pattern-dots': 'radial-gradient(circle, #94a9bc 1px, transparent 1px)',
+        'pattern-grid': 'linear-gradient(rgba(148, 169, 188, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(148, 169, 188, 0.1) 1px, transparent 1px)',
+        'pattern-diagonal': 'repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(148, 169, 188, 0.1) 10px, rgba(148, 169, 188, 0.1) 11px)',
+      },
+      // Enhanced border radius
+      borderRadius: {
+        'none': '0',
+        'sm': '0.125rem',
+        'DEFAULT': '0.25rem',
+        'md': '0.375rem',
+        'lg': '0.5rem',
+        'xl': '0.75rem',
+        '2xl': '1rem',
+        '3xl': '1.5rem',
+        '4xl': '2rem',
+        'full': '9999px',
+      },
+
+      // Enhanced backdrop blur
+      backdropBlur: {
+        'none': '0',
+        'sm': '4px',
+        'DEFAULT': '8px',
+        'md': '12px',
+        'lg': '16px',
+        'xl': '24px',
+        '2xl': '40px',
+        '3xl': '64px',
+      },
+
+      // Enhanced z-index scale
+      zIndex: {
+        '0': '0',
+        '10': '10',
+        '20': '20',
+        '30': '30',
+        '40': '40',
+        '50': '50',
+        '60': '60',
+        '70': '70',
+        '80': '80',
+        '90': '90',
+        '100': '100',
+        'auto': 'auto',
+      },
+
+      // Enhanced opacity scale
+      opacity: {
+        '0': '0',
+        '5': '0.05',
+        '10': '0.1',
+        '15': '0.15',
+        '20': '0.2',
+        '25': '0.25',
+        '30': '0.3',
+        '35': '0.35',
+        '40': '0.4',
+        '45': '0.45',
+        '50': '0.5',
+        '55': '0.55',
+        '60': '0.6',
+        '65': '0.65',
+        '70': '0.7',
+        '75': '0.75',
+        '80': '0.8',
+        '85': '0.85',
+        '90': '0.9',
+        '95': '0.95',
+        '100': '1',
       },
     },
   },

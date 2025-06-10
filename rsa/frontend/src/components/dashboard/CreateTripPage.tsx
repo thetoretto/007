@@ -49,17 +49,17 @@ const CreateTripPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-light dark:bg-dark">
       <Navbar />
       <main className="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">Create New Trip</h1>
+        <h1 className="text-3xl font-bold text-light-primary dark:text-dark-primary mb-8">Create New Trip</h1>
         {/* Render the unified TripForm component */}
         {/* Pass isCreatePageContext={true} to indicate it's embedded */}
         {/* Pass the onSubmit handler */}
-        {/* onClose is not strictly needed here as it's not a modal, but TripForm might expect it. 
+        {/* onClose is not strictly needed here as it's not a modal, but TripForm might expect it.
             We can pass a dummy function or modify TripForm to not require it when isCreatePageContext is true.
             For now, let's assume TripForm handles onClose gracefully if not in modal mode or provide a no-op. */}
-        <div className="bg-white p-8 rounded-lg shadow-lg">
+        <div className="card p-8">
           <TripForm 
             isOpen={true} // Form is always 'open' in this context
             onClose={() => {}} // No-op for onClose as it's not a modal

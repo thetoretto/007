@@ -17,10 +17,10 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   }[size];
 
   const colorClass = {
-    primary: 'text-primary dark:text-primary-200',
-    white: 'text-text-inverse',
-    accent: 'text-accent-yellow dark:text-accent-kente-gold',
-    secondary: 'text-secondary dark:text-secondary-200',
+    primary: 'text-primary',
+    white: 'text-black dark:text-white',
+    accent: 'text-accent',
+    secondary: 'text-secondary',
   }[color];
 
   return (

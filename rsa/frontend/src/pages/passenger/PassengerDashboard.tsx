@@ -127,32 +127,32 @@ const PassengerDashboard: React.FC = () => {
   };
 
   return (
-    <div className="text-gray-900 dark:text-gray-50 transition-colors duration-300">
+    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
       {/* Navbar is fixed, so main content needs top padding */}
       <ToastContainer />
       <main className="container-app pt-navbar pb-8 md:pb-12">
         {/* Header with greeting and search */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div className="flex-1 min-w-0 mb-4 md:mb-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white transition-colors duration-300">Passenger Dashboard</h1>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
+            <h1 className="text-2xl md:text-3xl font-bold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">Passenger Dashboard</h1>
+            <p className="mt-1 text-sm text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">
               {user && `Welcome back, ${user.firstName} ${user.lastName}`}
             </p>
           </div>
           <div className="flex flex-wrap gap-3 items-center">
             <div className="relative flex ">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-gray-600 dark:text-gray-300 transition-colors duration-300" />
+                <Search className="h-4 w-4 text-text-light-tertiary dark:text-text-dark-tertiary transition-colors duration-300" />
               </div>
               <input
                 type="text"
                 placeholder="Search routes..."
-                className="form-input block w-full  pr-4 py-2 text-gray-900 dark:text-white dark:bg-gray-700 dark:border-gray-600 rounded-lg focus:ring-primary-500 focus:border-primary-500 transition-colors duration-300"
+                className="form-input block w-full pr-4 py-2 transition-colors duration-300"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
-            <Link to="/book" className="btn btn-accent py-3 px-4 flex items-center gap-2">
+            <Link to="/book" className="btn btn-primary py-3 px-4 flex items-center gap-2">
               <Ticket className="h-4 w-4" />
               Book a Trip
             </Link>
@@ -163,13 +163,13 @@ const PassengerDashboard: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="card p-6 card-interactive hover:shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Total Trips</p>
-              <div className="icon-badge icon-badge-md bg-primary-light text-primary dark:bg-primary-dark dark:text-primary-light">
+              <p className="text-sm font-medium text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">Total Trips</p>
+              <div className="icon-badge icon-badge-md bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-700">
                 <Calendar className="h-6 w-6" />
               </div>
             </div>
-            <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{dummyTripStats.total}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300">Lifetime trips</p>
+            <p className="text-3xl font-semibold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">{dummyTripStats.total}</p>
+            <p className="text-xs text-text-light-tertiary dark:text-text-dark-tertiary mt-1 transition-colors duration-300">Lifetime trips</p>
           </div>
 
           <div className="card p-6 card-interactive hover:shadow-sm">
@@ -211,11 +211,11 @@ const PassengerDashboard: React.FC = () => {
           <div className="lg:col-span-2">
             <div className="card overflow-hidden mb-8">
               <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300 flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
-                  <Calendar className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
+                <h2 className="text-lg font-semibold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300 flex items-center">
+                  <Calendar className="h-5 w-5 mr-2 text-primary-700 transition-colors duration-300" />
                   Upcoming Trips
                 </h2>
-                <Link to="/passenger/trips" className="btn btn-ghost btn-sm text-primary-600 dark:text-primary-400 flex items-center gap-2 transition-colors duration-300">
+                <Link to="/passenger/trips" className="btn btn-ghost btn-sm text-primary-700 flex items-center gap-2 transition-colors duration-300">
                   View all <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>

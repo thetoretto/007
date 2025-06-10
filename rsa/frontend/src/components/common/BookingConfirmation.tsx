@@ -113,14 +113,14 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
   };
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 border border-gray-100 dark:border-gray-700 flex flex-col max-h-[85vh] overflow-hidden ${className}`}>
+    <div className={`card p-4 sm:p-6 flex flex-col max-h-[85vh] overflow-hidden ${className}`}>
       <div className="text-center mb-3 sm:mb-4">
-        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-          <CheckCircle className="h-10 w-10 sm:h-12 sm:w-12 text-green-500 dark:text-green-400" />
+        <div className="icon-badge icon-badge-xl bg-success/10 text-success mx-auto mb-4">
+          <CheckCircle className="h-10 w-10 sm:h-12 sm:w-12" />
         </div>
-        
-        <h2 className="text-xl sm:text-2xl font-bold mb-1 sm:mb-2">Booking Confirmed!</h2>
-        <p className="text-gray-600 dark:text-gray-300 mb-3 sm:mb-4 text-sm sm:text-base max-w-md mx-auto">
+
+        <h2 className="text-xl sm:text-2xl font-bold mb-2 text-text-light-primary dark:text-text-dark-primary">Booking Confirmed!</h2>
+        <p className="text-text-light-secondary dark:text-text-dark-secondary mb-4 text-sm sm:text-base max-w-md mx-auto">
           Your trip has been successfully booked. Please keep your confirmation details for reference.
         </p>
       </div>
@@ -237,11 +237,11 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
       </div>
       
       {/* Action Buttons - Sticky at the bottom */}
-      <div className="border-t border-gray-200 dark:border-gray-700 pt-3 mt-1 sticky bottom-0 bg-white dark:bg-gray-800">
+      <div className="border-t border-border-light dark:border-border-dark pt-3 mt-1 sticky bottom-0 bg-surface-light dark:bg-surface-dark">
         <div className="flex flex-wrap gap-2 sm:gap-3 justify-center mb-3">
           <button
             onClick={handlePrint}
-            className="flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg text-xs sm:text-sm transition-colors leading-tight"
+            className="btn btn-secondary btn-sm flex items-center"
           >
             <Printer className="h-3.5 w-3.5 mr-1.5" />
             Print Ticket
@@ -249,33 +249,33 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({
           
           <button
             onClick={handleShare}
-            className="flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg text-xs sm:text-sm transition-colors leading-tight"
+            className="btn btn-secondary btn-sm flex items-center"
           >
             <Share2 className="h-3.5 w-3.5 mr-1.5" />
             Share Details
           </button>
-          
+
           <button
             onClick={handleDownload}
-            className="flex items-center px-3 py-2 bg-accent-kente-gold hover:bg-accent-kente-gold-dark text-white rounded-lg text-xs sm:text-sm transition-colors leading-tight"
+            className="btn btn-primary btn-sm flex items-center"
           >
             <Download className="h-3.5 w-3.5 mr-1.5" />
             Download Ticket
           </button>
         </div>
-        
+
         {/* Navigation Buttons */}
         <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
           <button
             onClick={onBookAnother}
-            className="w-full py-2.5 sm:py-3 bg-accent-kente-gold hover:bg-accent-kente-gold-dark text-white rounded-lg transition-all text-sm sm:text-base font-medium"
+            className="btn btn-primary w-full py-3 text-sm sm:text-base"
           >
             Book Another Trip
           </button>
-          
+
           <button
             onClick={onViewBookings}
-            className="w-full py-2.5 sm:py-3 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm sm:text-base"
+            className="btn btn-secondary w-full py-3 text-sm sm:text-base"
           >
             View My Bookings
           </button>

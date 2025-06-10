@@ -108,7 +108,7 @@ const BecomeMemberPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark">
+    <div className="flex flex-col min-h-screen bg-light dark:bg-dark">
 
       <main className="flex-grow container-app py-12 sm:py-20 px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -118,10 +118,10 @@ const BecomeMemberPage: React.FC = () => {
           className="max-w-5xl mx-auto"
         >
           <motion.div variants={fadeInUp} className="text-center mb-12">
-            <h1 className="text-3xl sm:text-4xl font-bold text-text-base dark:text-text-inverse tracking-tight mb-4">
+            <h1 className="text-3xl sm:text-4xl font-bold text-light-primary dark:text-dark-primary tracking-tight mb-4">
               Become a Driver Partner
             </h1>
-            <p className="mt-2 text-lg text-text-muted dark:text-primary-200 max-w-2xl mx-auto">
+            <p className="mt-2 text-lg text-light-secondary dark:text-primary-medium max-w-2xl mx-auto">
               Register your vehicle and start earning with every ride. Complete your driver profile
               to get approved within 24 hours.
             </p>
@@ -133,24 +133,24 @@ const BecomeMemberPage: React.FC = () => {
               <div className="flex justify-between max-w-md mx-auto">
                 <div className="flex flex-col items-center">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm ${
-                    step >= 1 ? 'bg-primary text-text-inverse dark:bg-primary-400' : 'bg-section-light dark:bg-section-dark text-text-muted'
+                    step >= 1 ? 'bg-primary text-black dark:bg-primary-medium' : 'bg-surface-light dark:bg-surface-dark text-light-tertiary'
                   }`}>
                     1
                   </div>
-                  <span className={`mt-2 text-sm ${step >= 1 ? 'text-text-base dark:text-text-inverse' : 'text-text-muted'}`}>
+                  <span className={`mt-2 text-sm ${step >= 1 ? 'text-light-primary dark:text-dark-primary' : 'text-light-tertiary'}`}>
                     Personal Details
                   </span>
                 </div>
                 <div className="flex-1 flex items-center">
-                  <div className={`h-1 w-full ${step >= 2 ? 'bg-primary dark:bg-primary-400' : 'bg-section-light dark:bg-section-dark'}`}></div>
+                  <div className={`h-1 w-full ${step >= 2 ? 'bg-primary dark:bg-primary-medium' : 'bg-surface-light dark:bg-surface-dark'}`}></div>
                 </div>
                 <div className="flex flex-col items-center">
                   <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm ${
-                    step >= 2 ? 'bg-primary text-text-inverse dark:bg-primary-400' : 'bg-section-light dark:bg-section-dark text-text-muted'
+                    step >= 2 ? 'bg-primary text-black dark:bg-primary-medium' : 'bg-surface-light dark:bg-surface-dark text-light-tertiary'
                   }`}>
                     2
                   </div>
-                  <span className={`mt-2 text-sm ${step >= 2 ? 'text-text-base dark:text-text-inverse' : 'text-text-muted'}`}>
+                  <span className={`mt-2 text-sm ${step >= 2 ? 'text-light-primary dark:text-dark-primary' : 'text-light-tertiary'}`}>
                     Vehicle Info
                   </span>
                 </div>
@@ -162,15 +162,15 @@ const BecomeMemberPage: React.FC = () => {
             {/* Form Container */}
             <div className="md:col-span-3">
               {isSubmitted ? (
-                <motion.div 
-                  className="card p-8 rounded-xl shadow-lg border border-primary-100 dark:border-primary-800 bg-background-light dark:bg-section-dark text-center py-16"
+                <motion.div
+                  className="card p-8 text-center py-16"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <CheckCircle className="h-20 w-20 text-success mx-auto mb-6" />
-                  <h2 className="text-2xl font-semibold text-text-base dark:text-text-inverse mb-4">Registration Successful!</h2>
-                  <p className="text-text-muted dark:text-primary-200 mb-8 max-w-md mx-auto">
+                  <CheckCircle className="h-20 w-20 text-secondary mx-auto mb-6" />
+                  <h2 className="text-2xl font-semibold text-light-primary dark:text-dark-primary mb-4">Registration Successful!</h2>
+                  <p className="text-light-secondary dark:text-primary-medium mb-8 max-w-md mx-auto">
                     Thank you for joining our driver network. We'll review your details and get back to you within 24 hours.
                   </p>
                   <div className="flex flex-col sm:flex-row justify-center space-y-3 sm:space-y-0 sm:space-x-4">
@@ -189,10 +189,10 @@ const BecomeMemberPage: React.FC = () => {
                   </div>
                   </motion.div>
               ) : (
-                <div className="card p-8 rounded-xl shadow-lg border border-primary-100 dark:border-primary-800 bg-background-light dark:bg-section-dark">
+                <div className="card p-8">
                   {step === 1 && (
                     <div>
-                      <h2 className="text-xl font-semibold text-text-base dark:text-text-inverse mb-6">
+                      <h2 className="text-xl font-semibold text-light-primary dark:text-dark-primary mb-6">
                         Personal Information
                       </h2>
                       <form className="space-y-6">
@@ -202,7 +202,7 @@ const BecomeMemberPage: React.FC = () => {
                     </label>
                           <div className="relative">
                       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                              <User className="h-5 w-5 text-text-muted dark:text-primary-200" />
+                              <User className="h-5 w-5 text-light-tertiary dark:text-primary-medium" />
                       </div>
                       <input
                         type="text"

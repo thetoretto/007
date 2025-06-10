@@ -13,19 +13,19 @@ const TripTicket: React.FC<TripTicketProps> = ({ booking }) => {
   const getStatusInfo = () => {
     switch (status) {
       case 'pending':
-        return { icon: <AlertTriangle className="h-5 w-5 text-warning-500" />, text: 'Pending Confirmation', color: 'text-warning-700 bg-warning-100' };
+        return { icon: <AlertTriangle className="h-5 w-5 text-primary" />, text: 'Pending Confirmation', color: 'text-primary bg-primary-100' };
       case 'confirmed':
-        return { icon: <CheckCircle className="h-5 w-5 text-primary-500" />, text: 'Confirmed', color: 'text-primary-700 bg-primary-100' };
+        return { icon: <CheckCircle className="h-5 w-5 text-primary" />, text: 'Confirmed', color: 'text-primary bg-primary-100' };
       case 'completed':
-        return { icon: <CheckCircle className="h-5 w-5 text-success-500" />, text: 'Completed', color: 'text-success-700 bg-success-100' };
+        return { icon: <CheckCircle className="h-5 w-5 text-secondary" />, text: 'Completed', color: 'text-secondary bg-secondary/10' };
       case 'cancelled':
-        return { icon: <XCircle className="h-5 w-5 text-error-500" />, text: 'Cancelled', color: 'text-error-700 bg-error-100' };
+        return { icon: <XCircle className="h-5 w-5 text-accent" />, text: 'Cancelled', color: 'text-accent bg-accent/10' };
       case 'checked-in':
-        return { icon: <CheckCircle className="h-5 w-5 text-indigo-500" />, text: 'Checked In', color: 'text-indigo-700 bg-indigo-100' };
+        return { icon: <CheckCircle className="h-5 w-5 text-purple" />, text: 'Checked In', color: 'text-purple bg-purple/10' };
       case 'validated': // Added validated status
-        return { icon: <CheckCircle className="h-5 w-5 text-teal-500" />, text: 'Validated', color: 'text-teal-700 bg-teal-100' };
+        return { icon: <CheckCircle className="h-5 w-5 text-secondary" />, text: 'Validated', color: 'text-secondary bg-secondary/10' };
       case 'booked': // Added booked status
-        return { icon: <Info className="h-5 w-5 text-blue-500" />, text: 'Booked', color: 'text-blue-700 bg-blue-100' };
+        return { icon: <Info className="h-5 w-5 text-purple" />, text: 'Booked', color: 'text-purple bg-purple/10' };
       default:
         return { icon: <Info className="h-5 w-5 text-gray-500" />, text: status, color: 'text-gray-700 bg-gray-100' };
     }
@@ -65,7 +65,7 @@ const TripTicket: React.FC<TripTicketProps> = ({ booking }) => {
         <div>
           <p className="text-xs text-gray-500 uppercase tracking-wider mb-0.5">From</p>
           <p className="text-lg font-medium text-gray-800 flex items-center">
-            <MapPin className="h-5 w-5 mr-2 text-primary-500 flex-shrink-0" />
+            <MapPin className="h-5 w-5 mr-2 text-primary flex-shrink-0" />
             {route?.origin.name}
           </p>
           <p className="text-sm text-gray-500 ml-7">{route?.origin.address}, {route?.origin.city}</p>
@@ -73,7 +73,7 @@ const TripTicket: React.FC<TripTicketProps> = ({ booking }) => {
         <div>
           <p className="text-xs text-gray-500 uppercase tracking-wider mb-0.5">To</p>
           <p className="text-lg font-medium text-gray-800 flex items-center">
-            <MapPin className="h-5 w-5 mr-2 text-primary-500 flex-shrink-0" />
+            <MapPin className="h-5 w-5 mr-2 text-primary flex-shrink-0" />
             {route?.destination.name}
           </p>
           <p className="text-sm text-gray-500 ml-7">{route?.destination.address}, {route?.destination.city}</p>
@@ -121,12 +121,12 @@ const TripTicket: React.FC<TripTicketProps> = ({ booking }) => {
         )}
         <div className="flex justify-between items-center font-bold text-lg mb-2">
           <p className="text-gray-800">Total Paid:</p>
-          <p className="text-primary-600">${fare?.total?.toFixed(2) ?? 'N/A'}</p>
+          <p className="text-primary">${fare?.total?.toFixed(2) ?? 'N/A'}</p>
         </div>
         <div className="flex items-center text-sm">
           <CreditCard className="h-4 w-4 mr-2 text-gray-500" />
           <span className="text-gray-600">Payment Status: </span>
-          <span className={`ml-1 font-medium ${paymentStatus === 'paid' ? 'text-success-600' : 'text-warning-600'}`}>
+          <span className={`ml-1 font-medium ${paymentStatus === 'paid' ? 'text-secondary' : 'text-primary'}`}>
             {paymentStatus === 'paid' ? 'Paid' : 'Pending'}
           </span>
         </div>

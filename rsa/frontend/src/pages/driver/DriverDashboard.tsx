@@ -213,7 +213,7 @@ const DriverDashboard: React.FC = () => {
   };
 
   return (
-    <div className=" text-gray-800 dark:text-gray-200 transition-colors duration-300">
+    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
       <Navbar />
       <ToastContainer />
       {/* Main content with adjusted padding to accommodate fixed navbar */}
@@ -221,18 +221,18 @@ const DriverDashboard: React.FC = () => {
         {/* Header with actions - Restored */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div className="flex-1 min-w-0 mb-4 md:mb-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white transition-colors duration-300">Driver Dashboard</h1>
-            <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
+            <h1 className="text-2xl md:text-3xl font-bold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">Driver Dashboard</h1>
+            <p className="mt-1 text-sm text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">
               {user && `Welcome back, ${user.firstName} ${user.lastName}`}
             </p>
           </div>
           <div className="flex flex-wrap gap-3 items-center">
-            <button onClick={openCreateModal} className="btn btn-accent flex items-center gap-1 px-2 py-3">
+            <button onClick={openCreateModal} className="btn btn-primary flex items-center gap-1 px-2 py-3">
               <Plus className="h-4 w-4" />
               New Trip
             </button>
             <Link to="/driver/check-in" className="btn btn-secondary flex items-center gap-2 px-4 py-3">
-              <QRScannerIcon className="h-4 w-4" /> 
+              <QRScannerIcon className="h-4 w-4" />
               Validate Ticket
             </Link>
           </div>
@@ -241,28 +241,28 @@ const DriverDashboard: React.FC = () => {
         {/* Available Trips Section */}
       {availableTrips.length > 0 && (
           <div className="mb-8 card p-6">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
-              <Truck className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
+            <h2 className="text-xl font-semibold mb-4 text-text-light-primary dark:text-text-dark-primary transition-colors duration-300 flex items-center">
+              <Truck className="h-5 w-5 mr-2 text-primary-700 transition-colors duration-300" />
               Available Trips for Claiming
             </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {availableTrips.map(trip => (
                 <div key={trip.id} className="card p-4 card-interactive card-hover-border">
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="font-semibold text-gray-900 dark:text-white transition-colors duration-300">{trip.fromLocation || ''} to {trip.toLocation || ''}</h3>
+                    <h3 className="font-semibold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">{trip.fromLocation || ''} to {trip.toLocation || ''}</h3>
                     <span className="badge badge-sm badge-warning">
                       {trip.status.replace('_', ' ')}
                     </span>
                   </div>
                   <div className="space-y-1 mb-3">
-                    <p className="text-sm text-gray-600 dark:text-gray-300 flex items-center transition-colors duration-300">
+                    <p className="text-sm text-text-light-secondary dark:text-text-dark-secondary flex items-center transition-colors duration-300">
                       <Calendar className="h-4 w-4 mr-1" /> {trip.date} at {trip.time}
                     </p>
-                    <p className="text-sm text-gray-600 dark:text-gray-300 flex items-center transition-colors duration-300">
+                    <p className="text-sm text-text-light-secondary dark:text-text-dark-secondary flex items-center transition-colors duration-300">
                       <Truck className="h-4 w-4 mr-1" /> {getVehicleInfo(trip)}
                     </p>
                     {trip.price && (
-                      <p className="text-sm text-gray-600 dark:text-gray-300 flex items-center transition-colors duration-300">
+                      <p className="text-sm text-text-light-secondary dark:text-text-dark-secondary flex items-center transition-colors duration-300">
                         <DollarSign className="h-4 w-4 mr-1" /> ${trip.price.toFixed(2)}
                       </p>
                     )}

@@ -143,11 +143,11 @@ const VehicleManagement: React.FC<VehicleManagementProps> = ({ userRole }) => {
 
 
   return (
-    <div className="card bg-base-100 dark:bg-section-dark shadow-xl rounded-xl p-4 sm:p-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-border dark:border-border-dark gap-3">
+    <div className="card p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-light dark:border-dark gap-3">
         <div>
-            <h2 className="text-xl sm:text-2xl font-semibold text-text-base dark:text-text-inverse">Vehicle Fleet</h2>
-            <p className="text-sm text-text-muted dark:text-text-muted-dark mt-1">
+            <h2 className="text-xl sm:text-2xl font-semibold text-light-primary dark:text-dark-primary">Vehicle Fleet</h2>
+            <p className="text-sm text-light-secondary dark:text-dark-secondary mt-1">
                 {userRole === 'admin' ? 'Manage all registered vehicles.' : 'Manage your personal vehicles.'}
             </p>
         </div>
@@ -164,10 +164,10 @@ const VehicleManagement: React.FC<VehicleManagementProps> = ({ userRole }) => {
       {error && <div className="alert alert-error my-4"><AlertTriangle className="h-5 w-5"/> {error}</div>} 
 
       {!loading && vehicles.length === 0 && !error && (
-         <div className="text-center py-10 px-6 bg-base-200 dark:bg-section-medium rounded-lg">
-            <Car size={48} className="mx-auto text-text-muted dark:text-text-muted-dark mb-4" />
-            <h3 className="text-lg font-semibold text-text-base dark:text-text-inverse">No Vehicles Found</h3>
-            <p className="text-sm text-text-muted dark:text-text-muted-dark mt-1">
+         <div className="text-center py-10 px-6 bg-surface-light dark:bg-surface-dark rounded-lg">
+            <Car size={48} className="mx-auto text-light-tertiary dark:text-dark-tertiary mb-4" />
+            <h3 className="text-lg font-semibold text-light-primary dark:text-dark-primary">No Vehicles Found</h3>
+            <p className="text-sm text-light-secondary dark:text-dark-secondary mt-1">
                 {userRole === 'driver' ? 'You haven\'t added any vehicles yet.' : 'There are no vehicles in the system.'}
             </p>
             <button
@@ -181,38 +181,38 @@ const VehicleManagement: React.FC<VehicleManagementProps> = ({ userRole }) => {
       )}
 
       {!loading && vehicles.length > 0 && (
-        <div className="overflow-x-auto rounded-lg border border-border dark:border-border-dark">
-          <table className="min-w-full divide-y divide-border dark:divide-border-dark table-auto">
-            <thead className="bg-base-200 dark:bg-section-medium">
+        <div className="overflow-x-auto rounded-lg border border-light dark:border-dark">
+          <table className="min-w-full divide-y divide-light dark:divide-dark table-auto">
+            <thead className="bg-surface-light dark:bg-surface-dark">
               <tr>
-                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-text-muted dark:text-text-muted-dark uppercase tracking-wider">Brand/Model</th>
-                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-text-muted dark:text-text-muted-dark uppercase tracking-wider">License Plate</th>
-                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-text-muted dark:text-text-muted-dark uppercase tracking-wider hidden md:table-cell">Type</th>
-                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-text-muted dark:text-text-muted-dark uppercase tracking-wider text-center">Capacity</th>
-                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-text-muted dark:text-text-muted-dark uppercase tracking-wider text-center hidden sm:table-cell">Status</th>
+                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-light-tertiary dark:text-dark-tertiary uppercase tracking-wider">Brand/Model</th>
+                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-light-tertiary dark:text-dark-tertiary uppercase tracking-wider">License Plate</th>
+                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-light-tertiary dark:text-dark-tertiary uppercase tracking-wider hidden md:table-cell">Type</th>
+                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-light-tertiary dark:text-dark-tertiary uppercase tracking-wider text-center">Capacity</th>
+                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-light-tertiary dark:text-dark-tertiary uppercase tracking-wider text-center hidden sm:table-cell">Status</th>
                 {userRole === 'admin' && (
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-text-muted dark:text-text-muted-dark uppercase tracking-wider hidden lg:table-cell">Driver ID</th>
+                  <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-light-tertiary dark:text-dark-tertiary uppercase tracking-wider hidden lg:table-cell">Driver ID</th>
                 )}
-                <th scope="col" className="px-4 py-3 text-center text-xs font-semibold text-text-muted dark:text-text-muted-dark uppercase tracking-wider">Actions</th>
+                <th scope="col" className="px-4 py-3 text-center text-xs font-semibold text-light-tertiary dark:text-dark-tertiary uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-base-100 dark:bg-section-dark divide-y divide-border dark:divide-border-dark">
+            <tbody className="bg-surface-light dark:bg-surface-dark divide-y divide-light dark:divide-dark">
               {vehicles.map((vehicle) => (
-                <tr key={vehicle.id} className="hover:bg-base-200 dark:hover:bg-section-medium transition-colors duration-150">
+                <tr key={vehicle.id} className="hover:bg-light dark:hover:bg-dark transition-colors duration-150">
                   <td className="px-4 py-3 whitespace-nowrap text-sm">
-                    <div className="font-medium text-text-base dark:text-text-inverse">{vehicle.brand}</div>
-                    <div className="text-xs text-text-muted dark:text-text-muted-dark">{vehicle.model}</div>
+                    <div className="font-medium text-light-primary dark:text-dark-primary">{vehicle.brand}</div>
+                    <div className="text-xs text-light-tertiary dark:text-dark-tertiary">{vehicle.model}</div>
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-text-base dark:text-text-inverse font-mono">{vehicle.licensePlate}</td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-text-muted dark:text-text-muted-dark hidden md:table-cell">{vehicle.type}</td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-text-base dark:text-text-inverse text-center">{vehicle.capacity}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-light-primary dark:text-dark-primary font-mono">{vehicle.licensePlate}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-light-secondary dark:text-dark-secondary hidden md:table-cell">{vehicle.type}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-light-primary dark:text-dark-primary text-center">{vehicle.capacity}</td>
                   <td className="px-4 py-3 whitespace-nowrap text-sm text-center hidden sm:table-cell">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${vehicle.isActive ? 'bg-success-soft text-success' : 'bg-error-soft text-error'}`}>
                         {vehicle.isActive ? 'Active' : 'Inactive'}
                     </span>
                   </td>
                   {userRole === 'admin' && (
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-text-muted dark:text-text-muted-dark hidden lg:table-cell">{vehicle.driverId || 'N/A'}</td>
+                    <td className="px-4 py-3 whitespace-nowrap text-sm text-light-secondary dark:text-dark-secondary hidden lg:table-cell">{vehicle.driverId || 'N/A'}</td>
                   )}
                   <td className="px-4 py-3 whitespace-nowrap text-center text-sm font-medium space-x-1">
                     <button
@@ -239,54 +239,54 @@ const VehicleManagement: React.FC<VehicleManagementProps> = ({ userRole }) => {
 
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
-          <div className="card bg-base-100 dark:bg-background-dark w-full max-w-lg shadow-xl transform transition-all duration-300 ease-out scale-100 opacity-100 rounded-lg">
-            <div className="flex justify-between items-center p-4 border-b border-border dark:border-border-dark">
-              <h3 className="text-lg font-semibold text-text-base dark:text-text-inverse">
+          <div className="card w-full max-w-lg transform transition-all duration-300 ease-out scale-100 opacity-100">
+            <div className="flex justify-between items-center p-4 border-b border-light dark:border-dark">
+              <h3 className="text-lg font-semibold text-light-primary dark:text-dark-primary">
                 {vehicleToEdit ? 'Edit Vehicle Details' : 'Register New Vehicle'}
               </h3>
-              <button onClick={handleCloseModal} className="btn btn-sm btn-ghost btn-circle text-text-muted dark:text-text-muted-dark hover:bg-base-200 dark:hover:bg-section-medium" aria-label="Close modal">
+              <button onClick={handleCloseModal} className="btn btn-sm btn-ghost text-light-tertiary dark:text-dark-tertiary hover:bg-light dark:hover:bg-dark" aria-label="Close modal">
                 <X size={20} />
               </button>
             </div>
             <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 max-h-[80vh] overflow-y-auto">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label htmlFor="brand" className="label-text mb-1 flex items-center"><Briefcase size={14} className="mr-1.5 text-text-muted dark:text-text-muted-dark"/>Brand</label>
-                  <input type="text" id="brand" name="brand" value={formData.brand} onChange={handleChange} required className="input input-bordered w-full" placeholder="e.g., Toyota" />
+                  <label htmlFor="brand" className="form-label flex items-center"><Briefcase size={14} className="mr-1.5 text-light-tertiary dark:text-dark-tertiary"/>Brand</label>
+                  <input type="text" id="brand" name="brand" value={formData.brand} onChange={handleChange} required className="form-input" placeholder="e.g., Toyota" />
                 </div>
                 <div>
-                  <label htmlFor="model" className="label-text mb-1 flex items-center"><Car size={14} className="mr-1.5 text-text-muted dark:text-text-muted-dark"/>Model</label>
-                  <input type="text" id="model" name="model" value={formData.model} onChange={handleChange} required className="input input-bordered w-full" placeholder="e.g., Camry" />
+                  <label htmlFor="model" className="form-label flex items-center"><Car size={14} className="mr-1.5 text-light-tertiary dark:text-dark-tertiary"/>Model</label>
+                  <input type="text" id="model" name="model" value={formData.model} onChange={handleChange} required className="form-input" placeholder="e.g., Camry" />
                 </div>
               </div>
               
               <div>
-                  <label htmlFor="type" className="label-text mb-1 flex items-center"><Car size={14} className="mr-1.5 text-text-muted dark:text-text-muted-dark"/>Vehicle Type</label>
-                  <select id="type" name="type" value={formData.type} onChange={handleChange} required className="select select-bordered w-full">
+                  <label htmlFor="type" className="form-label flex items-center"><Car size={14} className="mr-1.5 text-light-tertiary dark:text-dark-tertiary"/>Vehicle Type</label>
+                  <select id="type" name="type" value={formData.type} onChange={handleChange} required className="form-select w-full">
                     {vehicleTypes.map(type => <option key={type} value={type.toLowerCase()}>{type}</option>)}
                   </select>
               </div>
 
               {userRole === 'admin' && (
                 <div>
-                  <label htmlFor="driverId" className="label-text mb-1 flex items-center"><UserIcon size={14} className="mr-1.5 text-text-muted dark:text-text-muted-dark"/>Driver ID (Optional)</label>
-                  <input type="text" id="driverId" name="driverId" value={formData.driverId} onChange={handleChange} className="input input-bordered w-full" placeholder="Assign Driver ID" />
+                  <label htmlFor="driverId" className="form-label flex items-center"><UserIcon size={14} className="mr-1.5 text-light-tertiary dark:text-dark-tertiary"/>Driver ID (Optional)</label>
+                  <input type="text" id="driverId" name="driverId" value={formData.driverId} onChange={handleChange} className="form-input" placeholder="Assign Driver ID" />
                 </div>
               )}
               <div>
-                <label htmlFor="licensePlate" className="label-text mb-1 flex items-center"><Hash size={14} className="mr-1.5 text-text-muted dark:text-text-muted-dark"/>License Plate</label>
-                <input type="text" id="licensePlate" name="licensePlate" value={formData.licensePlate} onChange={handleChange} required className="input input-bordered w-full" placeholder="e.g., RAE 123 X" />
+                <label htmlFor="licensePlate" className="form-label flex items-center"><Hash size={14} className="mr-1.5 text-light-tertiary dark:text-dark-tertiary"/>License Plate</label>
+                <input type="text" id="licensePlate" name="licensePlate" value={formData.licensePlate} onChange={handleChange} required className="form-input" placeholder="e.g., RAE 123 X" />
               </div>
               <div>
-                <label htmlFor="capacity" className="label-text mb-1 flex items-center"><Users size={14} className="mr-1.5 text-text-muted dark:text-text-muted-dark"/>Capacity (Seats)</label>
-                <input type="number" id="capacity" name="capacity" value={formData.capacity} onChange={handleChange} required min="1" className="input input-bordered w-full" placeholder="e.g., 4" />
+                <label htmlFor="capacity" className="form-label flex items-center"><Users size={14} className="mr-1.5 text-light-tertiary dark:text-dark-tertiary"/>Capacity (Seats)</label>
+                <input type="number" id="capacity" name="capacity" value={formData.capacity} onChange={handleChange} required min="1" className="form-input" placeholder="e.g., 4" />
               </div>
               
               <div>
-                  <label className="label-text mb-1 block">Features (Optional)</label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 p-3 border border-border dark:border-border-dark rounded-md bg-base-200 dark:bg-section-medium">
+                  <label className="form-label block">Features (Optional)</label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 p-3 border border-light dark:border-dark rounded-md bg-surface-light dark:bg-surface-dark">
                     {commonFeatures.map(feature => (
-                        <label key={feature} className="flex items-center space-x-2 cursor-pointer p-1.5 rounded hover:bg-base-300 dark:hover:bg-section-dark text-sm">
+                        <label key={feature} className="flex items-center space-x-2 cursor-pointer p-1.5 rounded hover:bg-light dark:hover:bg-dark text-sm">
                             <input 
                                 type="checkbox" 
                                 name="features" 
@@ -308,7 +308,7 @@ const VehicleManagement: React.FC<VehicleManagementProps> = ({ userRole }) => {
                 </label>
               </div>
               
-              <div className="flex justify-end space-x-3 pt-4 border-t border-border dark:border-border-dark mt-6">
+              <div className="flex justify-end space-x-3 pt-4 border-t border-light dark:border-dark mt-6">
                 <button type="button" onClick={handleCloseModal} className="btn btn-secondary py-3 px-4" disabled={loading}>
                   Cancel
                 </button>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { MapPin, ChevronRight, Shield, Clock, CalendarCheck, CheckCircle, ChevronDown, Calendar, Info, User, Home, ArrowLeft, Check, Search, X, Car, CreditCard } from 'lucide-react';
+import { MapPin, ChevronRight, Shield, Clock, CalendarCheck, CheckCircle, ChevronDown, Calendar, Info, User, Home, ArrowLeft, Check, Search, X, Car, CreditCard, Plane, Users, Star, Zap } from 'lucide-react';
 import SeatSelector from '../../components/common/SeatSelector';
 import TripViewer, { Trip as ViewerTrip } from '../../components/common/TripViewer';
 import PaymentForm from '../../components/common/PaymentForm';
@@ -369,81 +369,101 @@ const BookingPage: React.FC = () => {
   }, [isOriginDropdownOpen, isDestinationDropdownOpen, dropdownRefs]);
 
   const seatSelectorCustomColors = React.useMemo(() => ({
-    selected: 'bg-accent-kente-gold'
+    selected: 'bg-primary'
   }), []);
 
   return (
-    <div className=" flex flex-col   overflow-hidden">
+    <div className="min-h-screen bg-light dark:bg-dark flex flex-col overflow-hidden">
       {isLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[100] backdrop-blur-sm">
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-xl flex flex-col items-center max-w-xs mx-auto">
-            <div className="relative mb-4">
-              <div className="w-16 h-16 border-4 border-accent-kente-gold/30 rounded-full"></div>
-              <div className="absolute top-0 left-0 w-16 h-16 border-4 border-accent-kente-gold border-t-transparent rounded-full animate-spin"></div>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-[100] p-4">
+          <div className="card p-6 sm:p-8 flex flex-col items-center max-w-sm mx-auto">
+            <div className="relative mb-6">
+              <div className="w-16 h-16 sm:w-20 sm:h-20 border-4 border-primary/20 rounded-full"></div>
+              <div className="absolute top-0 left-0 w-16 h-16 sm:w-20 sm:h-20 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
             </div>
-            <p className="text-gray-700 dark:text-gray-300 text-center font-medium mb-1 text-sm sm:text-base">
+            <p className="text-black dark:text-white text-center font-semibold mb-2 text-base sm:text-lg">
               {loadingStep === 2 ? 'Finding trips...' : loadingStep === 3 ? 'Preparing seats...' : loadingStep === 4 ? 'Saving details...' : loadingStep === 5 ? 'Processing payment...' : loadingStep === 6 ? 'Confirming booking...' : 'Loading...'}
             </p>
-            <p className="text-gray-500 dark:text-gray-400 text-xs text-center">Just a moment...</p>
+            <p className="text-dark dark:text-light text-sm text-center">Just a moment...</p>
           </div>
         </div>
       )}
 
-      <div className="flex-1 flex flex-col overflow-hidden pt-8">
-        <div className="flex-1 max-w-4xl w-full mx-auto px-2 sm:px-4 py-2 sm:py-3 flex flex-col">
+      <div className="flex-1 flex flex-col overflow-hidden pt-4 sm:pt-6 lg:pt-8">
+        <div className="flex-1 max-w-5xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-3 sm:py-4 lg:py-6 flex flex-col">
           {step < 6 && (
-            <div className={`flex justify-between mb-3 sm:mb-4 px-1 sm:px-2 overflow-x-auto ${noScrollbarClass}`}>
-              {[1, 2, 3, 4, 5].map((s) => (
-                <div key={s} className="flex flex-col items-center min-w-[60px] sm:min-w-[70px] flex-1">
-                  <div className={`w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center transition-all duration-300 border-2 ${step > s ? 'bg-accent-kente-gold-dark text-white border-accent-kente-gold-dark' : step === s ? 'bg-accent-kente-gold text-white ring-4 ring-accent-kente-gold/30 border-accent-kente-gold' : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400 border-gray-300 dark:border-gray-600'}`}>
-                    {step > s ? <Check className="h-3.5 w-3.5 sm:h-4 sm:w-4" /> : <span className="text-xs sm:text-sm font-medium">{s}</span>}
+            <div className="mb-6 sm:mb-8 lg:mb-10">
+              <div className={`flex justify-between px-2 sm:px-4 overflow-x-auto ${noScrollbarClass}`}>
+                {[1, 2, 3, 4, 5].map((s, index) => (
+                  <div key={s} className="flex flex-col items-center min-w-[70px] sm:min-w-[80px] lg:min-w-[90px] flex-1 relative">
+                    {/* Connection line */}
+                    {index < 4 && (
+                      <div className={`absolute top-4 sm:top-5 left-1/2 w-full h-0.5 ${step > s ? 'bg-primary' : 'bg-gray-300 dark:bg-gray-600'} transition-colors duration-300 hidden sm:block`} style={{ transform: 'translateX(50%)', zIndex: 0 }} />
+                    )}
+                    <div className={`w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-full flex items-center justify-center transition-all duration-500 border-2 relative z-10 ${step > s ? 'bg-primary text-black border-primary shadow-lg scale-110' : step === s ? 'bg-primary text-black ring-4 ring-primary/30 border-primary shadow-xl scale-110' : 'bg-white dark:bg-dark text-secondary border-secondary/20 dark:border-secondary/40 shadow-md hover:shadow-lg'}`}>
+                      {step > s ? <Check className="h-4 w-4 sm:h-5 sm:w-5 lg:h-6 lg:w-6" /> : <span className="text-sm sm:text-base lg:text-lg font-semibold">{s}</span>}
+                    </div>
+                    <div className="mt-2 sm:mt-3 flex flex-col items-center">
+                      <span className={`text-xs sm:text-sm lg:text-base text-center whitespace-nowrap font-semibold transition-colors duration-300 ${step === s ? 'text-primary' : step > s ? 'text-primary' : 'text-secondary'}`}>
+                        {s === 1 ? 'Route' : s === 2 ? 'Trip' : s === 3 ? 'Seat' : s === 4 ? 'Details' : 'Payment'}
+                      </span>
+                    </div>
                   </div>
-                  <div className="mt-1.5 flex flex-col items-center">
-                    <span className={`text-xs text-center whitespace-nowrap font-medium ${step === s ? 'text-accent-kente-gold dark:text-accent-kente-gold' : 'text-gray-600 dark:text-gray-400'}`}>
-                      {s === 1 ? 'Route' : s === 2 ? 'Trip' : s === 3 ? 'Seat' : s === 4 ? 'Details' : 'Payment'}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
 
           <div className={`flex-1 overflow-y-auto ${noScrollbarClass}`}>
-            <div className="max-w-xl w-full mx-auto pb-4 sm:pb-6">
+            <div className="max-w-2xl w-full mx-auto pb-6 sm:pb-8 lg:pb-10">
               {step === 1 && (
-                <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 border border-gray-200 dark:border-gray-700">
-                  <h2 className="text-lg sm:text-xl font-semibold mb-5 sm:mb-6 text-center text-gray-800 dark:text-white">Where are you traveling?</h2>
-                  <div className="mb-4 sm:mb-5">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center">
-                      <MapPin className="h-4 w-4 mr-2 text-accent-red" /> Starting Point
+                <div className="card card-interactive p-6 sm:p-8 lg:p-10">
+                  <div className="text-center mb-8 sm:mb-10">
+                    <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 text-gradient-primary">Where are you traveling?</h2>
+                    <p className="text-dark dark:text-light text-sm sm:text-base lg:text-lg">Choose your departure and destination points</p>
+                  </div>
+                  <div className="mb-6 sm:mb-8">
+                    <label className="block text-base sm:text-lg font-semibold text-black dark:text-white mb-3 flex items-center">
+                      <div className="icon-badge icon-badge-lg bg-accent/10 text-accent mr-3">
+                        <MapPin className="h-4 w-4 sm:h-5 sm:w-5" />
+                      </div>
+                      Starting Point
                     </label>
                     <div className="relative">
                       <div className="relative origin-dropdown-container" ref={dropdownRefs.origin}>
-                        <button type="button" className="flex w-full justify-between items-center pl-3 pr-3 py-2.5 sm:pl-4 sm:pr-3 sm:py-3 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700/80 text-gray-900 dark:text-white hover:border-accent-kente-gold focus:border-accent-kente-gold focus:ring-2 focus:ring-accent-kente-gold/20 focus:outline-none transition-all" onClick={(e) => { e.stopPropagation(); setIsOriginDropdownOpen(!isOriginDropdownOpen); }} aria-expanded={isOriginDropdownOpen} aria-haspopup="listbox">
-                          <span className={origin ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}>{origin || 'Select starting point'}</span>
-                          <ChevronDown className={`h-4 w-4 flex-shrink-0 text-gray-500 dark:text-gray-400 ${isOriginDropdownOpen ? 'transform rotate-180' : ''}`} />
+                        <button type="button" className="input-field flex w-full justify-between items-center pl-4 pr-4 py-4 sm:pl-6 sm:pr-4 sm:py-5 text-base sm:text-lg" onClick={(e) => { e.stopPropagation(); setIsOriginDropdownOpen(!isOriginDropdownOpen); }} aria-expanded={isOriginDropdownOpen} aria-haspopup="listbox">
+                          <span className={`font-medium ${origin ? 'text-light-primary dark:text-dark-primary' : 'text-light-tertiary dark:text-dark-tertiary'}`}>{origin || 'Select starting point'}</span>
+                          <ChevronDown className={`h-5 w-5 flex-shrink-0 text-light-tertiary dark:text-dark-tertiary transition-transform duration-300 ${isOriginDropdownOpen ? 'transform rotate-180' : ''}`} />
                         </button>
                         {isOriginDropdownOpen && (
-                          <div className="absolute z-50 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-xl max-h-60 overflow-auto" onMouseDown={(e) => e.stopPropagation()}>
-                            <div className="sticky top-0 bg-white dark:bg-gray-800 z-10">
-                              <div className="flex items-center p-2.5 sm:p-3 border-b border-gray-200 dark:border-gray-700">
-                                <Search className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
-                                <input type="text" placeholder="Search locations..." className="w-full bg-transparent border-none p-0 text-sm sm:text-base focus:ring-0 focus:outline-none" value={origin} onChange={(e) => setOrigin(e.target.value)} onClick={(e) => e.stopPropagation()} autoFocus />
-                                {origin && <button className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 ml-2 p-1 rounded-full" onClick={() => setOrigin('')}><X className="h-3.5 w-3.5 sm:h-4 sm:w-4" /></button>}
+                          <div className="absolute z-50 mt-2 w-full bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md border-2 border-light dark:border-dark rounded-xl shadow-2xl max-h-72 overflow-hidden" onMouseDown={(e) => e.stopPropagation()}>
+                            <div className="sticky top-0 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md z-10">
+                              <div className="flex items-center p-4 border-b-2 border-light dark:border-dark">
+                                <Search className="h-5 w-5 text-light-tertiary dark:text-dark-tertiary mr-3" />
+                                <input type="text" placeholder="Search locations..." className="w-full bg-transparent border-none p-0 text-base sm:text-lg focus:ring-0 focus:outline-none font-medium text-light-primary dark:text-dark-primary placeholder-light-tertiary dark:placeholder-dark-tertiary" value={origin} onChange={(e) => setOrigin(e.target.value)} onClick={(e) => e.stopPropagation()} autoFocus />
+                                {origin && <button className="text-light-tertiary hover:text-light-primary dark:hover:text-dark-primary ml-3 p-2 rounded-full hover:bg-light dark:hover:bg-dark transition-all duration-200" onClick={() => setOrigin('')}><X className="h-4 w-4 sm:h-5 sm:w-5" /></button>}
                               </div>
                             </div>
-                            {availableOrigins.length > 0 ? (
-                              <ul role="listbox" className="py-1">
-                                {availableOrigins.filter(org => org.toLowerCase().includes(origin.toLowerCase())).map((org, index) => (
-                                  <li key={index} role="option" aria-selected={origin === org} className={`px-3 py-2 sm:px-4 sm:py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm sm:text-base flex items-center ${origin === org ? 'bg-gray-50 dark:bg-gray-700 font-medium' : ''}`} onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOrigin(org); setIsOriginDropdownOpen(false); }}>
-                                    <MapPin className="h-4 w-4 mr-2.5 text-accent-red opacity-70" /> {org}
-                                  </li>
-                                ))}
-                              </ul>
-                            ) : <div className="p-4 text-gray-500 dark:text-gray-400 text-center text-sm">No locations found</div>}
-                            <div className="p-2 border-t border-gray-200 dark:border-gray-600">
-                              <button className="w-full flex items-center justify-center text-accent-kente-gold hover:text-accent-kente-gold-dark text-sm sm:text-base p-2 rounded-md hover:bg-accent-kente-gold/10 transition-colors" onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigator.geolocation?.getCurrentPosition(() => { setOrigin("Current Location"); setIsOriginDropdownOpen(false); }, (error) => { console.error("Error getting location:", error); alert("Could not access your location. Please select manually."); }); }}>
-                                <MapPin className="h-4 w-4 mr-2" /> Use Current Location
+                            <div className="max-h-48 overflow-y-auto">
+                              {availableOrigins.length > 0 ? (
+                                <ul role="listbox" className="py-2">
+                                  {availableOrigins.filter(org => org.toLowerCase().includes(origin.toLowerCase())).map((org, index) => (
+                                    <li key={index} role="option" aria-selected={origin === org} className={`px-4 py-3 sm:px-6 sm:py-4 hover:bg-primary/10 dark:hover:bg-primary/20 cursor-pointer text-base sm:text-lg flex items-center transition-all duration-200 border-b border-light/50 dark:border-dark/50 last:border-b-0 ${origin === org ? 'bg-primary/10 dark:bg-primary/20 font-semibold' : 'font-medium'}`} onClick={(e) => { e.preventDefault(); e.stopPropagation(); setOrigin(org); setIsOriginDropdownOpen(false); }}>
+                                      <div className="icon-badge icon-badge-sm bg-accent/10 text-accent mr-3">
+                                        <MapPin className="h-4 w-4" />
+                                      </div>
+                                      {org}
+                                    </li>
+                                  ))}
+                                </ul>
+                              ) : <div className="p-6 text-gray-500 dark:text-gray-400 text-center text-base">No locations found</div>}
+                            </div>
+                            <div className="p-4 border-t-2 border-light dark:border-dark bg-light/50 dark:bg-dark/50">
+                              <button className="w-full flex items-center justify-center text-primary hover:text-primary-dark text-base sm:text-lg p-3 rounded-lg hover:bg-primary/10 transition-all duration-200 font-semibold" onClick={(e) => { e.preventDefault(); e.stopPropagation(); navigator.geolocation?.getCurrentPosition(() => { setOrigin("Current Location"); setIsOriginDropdownOpen(false); }, (error) => { console.error("Error getting location:", error); alert("Could not access your location. Please select manually."); }); }}>
+                                <div className="icon-badge icon-badge-sm bg-primary/10 text-primary mr-3">
+                                  <MapPin className="h-4 w-4" />
+                                </div>
+                                Use Current Location
                               </button>
                             </div>
                           </div>
@@ -451,59 +471,77 @@ const BookingPage: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="mt-3 mb-5">
-                    <div className="text-xs text-gray-500 dark:text-gray-400 mb-1.5 flex items-center">
-                      <Clock className="h-3 w-3 mr-1" /> Popular starting points
+                  <div className="mt-6 mb-8">
+                    <div className="text-sm sm:text-base text-light-secondary dark:text-dark-secondary mb-4 flex items-center font-medium">
+                      <div className="icon-badge icon-badge-sm bg-primary/10 text-primary mr-2">
+                        <Clock className="h-3 w-3" />
+                      </div>
+                      Popular starting points
                     </div>
-                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
                       {popularOrigins.map((city, i) => (
-                        <button key={i} className="px-2.5 py-1 sm:px-3 sm:py-1.5 text-xs sm:text-sm bg-gray-100 hover:bg-accent-kente-gold/20 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-full text-gray-700 dark:text-gray-300 flex items-center transition-colors" onClick={() => { setOrigin(city); setIsOriginDropdownOpen(false); }}>
-                          <MapPin className="h-3 w-3 mr-1 text-accent-red opacity-70" /> {city}
+                        <button key={i} className="px-4 py-2 sm:px-5 sm:py-3 text-sm sm:text-base bg-gradient-to-r from-light to-surface-light hover:from-primary/10 hover:to-primary/20 dark:from-dark dark:to-surface-dark dark:hover:from-primary/10 dark:hover:to-primary/20 rounded-xl text-light-primary dark:text-dark-primary flex items-center transition-all duration-300 shadow-sm hover:shadow-md border border-light dark:border-dark font-medium" onClick={() => { setOrigin(city); setIsOriginDropdownOpen(false); }}>
+                          <div className="icon-badge icon-badge-xs bg-accent/10 text-accent mr-2">
+                            <MapPin className="h-3 w-3" />
+                          </div>
+                          {city}
                         </button>
                       ))}
                     </div>
                   </div>
-                  <div className="mb-5 sm:mb-6">
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5 flex items-center">
-                      <MapPin className="h-4 w-4 mr-2 text-accent-kente-gold" /> Destination
+                  <div className="mb-6 sm:mb-8">
+                    <label className="block text-base sm:text-lg font-semibold text-light-primary dark:text-dark-primary mb-3 flex items-center">
+                      <div className="icon-badge icon-badge-lg bg-primary/10 text-primary mr-3">
+                        <MapPin className="h-4 w-4 sm:h-5 sm:w-5" />
+                      </div>
+                      Destination
                     </label>
                     <div className="relative">
                       <div className="relative destination-dropdown-container" ref={dropdownRefs.destination}>
-                        <button type="button" className="flex w-full justify-between items-center pl-3 pr-3 py-2.5 sm:pl-4 sm:pr-3 sm:py-3 text-sm sm:text-base border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700/80 text-gray-900 dark:text-white hover:border-accent-kente-gold focus:border-accent-kente-gold focus:ring-2 focus:ring-accent-kente-gold/20 focus:outline-none transition-all" onClick={(e) => { e.stopPropagation(); setIsDestinationDropdownOpen(!isDestinationDropdownOpen); }} aria-expanded={isDestinationDropdownOpen} aria-haspopup="listbox">
-                          <span className={destination ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}>{destination || 'Where would you like to go?'}</span>
-                          <ChevronDown className={`h-4 w-4 flex-shrink-0 text-gray-500 dark:text-gray-400 ${isDestinationDropdownOpen ? 'transform rotate-180' : ''}`} />
+                        <button type="button" className="input-field flex w-full justify-between items-center pl-4 pr-4 py-4 sm:pl-6 sm:pr-4 sm:py-5 text-base sm:text-lg" onClick={(e) => { e.stopPropagation(); setIsDestinationDropdownOpen(!isDestinationDropdownOpen); }} aria-expanded={isDestinationDropdownOpen} aria-haspopup="listbox">
+                          <span className={`font-medium ${destination ? 'text-light-primary dark:text-dark-primary' : 'text-light-tertiary dark:text-dark-tertiary'}`}>{destination || 'Where would you like to go?'}</span>
+                          <ChevronDown className={`h-5 w-5 flex-shrink-0 text-light-tertiary dark:text-dark-tertiary transition-transform duration-300 ${isDestinationDropdownOpen ? 'transform rotate-180' : ''}`} />
                         </button>
                         {isDestinationDropdownOpen && (
-                          <div className="absolute z-50 mt-1 w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-xl max-h-60 overflow-auto" onMouseDown={(e) => e.stopPropagation()}>
-                            <div className="sticky top-0 bg-white dark:bg-gray-800 z-10">
-                              <div className="flex items-center p-2.5 sm:p-3 border-b border-gray-200 dark:border-gray-700">
-                                <Search className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
-                                <input type="text" placeholder="Search destinations..." className="w-full bg-transparent border-none p-0 text-sm sm:text-base focus:ring-0 focus:outline-none" value={destination} onChange={(e) => setDestination(e.target.value)} onClick={(e) => e.stopPropagation()} autoFocus />
-                                {destination && <button className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 ml-2 p-1 rounded-full" onClick={() => setDestination('')}><X className="h-3.5 w-3.5 sm:h-4 sm:w-4" /></button>}
+                          <div className="absolute z-50 mt-2 w-full bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md border-2 border-light dark:border-dark rounded-xl shadow-2xl max-h-60 overflow-auto" onMouseDown={(e) => e.stopPropagation()}>
+                            <div className="sticky top-0 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md z-10">
+                              <div className="flex items-center p-3 border-b-2 border-light dark:border-dark">
+                                <Search className="h-4 w-4 text-light-tertiary dark:text-dark-tertiary mr-3" />
+                                <input type="text" placeholder="Search destinations..." className="w-full bg-transparent border-none p-0 text-sm sm:text-base focus:ring-0 focus:outline-none text-light-primary dark:text-dark-primary placeholder-light-tertiary dark:placeholder-dark-tertiary" value={destination} onChange={(e) => setDestination(e.target.value)} onClick={(e) => e.stopPropagation()} autoFocus />
+                                {destination && <button className="text-light-tertiary hover:text-light-primary dark:hover:text-dark-primary ml-2 p-2 rounded-full hover:bg-light dark:hover:bg-dark transition-all duration-200" onClick={() => setDestination('')}><X className="h-4 w-4" /></button>}
                               </div>
                             </div>
                             {availableDestinations.length > 0 ? (
-                              <ul role="listbox" className="py-1">
+                              <ul role="listbox" className="py-2">
                                 {availableDestinations.filter(dest => dest.toLowerCase().includes(destination.toLowerCase())).map((dest, index) => (
-                                  <li key={index} role="option" aria-selected={destination === dest} className={`px-3 py-2 sm:px-4 sm:py-2.5 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer text-sm sm:text-base flex items-center ${destination === dest ? 'bg-gray-50 dark:bg-gray-700 font-medium' : ''}`} onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDestination(dest); setIsDestinationDropdownOpen(false); }}>
-                                    <MapPin className="h-4 w-4 mr-2.5 text-accent-kente-gold opacity-70" /> {dest}
+                                  <li key={index} role="option" aria-selected={destination === dest} className={`px-4 py-3 hover:bg-primary-700/10 dark:hover:bg-primary-700/20 cursor-pointer text-sm sm:text-base flex items-center transition-all duration-200 border-b border-border-light/50 dark:border-border-dark/50 last:border-b-0 ${destination === dest ? 'bg-primary-700/10 dark:bg-primary-700/20 font-medium' : ''}`} onClick={(e) => { e.preventDefault(); e.stopPropagation(); setDestination(dest); setIsDestinationDropdownOpen(false); }}>
+                                    <div className="icon-badge icon-badge-xs bg-primary-700/10 text-primary-700 mr-3">
+                                      <MapPin className="h-3 w-3" />
+                                    </div>
+                                    {dest}
                                   </li>
                                 ))}
                               </ul>
-                            ) : <div className="p-4 text-gray-500 dark:text-gray-400 text-center text-sm">No destinations found</div>}
+                            ) : <div className="p-4 text-text-light-tertiary dark:text-text-dark-tertiary text-center text-sm">No destinations found</div>}
                           </div>
                         )}
                       </div>
                     </div>
                   </div>
                   <div className="mt-3 mb-6 sm:mb-8">
-                    <div className="text-xs text-gray-500 dark:text-gray-400 mb-1.5 flex items-center">
-                      <Clock className="h-3 w-3 mr-1" /> Popular destinations
+                    <div className="text-xs text-text-light-tertiary dark:text-text-dark-tertiary mb-2 flex items-center">
+                      <div className="icon-badge icon-badge-xs bg-primary-700/10 text-primary-700 mr-2">
+                        <Clock className="h-3 w-3" />
+                      </div>
+                      Popular destinations
                     </div>
-                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
+                    <div className="flex flex-wrap gap-2">
                       {popularDestinations.map((city, i) => (
-                        <button key={i} className="px-2.5 py-1 sm:px-3 sm:py-1.5 text-xs sm:text-sm bg-gray-100 hover:bg-accent-kente-gold/20 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-full text-gray-700 dark:text-gray-300 flex items-center transition-colors" onClick={() => { setDestination(city); setIsDestinationDropdownOpen(false); }}>
-                          <MapPin className="h-3 w-3 mr-1 text-accent-kente-gold opacity-70" /> {city}
+                        <button key={i} className="px-3 py-1.5 text-xs sm:text-sm bg-background-light hover:bg-primary-700/20 dark:bg-background-dark dark:hover:bg-primary-700/30 rounded-full text-text-light-secondary dark:text-text-dark-secondary hover:text-text-light-primary dark:hover:text-text-dark-primary flex items-center transition-all duration-300 border border-border-light dark:border-border-dark" onClick={() => { setDestination(city); setIsDestinationDropdownOpen(false); }}>
+                          <div className="icon-badge icon-badge-xs bg-primary-700/10 text-primary-700 mr-1">
+                            <MapPin className="h-3 w-3" />
+                          </div>
+                          {city}
                         </button>
                       ))}
                     </div>

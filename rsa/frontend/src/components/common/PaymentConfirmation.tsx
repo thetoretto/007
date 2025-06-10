@@ -120,13 +120,13 @@ const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 overflow-auto">
-      <div className="w-full max-w-2xl bg-background-light dark:bg-section-dark rounded-lg shadow-xl overflow-hidden">
+      <div className="w-full max-w-2xl bg-light dark:bg-section-dark rounded-lg shadow-xl overflow-hidden">
         {/* Header */}
-        <div className="px-6 py-4 bg-primary-800 dark:bg-primary-900 text-text-inverse flex justify-between items-center">
+        <div className="px-6 py-4 bg-primary dark:bg-primary text-black flex justify-between items-center">
           <h2 className="text-xl font-semibold">Complete Your Payment</h2>
           <button
             onClick={onClose}
-            className="text-text-inverse hover:text-gray-200"
+            className="text-black hover:text-gray-600"
             aria-label="Close"
           >
             <X className="h-5 w-5" />
@@ -136,27 +136,27 @@ const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({
         <div className="p-4 sm:p-6">
           {/* Order summary */}
           <div className="mb-5 sm:mb-6">
-            <h3 className="text-lg font-medium mb-2 sm:mb-3 text-accent-black dark:text-text-inverse">Order Summary</h3>
-            <div className="bg-gray-50 dark:bg-background-dark rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-primary-900 max-h-[40vh] sm:max-h-[50vh] overflow-y-auto">
+            <h3 className="text-lg font-medium mb-2 sm:mb-3 text-black dark:text-dark-primary">Order Summary</h3>
+            <div className="bg-gray-50 dark:bg-dark rounded-lg p-3 sm:p-4 border border-gray-200 dark:border-primary-900 max-h-[40vh] sm:max-h-[50vh] overflow-y-auto">
               {trip && (
                 <div className="mb-3 sm:mb-4 pb-3 border-b border-gray-200 dark:border-primary-900">
-                  <h4 className="font-medium mb-1.5 sm:mb-2 text-sm sm:text-base text-text-base dark:text-text-inverse">Trip Details</h4>
+                  <h4 className="font-medium mb-1.5 sm:mb-2 text-sm sm:text-base text-light-primary dark:text-dark-primary">Trip Details</h4>
                   <div className="text-xs sm:text-sm space-y-1">
                     <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">From:</span>
-                      <span className="font-medium text-text-base dark:text-text-inverse">{trip.fromLocation}</span>
+                      <span className="font-medium text-light-primary dark:text-dark-primary">{trip.fromLocation}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">To:</span>
-                      <span className="font-medium text-text-base dark:text-text-inverse">{trip.toLocation}</span>
+                      <span className="font-medium text-light-primary dark:text-dark-primary">{trip.toLocation}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">Date & Time:</span>
-                      <span className="font-medium text-text-base dark:text-text-inverse">{new Date(trip.date).toLocaleDateString()} at {trip.time}</span>
+                      <span className="font-medium text-light-primary dark:text-dark-primary">{new Date(trip.date).toLocaleDateString()} at {trip.time}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-600 dark:text-gray-400">Trip Price:</span>
-                      <span className="font-medium text-text-base dark:text-text-inverse">${trip.price.toFixed(2)}</span>
+                      <span className="font-medium text-light-primary dark:text-dark-primary">${trip.price.toFixed(2)}</span>
                     </div>
                   </div>
                 </div>
@@ -164,12 +164,12 @@ const PaymentConfirmation: React.FC<PaymentConfirmationProps> = ({
               
               {seats && seats.length > 0 && (
                 <div className="mb-3 sm:mb-4 pb-3 border-b border-gray-200 dark:border-primary-900">
-                  <h4 className="font-medium mb-1.5 sm:mb-2 text-sm sm:text-base text-text-base dark:text-text-inverse">Selected Seats</h4>
+                  <h4 className="font-medium mb-1.5 sm:mb-2 text-sm sm:text-base text-light-primary dark:text-dark-primary">Selected Seats</h4>
                   <div className="text-xs sm:text-sm space-y-1">
                     {seats.map(seat => (
                       <div key={seat.id} className="flex justify-between">
                         <span className="text-gray-600 dark:text-gray-400">Seat {seat.number} ({seat.type})</span>
-                        <span className="font-medium text-text-base dark:text-text-inverse">${seat.price.toFixed(2)}</span>
+                        <span className="font-medium text-light-primary dark:text-dark-primary">${seat.price.toFixed(2)}</span>
                       </div>
                     ))}
                   </div>

@@ -93,12 +93,12 @@ const TripManagement: React.FC = () => {
   const newTripRoute = user?.role === 'admin' ? '/admin/trips/new' : '/driver/trips/new';
 
   return (
-    <div className="min-h-screen bg-base-200 dark:bg-base-300">
+    <div className="min-h-screen bg-light dark:bg-dark">
       <main className="container-app mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pt-16 md:pt-20">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 sm:mb-8 gap-4">
           <div className="flex-1 min-w-0">
-            <h1 className="text-2xl sm:text-3xl font-bold text-text-base dark:text-text-inverse">Trip Management</h1>
-            <p className="mt-1 text-sm text-text-muted dark:text-text-muted-dark">
+            <h1 className="text-2xl sm:text-3xl font-bold text-black dark:text-white">Trip Management</h1>
+            <p className="mt-1 text-sm text-dark dark:text-light">
               {user?.role === 'admin' ? 'Oversee and manage all scheduled trips and activities.' : 'View and manage your assigned trips and activities.'}
             </p>
           </div>

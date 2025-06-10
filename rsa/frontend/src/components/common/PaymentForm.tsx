@@ -212,9 +212,9 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   };
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 sm:p-6 border border-gray-200 dark:border-gray-700 ${className}`}>
-      <h3 className="text-lg font-semibold mb-4">{title}</h3>
-      
+    <div className={`card p-4 sm:p-6 ${className}`}>
+      <h3 className="text-lg font-semibold mb-4 text-light-primary dark:text-dark-primary">{title}</h3>
+
       {/* Payment method selection */}
       <div className="grid grid-cols-1 gap-3 mb-5 sm:mb-6">
         <div className="grid grid-cols-3 gap-2 sm:gap-3">
@@ -222,20 +222,20 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             <button
               type="button"
               onClick={() => setSelectedMethod('airtel')}
-              className={`p-2.5 sm:p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
-                selectedMethod === 'airtel' 
-                  ? 'border-accent-kente-gold bg-accent-kente-gold/10 shadow-sm' 
-                  : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
+              className={`card card-interactive p-2.5 sm:p-4 flex flex-col items-center justify-center transition-all duration-300 ${
+                selectedMethod === 'airtel'
+                  ? 'border-primary-700 bg-primary-700/5 shadow-lg ring-2 ring-primary-700/20'
+                  : 'hover:border-primary-700/50 hover:shadow-md'
               }`}
               disabled={isProcessing}
               aria-pressed={selectedMethod === 'airtel'}
             >
-              <div className="w-9 h-9 sm:w-12 sm:h-12 flex items-center justify-center bg-red-100 dark:bg-red-900/30 rounded-full mb-2">
-                <Smartphone className="h-5 w-5 sm:h-6 sm:w-6 text-red-600 dark:text-red-400" />
+              <div className="icon-badge icon-badge-lg bg-accent/10 text-accent mb-2">
+                <Smartphone className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
-              <span className="font-medium text-xs sm:text-sm text-center">{airtelLabel}</span>
+              <span className="font-medium text-xs sm:text-sm text-center text-light-primary dark:text-dark-primary">{airtelLabel}</span>
               {selectedMethod === 'airtel' && (
-                <div className="mt-1 sm:mt-2 bg-accent-kente-gold text-white text-xs rounded-full px-2 py-0.5 flex items-center">
+                <div className="mt-1 sm:mt-2 bg-primary text-black text-xs rounded-full px-2 py-0.5 flex items-center">
                   <Check className="h-3 w-3 mr-1" /> Selected
                 </div>
               )}
@@ -246,44 +246,44 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
             <button
               type="button"
               onClick={() => setSelectedMethod('momo')}
-              className={`p-2.5 sm:p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
-                selectedMethod === 'momo' 
-                  ? 'border-accent-kente-gold bg-accent-kente-gold/10 shadow-sm' 
-                  : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
+              className={`card card-interactive p-2.5 sm:p-4 flex flex-col items-center justify-center transition-all duration-300 ${
+                selectedMethod === 'momo'
+                  ? 'border-primary-700 bg-primary-700/5 shadow-lg ring-2 ring-primary-700/20'
+                  : 'hover:border-primary-700/50 hover:shadow-md'
               }`}
               disabled={isProcessing}
               aria-pressed={selectedMethod === 'momo'}
             >
-              <div className="w-9 h-9 sm:w-12 sm:h-12 flex items-center justify-center bg-yellow-100 dark:bg-yellow-900/30 rounded-full mb-2">
-                <Wallet className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-600 dark:text-yellow-400" />
+              <div className="icon-badge icon-badge-lg bg-primary/10 text-primary mb-2">
+                <Wallet className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
-              <span className="font-medium text-xs sm:text-sm text-center">{momoLabel}</span>
+              <span className="font-medium text-xs sm:text-sm text-center text-light-primary dark:text-dark-primary">{momoLabel}</span>
               {selectedMethod === 'momo' && (
-                <div className="mt-1 sm:mt-2 bg-accent-kente-gold text-white text-xs rounded-full px-2 py-0.5 flex items-center">
+                <div className="mt-1 sm:mt-2 bg-primary text-black text-xs rounded-full px-2 py-0.5 flex items-center">
                   <Check className="h-3 w-3 mr-1" /> Selected
                 </div>
               )}
             </button>
           )}
-          
+
           {availableMethods.includes('card') && (
             <button
               type="button"
               onClick={() => setSelectedMethod('card')}
-              className={`p-2.5 sm:p-4 border rounded-lg flex flex-col items-center justify-center transition-all ${
-                selectedMethod === 'card' 
-                  ? 'border-accent-kente-gold bg-accent-kente-gold/10 shadow-sm' 
-                  : 'border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700'
+              className={`card card-interactive p-2.5 sm:p-4 flex flex-col items-center justify-center transition-all duration-300 ${
+                selectedMethod === 'card'
+                  ? 'border-primary-700 bg-primary-700/5 shadow-lg ring-2 ring-primary-700/20'
+                  : 'hover:border-primary-700/50 hover:shadow-md'
               }`}
               disabled={isProcessing}
               aria-pressed={selectedMethod === 'card'}
             >
-              <div className="w-9 h-9 sm:w-12 sm:h-12 flex items-center justify-center bg-blue-100 dark:bg-blue-900/30 rounded-full mb-2">
-                <CreditCard className="h-5 w-5 sm:h-6 sm:w-6 text-blue-600 dark:text-blue-400" />
+              <div className="icon-badge icon-badge-lg bg-purple/10 text-purple mb-2">
+                <CreditCard className="h-5 w-5 sm:h-6 sm:w-6" />
               </div>
-              <span className="font-medium text-xs sm:text-sm text-center">{cardLabel}</span>
+              <span className="font-medium text-xs sm:text-sm text-center text-light-primary dark:text-dark-primary">{cardLabel}</span>
               {selectedMethod === 'card' && (
-                <div className="mt-1 sm:mt-2 bg-accent-kente-gold text-white text-xs rounded-full px-2 py-0.5 flex items-center">
+                <div className="mt-1 sm:mt-2 bg-primary text-black text-xs rounded-full px-2 py-0.5 flex items-center">
                   <Check className="h-3 w-3 mr-1" /> Selected
                 </div>
               )}
@@ -296,7 +296,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
       {(selectedMethod === 'airtel' || selectedMethod === 'momo') && (
         <div className="space-y-4 mb-5 sm:mb-6">
           <div>
-            <label htmlFor="phoneNumber" className="block text-sm font-medium mb-1">
+            <label htmlFor="phoneNumber" className="block text-sm font-medium mb-2 text-light-primary dark:text-dark-primary">
               Phone Number
             </label>
             <input
@@ -306,25 +306,25 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               value={mobileDetails.phoneNumber}
               onChange={handleMobileInputChange}
               placeholder="Enter phone number"
-              className={`w-full p-2.5 sm:p-3 text-sm border ${errors.phoneNumber ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring focus:ring-accent-kente-gold/20`}
+              className={`input-field ${errors.phoneNumber ? 'border-accent-red focus:border-accent-red focus:ring-accent-red/20' : ''}`}
               disabled={isProcessing}
               aria-invalid={!!errors.phoneNumber}
               aria-describedby={errors.phoneNumber ? "phoneNumber-error" : undefined}
             />
             {errors.phoneNumber && (
-              <p id="phoneNumber-error" className="mt-1 text-xs sm:text-sm text-red-500 dark:text-red-400 flex items-center">
+              <p id="phoneNumber-error" className="mt-1 text-xs sm:text-sm text-accent-red flex items-center">
                 <AlertCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1" />
                 {errors.phoneNumber}
               </p>
             )}
-            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400 flex items-center">
+            <p className="mt-1 text-xs text-light-tertiary dark:text-dark-tertiary flex items-center">
               <Info className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1" />
               You'll receive a prompt on your phone to confirm payment
             </p>
           </div>
           
           <div>
-            <label htmlFor="fullName" className="block text-sm font-medium mb-1">
+            <label htmlFor="fullName" className="block text-sm font-medium mb-2 text-light-primary dark:text-dark-primary">
               Full Name
             </label>
             <input
@@ -334,13 +334,13 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
               value={mobileDetails.fullName}
               onChange={handleMobileInputChange}
               placeholder="Enter account holder's name"
-              className={`w-full p-2.5 sm:p-3 text-sm border ${errors.fullName ? 'border-red-500 dark:border-red-400' : 'border-gray-300 dark:border-gray-600'} rounded-lg bg-white dark:bg-gray-700 focus:border-accent-kente-gold focus:ring-accent-kente-gold`}
+              className={`input-field ${errors.fullName ? 'border-accent-red focus:border-accent-red focus:ring-accent-red/20' : ''}`}
               disabled={isProcessing}
               aria-invalid={!!errors.fullName}
               aria-describedby={errors.fullName ? "fullName-error" : undefined}
             />
             {errors.fullName && (
-              <p id="fullName-error" className="mt-1 text-xs sm:text-sm text-red-500 dark:text-red-400 flex items-center">
+              <p id="fullName-error" className="mt-1 text-xs sm:text-sm text-accent-red flex items-center">
                 <AlertCircle className="h-3 w-3 sm:h-3.5 sm:w-3.5 mr-1" />
                 {errors.fullName}
               </p>
@@ -457,34 +457,34 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
       
       {/* Payment Summary */}
       {showTotalAmount && (
-        <div className="bg-gray-50 dark:bg-gray-700 p-3 sm:p-4 rounded-lg mb-5 sm:mb-6">
+        <div className="card bg-light/50 dark:bg-dark/50 p-3 sm:p-4 mb-5 sm:mb-6">
           <div className="flex justify-between items-center">
-            <span className="font-medium text-sm sm:text-base">Total Amount:</span>
-            <span className="text-base sm:text-lg text-accent-kente-gold font-medium">{currency}{amount.toFixed(2)}</span>
+            <span className="font-medium text-sm sm:text-base text-light-primary dark:text-dark-primary">Total Amount:</span>
+            <span className="text-base sm:text-lg text-primary font-bold">{currency}{amount.toFixed(2)}</span>
           </div>
         </div>
       )}
-      
+
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-3">
         <button
           type="button"
           onClick={onCancel}
-          className="flex items-center justify-center flex-1 py-2.5 sm:py-3 px-4 border border-gray-300 dark:border-gray-600 rounded-lg font-medium text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors order-2 sm:order-1"
+          className="btn btn-secondary flex-1 py-3 px-4 order-2 sm:order-1"
           disabled={isProcessing}
         >
           <ArrowLeft className="h-4 w-4 mr-2" />
           {cancelLabel}
         </button>
-        
+
         <button
           type="button"
           onClick={handleSubmit}
           disabled={!selectedMethod || isProcessing}
-          className={`flex-1 py-2.5 sm:py-3 px-4 rounded-lg font-medium text-sm text-white relative flex items-center justify-center transition-all order-1 sm:order-2 ${
+          className={`btn flex-1 py-3 px-4 relative flex items-center justify-center order-1 sm:order-2 ${
             selectedMethod && !isProcessing
-              ? 'bg-accent-kente-gold hover:bg-accent-kente-gold-dark shadow-sm' 
-              : 'bg-gray-300 dark:bg-gray-700 cursor-not-allowed opacity-70'
+              ? 'btn-primary'
+              : 'opacity-70 cursor-not-allowed bg-gray-300 dark:bg-gray-700 text-gray-500 dark:text-gray-400'
           }`}
         >
           {isProcessing && showProcessingIndicator ? (

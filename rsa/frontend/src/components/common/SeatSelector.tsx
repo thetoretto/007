@@ -58,12 +58,12 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
   // Define default colors that can be overridden with customColors
   const colors = useMemo(() => {
     const defaultColorsDeep = {
-      standard: { bg: 'bg-green-100', hover: 'bg-green-200', border: 'border-green-300', text: 'text-green-800' },
-      premium: { bg: 'bg-blue-100', hover: 'bg-blue-200', border: 'border-blue-300', text: 'text-blue-800' },
-      vip: { bg: 'bg-purple-100', hover: 'bg-purple-200', border: 'border-purple-300', text: 'text-purple-800' },
-      accessible: { bg: 'bg-yellow-100', hover: 'bg-yellow-200', border: 'border-yellow-300', text: 'text-yellow-800' },
-      selected: { bg: 'bg-accent-kente-gold', hover: 'bg-accent-kente-gold', border: 'border-yellow-600', text: 'text-white' },
-      indicator: 'bg-green-500',
+      standard: { bg: 'bg-secondary/10', hover: 'bg-secondary/20', border: 'border-secondary/30', text: 'text-secondary' },
+      premium: { bg: 'bg-purple/10', hover: 'bg-purple/20', border: 'border-purple/30', text: 'text-purple' },
+      vip: { bg: 'bg-primary/30', hover: 'bg-primary/50', border: 'border-primary', text: 'text-primary' },
+      accessible: { bg: 'bg-accent/10', hover: 'bg-accent/20', border: 'border-accent/30', text: 'text-accent' },
+      selected: { bg: 'bg-primary', hover: 'bg-primary', border: 'border-primary', text: 'text-black' },
+      indicator: 'bg-secondary',
     };
 
     if (!customColors) {
@@ -202,16 +202,16 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
     let textColor = colors.standard.text;
     
     if (seat.status === 'reserved') {
-      bgColor = 'bg-gray-300';
-      borderColor = 'border-gray-400';
-      textColor = 'text-gray-500';
+      bgColor = 'bg-light dark:bg-dark';
+      borderColor = 'border-light dark:border-dark';
+      textColor = 'text-light-tertiary dark:text-dark-tertiary';
       return { bgColor, borderColor, textColor };
     }
 
     if (seat.status === 'booked') {
-      bgColor = 'bg-gray-200';
-      borderColor = 'border-gray-300';
-      textColor = 'text-gray-500';
+      bgColor = 'bg-light/50 dark:bg-dark/50';
+      borderColor = 'border-light/50 dark:border-dark/50';
+      textColor = 'text-light-tertiary dark:text-dark-tertiary';
       return { bgColor, borderColor, textColor };
     }
 
@@ -269,7 +269,7 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
           select-none
           transition-all duration-150
           ${isDisabled ? 'opacity-60 cursor-not-allowed' : 'cursor-pointer hover:shadow-md'}
-          ${isSelected ? 'shadow-md ring-2 ring-accent-kente-gold' : ''}
+          ${isSelected ? 'shadow-md ring-2 ring-primary-700/30' : ''}
         `}
         whileHover={!isDisabled ? { scale: 1.05 } : {}}
         whileTap={!isDisabled ? { scale: 0.95 } : {}}
@@ -313,10 +313,12 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
   // Empty state
   if (seatsData.length === 0) {
     return (
-      <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 text-center ${className}`}>
-        <User className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
-        <p className="text-gray-500 dark:text-gray-400">No seat data available</p>
-        <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">Please try again later</p>
+      <div className={`card p-6 text-center ${className}`}>
+        <div className="icon-badge icon-badge-xl bg-text-light-tertiary/10 text-text-light-tertiary dark:bg-text-dark-tertiary/10 dark:text-text-dark-tertiary mx-auto mb-3">
+          <User className="h-8 w-8" />
+        </div>
+        <p className="text-text-light-secondary dark:text-text-dark-secondary">No seat data available</p>
+        <p className="text-sm text-text-light-tertiary dark:text-text-dark-tertiary mt-1">Please try again later</p>
       </div>
     );
   }
@@ -325,20 +327,20 @@ const SeatSelector: React.FC<SeatSelectorProps> = ({
     <div className={`space-y-3 ${className}`}>
       {/* Heading with minimalist design - optional */}
       {!hideHeader && (
-        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-700 pb-2 mb-3">
-          <h3 className="text-sm font-medium">{vehicleName} Seating</h3>
-          <span className="text-xs text-gray-500">
+        <div className="flex items-center justify-between border-b border-border-light dark:border-border-dark pb-2 mb-3">
+          <h3 className="text-sm font-medium text-text-light-primary dark:text-text-dark-primary">{vehicleName} Seating</h3>
+          <span className="text-xs text-text-light-tertiary dark:text-text-dark-tertiary">
             {selectedSeats.length}/{maxSelectableSeats} selected
           </span>
         </div>
       )}
-      
+
       {/* Enhanced seat grid */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="card overflow-hidden">
         <div className="p-2 sm:p-3">
           {/* Vehicle outline with minimal design */}
           <div className="relative pb-2 pt-4">
-            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-gray-200 dark:bg-gray-700 text-xs px-2 py-0.5 rounded-full text-gray-600 dark:text-gray-300">
+            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-background-light dark:bg-background-dark text-xs px-2 py-0.5 rounded-full text-text-light-secondary dark:text-text-dark-secondary border border-border-light dark:border-border-dark">
               FRONT
             </div>
 

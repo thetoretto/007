@@ -30,7 +30,7 @@ const VehiclePage = lazy(() => import('./pages/driver/VehiclePage')); // Renamed
 const ProfilePage = lazy(() => import('./components/common/ProfilePage')); // Import the ProfilePage
 const DriverCheckInPage = lazy(() => import('./components/driver/DriverCheckInPage')); // Import the DriverCheckInPage
 const CreateTripPage = lazy(() => import('./components/dashboard/CreateTripPage')); // Import the CreateTripPage
-const AboutPage = lazy(() => import('./pages/AboutPage'));
+import AboutPage from './pages/AboutPage';
 const TermsPage = lazy(() => import('./pages/TermsPage'));
 const PrivacyPage = lazy(() => import('./pages/PrivacyPage'));
 const FAQPage = lazy(() => import('./pages/FAQPage'));
@@ -85,8 +85,8 @@ function App() {
       <Router>
         <FloatingThemeToggle position="bottom-right" />
         {isPending && (
-          <div className="fixed top-0 left-0 w-full h-1 bg-primary-500 z-50">
-            <div className="h-full w-1/3 bg-accent-yellow animate-pulse"></div>
+          <div className="fixed top-0 left-0 w-full h-1 bg-primary z-50">
+            <div className="h-full w-1/3 bg-primary/60 animate-pulse-slow"></div>
           </div>
         )}
         <Layout>

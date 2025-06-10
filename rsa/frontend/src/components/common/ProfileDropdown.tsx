@@ -61,20 +61,19 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
     return `${firstName?.[0] || ''}${lastName?.[0] || ''}`.toUpperCase() || '?';
   };
   
-  const textColorClass = 'text-text-base dark:text-text-inverse'; 
-  const avatarBgColorClass = 'bg-primary-soft text-primary dark:bg-primary-700 dark:text-primary-100';
-  const chevronColorClass = 'text-text-muted dark:text-text-muted-dark';
+  const textColorClass = 'text-light-primary dark:text-dark-primary';
+  const avatarBgColorClass = 'bg-primary-100 text-primary-700 dark:bg-primary dark:text-black';
+  const chevronColorClass = 'text-light-tertiary dark:text-dark-tertiary';
 
-
-  const menuItemClass = "flex items-center w-full px-4 py-2.5 text-sm text-text-base dark:text-text-inverse hover:bg-base-200 dark:hover:bg-section-medium transition-colors duration-150";
-  const iconClass = "mr-2.5 h-5 w-5 text-primary dark:text-primary-300";
+  const menuItemClass = "flex items-center w-full px-4 py-2.5 text-sm text-light-primary dark:text-dark-primary hover:bg-primary-100 dark:hover:bg-primary/20 transition-colors duration-150";
+  const iconClass = "mr-2.5 h-5 w-5 text-primary-700 dark:text-primary";
 
   return (
     <div className={`relative group  ${className}`} ref={dropdownRef}>
       {user ? (
         <button
           type="button"
-          className={`flex items-center text-sm rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:focus-visible:ring-offset-base-300 p-0.5 hover:bg-base-200 dark:hover:bg-section-medium transition-colors duration-150`}
+          className={`flex items-center text-sm rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 dark:focus-visible:ring-offset-dark p-0.5 hover:bg-primary-100 dark:hover:bg-primary/20 transition-colors duration-150`}
           onClick={toggleDropdown}
           aria-expanded={isOpen}
           aria-haspopup="true"
@@ -91,7 +90,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
       ) : (
         <button
           type="button"
-          className={`btn btn-ghost btn-sm flex items-center gap-1.5 ${textColorClass} hover:bg-base-200 dark:hover:bg-section-medium transition-colors duration-150 px-2 sm:px-3`}
+          className={`btn btn-ghost btn-sm flex items-center gap-1.5 ${textColorClass} hover:bg-primary-100 dark:hover:bg-primary/20 transition-colors duration-150 px-2 sm:px-3`}
           onClick={toggleDropdown}
           aria-expanded={isOpen}
           aria-haspopup="true"
@@ -105,7 +104,7 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
 
       {isOpen && (
         <div
-          className="origin-top-right absolute right-0 mt-2 w-56 rounded-lg shadow-xl py-1.5 ring-1 ring-black/5 dark:ring-white/10 focus:outline-none z-50 animate-fadeInUpSm"
+          className="origin-top-right absolute right-0 mt-2 w-56 rounded-lg bg-surface-light dark:bg-surface-dark shadow-xl py-1.5 ring-1 ring-black/5 dark:ring-white/10 focus:outline-none z-50 animate-fadeInUpSm"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="user-menu-button"
@@ -113,9 +112,9 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
         >
           {user ? (
             <>
-              <div className="px-4 py-2.5 border-b border-border dark:border-border-dark mb-1">
-                <p className="text-sm font-semibold text-text-base dark:text-text-inverse truncate" title={user.email}>{user.firstName} {user.lastName}</p>
-                <p className="text-xs text-text-muted dark:text-text-muted-dark truncate">{user.email}</p>
+              <div className="px-4 py-2.5 border-b border-light dark:border-dark mb-1">
+                <p className="text-sm font-semibold text-light-primary dark:text-dark-primary truncate" title={user.email}>{user.firstName} {user.lastName}</p>
+                <p className="text-xs text-light-tertiary dark:text-dark-tertiary truncate">{user.email}</p>
               </div>
               <a 
                 href="#" 
@@ -141,8 +140,8 @@ const ProfileDropdown: React.FC<ProfileDropdownProps> = ({ className = '' }) => 
               >
                 <UserIcon className={iconClass} /> Your Profile
               </a>
-              <button onClick={handleLogout} className={`${menuItemClass} text-error dark:text-error`} role="menuitem" data-testid="logout-button">
-                <LogOut className={`${iconClass} text-error dark:text-error`} /> Sign out
+              <button onClick={handleLogout} className={`${menuItemClass} text-accent-red dark:text-accent-red`} role="menuitem" data-testid="logout-button">
+                <LogOut className={`mr-2.5 h-5 w-5 text-accent-red dark:text-accent-red`} /> Sign out
               </button>
             </>
           ) : (

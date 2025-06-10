@@ -219,22 +219,22 @@ const TripViewer: React.FC<TripViewerProps> = ({
   // Loading state
   if (isLoading) {
     return (
-      <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 ${className}`}>
+      <div className={`card p-4 ${className}`}>
         <div className="animate-pulse space-y-4">
-          <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/3"></div>
+          <div className="h-6 bg-background-light dark:bg-background-dark rounded w-1/3"></div>
           <div className="space-y-3">
             {[1, 2, 3].map(i => (
-              <div key={i} className="border rounded-lg p-4 space-y-3">
+              <div key={i} className="card p-4 space-y-3">
                 <div className="flex justify-between">
-                  <div className="w-1/4 h-5 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                  <div className="w-1/5 h-5 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                  <div className="w-1/4 h-5 bg-background-light dark:bg-background-dark rounded"></div>
+                  <div className="w-1/5 h-5 bg-background-light dark:bg-background-dark rounded"></div>
                 </div>
                 <div className="flex justify-between items-end">
                   <div className="space-y-2">
-                    <div className="w-32 h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
-                    <div className="w-40 h-4 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                    <div className="w-32 h-4 bg-background-light dark:bg-background-dark rounded"></div>
+                    <div className="w-40 h-4 bg-background-light dark:bg-background-dark rounded"></div>
                   </div>
-                  <div className="w-20 h-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                  <div className="w-20 h-8 bg-background-light dark:bg-background-dark rounded"></div>
                 </div>
               </div>
             ))}
@@ -245,9 +245,9 @@ const TripViewer: React.FC<TripViewerProps> = ({
   }
 
   return (
-    <div className={`bg-white dark:bg-gray-800 rounded-lg shadow-md ${className}`}>
+    <div className={`card ${className}`}>
       {/* Confirmation Modal */}
-      <ConfirmationModal 
+      <ConfirmationModal
         isOpen={showConfirmation}
         onClose={() => setShowConfirmation(false)}
         onConfirm={confirmationData.onConfirm}
@@ -255,9 +255,9 @@ const TripViewer: React.FC<TripViewerProps> = ({
         message={confirmationData.message}
         type={confirmationData.type}
       />
-      
+
       <div className="p-4">
-        <h2 className={`${compact ? 'text-lg' : 'text-xl'} font-semibold mb-4`}>Available Trips</h2>
+        <h2 className={`${compact ? 'text-lg' : 'text-xl'} font-semibold mb-4 text-text-light-primary dark:text-text-dark-primary`}>Available Trips</h2>
         
         {/* Only show filters if enabled */}
         {showFilters && (
@@ -266,7 +266,7 @@ const TripViewer: React.FC<TripViewerProps> = ({
         <div className="md:hidden mb-4">
           <button
             onClick={() => setShowFiltersPanel(!showFiltersPanel)}
-            className="w-full flex items-center justify-between px-4 py-2.5 bg-gray-100 dark:bg-gray-700 rounded-md border dark:border-gray-600"
+            className="btn btn-secondary w-full flex items-center justify-between px-4 py-2.5"
             aria-expanded={showFiltersPanel}
             aria-controls="filters-panel"
           >
@@ -274,20 +274,20 @@ const TripViewer: React.FC<TripViewerProps> = ({
               <Sliders className="h-4 w-4 mr-2" />
               <span className="text-sm">Filters & Sorting</span>
             </div>
-            <ChevronDown className={`h-5 w-5 transition-transform ${showFiltersPanel ? 'transform rotate-180' : ''}`} />
+            <ChevronDown className={`h-5 w-5 transition-transform duration-300 ${showFiltersPanel ? 'transform rotate-180' : ''}`} />
           </button>
         </div>
         
         {/* Filters section - toggleable on mobile */}
             <div id="filters-panel" className={`${showFiltersPanel ? 'block' : 'hidden'} md:block`}>
-              <div className="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg mb-4 border dark:border-gray-600">
+              <div className="card bg-background-light/50 dark:bg-background-dark/50 p-3 mb-4">
             <div className="flex flex-col md:flex-row gap-3 mb-3">
                   {availableDates.length > 0 && (
               <div className="flex-1">
-                      <label htmlFor="date-filter" className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date</label>
+                      <label htmlFor="date-filter" className="block text-xs sm:text-sm font-medium text-text-light-primary dark:text-text-dark-primary mb-1">Date</label>
                 <select
                   id="date-filter"
-                        className="w-full h-9 border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-accent-kente-gold focus:ring-accent-kente-gold bg-white dark:bg-gray-800 text-sm"
+                        className="input-field h-9 text-sm"
                   value={filterDate}
                   onChange={(e) => setFilterDate(e.target.value)}
                 >
@@ -302,10 +302,10 @@ const TripViewer: React.FC<TripViewerProps> = ({
               
                   {availableRoutes.length > 0 && (
               <div className="flex-1">
-                      <label htmlFor="route-filter" className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Route</label>
+                      <label htmlFor="route-filter" className="block text-xs sm:text-sm font-medium text-text-light-primary dark:text-text-dark-primary mb-1">Route</label>
                 <select
                   id="route-filter"
-                        className="w-full h-9 border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-accent-kente-gold focus:ring-accent-kente-gold bg-white dark:bg-gray-800 text-sm"
+                        className="input-field h-9 text-sm"
                   value={filterRoute}
                   onChange={(e) => setFilterRoute(e.target.value)}
                 >
@@ -316,13 +316,13 @@ const TripViewer: React.FC<TripViewerProps> = ({
                 </select>
               </div>
                   )}
-              
+
                   {availableVehicleTypes.length > 0 && (
               <div className="flex-1">
-                      <label htmlFor="vehicle-filter" className="block text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Vehicle Type</label>
+                      <label htmlFor="vehicle-filter" className="block text-xs sm:text-sm font-medium text-text-light-primary dark:text-text-dark-primary mb-1">Vehicle Type</label>
                 <select
                   id="vehicle-filter"
-                        className="w-full h-9 border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:border-accent-kente-gold focus:ring-accent-kente-gold bg-white dark:bg-gray-800 text-sm"
+                        className="input-field h-9 text-sm"
                   value={filterVehicleType}
                   onChange={(e) => setFilterVehicleType(e.target.value)}
                 >

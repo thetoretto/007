@@ -35,35 +35,35 @@ const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
       case 'success':
         return {
           icon: <CheckCircle className="h-5 w-5" />,
-          bgColor: 'bg-green-100 dark:bg-green-800/30',
-          textColor: 'text-green-800 dark:text-green-200',
-          borderColor: 'border-green-500 dark:border-green-600',
-          iconColor: 'text-green-500 dark:text-green-400'
+          bgColor: 'bg-secondary/10 dark:bg-secondary/20',
+          textColor: 'text-light-primary dark:text-dark-primary',
+          borderColor: 'border-secondary',
+          iconColor: 'text-secondary'
         };
       case 'error':
         return {
-          icon: <X className="h-5 w-5" />,
-          bgColor: 'bg-red-100 dark:bg-red-800/30',
-          textColor: 'text-red-800 dark:text-red-200',
-          borderColor: 'border-red-500 dark:border-red-600',
-          iconColor: 'text-red-500 dark:text-red-400'
+          icon: <AlertCircle className="h-5 w-5" />,
+          bgColor: 'bg-accent/10 dark:bg-accent/20',
+          textColor: 'text-light-primary dark:text-dark-primary',
+          borderColor: 'border-accent',
+          iconColor: 'text-accent'
         };
       case 'warning':
         return {
           icon: <AlertTriangle className="h-5 w-5" />,
-          bgColor: 'bg-yellow-100 dark:bg-yellow-800/30',
-          textColor: 'text-yellow-800 dark:text-yellow-200',
-          borderColor: 'border-yellow-500 dark:border-yellow-600',
-          iconColor: 'text-yellow-500 dark:text-yellow-400'
+          bgColor: 'bg-primary/10 dark:bg-primary/20',
+          textColor: 'text-light-primary dark:text-dark-primary',
+          borderColor: 'border-primary',
+          iconColor: 'text-primary'
         };
       case 'info':
       default:
         return {
           icon: <Info className="h-5 w-5" />,
-          bgColor: 'bg-blue-100 dark:bg-blue-800/30',
-          textColor: 'text-blue-800 dark:text-blue-200',
-          borderColor: 'border-blue-500 dark:border-blue-600',
-          iconColor: 'text-blue-500 dark:text-blue-400'
+          bgColor: 'bg-purple/10 dark:bg-purple/20',
+          textColor: 'text-light-primary dark:text-dark-primary',
+          borderColor: 'border-purple',
+          iconColor: 'text-purple'
         };
     }
   };
@@ -71,25 +71,25 @@ const Toast: React.FC<ToastProps> = ({ toast, onClose }) => {
   const styles = getToastStyles();
   
   return (
-    <div 
-      className={`flex items-center w-full max-w-xs p-4 mb-4 rounded-lg shadow border-l-4 ${styles.bgColor} ${styles.borderColor} ${isExiting ? 'animate-fade-out' : 'animate-slide-in'}`}
+    <div
+      className={`card flex items-center w-full max-w-xs p-4 mb-4 border-l-4 ${styles.bgColor} ${styles.borderColor} ${isExiting ? 'animate-fade-out' : 'animate-slide-in'}`}
       role="alert"
       aria-live="assertive"
     >
-      <div className={`inline-flex items-center justify-center flex-shrink-0 w-8 h-8 ${styles.iconColor}`}>
+      <div className={`icon-badge icon-badge-sm ${styles.iconColor} mr-3`}>
         {styles.icon}
       </div>
-      <div className={`ml-3 text-sm font-normal ${styles.textColor}`}>
+      <div className={`flex-1 text-sm font-normal ${styles.textColor}`}>
         {toast.message}
       </div>
-      <button 
-        type="button" 
-        className={`ml-auto -mx-1.5 -my-1.5 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 inline-flex h-8 w-8 ${styles.textColor} hover:bg-gray-200 dark:hover:bg-gray-700`}
+      <button
+        type="button"
+        className={`ml-3 p-1.5 rounded-lg hover:bg-background-light dark:hover:bg-background-dark transition-colors duration-300 ${styles.iconColor}`}
         aria-label="Close"
         onClick={handleClose}
       >
         <span className="sr-only">Close</span>
-        <X className="w-5 h-5" />
+        <X className="w-4 h-4" />
       </button>
     </div>
   );

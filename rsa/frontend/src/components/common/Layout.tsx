@@ -29,15 +29,15 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // Enhanced container classes with better responsive design
   const getLayoutContainerClasses = () => {
     const baseClasses = 'min-h-screen flex flex-col transition-all duration-300 ease-in-out relative';
-    
+
     if (isDashboard) {
-      return `${baseClasses} bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100`;
+      return `${baseClasses} bg-light dark:bg-dark text-black dark:text-white`;
     } else if (isAuth) {
-      return `${baseClasses} bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 dark:from-gray-900 dark:via-gray-800 dark:to-primary-900 text-white overflow-hidden`;
+      return `${baseClasses} hero-gradient text-white overflow-hidden`;
     } else if (isHome) {
-      return `${baseClasses} bg-transparent text-gray-900 dark:text-gray-100`;
+      return `${baseClasses} bg-transparent text-black dark:text-white`;
     } else {
-      return `${baseClasses} bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100`;
+      return `${baseClasses} bg-light dark:bg-dark text-black dark:text-white`;
     }
   };
 
@@ -65,7 +65,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const SkipLink = () => (
     <a
       href="#main-content"
-      className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary-600 text-white px-4 py-2 rounded-md z-50 transition-all duration-200"
+      className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-primary text-black px-4 py-2 rounded-md z-50 transition-all duration-200 shadow-primary"
     >
       Skip to main content
     </a>

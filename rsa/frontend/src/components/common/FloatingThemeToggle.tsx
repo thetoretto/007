@@ -22,11 +22,11 @@ const FloatingThemeToggle: React.FC<FloatingThemeToggleProps> = ({
   return (
     <div className={`fixed ${positionClasses[position]} z-50 flex items-center transition-all duration-300 ease-in-out`}>
       {isExpanded ? (
-        <div className="flex items-center space-x-3 bg-background-light dark:bg-background-dark rounded-full p-2 shadow-lg border border-primary-300 dark:border-primary-800">
+        <div className="flex items-center space-x-3 bg-light dark:bg-dark rounded-full p-2 shadow-lg border border-primary-300 dark:border-primary-800">
           <ThemeToggle size="md" showLabel={true} />
           <button
             onClick={() => setIsExpanded(false)}
-            className="p-1 rounded-full hover:bg-primary-100 dark:hover:bg-primary-900/20"
+            className="p-1 rounded-full hover:bg-primary-100 dark:hover:bg-primary/20"
             aria-label="Collapse theme toggle"
           >
             {position.includes('right') ? (

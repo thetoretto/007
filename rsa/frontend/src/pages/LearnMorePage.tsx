@@ -128,7 +128,7 @@ const BenefitCard: React.FC<BenefitCardProps> = ({
   return (
     <motion.div 
       variants={fadeInUp} 
-      className="card p-6 rounded-xl shadow-md border border-primary-100 dark:border-primary-800 bg-background-light dark:bg-section-dark hover:shadow-lg transition-all duration-300 ease-in-out cursor-pointer"
+      className="card p-6 rounded-xl shadow-md border border-primary-100 dark:border-primary-800 bg-light dark:bg-section-dark hover:shadow-lg transition-all duration-300 ease-in-out cursor-pointer"
       onClick={() => setIsExpanded(!isExpanded)}
       whileHover={{ y: -5 }}
       layout
@@ -138,13 +138,13 @@ const BenefitCard: React.FC<BenefitCardProps> = ({
           <Icon className={`h-6 w-6 ${iconColorClass}`} />
         </div>
         <div className="flex-grow">
-          <h3 className="text-lg font-semibold text-text-base dark:text-text-inverse mb-1">{title}</h3>
-          <p className="text-sm text-text-muted dark:text-primary-200">{description}</p>
+          <h3 className="text-lg font-semibold text-light-primary dark:text-dark-primary mb-1">{title}</h3>
+          <p className="text-sm text-light-secondary dark:text-dark-secondary">{description}</p>
         </div>
         <div className="flex-shrink-0 ml-2 mt-1">
-          {isExpanded ? 
-            <ChevronUp className="h-5 w-5 text-text-muted dark:text-primary-200" /> : 
-            <ChevronDown className="h-5 w-5 text-text-muted dark:text-primary-200" />
+          {isExpanded ?
+            <ChevronUp className="h-5 w-5 text-light-secondary dark:text-dark-secondary" /> :
+            <ChevronDown className="h-5 w-5 text-light-secondary dark:text-dark-secondary" />
           }
         </div>
       </div>
@@ -156,7 +156,7 @@ const BenefitCard: React.FC<BenefitCardProps> = ({
       >
         {isExpanded && (
           <div className="mt-4 pt-3 border-t border-primary-100 dark:border-primary-800">
-            <p className="text-sm text-text-base dark:text-text-inverse whitespace-pre-line">{detailedDescription}</p>
+            <p className="text-sm text-light-primary dark:text-dark-primary whitespace-pre-line">{detailedDescription}</p>
           </div>
         )}
       </motion.div>
@@ -178,8 +178,8 @@ const TestimonialCard: React.FC<Testimonial> = ({ name, role, text, rating, avat
           className="w-12 h-12 rounded-full mr-4 border-2 border-primary"
         />
         <div>
-          <h4 className="font-medium text-text-base dark:text-text-inverse">{name}</h4>
-          <p className="text-xs text-text-muted dark:text-primary-200">{role}</p>
+          <h4 className="font-medium text-light-primary dark:text-dark-primary">{name}</h4>
+          <p className="text-xs text-light-secondary dark:text-dark-secondary">{role}</p>
         </div>
       </div>
       <div className="flex mb-3">
@@ -187,14 +187,14 @@ const TestimonialCard: React.FC<Testimonial> = ({ name, role, text, rating, avat
           <Star key={i} className="h-4 w-4 text-accent-yellow dark:text-accent-kente-gold fill-current" />
         ))}
       </div>
-      <p className="text-sm text-text-base dark:text-text-inverse italic">"{text}"</p>
+      <p className="text-sm text-light-primary dark:text-dark-primary italic">"{text}"</p>
     </motion.div>
   );
 };
 
 const LearnMorePage: React.FC = () => {
   return (
-    <div className="flex flex-col min-h-screen bg-background-light dark:bg-background-dark">
+    <div className="flex flex-col min-h-screen bg-light dark:bg-dark">
       <main className="flex-grow py-12 sm:py-20">
         <motion.div
           initial="hidden"
@@ -206,13 +206,13 @@ const LearnMorePage: React.FC = () => {
             variants={fadeInUp} 
             className="text-center mb-16"
           >
-            <div className="inline-block px-3 py-1 rounded-full bg-primary-100 dark:bg-primary-900 text-primary dark:text-primary-200 text-sm font-medium mb-4">
+            <div className="inline-block px-3 py-1 rounded-full bg-primary-100 dark:bg-primary/20 text-primary dark:text-primary text-sm font-medium mb-4">
               The Benefits of Ride Sharing
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-text-base dark:text-text-inverse tracking-tight mb-6">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-light-primary dark:text-dark-primary tracking-tight mb-6">
               A Better Way to Travel Together
             </h1>
-            <p className="mt-4 text-lg text-text-muted dark:text-primary-200 max-w-3xl mx-auto">
+            <p className="mt-4 text-lg text-light-secondary dark:text-dark-secondary max-w-3xl mx-auto">
               Discover how GIGI move makes travel better for everyone involved – safer journeys for passengers 
               and great opportunities for drivers.
             </p>
@@ -251,7 +251,7 @@ const LearnMorePage: React.FC = () => {
                 <div className="w-12 h-12 bg-accent-light dark:bg-accent-dark rounded-xl flex items-center justify-center text-primary dark:text-primary-200 mr-4">
                   <Users className="h-6 w-6" />
                 </div>
-                <h2 className="text-2xl font-semibold text-text-base dark:text-text-inverse">For Passengers: Travel Smarter, Safer</h2>
+                <h2 className="text-2xl font-semibold text-light-primary dark:text-dark-primary">For Passengers: Travel Smarter, Safer</h2>
               </div>
               <div className="space-y-6">
                 {passengerBenefits.map((benefit, index) => (
@@ -274,7 +274,7 @@ const LearnMorePage: React.FC = () => {
                 <div className="w-12 h-12 bg-accent-yellow bg-opacity-20 dark:bg-accent-yellow dark:bg-opacity-20 rounded-xl flex items-center justify-center text-accent-yellow dark:text-accent-kente-gold mr-4">
                   <DollarSign className="h-6 w-6" />
                 </div>
-                <h2 className="text-2xl font-semibold text-text-base dark:text-text-inverse">For Drivers: Earn More, Drive Securely</h2>
+                <h2 className="text-2xl font-semibold text-light-primary dark:text-dark-primary">For Drivers: Earn More, Drive Securely</h2>
               </div>
               <div className="space-y-6">
                 {driverBenefits.map((benefit, index) => (
@@ -295,10 +295,10 @@ const LearnMorePage: React.FC = () => {
           {/* Testimonials Section */}
           <motion.div variants={fadeInUp} className="mt-24">
             <div className="text-center mb-12">
-              <h2 className="text-2xl sm:text-3xl font-bold text-text-base dark:text-text-inverse mb-3">
+              <h2 className="text-2xl sm:text-3xl font-bold text-light-primary dark:text-dark-primary mb-3">
                 What Our Community Says
               </h2>
-              <p className="text-text-muted dark:text-primary-200 max-w-2xl mx-auto">
+              <p className="text-light-secondary dark:text-dark-secondary max-w-2xl mx-auto">
                 Real experiences from passengers and drivers who are part of our growing community.
               </p>
             </div>
@@ -313,7 +313,7 @@ const LearnMorePage: React.FC = () => {
           {/* CTA Section */}
           <motion.div 
             variants={fadeInUp} 
-            className="mt-24 py-12 px-8 sm:px-16 rounded-2xl bg-gradient-to-br from-primary-600 to-primary-900 text-text-inverse relative overflow-hidden"
+            className="mt-24 py-12 px-8 sm:px-16 rounded-2xl bg-gradient-to-br from-primary to-primary-dark text-black relative overflow-hidden"
           >
             <div className="absolute inset-0 opacity-10 pattern-kente"></div>
             <div className="relative z-10 max-w-3xl mx-auto text-center">

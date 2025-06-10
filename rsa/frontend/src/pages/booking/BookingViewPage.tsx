@@ -60,22 +60,22 @@ const BookingViewPage: React.FC = () => {
   };
 
   return (
-    <div className=" flex flex-col">
+    <div className="min-h-screen bg-background-light dark:bg-background-dark flex flex-col">
       {/* App-like header with back/home button */}
-      <div className="bg-gradient-to-r from-accent-kente-gold-dark to-accent-kente-gold text-black sticky top-0 z-10">
+      <div className="bg-gradient-to-r from-primary-700 to-primary-600 text-text-light-primary sticky top-0 z-10 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4 flex items-center">
-          <button 
+          <button
             onClick={handleGoBack}
-            className="mr-3 p-2 rounded-full hover:bg-black/10 transition-colors"
+            className="mr-3 p-2 rounded-full hover:bg-text-light-primary/10 transition-all duration-300"
             aria-label="Go back"
           >
             <ArrowLeft className="h-5 w-5 sm:h-6 sm:w-6" />
           </button>
           <h1 className="text-lg sm:text-xl font-bold">Booking Details</h1>
           <div className="flex-1"></div>
-          <button 
+          <button
             onClick={handleGoHome}
-            className="p-2 rounded-full hover:bg-black/10 transition-colors"
+            className="p-2 rounded-full hover:bg-text-light-primary/10 transition-all duration-300"
             aria-label="Go home"
           >
             <Home className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -88,21 +88,24 @@ const BookingViewPage: React.FC = () => {
         <div className="max-w-4xl mx-auto w-full px-4 py-4 sm:py-8 flex flex-col flex-1">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-8 sm:py-12 flex-1">
-              <div className="w-14 h-14 sm:w-16 sm:h-16 border-4 border-accent-kente-gold border-t-transparent rounded-full animate-spin mb-4"></div>
-              <p className="text-gray-600 dark:text-gray-300 text-sm sm:text-base">Loading booking details...</p>
+              <div className="relative mb-6">
+                <div className="w-16 h-16 border-4 border-primary-700/20 rounded-full"></div>
+                <div className="absolute top-0 left-0 w-16 h-16 border-4 border-primary-700 border-t-transparent rounded-full animate-spin"></div>
+              </div>
+              <p className="text-text-light-secondary dark:text-text-dark-secondary text-sm sm:text-base">Loading booking details...</p>
             </div>
           ) : error ? (
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 sm:p-6 text-center flex-1 flex flex-col items-center justify-center max-h-[80vh]">
-              <div className="w-14 h-14 sm:w-16 sm:h-16 bg-red-100 dark:bg-red-900/30 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 sm:h-8 sm:w-8 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="card p-6 sm:p-8 text-center flex-1 flex flex-col items-center justify-center max-h-[80vh]">
+              <div className="icon-badge icon-badge-xl bg-accent-red/10 text-accent-red mx-auto mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                 </svg>
               </div>
-              <h2 className="text-lg sm:text-xl font-bold mb-2">Error Loading Booking</h2>
-              <p className="text-gray-600 dark:text-gray-300 mb-5 sm:mb-6 text-sm sm:text-base">{error}</p>
+              <h2 className="text-lg sm:text-xl font-bold mb-2 text-text-light-primary dark:text-text-dark-primary">Error Loading Booking</h2>
+              <p className="text-text-light-secondary dark:text-text-dark-secondary mb-6 text-sm sm:text-base">{error}</p>
               <button
                 onClick={handleGoHome}
-                className="px-5 py-2 sm:px-6 sm:py-2.5 bg-accent-kente-gold hover:bg-accent-kente-gold-dark text-white rounded-lg transition-colors text-sm sm:text-base"
+                className="btn btn-primary px-6 py-3 text-sm sm:text-base"
               >
                 Go to Homepage
               </button>

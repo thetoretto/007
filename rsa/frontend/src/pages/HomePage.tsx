@@ -1,6 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { Map, Calendar, CreditCard, Users, Clock, Star, MapPin, Target, Shield, CheckCircle, ArrowRight, Moon, Sun } from 'lucide-react';
+import { 
+  Calendar, CreditCard, Users, Clock, Star, MapPin, Target, Shield, CheckCircle, ArrowRight, 
+  Zap, Globe, Heart, Award, TrendingUp, Sparkles, Play, ChevronRight, Phone, Mail, 
+  Navigation, Compass, Route, Car, Plane, Train, Bus, Wifi, Coffee, Music, AirVent
+} from 'lucide-react';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
 import '../index.css';
@@ -9,10 +13,41 @@ const HomePage: React.FC = () => {
   const [origin, setOrigin] = useState('');
   const [destination, setDestination] = useState('');
   const [animateHero, setAnimateHero] = useState(false);
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   // Popular destinations for suggestions
   const popularDestinations = [
-    'Rubavu', 'Huye', 'Musanze', 'Goma', 'Bukavu', 'Kigali'
+    'Kigali', 'Rubavu', 'Huye', 'Musanze', 'Goma', 'Bukavu', 'Nyagatare', 'Muhanga'
+  ];
+
+  // Testimonials data
+  const testimonials = [
+    {
+      name: "Amara Okafor",
+      role: "Business Traveler",
+      location: "Lagos, Nigeria",
+      content: "RSA has revolutionized my business trips across Africa. The comfort, reliability, and professional service are unmatched. I've saved countless hours and stress!",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      name: "Jean-Baptiste Uwimana",
+      role: "University Student",
+      location: "Kigali, Rwanda",
+      content: "As a student traveling between cities for internships, RSA's affordable prices and safe rides have been a lifesaver. The booking process is so simple!",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
+    },
+    {
+      name: "Fatima Al-Rashid",
+      role: "Tourism Guide",
+      location: "Cairo, Egypt",
+      content: "I recommend RSA to all my tour groups. The vehicles are always clean, drivers are professional, and the real-time tracking gives everyone peace of mind.",
+      rating: 5,
+      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
+    }
   ];
 
   useEffect(() => {
@@ -21,8 +56,6 @@ const HomePage: React.FC = () => {
 
     // Handle scroll animations
     const handleScroll = () => {
-      
-      // Find all elements with animate-on-scroll class
       const animatedElements = document.querySelectorAll('.animate-on-scroll');
       
       animatedElements.forEach(el => {
@@ -36,11 +69,18 @@ const HomePage: React.FC = () => {
     };
     
     window.addEventListener('scroll', handleScroll);
-    // Trigger once on load
     setTimeout(handleScroll, 500);
     
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    // Auto-rotate testimonials
+    const testimonialInterval = setInterval(() => {
+      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearInterval(testimonialInterval);
+    };
+  }, [testimonials.length]);
 
   // Navigate to booking page with parameters
   const navigateToBooking = () => {
@@ -62,153 +102,191 @@ const HomePage: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="min-h-screen">
       <Navbar />
-      {/* Hero Section - full width */}
-      <section className="relative min-h-screen h-screen overflow-hidden">
-        {/* Background with enhanced light/dark mode support */}
-        <div className="absolute inset-0 bg-gradient-to-br from-secondary-900 via-primary-600 to-primary-900 dark:from-gray-900 dark:via-gray-950 dark:to-primary-900 transition-all duration-500"></div>
-        
-        {/* Abstract shapes for visual interest - using new color system */}
-        <div className="absolute top-10 sm:top-20 right-[5%] sm:right-[10%] w-48 h-48 sm:w-72 sm:h-72 rounded-full bg-primary-500/10 dark:bg-primary-700/10 blur-3xl transition-all duration-500 opacity-70 dark:opacity-50"></div>
-        <div className="absolute -bottom-10 sm:-bottom-20 left-[2%] sm:left-[5%] w-64 h-64 sm:w-96 sm:h-96 rounded-full bg-darkBlue-500/5 dark:bg-darkBlue-700/5 blur-3xl transition-all duration-500 opacity-60 dark:opacity-40"></div>
-        
-        {/* Subtle pattern overlay */}
-        <div className="absolute inset-0 hero-pattern-overlay z-0"></div>
-        
-        {/* Content */}
-        <div className="container-app relative z-10 h-full flex items-center px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-16 w-full py-8 sm:py-12 lg:py-0">
-            {/* Left side - Hero text with enhanced animations */}
-            <div className={`text-center lg:text-left space-y-4 sm:space-y-6 ${animateHero ? 'animate-slide-up' : 'opacity-0'}`}>
-              <div className="inline-flex items-center px-3 py-1 rounded-full glass-effect text-white dark:text-gray-200 text-xs sm:text-sm transition-all duration-300">
-                <span className="mr-2 flex-shrink-0 w-2 h-2 rounded-full bg-primary-500 animate-pulse"></span>
-                <span className="hidden xs:inline">Africa's Premier Ride-Sharing Platform</span>
-                <span className="xs:hidden">Premier Ride-Sharing</span>
-              </div>
-              
-              <h1 className="text-3xl xs:text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white dark:text-gray-50 leading-tight transition-colors duration-300">
-                <span className="block sm:inline">Travel Across Africa</span> <span className="text-primary-400 dark:text-primary-300 block sm:inline">Effortlessly</span>
-              </h1>
-              
-              <p className="text-base sm:text-lg lg:text-xl text-gray-200 dark:text-gray-300 leading-relaxed max-w-xl mx-auto lg:mx-0 transition-colors duration-300 px-2 sm:px-0">
-                Safe, affordable, and convenient transportation connecting major cities across Africa.
-              </p>
-
-              <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4 justify-center ">
-                <Link 
-                  to="/book" 
-                  className="btn btn-primary btn-lg hover:-translate-y-0.5 active:translate-y-0  xs:w-auto"
-                >
-                  Book Now
-                </Link>
-                <a 
-                  href="#how-it-works" 
-                  className="btn btn-outline border-white/50 text-white  px-6 sm:px-8 py-3 transition-all  xs:w-auto"
-                >
-                  How It Works
-                </a>
-              </div>
-              
-              <div className="flex flex-wrap justify-center lg:justify-start gap-3 sm:gap-4 lg:gap-6 pt-2 sm:pt-4">
-                {[
-                  { icon: Users, text: "2M+ Travelers", shortText: "2M+" },
-                  { icon: Map, text: "25+ Cities", shortText: "25+" },
-                  { icon: Star, text: "4.9 Rating", shortText: "4.9" }
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center space-x-1 sm:space-x-2 text-white dark:text-gray-200 glass-effect px-2 sm:px-3 py-1 sm:py-1.5 rounded-full transition-all duration-300">
-                    <item.icon className="h-3 w-3 sm:h-4 sm:w-4 text-primary-400 dark:text-primary-300" />
-                    <span className="text-xs sm:text-sm font-medium hidden xs:inline">{item.text}</span>
-                    <span className="text-xs font-medium xs:hidden">{item.shortText}</span>
-                  </div>
-                ))}
-              </div>
+      
+      {/* Hero Section - Completely Redesigned */}
+      <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-light via-purple/5 to-primary/10 dark:from-dark dark:via-purple/10 dark:to-primary/5">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0">
+          {/* Floating geometric shapes */}
+          <div className="absolute top-20 left-10 w-32 h-32 bg-primary/20 rounded-full blur-xl animate-float"></div>
+          <div className="absolute top-40 right-20 w-24 h-24 bg-purple/30 rounded-full blur-lg animate-float-delayed"></div>
+          <div className="absolute bottom-32 left-1/4 w-40 h-40 bg-accent/10 rounded-full blur-2xl animate-float-slow"></div>
+          <div className="absolute top-1/3 right-1/3 w-16 h-16 bg-secondary/20 rounded-full blur-md animate-pulse"></div>
+          
+          {/* Grid pattern overlay */}
+          <div className="absolute inset-0 opacity-5 dark:opacity-10">
+            <div className="grid grid-cols-12 h-full">
+              {Array.from({ length: 12 }).map((_, i) => (
+                <div key={i} className="border-r border-primary/20"></div>
+              ))}
             </div>
+          </div>
+          
+          {/* Gradient overlays */}
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-purple/5"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-light/50 dark:to-dark/50"></div>
+        </div>
 
-            {/* Right side - Enhanced Booking form */}
-            <div className={`w-full max-w-md mx-auto lg:ml-auto mt-8 lg:mt-0 ${animateHero ? 'animate-slide-up animation-delay-300' : 'opacity-0'}`}>
-              <div className="glass-card p-4 sm:p-6 lg:p-8 relative overflow-hidden transition-all duration-300 mx-4 sm:mx-0">
-                {/* Decorative element */}
-                <div className="absolute -top-16 sm:-top-24 -right-16 sm:-right-24 w-32 h-32 sm:w-48 sm:h-48 rounded-full bg-primary-700/10 dark:bg-primary-700/10 blur-3xl pointer-events-none dark:opacity-50"></div>
-                
-                <h2 className="text-lg sm:text-xl font-semibold text-white dark:text-gray-100 mb-4 sm:mb-5 text-center relative z-10">Find Your Ride</h2>
-                
-                <div className="space-y-4 relative z-10">
-                  {/* Origin */}
-                  <div>
-                    <label htmlFor="origin" className="block text-white dark:text-gray-200 text-sm mb-1">From</label>
-                    <div className="relative">
-                      <div className="absolute left-3 top-1/2 -translate-y-1/2">
-                        <MapPin className="text-primary-400 dark:text-primary-300 h-4 w-4 sm:h-5 sm:w-5" />
-                      </div>
-                      <input
-                        id="origin"
-                        type="text"
-                        placeholder="Enter starting point"
-                        className="w-full pl-9 sm:pl-10 py-2.5 sm:py-3 bg-white/5 dark:bg-black/10 text-white dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-500 border border-white/20 dark:border-gray-700/30 rounded-lg focus:ring-2 focus:ring-primary-500/70 dark:focus:ring-primary-400/70 focus:border-primary-500/50 dark:focus:border-primary-400/50 transition-all text-sm sm:text-base"
-                        value={origin}
-                        onChange={(e) => setOrigin(e.target.value)}
-                      />
-                    </div>
-                  </div>
+        {/* Main Content */}
+        <div className="relative z-10 min-h-screen flex items-center">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
+              
+              {/* Left side - Enhanced Hero Content */}
+              <div className={`space-y-8 ${animateHero ? 'animate-slide-up' : 'opacity-0'}`}>
+                {/* Status Badge */}
+                <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-sm">
+                  <Sparkles className="w-4 h-4 text-primary mr-2 animate-pulse" />
+                  <span className="text-sm font-medium text-primary">Africa's #1 Travel Platform</span>
+                </div>
+
+                {/* Main Headline */}
+                <div className="space-y-4">
+                  <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight">
+                    <span className="text-black dark:text-white">Journey Beyond</span>
+                    <br />
+                    <span className="text-gradient bg-gradient-to-r from-primary via-purple to-accent bg-clip-text text-transparent">
+                      Boundaries
+                    </span>
+                  </h1>
                   
-                  {/* Destination */}
-                  <div>
-                    <label htmlFor="destination" className="block text-white dark:text-gray-200 text-sm mb-1">To</label>
-                    <div className="relative">
-                      <div className="absolute left-3 top-1/2 -translate-y-1/2">
-                        <Target className="text-primary-400 dark:text-primary-300 h-4 w-4 sm:h-5 sm:w-5" />
-                      </div>
-                      <input
-                        id="destination"
-                        type="text"
-                        placeholder="Where are you going?"
-                        className="w-full pl-9 sm:pl-10 py-2.5 sm:py-3 bg-white/5 dark:bg-black/10 text-white dark:text-gray-100 placeholder-gray-300 dark:placeholder-gray-500 border border-white/20 dark:border-gray-700/30 rounded-lg focus:ring-2 focus:ring-primary-500/70 dark:focus:ring-primary-400/70 focus:border-primary-500/50 dark:focus:border-primary-400/50 transition-all text-sm sm:text-base"
-                        value={destination}
-                        onChange={(e) => setDestination(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                  
-                  {/* Search button */}
-                  <button
-                    onClick={navigateToBooking}
-                    disabled={!origin || !destination}
-                    className={`btn btn-primary w-full py-2.5 sm:py-3 rounded-lg font-medium mt-2 transition-all text-sm sm:text-base ${
-                      origin && destination 
-                        ? 'bg-primary-600 text-white hover:bg-primary-700 shadow-lg hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0' 
-                        : 'bg-gray-600/50 text-gray-400 cursor-not-allowed'
-                    }`}
+                  <p className="text-lg sm:text-xl text-dark dark:text-light max-w-2xl leading-relaxed">
+                    Experience premium transportation across Africa with our cutting-edge platform.
+                    Connect cities, cultures, and communities with unmatched comfort and reliability.
+                  </p>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <Link 
+                    to="/booking" 
+                    className="btn btn-primary btn-lg group hover:shadow-2xl hover:shadow-primary-700/25 transform hover:-translate-y-1 transition-all duration-300"
                   >
-                    <span className="hidden sm:inline">Find Available Rides</span>
-                    <span className="sm:hidden">Find Rides</span>
+                    <Zap className="w-5 h-5 mr-2" />
+                    Start Your Journey
+                    <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                  
+                  <button 
+                    onClick={() => setIsVideoPlaying(true)}
+                    className="btn btn-secondary group flex items-center justify-center"
+                  >
+                    <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
+                    Watch Demo
                   </button>
-                  
-                  {/* Popular destinations */}
-                  <div>
-                    <p className="text-white/70 dark:text-gray-400/70 text-xs mb-2">Popular destinations:</p>
-                    <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                      {popularDestinations.map((city, i) => (
-                        <button 
-                          key={i} 
-                          className="px-2 sm:px-3 py-1 text-xs bg-white/10 hover:bg-white/20 dark:bg-black/20 dark:hover:bg-black/30 text-white/80 hover:text-white dark:text-gray-300/80 dark:hover:text-gray-200 rounded-full transition-colors flex-shrink-0"
-                          onClick={() => handleQuickBooking(city)}
-                        >
-                          {city}
-                        </button>
-                      ))}
+                </div>
+
+                {/* Stats */}
+                <div className="grid grid-cols-3 gap-6 pt-8">
+                  {[
+                    { icon: Users, number: "2M+", label: "Happy Travelers" },
+                    { icon: Globe, number: "25+", label: "African Cities" },
+                    { icon: Star, number: "4.9", label: "Average Rating" }
+                  ].map((stat, i) => (
+                    <div key={i} className="text-center group">
+                      <div className="icon-badge icon-badge-lg bg-primary/10 text-primary mx-auto mb-2 group-hover:bg-primary group-hover:text-black transition-all duration-300">
+                        <stat.icon className="w-6 h-6" />
+                      </div>
+                      <div className="text-2xl font-bold text-black dark:text-white">{stat.number}</div>
+                      <div className="text-sm text-dark dark:text-light">{stat.label}</div>
                     </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right side - Revolutionary Booking Interface */}
+              <div className={`${animateHero ? 'animate-slide-up animation-delay-300' : 'opacity-0'}`}>
+                <div className="card p-8 relative overflow-hidden bg-gradient-to-br from-white/95 to-white/80 dark:from-dark/95 dark:to-dark/80 backdrop-blur-xl border-2 border-primary/20 shadow-2xl">
+                  {/* Decorative elements */}
+                  <div className="absolute -top-20 -right-20 w-40 h-40 bg-gradient-to-br from-primary/20 to-purple/20 rounded-full blur-3xl"></div>
+                  <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-gradient-to-tr from-accent/10 to-primary/10 rounded-full blur-2xl"></div>
+                  
+                  {/* Header */}
+                  <div className="relative z-10 text-center mb-8">
+                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-primary/10 border border-primary/20 mb-4">
+                      <Navigation className="w-4 h-4 text-primary mr-2" />
+                      <span className="text-sm font-medium text-primary">Quick Booking</span>
+                    </div>
+                    <h2 className="text-2xl font-bold text-black dark:text-white mb-2">Plan Your Journey</h2>
+                    <p className="text-dark dark:text-light">Book your ride in under 60 seconds</p>
                   </div>
-                  
-                  {/* Extra info */}
-                  <div className="pt-2 flex flex-col xs:flex-row xs:justify-between gap-2 xs:gap-0 text-xs text-white/60">
-                    <div className="flex items-center justify-center xs:justify-start">
-                      <Clock size={12} className="mr-1 text-primary-400 dark:text-primary-300" />
-                      <span>24/7 Service</span>
+
+                  {/* Booking Form */}
+                  <div className="space-y-6 relative z-10">
+                    {/* Route Selection */}
+                    <div className="grid grid-cols-1 gap-4">
+                      <div className="space-y-2">
+                        <label className="block text-sm font-medium text-black dark:text-white">
+                          <MapPin className="w-4 h-4 inline mr-2 text-accent" />
+                          From
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Enter departure city"
+                          className="input-field w-full"
+                          value={origin}
+                          onChange={(e) => setOrigin(e.target.value)}
+                        />
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <label className="block text-sm font-medium text-black dark:text-white">
+                          <Target className="w-4 h-4 inline mr-2 text-primary" />
+                          To
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Enter destination city"
+                          className="input-field w-full"
+                          value={destination}
+                          onChange={(e) => setDestination(e.target.value)}
+                        />
+                      </div>
                     </div>
-                    <div className="flex items-center justify-center xs:justify-start">
-                      <Shield size={12} className="mr-1 text-primary-400 dark:text-primary-300" />
-                      <span>Secure Booking</span>
+
+                    {/* Search Button */}
+                    <button
+                      onClick={navigateToBooking}
+                      disabled={!origin || !destination}
+                      className={`btn w-full py-4 text-lg font-semibold transition-all duration-300 ${
+                        origin && destination
+                          ? 'btn-primary shadow-xl hover:shadow-2xl hover:-translate-y-1 group'
+                          : 'opacity-50 cursor-not-allowed bg-gray-300 dark:bg-gray-700'
+                      }`}
+                    >
+                      <Compass className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
+                      Find Your Ride
+                      <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                    
+                    {/* Popular Destinations */}
+                    <div>
+                      <p className="text-sm text-light-secondary dark:text-dark-secondary mb-3">Popular destinations:</p>
+                      <div className="flex flex-wrap gap-2">
+                        {popularDestinations.map((city, i) => (
+                          <button
+                            key={i}
+                            className="px-3 py-1.5 text-xs bg-primary-light hover:bg-primary hover:text-black text-primary rounded-full transition-all duration-300 border border-primary-medium hover:border-primary"
+                            onClick={() => handleQuickBooking(city)}
+                          >
+                            {city}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Trust Indicators */}
+                    <div className="grid grid-cols-2 gap-4 pt-4 border-t border-light dark:border-dark">
+                      <div className="flex items-center text-sm text-light-secondary dark:text-dark-secondary">
+                        <Shield className="w-4 h-4 mr-2 text-secondary" />
+                        <span>Secure & Safe</span>
+                      </div>
+                      <div className="flex items-center text-sm text-light-secondary dark:text-dark-secondary">
+                        <Clock className="w-4 h-4 mr-2 text-purple" />
+                        <span>24/7 Support</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -217,175 +295,260 @@ const HomePage: React.FC = () => {
           </div>
         </div>
         
-        {/* Scroll indicator */}
-        <div className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <a href="#how-it-works" className="flex flex-col items-center text-white/70 hover:text-white transition-colors">
-            <span className="text-xs sm:text-sm mb-1 hidden xs:block">Discover More</span>
-            <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full border border-white/30 flex items-center justify-center">
-              <svg width="10" height="10" className="sm:w-3 sm:h-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+        {/* Floating Action Elements */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
+          <a href="#features" className="flex flex-col items-center text-light-secondary dark:text-dark-secondary hover:text-primary-700 transition-colors group">
+            <span className="text-sm mb-2 opacity-0 group-hover:opacity-100 transition-opacity">Explore Features</span>
+            <div className="w-10 h-10 rounded-full border-2 border-current flex items-center justify-center group-hover:border-primary-700 transition-colors">
+              <ChevronRight className="w-5 h-5 rotate-90" />
             </div>
           </a>
         </div>
       </section>
-      {/* How It Works Section - container */}
-      <section id="how-it-works" className="section-padding bg-white dark:bg-gray-800 relative overflow-hidden transition-colors duration-300">
-        <div className="container-app px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-16">
-            <span className="badge badge-primary inline-block mb-3 sm:mb-4 text-xs sm:text-sm">
-              Simple 3-Step Process
-            </span>
-            <h2 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 text-gray-900 dark:text-white transition-colors duration-300 px-2 sm:px-0">
-              Book Your Ride in <span className="text-primary-600 dark:text-primary-400 block xs:inline">Minutes</span>
-            </h2>
-            <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto text-base sm:text-lg lg:text-xl transition-colors duration-300 px-4 sm:px-0">
-              Our streamlined process makes booking transportation quick and hassle-free.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 relative">
-            {/* Connecting line between steps (desktop only) */}
-            <div className="absolute top-28 sm:top-32 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary-600 dark:via-primary-400 to-transparent hidden lg:block">
-              <div className="absolute left-[16.67%] top-0 w-4 h-4 rounded-full bg-primary-600 dark:bg-primary-400 transform -translate-x-1/2 -translate-y-1/2"></div>
-              <div className="absolute left-1/2 top-0 w-4 h-4 rounded-full bg-primary-600 dark:bg-primary-400 transform -translate-x-1/2 -translate-y-1/2"></div>
-              <div className="absolute left-[83.33%] top-0 w-4 h-4 rounded-full bg-primary-600 dark:bg-primary-400 transform -translate-x-1/2 -translate-y-1/2"></div>
+
+      {/* Features Section - Revolutionary Design */}
+      <section id="features" className="py-20 lg:py-32 bg-gradient-to-b from-light to-white dark:from-dark dark:to-black">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-16 lg:mb-24 animate-on-scroll">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
+              <Award className="w-4 h-4 text-primary mr-2" />
+              <span className="text-sm font-medium text-primary">Premium Features</span>
             </div>
-            
-            {[
-              {
-                icon: MapPin,
-                title: "Choose Your Route",
-                description: "Enter your pickup and destination locations to find available rides."
-              },
-              {
-                icon: Calendar,
-                title: "Select Time & Seats",
-                description: "Pick your preferred departure time and the number of seats you need."
-              },
-              {
-                icon: CreditCard,
-                title: "Pay & Confirm",
-                description: "Complete your booking with secure payment and receive instant confirmation."
-              }
-            ].map((step, index) => (
-              <div 
-                key={index} 
-                className="feature-card animate-on-scroll group hover:border-primary-600 dark:hover:border-primary-400 sm:col-span-1 lg:col-span-1"
-                style={{ animationDelay: `${index * 150}ms` }}
-              >
-                <div className="icon-badge icon-badge-lg icon-badge-primary group-hover:bg-primary-500/20 group-hover:text-primary-400 transition-all mx-auto">
-                  <step.icon size={28} className="sm:w-8 sm:h-8" />
-                </div>
-                <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-center text-gray-900 dark:text-white group-hover:text-primary-400 transition-colors duration-300 px-2 sm:px-0">{step.title}</h3>
-                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-4 sm:mb-6 text-center transition-colors duration-300 px-2 sm:px-0">{step.description}</p>
-                
-                {/* Step number indicator */}
-                <div className="flex items-center justify-center mt-auto pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700 transition-colors duration-300">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-primary-500/10 dark:bg-primary-500/20 text-primary-400 flex items-center justify-center font-bold group-hover:bg-primary-500 group-hover:text-white transition-colors text-sm sm:text-base">
-                    {index + 1}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-          
-          <div className="mt-12 sm:mt-16 text-center px-4 sm:px-0">
-            <button className="btn btn-secondary btn-lg shadow-md hover:shadow-primary-600 hover:-translate-y-0.5 transition-all duration-300  xs:w-auto">
-              <span className="hidden sm:inline">Book Your Ride Now</span>
-              <span className="sm:hidden">Book Now</span>
-            </button>
-          </div>
-        </div>
-      </section>
-      {/* Features Section - container */}
-      <section className="section-padding bg-gray-50 dark:bg-gray-900 relative overflow-hidden transition-colors duration-300">
-        <div className="container-app px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12 sm:mb-16">
-            <span className="badge badge-primary inline-block mb-3 sm:mb-4 text-xs sm:text-sm">
-              Why Choose Us
-            </span>
-            <h2 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 text-gray-900 dark:text-white transition-colors duration-300 px-2 sm:px-0">
-              The Best Way to <span className="text-primary-400 dark:text-primary-300 block xs:inline">Travel</span>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold mb-6">
+              <span className="text-black dark:text-white">Why Choose</span>
+              <br />
+              <span className="text-gradient bg-gradient-to-r from-primary to-purple bg-clip-text text-transparent">RSA Travel</span>
             </h2>
-            <p className="text-base sm:text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto transition-colors duration-300 px-4 sm:px-0">
-              We provide exceptional service with features designed for your comfort and convenience.
+            <p className="text-lg sm:text-xl text-dark dark:text-light max-w-3xl mx-auto leading-relaxed">
+              Experience the future of transportation with our innovative features designed for modern travelers
             </p>
           </div>
-          
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+
+          {/* Features Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
             {[
               {
                 icon: Shield,
-                title: "Safe & Secure",
-                description: "Verified drivers, real-time tracking, and 24/7 customer support for a secure journey."
+                title: "Military-Grade Security",
+                description: "Advanced encryption, verified drivers, and real-time monitoring ensure your safety throughout the journey.",
+                color: "secondary",
+                features: ["Background-checked drivers", "Real-time GPS tracking", "Emergency assistance"]
+              },
+              {
+                icon: Zap,
+                title: "Lightning-Fast Booking",
+                description: "Book your ride in under 30 seconds with our AI-powered matching system and instant confirmations.",
+                color: "primary",
+                features: ["AI-powered matching", "Instant confirmations", "Smart route optimization"]
+              },
+              {
+                icon: Heart,
+                title: "Comfort Redefined",
+                description: "Premium vehicles with luxury amenities, climate control, and entertainment systems for the perfect journey.",
+                color: "accent",
+                features: ["Premium vehicles", "Climate control", "Entertainment systems"]
+              },
+              {
+                icon: Globe,
+                title: "Pan-African Network",
+                description: "Seamlessly travel across 25+ African cities with our extensive network of trusted partners.",
+                color: "purple",
+                features: ["25+ African cities", "Trusted partners", "Seamless connections"]
+              },
+              {
+                icon: TrendingUp,
+                title: "Smart Pricing",
+                description: "Dynamic pricing that adapts to demand while ensuring fair rates and transparent billing.",
+                color: "purple",
+                features: ["Dynamic pricing", "Transparent billing", "No hidden fees"]
               },
               {
                 icon: Star,
-                title: "Premium Experience",
-                description: "Comfortable, air-conditioned vehicles that meet high quality standards."
-              },
-              {
-                icon: CheckCircle,
-                title: "Transparent Pricing",
-                description: "No hidden fees or surcharges. Know exactly what you'll pay upfront."
+                title: "5-Star Experience",
+                description: "Consistently rated 4.9/5 by travelers for exceptional service, punctuality, and customer care.",
+                color: "primary",
+                features: ["4.9/5 rating", "Exceptional service", "24/7 support"]
               }
             ].map((feature, index) => (
-              <div 
-                key={index} 
-                className="feature-card animate-on-scroll hover:border-primary-600 dark:hover:border-primary-400"
-                style={{ animationDelay: `${index * 150}ms` }}
+              <div
+                key={index}
+                className="card card-interactive p-8 group hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 animate-on-scroll"
+                style={{ animationDelay: `${index * 100}ms` }}
               >
-                <div className="text-primary-400 dark:text-primary-300 mb-4 sm:mb-6">
-                  <feature.icon className="h-8 w-8 sm:h-10 sm:w-10 mx-auto" />
+                <div className={`icon-badge icon-badge-lg bg-primary-light text-primary mx-auto mb-6 group-hover:bg-primary group-hover:text-black transition-all duration-300`}>
+                  <feature.icon className="w-8 h-8" />
                 </div>
-                <h3 className="text-lg sm:text-xl font-semibold mb-2 sm:mb-3 text-center text-gray-900 dark:text-white transition-colors duration-300 px-2 sm:px-0">{feature.title}</h3>
-                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 text-center transition-colors duration-300 px-2 sm:px-0">{feature.description}</p>
+
+                <h3 className="text-xl font-bold text-black dark:text-white mb-4 text-center">
+                  {feature.title}
+                </h3>
+
+                <p className="text-dark dark:text-light mb-6 text-center leading-relaxed">
+                  {feature.description}
+                </p>
+
+                <ul className="space-y-2">
+                  {feature.features.map((item, i) => (
+                    <li key={i} className="flex items-center text-sm text-dark dark:text-light">
+                      <CheckCircle className={`w-4 h-4 mr-2 text-primary flex-shrink-0`} />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
         </div>
       </section>
-      {/* Call to Action Section - full width */}
-      <section className="section-padding hero-gradient-light dark:hero-gradient-dark text-white relative overflow-hidden transition-colors duration-300">
-        <div className="container-app px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto text-center">
-            <span className="glass-effect px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-white text-xs sm:text-sm font-medium inline-block mb-4 sm:mb-6">
-              Limited Time Offer
-            </span>
-            
-            <h2 className="text-2xl xs:text-3xl sm:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 px-2 sm:px-0">
-              Ready to Travel with <span className="text-gradient-gold block xs:inline">Us?</span>
+
+      {/* Testimonials Section - Interactive Carousel */}
+      <section className="py-20 lg:py-32 bg-gradient-to-br from-primary/5 via-purple/5 to-light dark:from-primary/10 dark:via-purple/10 dark:to-dark">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Section Header */}
+          <div className="text-center mb-16 animate-on-scroll">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 border border-primary/20 mb-6">
+              <Heart className="w-4 h-4 text-primary mr-2" />
+              <span className="text-sm font-medium text-primary">Customer Stories</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">
+              <span className="text-black dark:text-white">Loved by</span>
+              <br />
+              <span className="text-gradient bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Millions</span>
             </h2>
-            
-            <p className="text-base sm:text-lg lg:text-xl text-gray-200 mb-8 sm:mb-10 max-w-2xl mx-auto transition-colors duration-300 px-4 sm:px-0">
-              Join thousands of satisfied customers across Africa and experience premium transportation services.
+            <p className="text-lg text-dark dark:text-light max-w-2xl mx-auto">
+              Join over 2 million satisfied travelers who trust RSA for their journeys across Africa
             </p>
-            
-            <Link 
-              to="/book" 
-              className="btn btn-primary btn-lg group hover:-translate-y-0.5 active:translate-y-0  xs:w-auto"
-            >
-              <span className="hidden xs:inline">Book Your Ride Now</span>
-              <span className="xs:hidden">Book Now</span>
-              <ArrowRight className="ml-2 h-4 w-4 sm:h-5 sm:w-5 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            
-            <div className="mt-8 sm:mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+          </div>
+
+          {/* Testimonial Carousel */}
+          <div className="relative max-w-4xl mx-auto">
+            <div className="card p-8 lg:p-12 relative overflow-hidden">
+              {/* Background decoration */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl"></div>
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-accent/10 rounded-full blur-2xl"></div>
+
+              {/* Testimonial Content */}
+              <div className="relative z-10 text-center">
+                <div className="mb-8">
+                  <div className="flex justify-center mb-4">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} className="w-6 h-6 text-primary fill-current" />
+                    ))}
+                  </div>
+
+                  <blockquote className="text-xl lg:text-2xl font-medium text-black dark:text-white leading-relaxed mb-8">
+                    "{testimonials[currentTestimonial].content}"
+                  </blockquote>
+                </div>
+
+                <div className="flex items-center justify-center space-x-4">
+                  <img
+                    src={testimonials[currentTestimonial].image}
+                    alt={testimonials[currentTestimonial].name}
+                    className="w-16 h-16 rounded-full object-cover border-4 border-primary/20"
+                  />
+                  <div className="text-left">
+                    <div className="font-semibold text-black dark:text-white">
+                      {testimonials[currentTestimonial].name}
+                    </div>
+                    <div className="text-sm text-dark dark:text-light">
+                      {testimonials[currentTestimonial].role}
+                    </div>
+                    <div className="text-xs text-secondary">
+                      {testimonials[currentTestimonial].location}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Navigation Dots */}
+            <div className="flex justify-center mt-8 space-x-2">
+              {testimonials.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentTestimonial(index)}
+                  className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                    index === currentTestimonial
+                      ? 'bg-primary scale-125'
+                      : 'bg-primary/30 hover:bg-primary/50'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Call to Action Section */}
+      <section className="py-20 lg:py-32 bg-gradient-to-r from-primary via-primary/90 to-purple relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-10 left-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-10 right-10 w-32 h-32 bg-accent/20 rounded-full blur-2xl"></div>
+          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+        </div>
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-4xl mx-auto">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 border border-white/20 mb-8">
+              <Sparkles className="w-4 h-4 text-white mr-2" />
+              <span className="text-sm font-medium text-white">Ready to Travel?</span>
+            </div>
+
+            <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6">
+              Your Next Adventure
+              <br />
+              <span className="text-gradient bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+                Awaits
+              </span>
+            </h2>
+
+            <p className="text-lg lg:text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed">
+              Join millions of travelers who choose RSA for safe, comfortable, and reliable transportation across Africa.
+              Your journey starts with a single click.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+              <Link
+                to="/booking"
+                className="btn bg-white text-black hover:bg-white/90 btn-lg group shadow-2xl hover:shadow-white/25 transform hover:-translate-y-1 transition-all duration-300"
+              >
+                <Zap className="w-5 h-5 mr-2" />
+                Book Your Ride Now
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Link>
+
+              <Link
+                to="/learn-more"
+                className="btn border-2 border-white/30 text-white hover:bg-white/10 btn-lg group"
+              >
+                <Globe className="w-5 h-5 mr-2" />
+                Learn More
+              </Link>
+            </div>
+
+            {/* Trust Indicators */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto">
               {[
-                { number: "2M+", text: "Happy Travelers" },
-                { number: "25+", text: "African Cities" },
-                { number: "4.9", text: "Customer Rating" }
+                { icon: Users, number: "2M+", label: "Happy Travelers" },
+                { icon: Globe, number: "25+", label: "African Cities" },
+                { icon: Star, number: "4.9", label: "Average Rating" }
               ].map((stat, index) => (
-                <div key={index} className="glass-effect p-3 sm:p-4 rounded-lg transition-all duration-300">
-                  <div className="text-xl sm:text-2xl font-bold text-primary-400">{stat.number}</div>
-                  <div className="text-xs sm:text-sm text-gray-200">{stat.text}</div>
+                <div key={index} className="text-center">
+                  <div className="icon-badge icon-badge-lg bg-white/10 text-white mx-auto mb-3">
+                    <stat.icon className="w-6 h-6" />
+                  </div>
+                  <div className="text-2xl font-bold text-white">{stat.number}</div>
+                  <div className="text-sm text-white/80">{stat.label}</div>
                 </div>
               ))}
             </div>
           </div>
         </div>
       </section>
+
       <Footer />
     </div>
   );

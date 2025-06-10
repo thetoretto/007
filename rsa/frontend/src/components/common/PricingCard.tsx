@@ -37,43 +37,43 @@ const PricingCard: React.FC<PricingCardProps> = ({
     switch (tier.accentColor) {
       case 'yellow':
         return {
-          bg: 'bg-accent-yellow',
-          bgLight: 'bg-accent-yellow/10',
-          border: 'border-accent-yellow',
-          text: 'text-accent-yellow',
-          hover: 'hover:bg-accent-yellow/80',
+          bg: 'bg-primary',
+          bgLight: 'bg-primary/10',
+          border: 'border-primary',
+          text: 'text-primary',
+          hover: 'hover:bg-primary-dark',
         };
       case 'green':
         return {
-          bg: 'bg-accent-green',
-          bgLight: 'bg-accent-green/10',
-          border: 'border-accent-green',
-          text: 'text-accent-green',
-          hover: 'hover:bg-accent-green/80',
+          bg: 'bg-secondary',
+          bgLight: 'bg-secondary/10',
+          border: 'border-secondary',
+          text: 'text-secondary',
+          hover: 'hover:bg-secondary-dark',
         };
       case 'purple':
         return {
-          bg: 'bg-accent-purple',
-          bgLight: 'bg-accent-purple/10',
-          border: 'border-accent-purple',
-          text: 'text-accent-purple',
-          hover: 'hover:bg-accent-purple/80',
+          bg: 'bg-purple',
+          bgLight: 'bg-purple/10',
+          border: 'border-purple',
+          text: 'text-purple',
+          hover: 'hover:bg-purple-dark',
         };
       case 'red':
         return {
-          bg: 'bg-accent-red',
-          bgLight: 'bg-accent-red/10',
-          border: 'border-accent-red',
-          text: 'text-accent-red',
-          hover: 'hover:bg-accent-red/80',
+          bg: 'bg-accent',
+          bgLight: 'bg-accent/10',
+          border: 'border-accent',
+          text: 'text-accent',
+          hover: 'hover:bg-accent-dark',
         };
       default:
         return {
           bg: 'bg-primary',
           bgLight: 'bg-primary/10',
           border: 'border-primary',
-          text: 'text-primary-800 dark:text-primary-200',
-          hover: 'hover:bg-primary-800 dark:hover:bg-primary-700',
+          text: 'text-primary',
+          hover: 'hover:bg-primary-dark',
         };
     }
   };
@@ -81,32 +81,32 @@ const PricingCard: React.FC<PricingCardProps> = ({
   const accentColors = getAccentColorClasses();
 
   return (
-    <div 
-      className={`relative flex flex-col rounded-xl overflow-hidden ${
-        tier.popular 
-          ? 'shadow-lg border-2 border-primary dark:border-primary-300' 
-          : 'shadow-md border border-gray-200 dark:border-primary-900'
-      } bg-background-light dark:bg-section-dark ${className}`}
+    <div
+      className={`card card-interactive relative flex flex-col overflow-hidden ${
+        tier.popular
+          ? 'border-2 border-primary shadow-lg ring-2 ring-primary/20'
+          : ''
+      } ${className}`}
     >
       {tier.popular && (
         <div className="absolute top-0 right-0">
           <div className="w-20 h-20 relative">
-            <div className="absolute transform rotate-45 bg-primary dark:bg-primary-300 text-white text-xs font-semibold py-1 right-[-35px] top-[32px] w-[170px] text-center">
+            <div className="absolute transform rotate-45 bg-primary text-black text-xs font-semibold py-1 right-[-35px] top-[32px] w-[170px] text-center">
               Most Popular
             </div>
           </div>
         </div>
       )}
 
-      <div className={`${accentColors.bgLight} dark:bg-opacity-20 p-6`}>
-        <h3 className="text-xl font-bold text-accent-black dark:text-text-inverse mb-2">{tier.title}</h3>
+      <div className={`${accentColors.bgLight} p-6`}>
+        <h3 className="text-xl font-bold text-light-primary dark:text-dark-primary mb-2">{tier.title}</h3>
         <div className="flex items-end mb-2">
-          <span className="text-3xl font-bold text-accent-black dark:text-text-inverse">${tier.price}</span>
+          <span className="text-3xl font-bold text-light-primary dark:text-dark-primary">${tier.price}</span>
           {tier.period && (
-            <span className="text-sm text-text-muted dark:text-gray-400 ml-1">/{tier.period}</span>
+            <span className="text-sm text-light-tertiary dark:text-dark-tertiary ml-1">/{tier.period}</span>
           )}
         </div>
-        <p className="text-sm text-text-base dark:text-gray-300">{tier.description}</p>
+        <p className="text-sm text-light-secondary dark:text-dark-secondary">{tier.description}</p>
       </div>
 
       <div className="p-6 flex-grow">
@@ -116,9 +116,9 @@ const PricingCard: React.FC<PricingCardProps> = ({
               {feature.included ? (
                 <Check className={`h-5 w-5 ${accentColors.text} mr-2 flex-shrink-0`} />
               ) : (
-                <X className="h-5 w-5 text-gray-400 mr-2 flex-shrink-0" />
+                <X className="h-5 w-5 text-light-tertiary dark:text-dark-tertiary mr-2 flex-shrink-0" />
               )}
-              <span className={feature.included ? 'text-text-base dark:text-text-inverse' : 'text-text-muted dark:text-gray-400'}>
+              <span className={feature.included ? 'text-light-primary dark:text-dark-primary' : 'text-light-tertiary dark:text-dark-tertiary'}>
                 {feature.text}
               </span>
             </li>
@@ -129,10 +129,10 @@ const PricingCard: React.FC<PricingCardProps> = ({
       <div className="p-6 pt-0">
         <button
           onClick={handleSelect}
-          className={`w-full px-4 py-2 rounded-md font-medium text-sm transition-colors ${
-            tier.popular 
-              ? `${accentColors.bg} text-text-base dark:text-text-inverse ${accentColors.hover}`
-              : 'bg-background-alternate dark:bg-background-darkAlternate text-text-base dark:text-text-inverse hover:bg-gray-200 dark:hover:bg-gray-700'
+          className={`btn w-full ${
+            tier.popular
+              ? 'btn-primary'
+              : 'btn-secondary'
           }`}
         >
           {tier.callToAction}
