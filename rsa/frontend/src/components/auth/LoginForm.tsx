@@ -110,7 +110,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-light-tertiary dark:text-text-dark-tertiary hover:text-text-light-primary dark:hover:text-text-dark-primary transition-colors duration-300"
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -120,11 +120,11 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => {
 
             {/* Remember Me & Forgot Password */}
             <div className="flex items-center justify-between">
-              <label className="flex items-center gap-2 text-sm">
+              <label className="flex items-center gap-2 text-sm text-text-light-secondary dark:text-text-dark-secondary cursor-pointer hover:text-text-light-primary dark:hover:text-text-dark-primary transition-colors duration-300">
                 <Field
                   name="rememberMe"
                   type="checkbox"
-                  className="rounded border-gray-300 text-primary focus:ring-primary"
+                  className="form-checkbox"
                 />
                 Remember me
               </label>
@@ -154,7 +154,7 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => {
 
             {/* Register Link */}
             <div className="text-center">
-              <span className="text-sm text-gray-600">Don't have an account? </span>
+              <span className="text-sm text-text-light-secondary dark:text-text-dark-secondary">Don't have an account? </span>
               <Link to="/register" className="auth-link">
                 Create one
               </Link>

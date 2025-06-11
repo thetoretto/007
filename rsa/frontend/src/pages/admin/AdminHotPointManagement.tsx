@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import useHotPointStore, { HotPoint } from '../../store/hotPointStore';
-import Navbar from '../../components/common/Navbar';
 import { PlusCircle, Edit, Trash2, Search, Filter, X, Save, MapPin, ToggleLeft, ToggleRight } from 'lucide-react';
 import '../../index.css';
 import ToastContainer from '../../components/common/ToastContainer';
@@ -164,12 +163,11 @@ const AdminHotPointManagement: React.FC<AdminHotPointManagementProps> = ({ mode 
 
   if (isLoading) {
     return (
-      <div className="flex flex-col min-h-screen">
-        <Navbar />
-        <main className="flex-grow flex items-center justify-center p-4">
+      <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
+        <main className="container-app py-8 md:py-12 min-h-screen flex items-center justify-center">
           <div className="text-center">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600 mb-4"></div>
-            <p className="text-xl text-gray-600">Loading Hot Points...</p>
+            <p className="text-xl text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">Loading Hot Points...</p>
           </div>
         </main>
       </div>
@@ -177,17 +175,19 @@ const AdminHotPointManagement: React.FC<AdminHotPointManagementProps> = ({ mode 
   }
 
   return (
-    <div className=" text-gray-900 dark:text-gray-50 transition-colors duration-300">
-      <Navbar /> {/* Ensured Navbar is included */}
+    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
       <ToastContainer />
 
-      <main className="container-app py-8 md:py-12"> {/* Adjusted padding */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-          <div className="flex-1 min-w-0">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 dark:text-gray-100 flex items-center">
-              <MapPin className="h-7 w-7 mr-2 sm:mr-3 text-primary-600" />
+      <main className="container-app py-8 md:py-12">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+          <div className="flex-1 min-w-0 mb-4 md:mb-0">
+            <h1 className="text-2xl md:text-3xl font-bold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300 flex items-center">
+              <MapPin className="h-7 w-7 mr-2 sm:mr-3 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
               Hot Point Management
             </h1>
+            <p className="mt-1 text-sm text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">
+              Manage pickup and drop-off locations
+            </p>
           </div>
           <div className="mt-4 flex-1 sm:mt-0 sm:flex-none">
             <button

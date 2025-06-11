@@ -183,10 +183,10 @@ const Navbar: React.FC = () => {
     <nav
       className={
         isDashboard
-          ? `rounded-xl z-50 transition-all duration-300 py-2 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-xl border border-border-light dark:border-border-dark shadow-card-light dark:shadow-card-dark`
+          ? `rounded-xl z-50 transition-all duration-300 py-3 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-xl border border-light dark:border-dark shadow-lg hover:shadow-xl`
           : `fixed w-full top-0 z-50 transition-all duration-500 ${
               scrolled
-                ? 'py-2 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-xl shadow-lg border-b border-secondary/20 dark:border-secondary/40'
+                ? 'py-3 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-xl shadow-lg border-b border-light dark:border-dark'
                 : 'py-4 bg-gradient-to-b from-surface-light/80 via-surface-light/60 to-transparent dark:from-surface-dark/80 dark:via-surface-dark/60 dark:to-transparent backdrop-blur-sm'
             }`
       }
@@ -202,25 +202,27 @@ const Navbar: React.FC = () => {
           <div className="flex-shrink-0 min-w-0">
             <Link to="/" className="group flex items-center gap-3 whitespace-nowrap">
               <div className="relative">
-                <Logo
-                  variant={
-                    isDashboard
-                      ? 'primary'
-                      : scrolled
-                        ? 'primary'
-                        : 'white'
-                  }
-                  size="lg"
-                  showText={false}
-                  className="h-8 w-8 sm:h-9 sm:w-9 transition-transform duration-300 group-hover:scale-110"
-                />
+                <div className={`p-2 rounded-xl transition-all duration-300 shadow-lg ${
+                  isDashboard
+                    ? 'bg-primary/10 dark:bg-primary/20 group-hover:bg-primary/20 dark:group-hover:bg-primary/30'
+                    : scrolled
+                      ? 'bg-primary/10 dark:bg-primary/20 group-hover:bg-primary/20 dark:group-hover:bg-primary/30'
+                      : 'bg-black/20 dark:bg-white/20 backdrop-blur-sm group-hover:bg-black/30 dark:group-hover:bg-white/30 border border-black/10 dark:border-white/10'
+                }`}>
+                  <Logo
+                    variant="primary"
+                    size="lg"
+                    showText={false}
+                    className="h-5 w-5 sm:h-6 sm:w-6 transition-transform duration-300 group-hover:scale-110"
+                  />
+                </div>
                 {/* Enhanced glow effect */}
-                <div className={`absolute inset-0 rounded-full blur-lg transition-all duration-300 ${
+                <div className={`absolute inset-0 rounded-xl blur-lg transition-all duration-300 ${
                   isDashboard
                     ? 'bg-primary/20 group-hover:bg-primary/40'
                     : scrolled
                       ? 'bg-primary/20 group-hover:bg-primary/40'
-                      : 'bg-white/20 group-hover:bg-white/40'
+                      : 'bg-primary/30 group-hover:bg-primary/50'
                 } group-hover:opacity-100 opacity-0 group-hover:scale-110`}></div>
               </div>
               <div className="flex flex-col">
@@ -229,7 +231,7 @@ const Navbar: React.FC = () => {
                     ? 'text-text-light-primary dark:text-text-dark-primary'
                     : scrolled
                       ? 'bg-gradient-to-r from-primary to-primary/80 dark:from-primary dark:to-primary/80 bg-clip-text text-transparent'
-                      : 'text-white dark:text-white'
+                      : 'text-black dark:text-white drop-shadow-lg'
                 } group-hover:scale-105`}>
                   {isDashboard && user ? (
                     user.role === 'admin' ? 'Admin Panel' :
@@ -243,7 +245,7 @@ const Navbar: React.FC = () => {
                   <span className={`text-xs font-medium transition-all duration-300 ${
                     scrolled
                       ? 'text-primary dark:text-primary'
-                      : 'text-white/80 dark:text-white/80'
+                      : 'text-black/70 dark:text-white/80 drop-shadow-md'
                   } group-hover:text-primary`}>
                     Travel with confidence
                   </span>
@@ -275,7 +277,7 @@ const Navbar: React.FC = () => {
                                   : 'bg-black/80 text-white dark:bg-white/20 dark:text-white font-semibold shadow-glass border border-black/20 dark:border-white/30'
                                 : scrolled
                                   ? 'text-text-light-primary dark:text-text-dark-primary hover:text-primary'
-                                  : 'text-black hover:text-primary dark:text-white/90 dark:hover:text-white font-medium'
+                                  : 'text-black hover:text-primary dark:text-white/90 dark:hover:text-white font-medium drop-shadow-sm'
                             }`
                       }`}
                     >
@@ -284,7 +286,7 @@ const Navbar: React.FC = () => {
                       <ChevronDown className={`ml-2 h-4 w-4 transition-all duration-300 ${openDesktopSubmenu === item.path ? 'transform rotate-180' : 'group-hover:translate-y-0.5'}`} />
                     </button>
                     {openDesktopSubmenu === item.path && (
-                      <div className="absolute z-60 mt-3 w-64 origin-top-right bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-xl rounded-xl shadow-glass dark:shadow-glass-dark ring-1 ring-black/5 dark:ring-white/10 border border-border-light dark:border-border-dark overflow-hidden animate-slide-down">
+                      <div className="absolute z-60 mt-3 w-64 origin-top-right bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-xl rounded-xl shadow-lg ring-1 ring-black/5 dark:ring-white/10 border border-light dark:border-dark overflow-hidden animate-slide-down">
                         <div className="p-2">
                           {item.submenu.map((sub) => (
                             <a
@@ -330,7 +332,7 @@ const Navbar: React.FC = () => {
                                 : 'bg-black/80 text-white dark:bg-white/20 dark:text-white font-semibold shadow-glass border border-black/20 dark:border-white/30'
                               : scrolled
                                 ? 'text-text-light-primary dark:text-text-dark-primary hover:text-primary'
-                                : 'text-black hover:text-primary dark:text-white/90 dark:hover:text-white font-medium'
+                                : 'text-black hover:text-primary dark:text-white/90 dark:hover:text-white font-medium drop-shadow-sm'
                           }`
                     }`}
                   >
@@ -354,8 +356,8 @@ const Navbar: React.FC = () => {
                   to="/login"
                   className={`group flex items-center px-4 py-2.5 rounded-xl font-medium transition-all duration-300 ${
                     isDashboard || scrolled
-                      ? 'text-primary hover:bg-primary/10 dark:hover:bg-primary/20 border border-border-light dark:border-border-dark hover:border-primary shadow-sm hover:shadow-primary'
-                      : 'text-black border border-black/30 hover:bg-black/10 hover:border-black/50 backdrop-blur-sm dark:text-white dark:border-white/30 dark:hover:bg-white/10 dark:hover:border-white/50 shadow-sm hover:shadow-md'
+                      ? 'text-primary hover:bg-primary/10 dark:hover:bg-primary/20 border border-light dark:border-dark hover:border-primary shadow-sm hover:shadow-lg'
+                      : 'text-black border border-black/40 hover:bg-black/10 hover:border-black/60 backdrop-blur-sm dark:text-white dark:border-white/40 dark:hover:bg-white/10 dark:hover:border-white/60 shadow-md hover:shadow-lg drop-shadow-sm'
                   }`}
                 >
                   <LogIn size={16} className="mr-2 transition-transform duration-300 group-hover:scale-110" />
@@ -363,7 +365,7 @@ const Navbar: React.FC = () => {
                 </Link>
                 <Link
                   to="/register"
-                  className={`group flex items-center px-4 py-2.5 rounded-xl font-medium transition-all duration-300 shadow-primary hover:shadow-primary-lg hover:scale-105 ${
+                  className={`group flex items-center px-4 py-2.5 rounded-xl font-medium transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 ${
                     isDashboard || scrolled
                       ? 'bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 text-black'
                       : 'bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary text-black'
@@ -383,9 +385,9 @@ const Navbar: React.FC = () => {
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               type="button"
               className={`relative inline-flex items-center justify-center p-3 rounded-xl focus:outline-none transition-all duration-300 ${
-                isDashboard ? 'text-text-light-primary dark:text-text-dark-primary hover:bg-primary/10 border border-border-light dark:border-border-dark shadow-sm hover:shadow-primary' :
-                scrolled ? 'text-text-light-primary dark:text-text-dark-primary hover:bg-primary/10 border border-border-light dark:border-border-dark shadow-sm hover:shadow-primary' :
-                'text-black hover:bg-black/10 border border-black/30 hover:border-black/50 backdrop-blur-sm dark:text-white dark:hover:bg-white/10 dark:border-white/30 dark:hover:border-white/50 shadow-sm hover:shadow-md'
+                isDashboard ? 'text-text-light-primary dark:text-text-dark-primary hover:bg-primary/10 border border-light dark:border-dark shadow-sm hover:shadow-lg' :
+                scrolled ? 'text-text-light-primary dark:text-text-dark-primary hover:bg-primary/10 border border-light dark:border-dark shadow-sm hover:shadow-lg' :
+                'text-black hover:bg-black/10 border border-black/40 hover:border-black/60 backdrop-blur-sm dark:text-white dark:hover:bg-white/10 dark:border-white/40 dark:hover:border-white/60 shadow-md hover:shadow-lg drop-shadow-sm'
               } ${isMenuOpen ? 'scale-95' : 'hover:scale-105'}`}
               aria-controls="mobile-menu"
               aria-expanded={isMenuOpen}
@@ -414,7 +416,7 @@ const Navbar: React.FC = () => {
       {/* Enhanced Mobile Menu */}
       {isMenuOpen && (
         <div className="md:hidden animate-slide-down" id="mobile-menu">
-          <div className="mx-4 my-4 rounded-2xl overflow-hidden shadow-glass dark:shadow-glass-dark border bg-surface-light/95 dark:bg-surface-dark/95 border-border-light dark:border-border-dark backdrop-blur-xl">
+          <div className="mx-4 my-4 rounded-2xl overflow-hidden shadow-xl border bg-surface-light/95 dark:bg-surface-dark/95 border-light dark:border-dark backdrop-blur-xl">
             <div className="p-6 space-y-2">
               {navItems.map((item, index) => (
                 <div key={item.label} className="animate-slide-up" style={{ animationDelay: `${index * 100}ms` }}>
@@ -481,7 +483,7 @@ const Navbar: React.FC = () => {
               ))}
 
               {/* Enhanced Mobile Auth Buttons */}
-              <div className="pt-6 border-t border-border-light dark:border-border-dark space-y-3 animate-slide-up" style={{ animationDelay: `${navItems.length * 100}ms` }}>
+              <div className="pt-6 border-t border-light dark:border-dark space-y-3 animate-slide-up" style={{ animationDelay: `${navItems.length * 100}ms` }}>
                 {user ? (
                   <div className="px-2">
                     <ProfileDropdown />
@@ -491,7 +493,7 @@ const Navbar: React.FC = () => {
                     <Link
                       to="/login"
                       onClick={() => setIsMenuOpen(false)}
-                      className="w-full flex items-center justify-center px-4 py-3 text-base font-medium text-primary bg-primary/10 dark:bg-primary/20 rounded-xl hover:bg-primary/20 dark:hover:bg-primary/30 transition-all duration-300 border border-border-light dark:border-border-dark shadow-sm hover:shadow-primary"
+                      className="w-full flex items-center justify-center px-4 py-3 text-base font-medium text-primary bg-primary/10 dark:bg-primary/20 rounded-xl hover:bg-primary/20 dark:hover:bg-primary/30 transition-all duration-300 border border-light dark:border-dark shadow-sm hover:shadow-lg"
                     >
                       <LogIn size={18} className="mr-2" />
                       Login
@@ -499,7 +501,7 @@ const Navbar: React.FC = () => {
                     <Link
                       to="/register"
                       onClick={() => setIsMenuOpen(false)}
-                      className="w-full flex items-center justify-center px-4 py-3 text-base font-medium text-black bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 rounded-xl transition-all duration-300 shadow-primary hover:shadow-primary-lg hover:scale-105"
+                      className="w-full flex items-center justify-center px-4 py-3 text-base font-medium text-black bg-gradient-to-r from-primary to-primary/90 hover:from-primary/90 hover:to-primary/80 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
                     >
                       <UserPlus size={18} className="mr-2" />
                       Sign Up

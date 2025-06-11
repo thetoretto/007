@@ -1368,22 +1368,22 @@ a:hover {
 .auth-title {
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--light-primary);
+  color: var(--text-light-primary);
   margin-bottom: 0.5rem;
 }
 
 .dark .auth-title {
-  color: var(--dark-primary);
+  color: var(--text-dark-primary);
 }
 
 .auth-subtitle {
-  color: var(--light-secondary);
+  color: var(--text-light-secondary);
   font-size: 0.875rem;
   line-height: 1.5;
 }
 
 .dark .auth-subtitle {
-  color: var(--dark-secondary);
+  color: var(--text-dark-secondary);
 }
 
 /* Form Styles */
@@ -1402,14 +1402,14 @@ a:hover {
 .form-label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--light-primary);
+  color: var(--text-light-primary);
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
 .dark .form-label {
-  color: var(--dark-primary);
+  color: var(--text-dark-primary);
 }
 
 /* Enhanced form input styles - consolidated and improved */

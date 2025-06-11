@@ -141,17 +141,17 @@ const AdminStatistics: React.FC = () => {
   };
   
   return (
-    <div className="text-gray-900 dark:text-gray-50 transition-colors duration-300">
-  
+    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
+      <ToastContainer />
 
-      <main className="container-app pb-8 md:pt-28 md:pb-12">
+      <main className="container-app py-8 md:py-12">
         <div className="mb-8 md:mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
+          <h1 className="text-2xl md:text-3xl font-bold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300 flex items-center">
             <BarChart2 className="h-7 w-7 mr-3 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
-            Statistics
+            Statistics Dashboard
           </h1>
-          <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
-            Platform-wide metrics and performance statistics
+          <p className="mt-1 text-sm text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">
+            View comprehensive analytics and insights
           </p>
         </div>
         

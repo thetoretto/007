@@ -11,7 +11,6 @@ import { User, UserStatus, UserRole } from '../../types';
 import '../../index.css';
 import ToastContainer from '../../components/common/ToastContainer';
 import { useToast } from '../../hooks/useToast';
-import Navbar from '../../components/common/Navbar';
 
 
 // Enhanced Modal Component
@@ -202,8 +201,7 @@ const UserManagement: React.FC = () => {
   };
 
   return (
-    <div className=" text-gray-900 dark:text-gray-50 transition-colors duration-300">
-      <Navbar />
+    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
       <ToastContainer />
 
       <main className="container-app py-8 md:py-12">

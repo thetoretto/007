@@ -6,10 +6,9 @@ import { useBookingStore } from '../../store/bookingStore';
 import { BookingStatus } from '../../store/bookingStore';
 import { mockUsers, mockRoutes as allMockRoutes, mockVehicles } from '../../utils/mockData';
 import { XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts';
-import { Users, Calendar, TrendingUp, Settings, User, Map, Activity, Plus, Edit, Trash2, Clock, Filter, Star, MapPin, Navigation, ArrowRight, LayoutDashboard } from 'lucide-react'; // Added LayoutDashboard
+import { Users, Calendar, TrendingUp, Settings, User, Map, Activity, Plus, Edit, Trash2, Clock, Filter, Star, MapPin, Navigation, ArrowRight, LayoutDashboard } from 'lucide-react';
 import TripForm from '../../components/trips/TripForm';
 import '../../index.css';
-import Navbar from '../../components/common/Navbar'; // Ensured Navbar import
 
 // Enhanced mock data generation for Admin Dashboard
 const generateAdminMockData = (period: 'daily' | 'weekly' | 'monthly' | 'yearly', allTrips: Trip[]) => {
@@ -179,15 +178,18 @@ const AdminDashboard: React.FC = () => {
   };
 
   return (
-    <div className="text-gray-900 dark:text-gray-50 transition-colors duration-300">
-      <Navbar />
-      <main className="container-app py-8 md:py-12"> {/* Adjusted padding and removed pt-navbar comment */} 
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
-                <LayoutDashboard className="h-7 w-7 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
-                Admin Dashboard
-            </h1>
-            {/* Add any top-level actions or filters here if needed */}
+    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
+      <main className="container-app py-8 md:py-12">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+            <div className="flex-1 min-w-0 mb-4 md:mb-0">
+              <h1 className="text-2xl md:text-3xl font-bold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300 flex items-center">
+                  <LayoutDashboard className="h-7 w-7 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
+                  Admin Dashboard
+              </h1>
+              <p className="mt-1 text-sm text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">
+                Manage your transportation system
+              </p>
+            </div>
         </div>
         
         {/* Quick Stats */}

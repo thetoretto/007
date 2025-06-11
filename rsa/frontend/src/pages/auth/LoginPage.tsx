@@ -23,13 +23,13 @@ const LoginPage: React.FC = () => {
   return (
     <div className="auth-container">
       {/* Navigation */}
-      <div className="absolute top-4 left-4">
+      <div className="absolute top-4 left-4 z-10">
         <Link
           to="/"
-          className="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors duration-200"
+          className="flex items-center gap-2 px-4 py-2.5 bg-surface-light dark:bg-surface-dark rounded-xl text-text-light-primary dark:text-text-dark-primary hover:bg-surface-light-alt dark:hover:bg-surface-dark-alt transition-all duration-300 shadow-sm hover:shadow-md border border-light dark:border-dark"
         >
           <ArrowLeft size={16} />
-          <span>Home</span>
+          <span className="font-medium">Home</span>
         </Link>
       </div>
 
@@ -37,12 +37,12 @@ const LoginPage: React.FC = () => {
       <div className="auth-card">
         {/* Header */}
         <div className="auth-header">
-          <div className="auth-logo">
-            <LogIn size={24} className="text-white" />
+          <div className="auth-logo shadow-lg">
+            <LogIn size={24} className="text-black" />
           </div>
           <h1 className="auth-title">Welcome Back</h1>
           <p className="auth-subtitle">
-            Sign in to your GIGI move account and continue your journey.
+            Sign in to your GIGI move account and continue your journey with confidence.
           </p>
         </div>
 

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Navbar from '../../components/common/Navbar';
 import { Route as RouteType } from '../../types';
 import { useAuthStore } from '../../store/authStore';
 import { MapPin, Plus, Edit2, Trash, X, Save, ChevronRight } from 'lucide-react';
@@ -65,19 +64,23 @@ const AdminRouteManagement: React.FC = () => {
   };
 
   return (
-    <div className=" text-gray-900 dark:text-gray-50 transition-colors duration-300">
-      <Navbar /> {/* Ensured Navbar is included */}
+    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
       <ToastContainer />
 
-      <main className="container-app py-8 md:py-12"> {/* Adjusted padding */}
+      <main className="container-app py-8 md:py-12">
         <div className="mb-8 md:mb-12">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-            <div className="flex-1 min-w-0">
-              <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-                <div className="flex items-center">
-                  <MapPin className="h-7 w-7 mr-3 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
-                  <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white transition-colors duration-300">Route Management</h1>
-                </div>
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+            <div className="flex-1 min-w-0 mb-4 md:mb-0">
+              <h1 className="text-2xl md:text-3xl font-bold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300 flex items-center">
+                <MapPin className="h-7 w-7 mr-3 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
+                Route Management
+              </h1>
+              <p className="mt-1 text-sm text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">
+                Manage travel routes and destinations
+              </p>
+            </div>
+            <div className="flex items-center">
+              <div className="flex items-center">
                 <button
                   onClick={handleCreate}
                   className="btn btn-accent w-full sm:w-auto inline-flex items-center justify-center gap-2 py-3 px-4"

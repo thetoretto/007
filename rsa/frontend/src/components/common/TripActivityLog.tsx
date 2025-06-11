@@ -234,27 +234,32 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
   }, []);
 
   return (
-    <div className="card bg-base-100 dark:bg-section-dark shadow-xl rounded-xl p-4 sm:p-6">
-      <div className="border-b border-border dark:border-border-dark pb-4 mb-4 sm:mb-6">
+    <div className="bg-white dark:bg-gray-800 shadow-xl rounded-xl p-4 sm:p-6 border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+      <div className="border-b border-gray-200 dark:border-gray-700 pb-4 mb-4 sm:mb-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3 sm:gap-4">
-          <h2 className="text-xl sm:text-2xl font-semibold text-text-base dark:text-text-inverse">Trip Activity Log</h2>
+          <div className="flex-1 min-w-0">
+            <h2 className="text-xl sm:text-2xl font-bold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">Trip Activity Log</h2>
+            <p className="mt-1 text-sm text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">
+              Track and manage your trip activities
+            </p>
+          </div>
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="btn btn-outline btn-secondary flex items-center text-sm py-3 px-3"
+            className="btn btn-outline btn-sm flex items-center gap-2 px-4 py-2 text-text-light-primary dark:text-text-dark-primary border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-300"
             aria-expanded={showFilters}
             aria-controls="filter-panel"
           >
-            <Filter className="h-4 w-4 mr-2" />
-            {showFilters ? 'Hide Filters' : 'Filters'}
+            <Filter className="h-4 w-4" />
+            {showFilters ? 'Hide Filters' : 'Show Filters'}
           </button>
         </div>
 
-        <div className="relative flex ">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-text-muted dark:text-text-muted-dark pointer-events-none" />
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400 dark:text-gray-500 pointer-events-none" />
           <input
             type="search"
-            className="input input-other w-full pl-10 pr-4 py-2.5  dark:bg-background-dark text-text-base dark:text-text-inverse placeholder-text-muted dark:placeholder-text-muted-dark focus:ring-primary focus:border-primary"
-            placeholder="Search trips (e.g., Kigali, Driver John, Completed)"
+            className="w-full pl-10 pr-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-text-light-primary dark:text-text-dark-primary placeholder-gray-500 dark:placeholder-gray-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-300"
+            placeholder="Search trips (location, driver, status...)"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             aria-label="Search trips"
@@ -264,20 +269,20 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
         {showFilters && (
           <div
             id="filter-panel"
-            className="mt-4 p-4 bg-base-200 dark:bg-section-medium rounded-lg space-y-4 animate-fadeIn"
+            className="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg space-y-4 border border-gray-200 dark:border-gray-600 transition-colors duration-300"
             role="region"
           >
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label htmlFor="date-filter-select" className="form-label flex items-center mb-1.5 text-text-base dark:text-text-inverse font-medium">
-                  <CalendarRange className="h-5 w-5 mr-2 text-primary dark:text-primary-300" />
+                <label htmlFor="date-filter-select" className="flex items-center mb-2 text-sm font-medium text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
+                  <CalendarRange className="h-4 w-4 mr-2 text-primary-600 dark:text-primary-400" />
                   Date Range
                 </label>
                 <select
                   id="date-filter-select"
                   value={dateFilter}
                   onChange={(e) => setDateFilter(e.target.value as LogDateFilter)}
-                  className="select select-bordered w-full bg-background-light dark:bg-background-dark text-text-base dark:text-text-inverse focus:ring-primary focus:border-primary"
+                  className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-text-light-primary dark:text-text-dark-primary focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-300"
                 >
                   <option value="all">All Dates</option>
                   <option value="today">Today</option>
@@ -287,15 +292,15 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
               </div>
 
               <div>
-                <label htmlFor="status-filter-select" className="form-label flex items-center mb-1.5 text-text-base dark:text-text-inverse font-medium">
-                  <Filter className="h-5 w-5 mr-2 text-primary dark:text-primary-300" />
+                <label htmlFor="status-filter-select" className="flex items-center mb-2 text-sm font-medium text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
+                  <Filter className="h-4 w-4 mr-2 text-primary-600 dark:text-primary-400" />
                   Trip Status
                 </label>
                 <select
                   id="status-filter-select"
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value as LogTripStatus | 'all')}
-                  className="select select-bordered w-full bg-background-light dark:bg-background-dark text-text-base dark:text-text-inverse focus:ring-primary focus:border-primary"
+                  className="w-full px-3 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg text-text-light-primary dark:text-text-dark-primary focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-300"
                 >
                   <option value="all">All Statuses</option>
                   <option value="completed">Completed</option>
@@ -312,13 +317,13 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
 
       <div className="space-y-3 sm:space-y-4" role="list">
         {paginatedActivities.length === 0 ? (
-          <div className="p-6 sm:p-8 text-center rounded-lg bg-base-200 dark:bg-section-medium" role="status">
-            <MapPin className="h-12 w-12 mx-auto text-text-muted dark:text-text-muted-dark mb-3" />
-            <p className="text-lg font-medium text-text-base dark:text-text-inverse">No Trip Activities Found</p>
-            <p className="text-sm text-text-muted dark:text-text-muted-dark mt-1">
-              {searchQuery || statusFilter !== 'all' || dateFilter !== 'all' 
-                ? "Try adjusting your search or filters." 
-                : "There are no trip activities to display yet."}
+          <div className="p-6 sm:p-8 text-center rounded-lg bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 transition-colors duration-300" role="status">
+            <MapPin className="h-12 w-12 mx-auto text-gray-400 dark:text-gray-500 mb-3" />
+            <p className="text-lg font-semibold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">No Trip Activities Found</p>
+            <p className="text-sm text-text-light-secondary dark:text-text-dark-secondary mt-2 transition-colors duration-300">
+              {searchQuery || statusFilter !== 'all' || dateFilter !== 'all'
+                ? "Try adjusting your search or filters to find more results."
+                : "There are no trip activities to display yet. Start by creating your first trip."}
             </p>
           </div>
         ) : (
@@ -340,35 +345,34 @@ const TripActivityLog: React.FC<TripActivityLogProps> = ({
       </div>
 
       {totalPages > 1 && (
-        <div className="pt-4 sm:pt-6 mt-4 sm:mt-6 border-t border-border dark:border-border-dark flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4" role="navigation">
-          <div className="text-sm text-text-muted dark:text-text-muted-dark">
-            Page <span className="font-semibold text-text-base dark:text-text-inverse">{page}</span> of <span className="font-semibold text-text-base dark:text-text-inverse">{totalPages}</span>
-            <span className="hidden sm:inline"> ({filteredActivities.length} results)</span>
+        <div className="pt-4 sm:pt-6 mt-4 sm:mt-6 border-t border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4" role="navigation">
+          <div className="text-sm text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">
+            Page <span className="font-semibold text-text-light-primary dark:text-text-dark-primary">{page}</span> of <span className="font-semibold text-text-light-primary dark:text-text-dark-primary">{totalPages}</span>
+            <span className="hidden sm:inline"> • {filteredActivities.length} total results</span>
           </div>
-          <div className="join shadow-sm rounded-lg">
+          <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              className="join-item btn btn-outline btn-secondary btn-sm sm:btn-md disabled:opacity-60"
+              className="px-3 py-2 text-sm font-medium text-text-light-primary dark:text-text-dark-primary bg-transparent hover:bg-white dark:hover:bg-gray-600 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300 flex items-center gap-1"
               aria-label="Previous page"
             >
-              <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
-              <span className="hidden sm:inline ml-1">Prev</span>
+              <ChevronLeft className="h-4 w-4" />
+              <span className="hidden sm:inline">Previous</span>
             </button>
-            
-            {/* Simplified Pagination: Prev, Current Page Indicator, Next */}
-            <button className="join-item btn btn-outline btn-secondary btn-sm sm:btn-md pointer-events-none">
+
+            <div className="px-3 py-2 text-sm font-medium text-text-light-primary dark:text-text-dark-primary bg-white dark:bg-gray-600 rounded-md min-w-[2.5rem] text-center">
               {page}
-            </button>
+            </div>
 
             <button
               onClick={() => setPage(p => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              className="join-item btn btn-outline btn-secondary btn-sm sm:btn-md disabled:opacity-60"
+              className="px-3 py-2 text-sm font-medium text-text-light-primary dark:text-text-dark-primary bg-transparent hover:bg-white dark:hover:bg-gray-600 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300 flex items-center gap-1"
               aria-label="Next page"
             >
-               <span className="hidden sm:inline mr-1">Next</span>
-              <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="hidden sm:inline">Next</span>
+              <ChevronRight className="h-4 w-4" />
             </button>
           </div>
         </div>

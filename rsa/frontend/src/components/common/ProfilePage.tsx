@@ -109,7 +109,7 @@ const ProfilePage: React.FC = () => {
 
   if (loading && !user) {
     return (
-        <div className="min-h-screen bg-base-200 dark:bg-base-300 flex items-center justify-center">
+        <div className="min-h-screen bg-background-light dark:bg-background-dark flex items-center justify-center transition-colors duration-300">
             <LoadingSpinner size="large" />
         </div>
     );
@@ -120,39 +120,46 @@ const ProfilePage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-base-200 dark:bg-base-300 flex flex-col">
-      <main className="flex-grow container-app py-8 sm:py-12">
-        <h1 className="text-3xl sm:text-4xl font-bold text-text-base dark:text-text-inverse mb-10 text-center">Your Profile</h1>
+    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
+      <main className="container-app py-8 md:py-12">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
+          <div className="flex-1 min-w-0 mb-4 md:mb-0">
+            <h1 className="text-2xl md:text-3xl font-bold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">Your Profile</h1>
+            <p className="mt-1 text-sm text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">
+              Manage your account settings and preferences
+            </p>
+          </div>
+        </div>
 
         {successMessage && (
-          <div role="alert" className="alert alert-success shadow-md mb-6 max-w-2xl mx-auto">
-            <CheckCircle size={20} />
-            <span>{successMessage}</span>
+          <div role="alert" className="flex items-center p-4 mb-6 text-green-800 bg-green-50 border border-green-200 rounded-lg dark:bg-green-900 dark:text-green-200 dark:border-green-800 max-w-4xl mx-auto transition-colors duration-300">
+            <CheckCircle size={20} className="mr-3 flex-shrink-0" />
+            <span className="font-medium">{successMessage}</span>
           </div>
         )}
         {errorMessage && (
-          <div role="alert" className="alert alert-error shadow-md mb-6 max-w-2xl mx-auto">
-            <AlertTriangle size={20} />
-            <span>{errorMessage}</span>
+          <div role="alert" className="flex items-center p-4 mb-6 text-red-800 bg-red-50 border border-red-200 rounded-lg dark:bg-red-900 dark:text-red-200 dark:border-red-800 max-w-4xl mx-auto transition-colors duration-300">
+            <AlertTriangle size={20} className="mr-3 flex-shrink-0" />
+            <span className="font-medium">{errorMessage}</span>
           </div>
         )}
 
-        <div className="card bg-base-100 dark:bg-section-dark p-6 sm:p-8 rounded-xl shadow-xl max-w-2xl mx-auto">
-          <div className="flex flex-col sm:flex-row items-center mb-8 pb-6 border-b border-border dark:border-border-dark">
+        <div className="bg-white dark:bg-gray-800 p-6 sm:p-8 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 max-w-4xl mx-auto transition-colors duration-300">
+          <div className="flex flex-col sm:flex-row items-center mb-8 pb-6 border-b border-gray-200 dark:border-gray-700">
             <div className="relative mb-4 sm:mb-0 sm:mr-6">
-                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-primary-soft dark:bg-primary-800 flex items-center justify-center text-primary dark:text-primary-200 text-3xl sm:text-4xl font-semibold">
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary-700 dark:text-primary-300 text-2xl sm:text-3xl font-bold border-2 border-primary-200 dark:border-primary-700">
                     {user.firstName?.[0]?.toUpperCase()}{user.lastName?.[0]?.toUpperCase()}
                 </div>
             </div>
             <div className="text-center sm:text-left flex-grow">
-              <h2 className="text-2xl sm:text-3xl font-bold text-text-base dark:text-text-inverse">{user.firstName} {user.lastName}</h2>
-              <p className="text-text-muted dark:text-text-muted-dark mt-1">{user.email}</p>
-              {user.phoneNumber && <p className="text-text-muted dark:text-text-muted-dark text-sm">{user.phoneNumber}</p>}
+              <h2 className="text-2xl sm:text-3xl font-bold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">{user.firstName} {user.lastName}</h2>
+              <p className="text-text-light-secondary dark:text-text-dark-secondary mt-1 transition-colors duration-300">{user.email}</p>
+              {user.phoneNumber && <p className="text-text-light-secondary dark:text-text-dark-secondary text-sm transition-colors duration-300">{user.phoneNumber}</p>}
             </div>
             {!editMode && (
               <button
                 onClick={() => { setEditMode(true); setShowPasswordForm(false); setShowDeactivateConfirm(false); }}
-                className="btn btn-accent y-3 px-4 mt-4 sm:mt-0 sm:ml-auto flex items-center gap-2 self-start sm:self-center"
+                className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg font-medium transition-colors duration-300 flex items-center gap-2 mt-4 sm:mt-0 sm:ml-auto"
               >
                 <Edit3 size={16} /> Edit Profile
               </button>
@@ -172,32 +179,32 @@ const ProfilePage: React.FC = () => {
               enableReinitialize
             >
               {({ dirty, isValid }) => (
-                <Form className="space-y-5 animate-fadeIn">
+                <Form className="space-y-5">
                   <div>
-                    <label htmlFor="firstName" className="label-text font-medium">First Name</label>
-                    <Field name="firstName" type="text" className="input input-bordered w-full mt-1" />
-                    <ErrorMessage name="firstName" component="div" className="text-error text-xs mt-1" />
+                    <label htmlFor="firstName" className="block text-sm font-medium text-text-light-primary dark:text-text-dark-primary mb-1 transition-colors duration-300">First Name</label>
+                    <Field name="firstName" type="text" className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-text-light-primary dark:text-text-dark-primary focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-300" />
+                    <ErrorMessage name="firstName" component="div" className="text-red-600 dark:text-red-400 text-xs mt-1" />
                   </div>
                   <div>
-                    <label htmlFor="lastName" className="label-text font-medium">Last Name</label>
-                    <Field name="lastName" type="text" className="input input-bordered w-full mt-1" />
-                    <ErrorMessage name="lastName" component="div" className="text-error text-xs mt-1" />
+                    <label htmlFor="lastName" className="block text-sm font-medium text-text-light-primary dark:text-text-dark-primary mb-1 transition-colors duration-300">Last Name</label>
+                    <Field name="lastName" type="text" className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-text-light-primary dark:text-text-dark-primary focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-300" />
+                    <ErrorMessage name="lastName" component="div" className="text-red-600 dark:text-red-400 text-xs mt-1" />
                   </div>
                   <div>
-                    <label htmlFor="email" className="label-text font-medium">Email Address</label>
-                    <Field name="email" type="email" className="input input-bordered w-full mt-1" />
-                    <ErrorMessage name="email" component="div" className="text-error text-xs mt-1" />
+                    <label htmlFor="email" className="block text-sm font-medium text-text-light-primary dark:text-text-dark-primary mb-1 transition-colors duration-300">Email Address</label>
+                    <Field name="email" type="email" className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-text-light-primary dark:text-text-dark-primary focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-300" />
+                    <ErrorMessage name="email" component="div" className="text-red-600 dark:text-red-400 text-xs mt-1" />
                   </div>
                   <div>
-                    <label htmlFor="phoneNumber" className="label-text font-medium">Phone Number (Optional)</label>
-                    <Field name="phoneNumber" type="tel" className="input input-bordered w-full mt-1" placeholder="+1234567890" />
-                    <ErrorMessage name="phoneNumber" component="div" className="text-error text-xs mt-1" />
+                    <label htmlFor="phoneNumber" className="block text-sm font-medium text-text-light-primary dark:text-text-dark-primary mb-1 transition-colors duration-300">Phone Number (Optional)</label>
+                    <Field name="phoneNumber" type="tel" className="w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg text-text-light-primary dark:text-text-dark-primary focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors duration-300" placeholder="+1234567890" />
+                    <ErrorMessage name="phoneNumber" component="div" className="text-red-600 dark:text-red-400 text-xs mt-1" />
                   </div>
-                  <div className="flex flex-col sm:flex-row gap-3 pt-3">
+                  <div className="flex flex-col sm:flex-row gap-3 pt-4">
                     <button
                       type="submit"
                       disabled={loading || !dirty || !isValid}
-                      className="btn btn-accent py-3 px-4 w-full sm:flex-1 flex items-center justify-center gap-2"
+                      className="px-4 py-2 bg-primary-600 hover:bg-primary-700 disabled:bg-gray-400 text-white rounded-lg font-medium transition-colors duration-300 flex items-center justify-center gap-2 w-full sm:flex-1"
                     >
                       {loading ? <LoadingSpinner size="small" /> : <Save size={18} />} Save Changes
                     </button>
@@ -205,7 +212,7 @@ const ProfilePage: React.FC = () => {
                       type="button"
                       onClick={() => setEditMode(false)}
                       disabled={loading}
-                      className="btn btn-ghost w-full sm:flex-1"
+                      className="px-4 py-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-600 dark:hover:bg-gray-500 text-gray-800 dark:text-gray-200 rounded-lg font-medium transition-colors duration-300 w-full sm:flex-1"
                     >
                       Cancel
                     </button>

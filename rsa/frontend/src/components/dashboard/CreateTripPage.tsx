@@ -6,8 +6,6 @@ import useVehicleStore, { Vehicle } from '../../store/vehicleStore';
 import useTripStore, { Trip } from '../../store/tripStore';
 import useHotPointStore, { HotPoint } from '../../store/hotPointStore'; // No longer needed here, TripForm handles it
 import { mockRoutes, Route as AppRoute } from '../../utils/mockData'; // No longer needed here, TripForm handles it
-import Navbar from '../common/Navbar';
-import Footer from '../common/Footer';
 import { Calendar, Clock, MapPinIcon, Truck, Save, CheckSquare, Square } from 'lucide-react'; // Icons are in TripForm
 import TripForm from '../trips/TripForm'; // Import the unified TripForm
 import '../../index.css';
@@ -49,10 +47,9 @@ const CreateTripPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-light dark:bg-dark">
-      <Navbar />
-      <main className="flex-grow max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
-        <h1 className="text-3xl font-bold text-light-primary dark:text-dark-primary mb-8">Create New Trip</h1>
+    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
+      <main className="container-app py-8 md:py-12">
+        <h1 className="text-2xl md:text-3xl font-bold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300 mb-8">Create New Trip</h1>
         {/* Render the unified TripForm component */}
         {/* Pass isCreatePageContext={true} to indicate it's embedded */}
         {/* Pass the onSubmit handler */}
@@ -69,7 +66,6 @@ const CreateTripPage: React.FC = () => {
           />
         </div>
       </main>
-      <Footer />
     </div>
   );
 };

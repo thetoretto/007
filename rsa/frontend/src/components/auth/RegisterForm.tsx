@@ -113,7 +113,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ redirectTo }) => {
       case 1:
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-center mb-6">Personal Information</h3>
+            <h3 className="text-lg font-semibold text-center mb-6 text-text-light-primary dark:text-text-dark-primary">Personal Information</h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="form-group">
@@ -173,7 +173,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ redirectTo }) => {
       case 2:
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-center mb-6">Contact & Security</h3>
+            <h3 className="text-lg font-semibold text-center mb-6 text-text-light-primary dark:text-text-dark-primary">Contact & Security</h3>
 
             <div className="form-group">
               <label className="form-label">
@@ -190,7 +190,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ redirectTo }) => {
                 <Phone size={16} className="icon" />
               </div>
               <ErrorMessage name="phoneNumber" component="div" className="form-error" />
-              <p className="text-xs text-gray-500 mt-1">Include country code (e.g., +27 for South Africa)</p>
+              <p className="text-xs text-text-light-tertiary dark:text-text-dark-tertiary mt-1">Include country code (e.g., +27 for South Africa)</p>
             </div>
 
             <div className="form-group">
@@ -210,7 +210,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ redirectTo }) => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-light-tertiary dark:text-text-dark-tertiary hover:text-text-light-primary dark:hover:text-text-dark-primary transition-colors duration-300"
                 >
                   {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -235,7 +235,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ redirectTo }) => {
                 <button
                   type="button"
                   onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-text-light-tertiary dark:text-text-dark-tertiary hover:text-text-light-primary dark:hover:text-text-dark-primary transition-colors duration-300"
                 >
                   {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
                 </button>
@@ -248,17 +248,17 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ redirectTo }) => {
       case 3:
         return (
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-center mb-6">Terms & Conditions</h3>
+            <h3 className="text-lg font-semibold text-center mb-6 text-text-light-primary dark:text-text-dark-primary">Terms & Conditions</h3>
 
             <div className="form-group">
-              <div className="flex items-start gap-3 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+              <div className="flex items-start gap-3 p-4 bg-surface-light-alt dark:bg-surface-dark-alt rounded-xl border border-light dark:border-dark">
                 <Field
                   name="termsAccepted"
                   type="checkbox"
-                  className="mt-1 rounded border-gray-300 text-primary focus:ring-primary"
+                  className="form-checkbox mt-1"
                 />
                 <div className="flex-1">
-                  <label className="text-sm font-medium cursor-pointer">
+                  <label className="text-sm font-medium cursor-pointer text-text-light-primary dark:text-text-dark-primary hover:text-primary dark:hover:text-primary-light transition-colors duration-300">
                     I agree to the{' '}
                     <Link to="/terms" className="auth-link" target="_blank">
                       Terms of Service
@@ -268,7 +268,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ redirectTo }) => {
                       Privacy Policy
                     </Link>
                   </label>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-text-light-tertiary dark:text-text-dark-tertiary mt-1">
                     By creating an account, you're joining a trusted community of travelers across Africa.
                   </p>
                 </div>
@@ -276,9 +276,9 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ redirectTo }) => {
               <ErrorMessage name="termsAccepted" component="div" className="form-error" />
             </div>
 
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg">
-              <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-2">What's next?</h4>
-              <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
+            <div className="bg-primary/10 dark:bg-primary/20 p-4 rounded-xl border border-primary/20 dark:border-primary/30">
+              <h4 className="font-medium text-primary dark:text-primary-light mb-2">What's next?</h4>
+              <ul className="text-sm text-text-light-secondary dark:text-text-dark-secondary space-y-1">
                 <li>• Verify your email address</li>
                 <li>• Complete your profile</li>
                 <li>• Start booking rides or become a driver</li>
@@ -331,7 +331,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ redirectTo }) => {
                 <button
                   type="button"
                   onClick={handlePrevious}
-                  className="flex items-center gap-2 px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                  className="flex items-center gap-2 px-4 py-2 text-text-light-secondary dark:text-text-dark-secondary hover:text-text-light-primary dark:hover:text-text-dark-primary transition-colors duration-300 rounded-lg hover:bg-surface-light-alt dark:hover:bg-surface-dark-alt"
                 >
                   <ChevronLeft size={16} />
                   Previous
@@ -372,7 +372,7 @@ const RegisterForm: React.FC<RegisterFormProps> = ({ redirectTo }) => {
 
             {/* Login Link */}
             <div className="text-center pt-4">
-              <span className="text-sm text-gray-600">Already have an account? </span>
+              <span className="text-sm text-text-light-secondary dark:text-text-dark-secondary">Already have an account? </span>
               <Link to="/login" className="auth-link">
                 Sign in
               </Link>

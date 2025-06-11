@@ -2,7 +2,6 @@ import '../../index.css';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useBookingStore, BookingWithDetails } from '../../store/bookingStore'; // Corrected import
-import Navbar from '../../components/common/Navbar';
 import TripTicket from '../../components/trips/TripTicket'; // We'll create this next
 import { ArrowLeft, Printer, Share2 } from 'lucide-react';
 
@@ -77,31 +76,32 @@ const TripDetailsPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
-        <Navbar />
-        <p className="text-lg text-red-600 dark:text-red-400 mt-20 transition-colors duration-300">Error: {error}</p>
-        <Link to="/passenger/dashboard" className="mt-4 btn btn-primary">
-          Back to Dashboard
-        </Link>
+      <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
+        <div className="container-app py-8 md:py-12 min-h-screen flex flex-col items-center justify-center">
+          <p className="text-lg text-red-600 dark:text-red-400 transition-colors duration-300">Error: {error}</p>
+          <Link to="/passenger/dashboard" className="mt-4 btn btn-primary">
+            Back to Dashboard
+          </Link>
+        </div>
       </div>
     );
   }
 
   if (!booking) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50 transition-colors duration-300">
-        <Navbar />
-        <p className="text-lg text-gray-600 dark:text-gray-300 mt-20 transition-colors duration-300">No booking details found for this trip.</p>
-        <Link to="/passenger/dashboard" className="mt-4 btn btn-primary">
-          Back to Dashboard
-        </Link>
+      <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
+        <div className="container-app py-8 md:py-12 min-h-screen flex flex-col items-center justify-center">
+          <p className="text-lg text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">No booking details found for this trip.</p>
+          <Link to="/passenger/dashboard" className="mt-4 btn btn-primary">
+            Back to Dashboard
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className=" text-gray-900 dark:text-gray-50 transition-colors duration-300">
-      <Navbar />
+    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
       <div className="container-app max-w-4xl py-8 md:py-12">
         <button
           onClick={() => navigate(-1)} // Go back to the previous page

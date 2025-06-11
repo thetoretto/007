@@ -18,8 +18,7 @@ import {
   ArrowRight,
   ArrowLeft
 } from 'lucide-react';
-import Navbar from '../components/common/Navbar';
-import Footer from '../components/common/Footer';
+
 import '../index.css';
 
 const BecomeMemberPage: React.FC = () => {
@@ -110,10 +109,8 @@ const BecomeMemberPage: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-light dark:bg-dark">
-      <Navbar />
-
-      <main className="flex-grow container-app py-12 sm:py-20 px-4 sm:px-6 lg:px-8">
+    <div className="w-full">
+      <div className="py-12 sm:py-20 px-4 sm:px-6 lg:px-8">
         <motion.div
           initial="hidden"
           animate="show"
@@ -572,8 +569,7 @@ const BecomeMemberPage: React.FC = () => {
             </div>
           </motion.div>
         </motion.div>
-      </main>
-      <Footer />
+      </div>
     </div>
   );
 };

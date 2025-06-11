@@ -8,7 +8,6 @@ import useTripStore, { Trip } from '../../store/tripStore';
 import QRScannerIcon from '../../components/icons/QRScannerIcon';
 import TripForm from '../../components/trips/TripForm';
 import PasswordConfirmationModal from '../../components/common/PasswordConfirmationModal';
-import Navbar from '../../components/common/Navbar';
 import ToastContainer from '../../components/common/ToastContainer';
 
 // Define BookingWithDetails interface for type safety
@@ -214,11 +213,10 @@ const DriverDashboard: React.FC = () => {
 
   return (
     <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
-      <Navbar />
       <ToastContainer />
-      {/* Main content with adjusted padding to accommodate fixed navbar */}
+      {/* Main content */}
       <main className="container-app py-8 md:py-12">
-        {/* Header with actions - Restored */}
+        {/* Header with actions */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div className="flex-1 min-w-0 mb-4 md:mb-0">
             <h1 className="text-2xl md:text-3xl font-bold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">Driver Dashboard</h1>

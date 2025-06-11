@@ -6,7 +6,6 @@ import {
   Navigation, Compass, Route, Car, Plane, Train, Bus, Wifi, Coffee, Music, AirVent
 } from 'lucide-react';
 import Navbar from '../components/common/Navbar';
-import Footer from '../components/common/Footer';
 import '../index.css';
 
 const HomePage: React.FC = () => {
@@ -549,7 +548,6 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      <Footer />
     </div>
   );
 };

@@ -1,7 +1,6 @@
 import React from 'react';
 import VehicleManagement from '../../components/driver/VehicleManagement';
 import useAuthStore from '../../store/authStore';
-import Navbar from '../../components/common/Navbar'; // Added Navbar import
 import {
     UserRole
   } from '../../types';
@@ -19,10 +18,9 @@ const VehiclePage: React.FC = () => {
   // This scenario should ideally be handled based on application logic, e.g. redirecting or showing an error.
 
   return (
-    <div className="text-gray-900 dark:text-gray-50 transition-colors duration-300">
-      <Navbar /> {/* Added Navbar component */}
+    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
       <main className="container-app py-8 md:py-12">
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6 transition-colors duration-300">My Vehicle</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300 mb-8">My Vehicle</h1>
         <VehicleManagement userRole={userRoleForVehicle} /> {/* Pass userRole to VehicleManagement */}
       </main>
     </div>

@@ -206,9 +206,16 @@ const Layout: React.FC<LayoutProps> = ({
         </main>
 
         {/* Enhanced Footer with better conditional rendering */}
-        {isPublic && !isHome && (
+        {isPublic && (
           <footer className="relative z-10 mt-auto">
-            <Footer />
+            <Footer variant="public" />
+          </footer>
+        )}
+
+        {/* Dashboard Footer */}
+        {isDashboard && (
+          <footer className="relative z-10 mt-auto">
+            <Footer variant="dashboard" />
           </footer>
         )}
       </div>
