@@ -67,7 +67,7 @@
   --surface-dark: var(--dark);
   --surface-dark-alt: var(--black);
 
-  /* Text Colors - High contrast for accessibility */
+  /* Text Colors - High contrast for accessibility with proper background pairing */
   --text-light-primary: var(--black);
   --text-light-secondary: var(--dark);
   --text-light-tertiary: var(--secondary);
@@ -77,6 +77,18 @@
   --text-dark-secondary: var(--light);
   --text-dark-tertiary: var(--secondary);
   --text-dark-disabled: var(--secondary-medium);
+
+  /* Contrast-specific text colors for proper pairing - using readable combinations */
+  --text-on-black: var(--white);
+  --text-on-white: var(--black);
+  --text-on-primary: var(--dark); /* Dark text on yellow background for better readability */
+  --text-on-dark: var(--white);
+  --text-on-light: var(--dark);
+
+  /* Better color alternatives for visibility */
+  --text-primary-readable: var(--dark); /* Dark instead of yellow for better readability */
+  --text-secondary-readable: var(--secondary); /* Blue-gray is already readable */
+  --text-accent-readable: var(--accent); /* Red is readable on light backgrounds */
 
   /* Border Colors - Only palette colors */
   --border-light: var(--secondary-light);
@@ -225,16 +237,17 @@ a:hover {
   cursor: not-allowed;
 }
 
-/* Primary Button - Yellow */
+/* Primary Button - Yellow with proper contrast */
 .btn-primary {
   background-color: var(--primary);
-  color: var(--black);
+  color: var(--text-on-primary); /* Dark text on yellow background for readability */
   border: 1px solid var(--primary);
   box-shadow: var(--shadow-primary);
 }
 
 .btn-primary:hover {
   background-color: var(--primary-dark);
+  color: var(--text-on-primary); /* Maintain dark text on hover */
   transform: translateY(-1px);
   box-shadow: var(--shadow-primary-lg);
 }
@@ -243,39 +256,41 @@ a:hover {
   box-shadow: var(--shadow-primary-lg), 0 0 0 3px rgba(254, 228, 107, 0.2);
 }
 
-/* Secondary Button - Blue Gray */
+/* Secondary Button - Blue Gray with proper contrast */
 .btn-secondary {
   background-color: var(--secondary);
-  color: var(--white);
+  color: var(--white); /* White text on blue-gray for good contrast */
   border: 1px solid var(--secondary);
   box-shadow: var(--shadow-secondary);
 }
 
 .btn-secondary:hover {
   background-color: var(--secondary-dark);
+  color: var(--white); /* Maintain white text on hover */
   transform: translateY(-1px);
   box-shadow: var(--shadow-secondary-lg);
 }
 
-/* Accent Button - Red */
+/* Accent Button - Red with proper contrast */
 .btn-accent {
   background-color: var(--accent);
-  color: var(--white);
+  color: var(--white); /* White text on red background for proper contrast */
   border: 1px solid var(--accent);
   box-shadow: var(--shadow-accent);
 }
 
 .btn-accent:hover {
   background-color: var(--accent-dark);
+  color: var(--white); /* Maintain white text on hover */
   transform: translateY(-1px);
   box-shadow: var(--shadow-accent-lg);
 }
 
-/* Form Controls */
+/* Enhanced Form Controls with better spacing and icon support */
 .form-input, .form-select, .input-field {
   display: block;
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.875rem 1rem;
   border-radius: 0.5rem;
   border: 1px solid var(--border-light);
   background-color: var(--surface-light);
@@ -283,7 +298,9 @@ a:hover {
   box-shadow: var(--shadow-sm);
   transition: var(--transition-base);
   font-size: 1rem;
+  line-height: 1.5;
   outline: none;
+  min-height: 2.75rem;
 }
 
 .form-input:focus, .form-select:focus, .input-field:focus {
@@ -318,6 +335,70 @@ a:hover {
   color: var(--text-dark-primary);
 }
 
+/* Form error styles */
+.form-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--error);
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.border-error {
+  border-color: var(--error) !important;
+  box-shadow: 0 0 0 3px rgba(223, 8, 39, 0.1) !important;
+}
+
+/* Form checkbox styles */
+.form-checkbox {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 0.25rem;
+  border: 1px solid var(--border-light);
+  background-color: var(--surface-light);
+  transition: var(--transition-base);
+  cursor: pointer;
+}
+
+.form-checkbox:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.dark .form-checkbox {
+  border-color: var(--border-dark);
+  background-color: var(--surface-dark);
+}
+
+/* Step indicator styles */
+.step-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.step-dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background-color: var(--border-light);
+  transition: var(--transition-base);
+}
+
+.step-dot.active {
+  background-color: var(--primary);
+}
+
+.step-dot.completed {
+  background-color: var(--secondary);
+}
+
+.dark .step-dot {
+  background-color: var(--border-dark);
+}
+
 /* Cards */
 .card {
   background-color: var(--card-bg-light);
@@ -338,15 +419,27 @@ a:hover {
   border-color: var(--card-border-dark);
 }
 
-/* Utility Classes */
-.text-primary { color: var(--primary); }
-.text-secondary { color: var(--secondary); }
-.text-accent { color: var(--accent); }
+/* Text Color Utilities - Readable alternatives for better visibility */
+.text-primary { color: var(--text-primary-readable); } /* Dark instead of yellow for readability */
+.text-secondary { color: var(--secondary); } /* Blue-gray is readable */
+.text-accent { color: var(--accent); } /* Red is readable */
 .text-purple { color: var(--purple); }
 .text-dark { color: var(--dark); }
 .text-light { color: var(--light); }
 .text-white { color: var(--white); }
 .text-black { color: var(--black); }
+
+/* Original brand colors when specifically needed */
+.text-primary-brand { color: var(--primary); } /* Actual yellow color */
+.text-secondary-brand { color: var(--secondary); }
+.text-accent-brand { color: var(--accent); }
+
+/* Contrast-specific text utilities */
+.text-on-black { color: var(--text-on-black); }
+.text-on-white { color: var(--text-on-white); }
+.text-on-primary { color: var(--text-on-primary); }
+.text-on-dark { color: var(--text-on-dark); }
+.text-on-light { color: var(--text-on-light); }
 
 /* Semantic text colors */
 .text-light-primary { color: var(--text-light-primary); }
@@ -356,7 +449,7 @@ a:hover {
 .text-dark-secondary { color: var(--text-dark-secondary); }
 .text-dark-tertiary { color: var(--text-dark-tertiary); }
 
-/* Background colors */
+/* Background colors - clean without automatic text colors */
 .bg-primary { background-color: var(--primary); }
 .bg-secondary { background-color: var(--secondary); }
 .bg-accent { background-color: var(--accent); }
@@ -451,10 +544,302 @@ a:hover {
 /* Additional background utilities */
 .bg-accent-red { background-color: var(--accent); }
 .bg-accent-kente-gold { background-color: var(--primary); }
+.bg-accent-yellow { background-color: var(--primary); }
+.bg-accent-green { background-color: var(--secondary); }
 
 /* Additional text colors */
 .text-accent-red { color: var(--accent); }
 .text-accent-kente-gold { color: var(--primary); }
+.text-accent-yellow { color: var(--primary); }
+.text-accent-green { color: var(--secondary); }
+
+/* Icon badge component */
+.icon-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.75rem;
+  transition: var(--transition-base);
+}
+
+.icon-badge-sm {
+  width: 2rem;
+  height: 2rem;
+}
+
+.icon-badge-md {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.icon-badge-lg {
+  width: 3rem;
+  height: 3rem;
+}
+
+.icon-badge-xl {
+  width: 4rem;
+  height: 4rem;
+}
+
+/* Card interactive variant */
+.card-interactive {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.card-interactive:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+}
+
+/* Container utilities */
+.container-app {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+@media (min-width: 640px) {
+  .container-app {
+    padding: 0 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container-app {
+    padding: 0 2rem;
+  }
+}
+
+/* High-contrast combination classes for proper display - using readable colors */
+.white-on-black { background-color: var(--black); color: var(--white); }
+.black-on-white { background-color: var(--white); color: var(--black); }
+.dark-on-white { background-color: var(--white); color: var(--dark); } /* Dark text instead of yellow */
+.dark-on-yellow { background-color: var(--primary); color: var(--dark); } /* Dark text on yellow */
+.white-on-dark { background-color: var(--dark); color: var(--white); }
+.dark-on-light { background-color: var(--light); color: var(--dark); }
+.red-on-white { background-color: var(--white); color: var(--accent); } /* Red text is readable */
+.white-on-red { background-color: var(--accent); color: var(--white); }
+.blue-on-white { background-color: var(--white); color: var(--secondary); } /* Blue-gray is readable */
+.white-on-blue { background-color: var(--secondary); color: var(--white); }
+
+/* Light mode specific contrast classes */
+.light-mode-text { color: var(--text-light-primary); }
+.light-mode-secondary { color: var(--text-light-secondary); }
+.light-mode-bg { background-color: var(--bg-light); }
+.light-mode-surface { background-color: var(--surface-light); }
+
+/* Dark mode specific contrast classes */
+.dark-mode-text { color: var(--text-dark-primary); }
+.dark-mode-secondary { color: var(--text-dark-secondary); }
+.dark-mode-bg { background-color: var(--bg-dark); }
+.dark-mode-surface { background-color: var(--surface-dark); }
+
+/* Automatic contrast adjustments for common elements */
+.text-primary.bg-white,
+.text-primary.bg-light {
+  color: var(--primary); /* Yellow text on white/light backgrounds */
+}
+
+.text-white.bg-black,
+.text-white.bg-dark {
+  color: var(--white); /* White text on black/dark backgrounds */
+}
+
+/* Ensure proper contrast for navigation and interactive elements */
+.nav-item.active {
+  background-color: var(--primary);
+  color: var(--text-on-primary);
+}
+
+.nav-item:focus,
+.nav-item:hover {
+  background-color: var(--primary-light);
+  color: var(--text-on-primary);
+}
+
+/* Form elements with proper contrast */
+.form-input:focus {
+  border-color: var(--primary);
+  background-color: var(--white);
+  color: var(--text-on-white);
+}
+
+.dark .form-input:focus {
+  border-color: var(--primary);
+  background-color: var(--dark);
+  color: var(--text-on-dark);
+}
+
+/* Light mode color balance rules - using readable colors */
+:root:not(.dark) {
+  /* Use dark text instead of yellow for better readability */
+  .text-primary-readable {
+    color: var(--dark);
+  }
+
+  /* Ensure white text has dark backgrounds for contrast */
+  .text-white {
+    color: var(--white);
+  }
+
+  /* Red and blue-gray are already readable on light backgrounds */
+  .text-accent {
+    color: var(--accent);
+  }
+
+  .text-secondary {
+    color: var(--secondary);
+  }
+}
+
+/* Dark mode color balance rules */
+.dark {
+  /* Maintain proper contrast in dark mode */
+  .text-primary {
+    color: var(--primary);
+  }
+
+  .text-white {
+    color: var(--white);
+  }
+}
+
+/* Universal contrast enforcement - using readable colors */
+.contrast-enforced {
+  /* Dark text instead of yellow for readability */
+  &.text-primary {
+    color: var(--dark);
+  }
+
+  /* White text on dark backgrounds */
+  &.text-white {
+    color: var(--white);
+  }
+
+  /* Black text on light backgrounds */
+  &.text-black {
+    color: var(--black);
+  }
+
+  /* Red text is readable on light backgrounds */
+  &.text-accent {
+    color: var(--accent);
+  }
+
+  /* Blue-gray text is readable */
+  &.text-secondary {
+    color: var(--secondary);
+  }
+}
+
+/* Easy-to-use contrast utility classes - readable combinations */
+.contrast-dark-white {
+  background-color: var(--white);
+  color: var(--dark);
+}
+
+.contrast-white-black {
+  background-color: var(--black);
+  color: var(--white);
+}
+
+.contrast-black-white {
+  background-color: var(--white);
+  color: var(--black);
+}
+
+.contrast-dark-yellow {
+  background-color: var(--primary);
+  color: var(--dark);
+}
+
+.contrast-white-dark {
+  background-color: var(--dark);
+  color: var(--white);
+}
+
+.contrast-dark-light {
+  background-color: var(--light);
+  color: var(--dark);
+}
+
+.contrast-red-white {
+  background-color: var(--white);
+  color: var(--accent);
+}
+
+.contrast-white-red {
+  background-color: var(--accent);
+  color: var(--white);
+}
+
+.contrast-blue-white {
+  background-color: var(--white);
+  color: var(--secondary);
+}
+
+.contrast-white-blue {
+  background-color: var(--secondary);
+  color: var(--white);
+}
+
+/* Responsive contrast adjustments */
+@media (prefers-color-scheme: light) {
+  :root:not(.dark) .auto-contrast-text {
+    color: var(--text-light-primary);
+  }
+
+  :root:not(.dark) .auto-contrast-bg {
+    background-color: var(--bg-light);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .dark .auto-contrast-text {
+    color: var(--text-dark-primary);
+  }
+
+  .dark .auto-contrast-bg {
+    background-color: var(--bg-dark);
+  }
+}
+
+/* Readable text utilities - no background needed */
+.text-readable-primary { color: var(--text-primary-readable); }
+.text-readable-secondary { color: var(--text-secondary-readable); }
+.text-readable-accent { color: var(--text-accent-readable); }
+
+/* High visibility text colors for light mode */
+.text-high-contrast {
+  color: var(--dark);
+}
+
+.text-medium-contrast {
+  color: var(--secondary);
+}
+
+.text-accent-contrast {
+  color: var(--accent);
+}
+
+/* Dark mode overrides for readable text */
+.dark .text-readable-primary { color: var(--primary); }
+.dark .text-readable-secondary { color: var(--secondary); }
+.dark .text-readable-accent { color: var(--accent); }
+
+.dark .text-high-contrast {
+  color: var(--white);
+}
+
+.dark .text-medium-contrast {
+  color: var(--light);
+}
+
+.dark .text-accent-contrast {
+  color: var(--accent);
+}
 
 /* Status colors for compatibility */
 .bg-success-soft { background-color: var(--secondary-light); }
@@ -471,6 +856,463 @@ a:hover {
 .dark .bg-base-100 { background-color: var(--surface-dark); }
 .dark .bg-base-200 { background-color: var(--dark); }
 .dark .bg-base-300 { background-color: var(--border-dark); }
+
+/* ===== ANIMATIONS ===== */
+
+/* Scroll-triggered animations */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.animate-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Floating animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+@keyframes float-delayed {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float-delayed 8s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+.animate-float-slow {
+  animation: float-slow 10s ease-in-out infinite;
+  animation-delay: 4s;
+}
+
+/* Scale animations */
+.animate-scale-in {
+  animation: scale-in 0.5s ease-out;
+}
+
+@keyframes scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Slide animations */
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+
+@keyframes slide-in {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Fade animations */
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ===== AUTH SYSTEM STYLES ===== */
+
+/* Auth container */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--light) 0%, var(--purple-light) 50%, var(--primary-light) 100%);
+  position: relative;
+}
+
+.dark .auth-container {
+  background: linear-gradient(135deg, var(--dark) 0%, var(--purple-dark) 50%, var(--primary-dark) 100%);
+}
+
+/* Auth card */
+.auth-card {
+  width: 100%;
+  max-width: 28rem;
+  background-color: var(--surface-light);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-xl);
+  padding: 2rem;
+  border: 1px solid var(--border-light);
+}
+
+.dark .auth-card {
+  background-color: var(--surface-dark);
+  border-color: var(--border-dark);
+}
+
+/* Auth header */
+.auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.auth-logo {
+  width: 3rem;
+  height: 3rem;
+  background: linear-gradient(135deg, var(--primary), var(--accent));
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+}
+
+.auth-title {
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-light-primary);
+  margin-bottom: 0.5rem;
+}
+
+.dark .auth-title {
+  color: var(--text-dark-primary);
+}
+
+.auth-subtitle {
+  color: var(--text-light-secondary);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.dark .auth-subtitle {
+  color: var(--text-dark-secondary);
+}
+
+/* Auth form */
+.auth-form > * + * {
+  margin-top: 1.5rem;
+}
+
+/* Auth divider */
+.auth-divider {
+  text-align: center;
+  margin: 1.5rem 0;
+  position: relative;
+  color: var(--text-light-tertiary);
+  font-size: 0.875rem;
+}
+
+.dark .auth-divider {
+  color: var(--text-dark-tertiary);
+}
+
+.auth-divider::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: var(--border-light);
+  z-index: 1;
+}
+
+.dark .auth-divider::before {
+  background-color: var(--border-dark);
+}
+
+.auth-divider span {
+  background-color: var(--surface-light);
+  padding: 0 1rem;
+  position: relative;
+  z-index: 2;
+}
+
+.dark .auth-divider span {
+  background-color: var(--surface-dark);
+}
+
+/* Auth link */
+.auth-link {
+  color: var(--primary);
+  font-weight: 500;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.auth-link:hover {
+  color: var(--primary-dark);
+}
+
+/* ===== MOBILE-FIRST BOOKING SYSTEM STYLES ===== */
+
+/* Enhanced booking layout */
+.enhanced-booking {
+  min-height: 100vh;
+  background-color: var(--surface-light);
+}
+
+.dark .enhanced-booking {
+  background-color: var(--surface-dark);
+}
+
+/* Mobile-optimized touch targets */
+.touch-target {
+  min-height: 44px;
+  min-width: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Swipe-friendly cards */
+.swipe-card {
+  touch-action: pan-x;
+  user-select: none;
+  transition: transform 0.2s ease-out;
+}
+
+.swipe-card:active {
+  transform: scale(0.98);
+}
+
+/* Enhanced seat selection styles */
+.seat-grid {
+  display: grid;
+  gap: 0.5rem;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.seat-button {
+  aspect-ratio: 1;
+  border-radius: 0.5rem;
+  border: 2px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.seat-button:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, transparent 0%, rgba(255,255,255,0.1) 50%, transparent 100%);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.seat-button:hover:before {
+  opacity: 1;
+}
+
+.seat-available {
+  border-color: var(--border-light);
+  background-color: var(--surface-light);
+  color: var(--text-light-primary);
+}
+
+.dark .seat-available {
+  border-color: var(--border-dark);
+  background-color: var(--surface-dark);
+  color: var(--text-dark-primary);
+}
+
+.seat-selected {
+  border-color: var(--primary);
+  background-color: var(--primary);
+  color: var(--black);
+  box-shadow: var(--shadow-primary);
+}
+
+.seat-occupied {
+  border-color: var(--accent);
+  background-color: var(--accent-light);
+  color: var(--accent);
+  cursor: not-allowed;
+}
+
+.seat-premium {
+  border-color: var(--secondary);
+  background-color: var(--secondary-light);
+  color: var(--secondary);
+}
+
+/* Mobile-optimized form inputs */
+.mobile-input {
+  font-size: 16px; /* Prevents zoom on iOS */
+  padding: 0.875rem;
+  border-radius: 0.75rem;
+  border: 2px solid var(--border-light);
+  background-color: var(--surface-light);
+  color: var(--text-light-primary);
+  transition: var(--transition-base);
+  width: 100%;
+}
+
+.dark .mobile-input {
+  border-color: var(--border-dark);
+  background-color: var(--surface-dark);
+  color: var(--text-dark-primary);
+}
+
+.mobile-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(254, 228, 107, 0.1);
+  outline: none;
+}
+
+/* Progress indicator for mobile */
+.progress-step {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.progress-step.active {
+  background-color: var(--primary);
+  color: var(--black);
+  box-shadow: var(--shadow-primary);
+}
+
+.progress-step.completed {
+  background-color: var(--primary);
+  color: var(--black);
+}
+
+.progress-step.inactive {
+  background-color: var(--surface-light);
+  border: 2px solid var(--border-light);
+  color: var(--text-light-tertiary);
+}
+
+.dark .progress-step.inactive {
+  background-color: var(--surface-dark);
+  border-color: var(--border-dark);
+  color: var(--text-dark-tertiary);
+}
+
+/* Trip card enhancements */
+.trip-card {
+  border-radius: 1rem;
+  padding: 1rem;
+  border: 2px solid var(--border-light);
+  background-color: var(--surface-light);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.dark .trip-card {
+  border-color: var(--border-dark);
+  background-color: var(--surface-dark);
+}
+
+.trip-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.trip-card.selected {
+  border-color: var(--primary);
+  background-color: var(--primary-light);
+  box-shadow: var(--shadow-primary);
+}
+
+/* Mobile-specific animations */
+@keyframes slideInUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.slide-in-up {
+  animation: slideInUp 0.3s ease-out;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.3s ease-out;
+}
+
+/* Responsive utilities for booking */
+@media (max-width: 640px) {
+  .booking-container {
+    font-size: 14px;
+  }
+
+  .seat-button {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .trip-card {
+    padding: 0.75rem;
+  }
+
+  .mobile-input {
+    padding: 0.75rem;
+  }
+}
 
 /* ===== AUTHENTICATION SYSTEM STYLES ===== */
 
@@ -570,6 +1412,7 @@ a:hover {
   color: var(--dark-primary);
 }
 
+/* Enhanced form input styles - consolidated and improved */
 .form-input {
   height: 2.75rem;
   padding: 0 1rem;
@@ -579,29 +1422,37 @@ a:hover {
   font-size: 0.875rem;
   transition: all 0.2s ease;
   outline: none;
+  color: var(--text-light-primary);
 }
 
 .form-input:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.1);
+  box-shadow: 0 0 0 3px rgba(254, 228, 107, 0.1);
 }
 
 .dark .form-input {
   background: var(--surface-dark);
   border-color: var(--border-dark);
-  color: var(--dark-primary);
+  color: var(--text-dark-primary);
 }
 
 .dark .form-input:focus {
   border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(254, 228, 107, 0.1);
 }
 
+/* Enhanced form input with icon support - prevents text collision */
 .form-input-icon {
   position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.form-input-icon input {
-  padding-left: 3rem;
+.form-input-icon input,
+.form-input-icon .form-input,
+.form-input-icon .input-field {
+  padding-left: 3.5rem !important; /* Increased padding to prevent collision */
+  padding-right: 1rem;
 }
 
 .form-input-icon .icon {
@@ -609,12 +1460,99 @@ a:hover {
   left: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--light-tertiary);
+  color: var(--text-light-tertiary);
   pointer-events: none;
+  z-index: 1;
+  width: 1.25rem;
+  height: 1.25rem;
+  flex-shrink: 0;
 }
 
 .dark .form-input-icon .icon {
-  color: var(--dark-tertiary);
+  color: var(--text-dark-tertiary);
+}
+
+/* Special handling for inputs with right-side icons (like password toggle) */
+.form-input-icon input[style*="paddingRight"],
+.form-input-icon .form-input[style*="paddingRight"] {
+  padding-right: 3.5rem !important;
+}
+
+/* Enhanced input focus states */
+.form-input-icon input:focus + .icon,
+.form-input-icon .form-input:focus + .icon {
+  color: var(--primary);
+}
+
+.dark .form-input-icon input:focus + .icon,
+.dark .form-input-icon .form-input:focus + .icon {
+  color: var(--primary);
+}
+
+/* Search input specific styles */
+.search-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-input-container input {
+  padding-left: 3rem !important;
+  padding-right: 1rem;
+}
+
+.search-input-container .search-icon {
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light-tertiary);
+  pointer-events: none;
+  z-index: 1;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.dark .search-input-container .search-icon {
+  color: var(--text-dark-tertiary);
+}
+
+/* Input with left padding for icons - universal fix */
+input.pl-10,
+input.pl-12,
+.form-input.pl-10,
+.form-input.pl-12,
+.input-field.pl-10,
+.input-field.pl-12 {
+  padding-left: 3rem !important;
+}
+
+/* Ensure consistent spacing for all icon inputs */
+.relative input[class*="pl-"],
+.relative .form-input[class*="pl-"],
+.relative .input-field[class*="pl-"] {
+  padding-left: 3rem !important;
+}
+
+/* Mobile responsive adjustments for form inputs */
+@media (max-width: 768px) {
+  .form-input, .form-select, .input-field {
+    padding: 0.75rem 1rem;
+    font-size: 1rem; /* Prevent zoom on iOS */
+    min-height: 2.5rem;
+  }
+
+  .form-input-icon input,
+  .form-input-icon .form-input,
+  .form-input-icon .input-field {
+    padding-left: 3rem !important;
+  }
+
+  .form-input-icon .icon {
+    left: 0.75rem;
+    width: 1.125rem;
+    height: 1.125rem;
+  }
 }
 
 .form-error {
@@ -837,6 +1775,18 @@ a:hover {
 
 .animate-scale-in {
   animation: scaleIn 0.5s ease-out;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+  animation: float 6s ease-in-out infinite 2s;
 }
 
 .animation-delay-300 {

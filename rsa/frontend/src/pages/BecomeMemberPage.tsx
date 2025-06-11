@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { fadeInUp, staggerContainer } from '../utils/animations';
-import { 
-  User, 
-  MapPin, 
-  FileText, 
-  Users, 
-  DollarSign, 
-  Clock, 
-  ShieldCheck, 
-  Car, 
-  CarFront, 
+import {
+  User,
+  MapPin,
+  FileText,
+  Users,
+  DollarSign,
+  Clock,
+  ShieldCheck,
+  Car,
+  CarFront,
   Calendar,
   Mail,
   Phone,
@@ -18,6 +18,8 @@ import {
   ArrowRight,
   ArrowLeft
 } from 'lucide-react';
+import Navbar from '../components/common/Navbar';
+import Footer from '../components/common/Footer';
 import '../index.css';
 
 const BecomeMemberPage: React.FC = () => {
@@ -109,6 +111,7 @@ const BecomeMemberPage: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-light dark:bg-dark">
+      <Navbar />
 
       <main className="flex-grow container-app py-12 sm:py-20 px-4 sm:px-6 lg:px-8">
         <motion.div
@@ -570,6 +573,7 @@ const BecomeMemberPage: React.FC = () => {
           </motion.div>
         </motion.div>
       </main>
+      <Footer />
     </div>
   );
 };

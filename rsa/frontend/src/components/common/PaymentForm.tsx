@@ -16,13 +16,17 @@ export interface MobileMoneyDetails {
 }
 
 export interface PaymentFormProps {
-  onComplete: (data: {
+  onComplete?: (data: {
+    method: PaymentMethod;
+    details: CardDetails | MobileMoneyDetails | null;
+  }) => void;
+  onPaymentSubmit?: (data: {
     method: PaymentMethod;
     details: CardDetails | MobileMoneyDetails | null;
   }) => void;
   amount: number;
   isProcessing?: boolean;
-  onCancel: () => void;
+  onCancel?: () => void;
   defaultMethod?: PaymentMethod;
   availableMethods?: PaymentMethod[];
   currency?: string;
@@ -35,10 +39,12 @@ export interface PaymentFormProps {
   className?: string;
   showProcessingIndicator?: boolean;
   showTotalAmount?: boolean;
+  showCancelButton?: boolean;
 }
 
 const PaymentForm: React.FC<PaymentFormProps> = ({
   onComplete,
+  onPaymentSubmit,
   amount,
   isProcessing = false,
   onCancel,
@@ -53,7 +59,8 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
   payLabel = 'Pay',
   className = '',
   showProcessingIndicator = true,
-  showTotalAmount = true
+  showTotalAmount = true,
+  showCancelButton = true
 }) => {
   const [selectedMethod, setSelectedMethod] = useState<PaymentMethod>(defaultMethod);
   const [cardDetails, setCardDetails] = useState<CardDetails>({
@@ -146,22 +153,28 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
 
   const handleSubmit = () => {
     let isValid = false;
-    
+
     if (selectedMethod === 'card') {
       isValid = validateCardDetails();
       if (isValid) {
-        onComplete({
-          method: 'card',
-          details: cardDetails
-        });
+        const submitHandler = onPaymentSubmit || onComplete;
+        if (submitHandler) {
+          submitHandler({
+            method: 'card',
+            details: cardDetails
+          });
+        }
       }
     } else if (selectedMethod === 'airtel' || selectedMethod === 'momo') {
       isValid = validateMobileDetails();
       if (isValid) {
-        onComplete({
-          method: selectedMethod,
-          details: mobileDetails
-        });
+        const submitHandler = onPaymentSubmit || onComplete;
+        if (submitHandler) {
+          submitHandler({
+            method: selectedMethod,
+            details: mobileDetails
+          });
+        }
       }
     }
   };
@@ -467,15 +480,17 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
 
       {/* Action Buttons */}
       <div className="flex flex-col sm:flex-row gap-3">
-        <button
-          type="button"
-          onClick={onCancel}
-          className="btn btn-secondary flex-1 py-3 px-4 order-2 sm:order-1"
-          disabled={isProcessing}
-        >
-          <ArrowLeft className="h-4 w-4 mr-2" />
-          {cancelLabel}
-        </button>
+        {showCancelButton && onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="btn btn-secondary flex-1 py-3 px-4 order-2 sm:order-1"
+            disabled={isProcessing}
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            {cancelLabel}
+          </button>
+        )}
 
         <button
           type="button"

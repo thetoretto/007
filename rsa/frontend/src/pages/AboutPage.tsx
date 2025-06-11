@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  Shield, Users, Zap, Globe, Heart, Award, TrendingUp, MapPin, Clock, Star,
-  Target, Compass, Route, CheckCircle, ArrowRight, Sparkles, Play, Eye,
-  Lightbulb, Rocket, Building, Calendar, Phone, Mail, Camera, Video
+  Shield, Users, Zap, Globe, Award, TrendingUp, Star,
+  Target, Route, CheckCircle, ArrowRight, Sparkles, Play, Eye,
+  Lightbulb, Rocket, Calendar, Phone, Mail
 } from 'lucide-react';
-import Navbar from '../components/common/Navbar';
-import Footer from '../components/common/Footer';
+
 import '../index.css';
 
 const AboutPage: React.FC = () => {
-  const [activeSection, setActiveSection] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,7 +22,7 @@ const AboutPage: React.FC = () => {
     };
 
     window.addEventListener('scroll', handleScroll);
-    handleScroll();
+    handleScroll(); // Trigger on mount
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -65,9 +63,7 @@ const AboutPage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-light dark:bg-dark">
-      <Navbar />
-
+    <div className="w-full">
       {/* Hero Section - Cinematic Introduction */}
       <section className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-br from-light via-purple/5 to-primary/10 dark:from-dark dark:via-purple/10 dark:to-primary/5">
         {/* Animated Background */}

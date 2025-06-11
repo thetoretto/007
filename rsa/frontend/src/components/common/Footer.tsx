@@ -29,25 +29,27 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="relative bg-gradient-to-br from-light via-primary/5 to-light dark:from-dark dark:via-primary/10 dark:to-dark border-t border-secondary/20 dark:border-secondary/40 overflow-hidden">
-      {/* Background Pattern */}
+    <footer className="relative bg-gradient-to-br from-surface-light-alt via-primary/5 to-surface-light-alt dark:from-surface-dark-alt dark:via-primary/10 dark:to-surface-dark-alt border-t border-border-light dark:border-border-dark overflow-hidden">
+      {/* Enhanced Background Pattern */}
       <div className="absolute inset-0 opacity-5 dark:opacity-10">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-primary rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2"></div>
-        <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary rounded-full blur-3xl transform translate-x-1/2 translate-y-1/2"></div>
+        <div className="absolute top-0 left-0 w-96 h-96 bg-primary rounded-full blur-3xl transform -translate-x-1/2 -translate-y-1/2 animate-float-slow"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-primary rounded-full blur-3xl transform translate-x-1/2 translate-y-1/2 animate-float-delayed"></div>
+        <div className="absolute top-1/2 left-1/2 w-64 h-64 bg-secondary rounded-full blur-2xl transform -translate-x-1/2 -translate-y-1/2 opacity-30 animate-pulse-slow"></div>
       </div>
 
-      {/* Newsletter Section */}
-      <div className="relative bg-gradient-to-r from-primary via-primary/90 to-primary/80 dark:from-primary/80 dark:via-primary/70 dark:to-primary/60">
+      {/* Enhanced Newsletter Section */}
+      <div className="relative bg-gradient-to-r from-primary via-primary/90 to-primary/80 dark:from-primary/80 dark:via-primary/70 dark:to-primary/60 overflow-hidden">
         <div className="absolute inset-0 opacity-20">
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5"></div>
-          <div className="absolute top-0 left-0 w-32 h-32 bg-white/5 rounded-full blur-xl"></div>
-          <div className="absolute bottom-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-lg"></div>
+          <div className="absolute top-0 left-0 w-32 h-32 bg-white/5 rounded-full blur-xl animate-float"></div>
+          <div className="absolute bottom-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-lg animate-float-delayed"></div>
+          <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-white/3 rounded-full blur-md animate-pulse-slow"></div>
         </div>
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 relative">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
             <div className="lg:max-w-xl">
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-white/10 rounded-lg backdrop-blur-sm">
+                <div className="p-3 bg-white/10 rounded-xl backdrop-blur-sm border border-white/20 shadow-glass">
                   <Send className="h-6 w-6 text-white" />
                 </div>
                 <h3 className="text-2xl lg:text-3xl font-bold text-white">
@@ -59,24 +61,24 @@ const Footer: React.FC = () => {
               </p>
               <div className="flex items-center gap-6 mt-6">
                 <div className="flex items-center gap-2 text-white/80">
-                  <Star className="h-4 w-4 text-primary" />
-                  <span className="text-sm">10k+ subscribers</span>
+                  <Star className="h-4 w-4 text-white fill-white/50" />
+                  <span className="text-sm font-medium">10k+ subscribers</span>
                 </div>
                 <div className="flex items-center gap-2 text-white/80">
-                  <Shield className="h-4 w-4 text-primary" />
-                  <span className="text-sm">No spam, ever</span>
+                  <Shield className="h-4 w-4 text-white" />
+                  <span className="text-sm font-medium">No spam, ever</span>
                 </div>
               </div>
             </div>
             <div className="lg:max-w-md w-full">
               <form onSubmit={handleSubscribe} className="space-y-4">
-                <div className="relative">
+                <div className="relative group">
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email address"
-                    className="w-full px-6 py-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder-white/60 focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-300 text-lg"
+                    className="w-full px-6 py-4 rounded-xl bg-white/10 backdrop-blur-sm border border-white/20 text-white placeholder-white/60 focus:ring-2 focus:ring-white focus:border-white transition-all duration-300 text-lg group-hover:bg-white/15"
                     required
                   />
                   <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-white/5 to-transparent pointer-events-none"></div>
@@ -84,7 +86,7 @@ const Footer: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isSubscribed}
-                  className="w-full px-6 py-4 bg-primary hover:bg-primary/90 text-black font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-lg"
+                  className="w-full px-6 py-4 bg-white text-black font-semibold rounded-xl transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed text-lg hover:bg-white/90"
                 >
                   {isSubscribed ? (
                     <>
@@ -94,7 +96,7 @@ const Footer: React.FC = () => {
                   ) : (
                     <>
                       Subscribe Now
-                      <ArrowRight className="h-5 w-5" />
+                      <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
                     </>
                   )}
                 </button>
@@ -131,31 +133,31 @@ const Footer: React.FC = () => {
               </span>
             </a>
 
-            <p className="text-dark dark:text-light text-lg leading-relaxed max-w-md">
+            <p className="text-text-light-secondary dark:text-text-dark-secondary text-lg leading-relaxed max-w-md">
               Revolutionizing transportation across Africa with safe, convenient, and affordable rides. Connecting communities, one journey at a time.
             </p>
 
-            {/* Trust Indicators */}
+            {/* Enhanced Trust Indicators */}
             <div className="grid grid-cols-2 gap-4 max-w-sm">
-              <div className="flex items-center gap-2 p-3 bg-primary-light dark:bg-primary/20 rounded-lg">
-                <Shield className="h-5 w-5 text-primary" />
+              <div className="flex items-center gap-2 p-3 bg-primary/10 dark:bg-primary/20 rounded-xl border border-primary/20 dark:border-primary/30 hover:bg-primary/15 dark:hover:bg-primary/25 transition-all duration-300 group">
+                <Shield className="h-5 w-5 text-primary group-hover:scale-110 transition-transform" />
                 <div>
-                  <div className="text-sm font-semibold text-primary-dark dark:text-primary-light">Safe</div>
-                  <div className="text-xs text-primary dark:text-primary-medium">Verified drivers</div>
+                  <div className="text-sm font-semibold text-text-light-primary dark:text-text-dark-primary">Safe</div>
+                  <div className="text-xs text-text-light-tertiary dark:text-text-dark-tertiary">Verified drivers</div>
                 </div>
               </div>
-              <div className="flex items-center gap-2 p-3 bg-primary-light dark:bg-primary/20 rounded-lg">
-                <Clock className="h-5 w-5 text-primary" />
+              <div className="flex items-center gap-2 p-3 bg-primary/10 dark:bg-primary/20 rounded-xl border border-primary/20 dark:border-primary/30 hover:bg-primary/15 dark:hover:bg-primary/25 transition-all duration-300 group">
+                <Clock className="h-5 w-5 text-primary group-hover:scale-110 transition-transform" />
                 <div>
-                  <div className="text-sm font-semibold text-primary-dark dark:text-primary-light">24/7</div>
-                  <div className="text-xs text-primary dark:text-primary-medium">Available</div>
+                  <div className="text-sm font-semibold text-text-light-primary dark:text-text-dark-primary">24/7</div>
+                  <div className="text-xs text-text-light-tertiary dark:text-text-dark-tertiary">Available</div>
                 </div>
               </div>
             </div>
 
             {/* Enhanced Social Links */}
             <div className="space-y-4">
-              <h4 className="text-sm font-semibold text-light-primary dark:text-dark-primary uppercase tracking-wider">
+              <h4 className="text-sm font-semibold text-text-light-primary dark:text-text-dark-primary uppercase tracking-wider">
                 Follow Us
               </h4>
               <div className="flex space-x-3">
@@ -167,10 +169,10 @@ const Footer: React.FC = () => {
                   <a
                     key={label}
                     href="#"
-                    className={`group relative w-12 h-12 rounded-xl flex items-center justify-center bg-surface-light dark:bg-surface-dark border border-light dark:border-dark hover:border-transparent transition-all duration-300 ${color} hover:text-white hover:scale-110 hover:shadow-lg`}
+                    className={`group relative w-12 h-12 rounded-xl flex items-center justify-center bg-surface-light dark:bg-surface-dark border border-border-light dark:border-border-dark hover:border-transparent transition-all duration-300 ${color} hover:text-white hover:scale-110 shadow-sm hover:shadow-lg`}
                     aria-label={label}
                   >
-                    <Icon className="h-5 w-5 text-light-secondary dark:text-dark-secondary group-hover:text-white transition-colors" />
+                    <Icon className="h-5 w-5 text-text-light-secondary dark:text-text-dark-secondary group-hover:text-white transition-colors" />
                     <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
                   </a>
                 ))}

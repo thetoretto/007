@@ -101,7 +101,7 @@ export default {
           darkAlt: '#000000',  // Black
         },
 
-        // Text colors - High contrast for accessibility
+        // Text colors - High contrast for accessibility with proper background pairing
         text: {
           light: {
             primary: '#000000',   // Black - maximum contrast
@@ -116,6 +116,16 @@ export default {
             disabled: 'rgba(148, 169, 188, 0.5)', // Secondary medium
           },
           accent: '#fee46b',      // Primary yellow for accent text
+          // Contrast-specific text colors for proper pairing
+          onBlack: '#ffffff',     // White text on black background
+          onWhite: '#000000',     // Black text on white background
+          onPrimary: '#171c22',   // Dark text on yellow background for better readability
+          onDark: '#ffffff',      // White text on dark background
+          onLight: '#171c22',     // Dark text on light background
+          // Readable alternatives
+          primaryReadable: '#171c22', // Dark instead of yellow for better readability
+          secondaryReadable: '#94a9bc', // Blue-gray is already readable
+          accentReadable: '#df0827',    // Red is readable
         },
 
         // Border colors - Only palette colors
@@ -124,6 +134,20 @@ export default {
           lightFocus: '#fee46b',  // Primary yellow
           dark: 'rgba(148, 169, 188, 0.5)', // Secondary medium
           darkFocus: '#fee46b',   // Primary yellow
+        },
+
+        // High-contrast combination colors for proper display - readable alternatives
+        contrast: {
+          whiteOnBlack: { bg: '#000000', text: '#ffffff' },
+          blackOnWhite: { bg: '#ffffff', text: '#000000' },
+          darkOnWhite: { bg: '#ffffff', text: '#171c22' }, // Dark instead of yellow
+          darkOnYellow: { bg: '#fee46b', text: '#171c22' }, // Dark text on yellow
+          whiteOnDark: { bg: '#171c22', text: '#ffffff' },
+          darkOnLight: { bg: '#f8f3ef', text: '#171c22' },
+          redOnWhite: { bg: '#ffffff', text: '#df0827' }, // Red is readable
+          whiteOnRed: { bg: '#df0827', text: '#ffffff' },
+          blueOnWhite: { bg: '#ffffff', text: '#94a9bc' }, // Blue-gray is readable
+          whiteOnBlue: { bg: '#94a9bc', text: '#ffffff' },
         },
       },
 

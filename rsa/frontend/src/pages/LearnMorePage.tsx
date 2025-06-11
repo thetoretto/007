@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
-import { 
-  ShieldCheck, 
-  DollarSign, 
-  Users, 
-  Leaf, 
-  Clock, 
-  UserCheck, 
-  ChevronDown, 
+import {
+  ShieldCheck,
+  DollarSign,
+  Users,
+  Leaf,
+  Clock,
+  UserCheck,
+  ChevronDown,
   ChevronUp,
   Star,
   ArrowRight
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { fadeInUp, staggerContainer } from '../utils/animations';
+import Navbar from '../components/common/Navbar';
+import Footer from '../components/common/Footer';
 import '../index.css';
 
 // Define benefit data
@@ -195,6 +197,7 @@ const TestimonialCard: React.FC<Testimonial> = ({ name, role, text, rating, avat
 const LearnMorePage: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen bg-light dark:bg-dark">
+      <Navbar />
       <main className="flex-grow py-12 sm:py-20">
         <motion.div
           initial="hidden"
@@ -343,6 +346,7 @@ const LearnMorePage: React.FC = () => {
           </motion.div>
         </motion.div>
       </main>
+      <Footer />
     </div>
   );
 };

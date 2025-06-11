@@ -34,7 +34,12 @@ const LoginForm: React.FC<LoginFormProps> = ({ redirectTo }) => {
 
   const handleSubmit = async (values: { emailOrPhone: string; password: string; rememberMe: boolean }) => {
     try {
-      await login(values.emailOrPhone, values.password);
+      // Pass the credentials as an object, not individual parameters
+      await login({
+        emailOrPhone: values.emailOrPhone,
+        password: values.password,
+        rememberMe: values.rememberMe
+      });
 
       // Navigate to the specified redirect path or dashboard
       if (redirectTo) {
