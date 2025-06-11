@@ -123,6 +123,11 @@ const AdminStatistics: React.FC = () => {
   useEffect(() => {
     setStatsPageData(generateStatisticsPageData(timePeriod, trips));
   }, [timePeriod, trips]);
+
+  // Scroll to top on page load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
   
   // Calculate summary statistics
   const totalTrips = mockTripStats.reduce((sum, day) => sum + day.trips, 0);
@@ -141,126 +146,139 @@ const AdminStatistics: React.FC = () => {
   };
   
   return (
-    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
+    <div className="driver-dashboard">
       <ToastContainer />
 
-      <main className="container-app py-8 md:py-12">
-        <div className="mb-8 md:mb-12">
-          <h1 className="text-2xl md:text-3xl font-bold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300 flex items-center">
-            <BarChart2 className="h-7 w-7 mr-3 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
-            Statistics Dashboard
-          </h1>
-          <p className="mt-1 text-sm text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">
-            View comprehensive analytics and insights
-          </p>
-        </div>
-        
-        {/* Time Period Filter */}
-        <div className="mb-8 md:mb-12">
-          <label htmlFor="timePeriod" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2 transition-colors duration-300">Select Period:</label>
-          <div className="relative inline-block">
-              <select
-                id="timePeriod"
-                name="timePeriod"
-              className="form-select block w-full text-sm rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:focus:ring-primary-500 dark:focus:border-primary-500 pr-10 transition-colors duration-300"
-                value={timePeriod}
-                onChange={(e) => setTimePeriod(e.target.value as 'daily' | 'weekly' | 'monthly' | 'yearly')}
-                aria-label="Time period"
-              >
-                <option value="daily">Daily</option>
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-                <option value="yearly">Yearly</option>
-              </select>
+      {/* Modern Header */}
+      <header className="driver-header mb-8">
+        <div className="container-app">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="icon-badge icon-badge-lg bg-primary text-on-primary">
+                  <BarChart2 className="h-6 w-6" />
+                </div>
+                <div>
+                  <h1 className="text-2xl lg:text-3xl font-bold text-light-primary dark:text-dark-primary">
+                    Statistics Dashboard
+                  </h1>
+                  <p className="text-sm text-light-secondary dark:text-dark-secondary">
+                    View comprehensive analytics and insights
+                  </p>
+                </div>
+              </div>
+              <div className="driver-status-badge online">
+                <div className="w-2 h-2 bg-secondary rounded-full animate-pulse"></div>
+                Analytics Active - {getTimePeriodLabel()}
+              </div>
+            </div>
 
+            <div className="flex flex-wrap gap-3 items-center">
+              <div className="relative">
+                <select
+                  id="timePeriod"
+                  name="timePeriod"
+                  className="form-select text-sm rounded-lg pr-10"
+                  value={timePeriod}
+                  onChange={(e) => setTimePeriod(e.target.value as 'daily' | 'weekly' | 'monthly' | 'yearly')}
+                  aria-label="Time period"
+                >
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="yearly">Yearly</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container-app py-8">
 
         {isLoading && (
           <div className="flex justify-center items-center py-12">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600 dark:border-primary-400 transition-colors duration-300"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
           </div>
         )}
 
         {!isLoading && (
           <>
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-              <div className="card p-6">
-                  <div className="flex items-center">
-                  <div className="flex-shrink-0 icon-badge icon-badge-md bg-primary-100 text-primary-600 dark:bg-primary-900 dark:text-primary-400 transition-colors duration-300">
-                    <Activity className="h-5 w-5" />
+            {/* Key Metrics Section */}
+            <section className="mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="driver-metric-card">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="driver-metric-label">Total Trips</div>
+                    <div className="icon-badge icon-badge-md bg-primary-light text-primary">
+                      <Activity className="h-5 w-5" />
                     </div>
-                  <div className="ml-4 w-0 flex-1">
-                      <dl>
-                      <dt className="text-sm font-medium text-gray-600 dark:text-gray-300 truncate transition-colors duration-300">Total Trips ({getTimePeriodLabel()})</dt>
-                        <dd>
-                        <div className="text-2xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{totalTrips}</div>
-                        </dd>
-                      </dl>
+                  </div>
+                  <div className="driver-metric-value">{totalTrips}</div>
+                  <div className="driver-metric-change positive">
+                    <TrendingUp className="h-3 w-3" />
+                    {getTimePeriodLabel()}
                   </div>
                 </div>
-              </div>
 
-              <div className="card p-6">
-                  <div className="flex items-center">
-                  <div className="flex-shrink-0 icon-badge icon-badge-md bg-secondary-100 text-secondary-600 dark:bg-secondary-900 dark:text-secondary-400 transition-colors duration-300">
-                    <Users className="h-5 w-5" />
+                <div className="driver-metric-card">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="driver-metric-label">Total Passengers</div>
+                    <div className="icon-badge icon-badge-md bg-secondary-light text-secondary">
+                      <Users className="h-5 w-5" />
                     </div>
-                  <div className="ml-4 w-0 flex-1">
-                      <dl>
-                      <dt className="text-sm font-medium text-gray-600 dark:text-gray-300 truncate transition-colors duration-300">Total Passengers ({getTimePeriodLabel()})</dt>
-                        <dd>
-                        <div className="text-2xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{mockDashboardStats.totalUsers}</div>
-                        </dd>
-                      </dl>
+                  </div>
+                  <div className="driver-metric-value">{mockDashboardStats.totalUsers}</div>
+                  <div className="driver-metric-change positive">
+                    <TrendingUp className="h-3 w-3" />
+                    {getTimePeriodLabel()}
                   </div>
                 </div>
-              </div>
 
-              <div className="card p-6">
-                  <div className="flex items-center">
-                  <div className="flex-shrink-0 icon-badge icon-badge-md bg-success-light text-success dark:bg-success-dark dark:text-success-light transition-colors duration-300">
-                    <DollarSign className="h-5 w-5" />
+                <div className="driver-metric-card">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="driver-metric-label">Total Revenue</div>
+                    <div className="icon-badge icon-badge-md bg-secondary-light text-secondary">
+                      <DollarSign className="h-5 w-5" />
                     </div>
-                  <div className="ml-4 w-0 flex-1">
-                      <dl>
-                      <dt className="text-sm font-medium text-gray-600 dark:text-gray-300 truncate transition-colors duration-300">Total Revenue ({getTimePeriodLabel()})</dt>
-                        <dd>
-                        <div className="text-2xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">${totalRevenue.toFixed(2)}</div>
-                        </dd>
-                      </dl>
+                  </div>
+                  <div className="driver-metric-value">${totalRevenue.toFixed(2)}</div>
+                  <div className="driver-metric-change positive">
+                    <TrendingUp className="h-3 w-3" />
+                    {getTimePeriodLabel()}
                   </div>
                 </div>
-              </div>
 
-              <div className="card p-6">
-                  <div className="flex items-center">
-                  <div className="flex-shrink-0 icon-badge icon-badge-md bg-warning-light text-warning dark:bg-warning-dark dark:text-warning-light transition-colors duration-300">
-                    <TrendingUp className="h-5 w-5" />
+                <div className="driver-metric-card">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="driver-metric-label">Avg. Per Trip</div>
+                    <div className="icon-badge icon-badge-md bg-primary-light text-primary">
+                      <TrendingUp className="h-5 w-5" />
                     </div>
-                  <div className="ml-4 w-0 flex-1">
-                      <dl>
-                      <dt className="text-sm font-medium text-gray-600 dark:text-gray-300 truncate transition-colors duration-300">Avg. Revenue Per Trip</dt>
-                        <dd>
-                        <div className="text-2xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">${avgRevenuePerTrip}</div>
-                        </dd>
-                      </dl>
+                  </div>
+                  <div className="driver-metric-value">${avgRevenuePerTrip}</div>
+                  <div className="driver-metric-change positive">
+                    <TrendingUp className="h-3 w-3" />
+                    Revenue efficiency
                   </div>
                 </div>
               </div>
-            </div>
-            
-            {/* Charts Section (existing charts remain) */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-              <div className="card rounded-lg shadow-sm p-4 sm:p-6 bg-white dark:bg-gray-800">
-                <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-base sm:text-lg font-medium text-gray-900 dark:text-gray-100">Daily Trip & Revenue Statistics</h2>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xs text-gray-500 dark:text-gray-400">Last 7 days</span>
-                    <TrendingUp className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+            </section>
+
+            {/* Charts Section */}
+            <section className="mb-8">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div className="driver-metric-card">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="icon-badge icon-badge-md bg-primary-light text-primary">
+                      <TrendingUp className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-semibold text-light-primary dark:text-dark-primary">Daily Trip & Revenue</h2>
+                      <p className="text-sm text-light-secondary dark:text-dark-secondary">Last 7 days</p>
+                    </div>
                   </div>
-                </div>
                 <div className="h-64 sm:h-80">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={mockTripStats}>
@@ -312,15 +330,17 @@ const AdminStatistics: React.FC = () => {
                   </ResponsiveContainer>
                 </div>
               </div>
-              
-              <div className="card rounded-lg shadow-sm p-4 sm:p-6 bg-white dark:bg-gray-800">
-                <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-base sm:text-lg font-medium text-gray-900 dark:text-gray-100">User Distribution</h2>
-                  <div className="flex items-center space-x-2">
-                    <span className="text-xs text-gray-500 dark:text-gray-400">By user type</span>
-                    <Users className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+
+                <div className="driver-metric-card">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="icon-badge icon-badge-md bg-secondary-light text-secondary">
+                      <Users className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h2 className="text-lg font-semibold text-light-primary dark:text-dark-primary">User Distribution</h2>
+                      <p className="text-sm text-light-secondary dark:text-dark-secondary">By user type</p>
+                    </div>
                   </div>
-                </div>
                 <div className="h-64 sm:h-80">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
@@ -351,16 +371,20 @@ const AdminStatistics: React.FC = () => {
                   </ResponsiveContainer>
                 </div>
               </div>
-            </div>
+              </div>
+            </section>
 
-            {/* New Charts Section: Driver Origins, Popular Destinations, Payment Overview */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {/* Driver Origins */}
-              <div className="card rounded-lg shadow-sm p-4 sm:p-6 bg-white dark:bg-gray-800">
-                <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-base sm:text-lg font-medium text-gray-900 dark:text-gray-100">Driver Common Origins</h2>
-                  <MapPin className="h-5 w-5 text-gray-400 dark:text-gray-500" />
-                </div>
+            {/* Additional Analytics Section */}
+            <section className="mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {/* Driver Origins */}
+                <div className="driver-metric-card">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="icon-badge icon-badge-md bg-primary-light text-primary">
+                      <MapPin className="h-5 w-5" />
+                    </div>
+                    <h2 className="text-lg font-semibold text-light-primary dark:text-dark-primary">Driver Origins</h2>
+                  </div>
                 <div className="h-64 sm:h-80">
                   {statsPageData.driverOriginData.length > 0 ? (
                     <ResponsiveContainer width="100%" height="100%">
@@ -411,12 +435,14 @@ const AdminStatistics: React.FC = () => {
                 </div>
               </div>
 
-              {/* Popular Destinations */}
-              <div className="card rounded-lg shadow-sm p-4 sm:p-6 bg-white dark:bg-gray-800">
-                <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-base sm:text-lg font-medium text-gray-900 dark:text-gray-100">Popular Destinations</h2>
-                  <Navigation className="h-5 w-5 text-gray-400 dark:text-gray-500" />
-                </div>
+                {/* Popular Destinations */}
+                <div className="driver-metric-card">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="icon-badge icon-badge-md bg-secondary-light text-secondary">
+                      <Navigation className="h-5 w-5" />
+                    </div>
+                    <h2 className="text-lg font-semibold text-light-primary dark:text-dark-primary">Popular Destinations</h2>
+                  </div>
                 <div className="h-64 sm:h-80">
                   {statsPageData.destinationData.length > 0 ? (
                     <ResponsiveContainer width="100%" height="100%">
@@ -457,51 +483,41 @@ const AdminStatistics: React.FC = () => {
                 </div>
               </div>
 
-              {/* Simulated Payment Overview */}
-              <div className="card rounded-lg shadow-sm p-4 sm:p-6 bg-white dark:bg-gray-800">
-                <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-base sm:text-lg font-medium text-gray-900 dark:text-gray-100">Payment Overview</h2>
-                  <CreditCard className="h-5 w-5 text-gray-400 dark:text-gray-500" />
-                </div>
-                <div className="space-y-3 mt-2">
-                  <div className="flex justify-between items-baseline">
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Total Transactions:</span>
-                    <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">{statsPageData.simulatedPayments.totalTransactions}</span>
+                {/* Payment Overview */}
+                <div className="driver-metric-card">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="icon-badge icon-badge-md bg-primary-light text-primary">
+                      <CreditCard className="h-5 w-5" />
+                    </div>
+                    <h2 className="text-lg font-semibold text-light-primary dark:text-dark-primary">Payment Overview</h2>
                   </div>
-                  <div className="flex justify-between items-baseline">
-                    <span className="text-sm text-gray-500 dark:text-gray-400">Total Value:</span>
-                    <span className="text-lg font-semibold text-gray-900 dark:text-gray-100">${statsPageData.simulatedPayments.totalValue}</span>
-                  </div>
-                  <div className="flex justify-between items-baseline">
-                    <span className="text-sm text-green-500 dark:text-green-400">Successful Payments:</span>
-                    <span className="text-lg font-semibold text-green-600 dark:text-green-400">{statsPageData.simulatedPayments.successful}</span>
-                  </div>
-                  <div className="flex justify-between items-baseline">
-                    <span className="text-sm text-red-500 dark:text-red-400">Failed Payments:</span>
-                    <span className="text-lg font-semibold text-red-600 dark:text-red-400">{statsPageData.simulatedPayments.failed}</span>
-                  </div>
-                  <div className="pt-2">
-                    <ResponsiveContainer width="100%" height={60}>
-                      <BarChart data={[{name: 'Payments', successful: statsPageData.simulatedPayments.successful, failed: statsPageData.simulatedPayments.failed }]}>
-                        <XAxis dataKey="name" hide/>
-                        <YAxis hide/>
-                        <Tooltip 
-                          formatter={(value, name) => [value, name === 'successful' ? 'Successful' : 'Failed']}
-                          contentStyle={{ 
-                            backgroundColor: 'rgba(255, 255, 255, 0.95)', 
-                            borderRadius: '0.375rem',
-                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-                            border: 'none'
-                          }}
-                        />
-                        <Bar dataKey="successful" stackId="a" fill="#10b981" radius={[4,0,0,4]}/>
-                        <Bar dataKey="failed" stackId="a" fill="#ef4444" radius={[0,4,4,0]}/>
-                      </BarChart>
-                    </ResponsiveContainer>
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-baseline">
+                      <span className="text-sm text-light-secondary dark:text-dark-secondary">Total Transactions:</span>
+                      <span className="text-lg font-semibold text-light-primary dark:text-dark-primary">{statsPageData.simulatedPayments.totalTransactions}</span>
+                    </div>
+                    <div className="flex justify-between items-baseline">
+                      <span className="text-sm text-light-secondary dark:text-dark-secondary">Total Value:</span>
+                      <span className="text-lg font-semibold text-light-primary dark:text-dark-primary">${statsPageData.simulatedPayments.totalValue}</span>
+                    </div>
+                    <div className="flex justify-between items-baseline">
+                      <span className="text-sm text-secondary">Successful:</span>
+                      <span className="text-lg font-semibold text-secondary">{statsPageData.simulatedPayments.successful}</span>
+                    </div>
+                    <div className="flex justify-between items-baseline">
+                      <span className="text-sm text-accent">Failed:</span>
+                      <span className="text-lg font-semibold text-accent">{statsPageData.simulatedPayments.failed}</span>
+                    </div>
+                    <div className="driver-progress-bar mt-3">
+                      <div
+                        className="driver-progress-fill"
+                        style={{ width: `${(statsPageData.simulatedPayments.successful / (statsPageData.simulatedPayments.successful + statsPageData.simulatedPayments.failed)) * 100}%` }}
+                      ></div>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </section>
           </>
         )}
       </main>

@@ -5,7 +5,6 @@ import {
   Zap, Globe, Heart, Award, TrendingUp, Sparkles, Play, ChevronRight, Phone, Mail, 
   Navigation, Compass, Route, Car, Plane, Train, Bus, Wifi, Coffee, Music, AirVent
 } from 'lucide-react';
-import Navbar from '../components/common/Navbar';
 import '../index.css';
 
 const HomePage: React.FC = () => {
@@ -14,6 +13,9 @@ const HomePage: React.FC = () => {
   const [animateHero, setAnimateHero] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [showDemoModal, setShowDemoModal] = useState(false);
+  const [showQuickActions, setShowQuickActions] = useState(false);
+  const [recentBookings, setRecentBookings] = useState<string[]>([]);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   // Popular destinations for suggestions
@@ -56,28 +58,36 @@ const HomePage: React.FC = () => {
     // Handle scroll animations
     const handleScroll = () => {
       const animatedElements = document.querySelectorAll('.animate-on-scroll');
-      
+
       animatedElements.forEach(el => {
         const rect = el.getBoundingClientRect();
         const isVisible = (rect.top <= window.innerHeight * 0.85);
-        
+
         if (isVisible) {
           el.classList.add('visible');
         }
       });
     };
-    
+
     window.addEventListener('scroll', handleScroll);
     setTimeout(handleScroll, 500);
-    
+
     // Auto-rotate testimonials
     const testimonialInterval = setInterval(() => {
       setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
     }, 5000);
-    
+
+    // Simulate recent bookings for social proof
+    const bookingInterval = setInterval(() => {
+      const cities = ['Kigali', 'Lagos', 'Nairobi', 'Cairo', 'Cape Town', 'Accra'];
+      const randomBooking = `${cities[Math.floor(Math.random() * cities.length)]} → ${cities[Math.floor(Math.random() * cities.length)]}`;
+      setRecentBookings(prev => [randomBooking, ...prev.slice(0, 2)]);
+    }, 8000);
+
     return () => {
       window.removeEventListener('scroll', handleScroll);
       clearInterval(testimonialInterval);
+      clearInterval(bookingInterval);
     };
   }, [testimonials.length]);
 
@@ -100,9 +110,40 @@ const HomePage: React.FC = () => {
     }, 300);
   };
 
+  // Smart journey planner - auto-fill popular routes
+  const handleSmartPlanner = () => {
+    const popularRoutes = [
+      { from: 'Kigali', to: 'Rubavu' },
+      { from: 'Lagos', to: 'Abuja' },
+      { from: 'Nairobi', to: 'Mombasa' },
+      { from: 'Cairo', to: 'Alexandria' }
+    ];
+    const randomRoute = popularRoutes[Math.floor(Math.random() * popularRoutes.length)];
+    setOrigin(randomRoute.from);
+    setDestination(randomRoute.to);
+    setTimeout(() => {
+      navigateToBooking();
+    }, 1000);
+  };
+
+  // Handle demo modal
+  const handleDemoClick = () => {
+    setShowDemoModal(true);
+  };
+
+  // Emergency booking handler
+  const handleEmergencyBooking = () => {
+    window.location.href = '/booking?emergency=true';
+  };
+
+  // Price calculator handler
+  const handlePriceCalculator = () => {
+    window.location.href = '/pricing';
+  };
+
   return (
     <div className="min-h-screen">
-      <Navbar />
+  
       
       {/* Hero Section - Completely Redesigned */}
       <section className="relative min-h-screen overflow-hidden bg-gradient-to-br from-light via-purple/5 to-primary/10 dark:from-dark dark:via-purple/10 dark:to-primary/5">
@@ -157,24 +198,24 @@ const HomePage: React.FC = () => {
                   </p>
                 </div>
 
-                {/* Action Buttons */}
+                {/* Simple & Crucial Action Buttons */}
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Link 
-                    to="/booking" 
-                    className="btn btn-primary btn-lg group hover:shadow-2xl hover:shadow-primary-700/25 transform hover:-translate-y-1 transition-all duration-300"
+                  <Link
+                    to="/booking"
+                    className="btn btn-primary btn-lg group hover:shadow-2xl hover:shadow-primary/25 transform hover:-translate-y-1 transition-all duration-300"
                   >
                     <Zap className="w-5 h-5 mr-2" />
-                    Start Your Journey
+                    Book Your Ride
                     <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Link>
-                  
-                  <button 
-                    onClick={() => setIsVideoPlaying(true)}
-                    className="btn btn-secondary group flex items-center justify-center"
+
+                  <Link
+                    to="/about"
+                    className="btn btn-secondary btn-lg group flex items-center justify-center"
                   >
-                    <Play className="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" />
-                    Watch Demo
-                  </button>
+                    <Globe className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
+                    How It Works
+                  </Link>
                 </div>
 
                 {/* Stats */}
@@ -480,39 +521,42 @@ const HomePage: React.FC = () => {
         </div>
       </section>
 
-      {/* Call to Action Section */}
-      <section className="py-20 lg:py-32 bg-gradient-to-r from-primary via-primary/90 to-purple relative overflow-hidden">
-        {/* Background Elements */}
+      {/* Call to Action Section - Modern & Simple */}
+      <section className="py-24 bg-black relative overflow-hidden">
+        {/* Minimal Background Elements */}
         <div className="absolute inset-0">
-          <div className="absolute top-10 left-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-10 right-10 w-32 h-32 bg-accent/20 rounded-full blur-2xl"></div>
-          <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/5 rounded-full blur-3xl"></div>
+          <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl"></div>
+          <div className="absolute bottom-1/4 left-1/4 w-80 h-80 bg-purple/10 rounded-full blur-3xl"></div>
         </div>
 
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-white/10 border border-white/20 mb-8">
-              <Sparkles className="w-4 h-4 text-white mr-2" />
+          <div className="max-w-4xl mx-auto text-center">
+
+            {/* Simple Badge */}
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/20 border border-primary/30 mb-8">
+              <Sparkles className="w-4 h-4 text-primary mr-2" />
               <span className="text-sm font-medium text-white">Ready to Travel?</span>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-6">
+            {/* Clean Typography */}
+            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight">
               Your Next Adventure
               <br />
-              <span className="text-gradient bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+              <span className="text-gradient bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 Awaits
               </span>
             </h2>
 
-            <p className="text-lg lg:text-xl text-white/90 mb-10 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-xl text-white/80 mb-12 max-w-2xl mx-auto leading-relaxed">
               Join millions of travelers who choose RSA for safe, comfortable, and reliable transportation across Africa.
               Your journey starts with a single click.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
+            {/* Simple Action Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
               <Link
                 to="/booking"
-                className="btn bg-white text-black hover:bg-white/90 btn-lg group shadow-2xl hover:shadow-white/25 transform hover:-translate-y-1 transition-all duration-300"
+                className="btn btn-primary btn-lg group transform hover:-translate-y-1 transition-all duration-300"
               >
                 <Zap className="w-5 h-5 mr-2" />
                 Book Your Ride Now
@@ -521,32 +565,133 @@ const HomePage: React.FC = () => {
 
               <Link
                 to="/learn-more"
-                className="btn border-2 border-white/30 text-white hover:bg-white/10 btn-lg group"
+                className="btn border-2 border-white/30 text-white hover:bg-white/10 btn-lg"
               >
                 <Globe className="w-5 h-5 mr-2" />
                 Learn More
               </Link>
             </div>
 
-            {/* Trust Indicators */}
+            {/* Clean Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-2xl mx-auto">
               {[
                 { icon: Users, number: "2M+", label: "Happy Travelers" },
                 { icon: Globe, number: "25+", label: "African Cities" },
                 { icon: Star, number: "4.9", label: "Average Rating" }
               ].map((stat, index) => (
-                <div key={index} className="text-center">
-                  <div className="icon-badge icon-badge-lg bg-white/10 text-white mx-auto mb-3">
+                <div key={index} className="text-center group">
+                  <div className="icon-badge icon-badge-lg bg-primary/20 text-primary mx-auto mb-3 group-hover:bg-primary group-hover:text-black transition-all duration-300">
                     <stat.icon className="w-6 h-6" />
                   </div>
                   <div className="text-2xl font-bold text-white">{stat.number}</div>
-                  <div className="text-sm text-white/80">{stat.label}</div>
+                  <div className="text-sm text-white/70">{stat.label}</div>
                 </div>
               ))}
             </div>
           </div>
         </div>
       </section>
+
+      {/* Live Booking Notifications */}
+      {recentBookings.length > 0 && (
+        <div className="fixed bottom-4 left-4 z-50 space-y-2">
+          {recentBookings.slice(0, 1).map((booking, index) => (
+            <div
+              key={index}
+              className="bg-white dark:bg-dark border border-primary/20 rounded-lg p-3 shadow-lg animate-slide-in max-w-xs"
+            >
+              <div className="flex items-center">
+                <div className="icon-badge icon-badge-sm bg-primary/20 text-primary mr-3">
+                  <CheckCircle className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-black dark:text-white">Just booked!</p>
+                  <p className="text-xs text-dark dark:text-light">{booking}</p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Interactive Demo Modal */}
+      {showDemoModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white dark:bg-dark rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6 border-b border-light dark:border-dark">
+              <div className="flex items-center justify-between">
+                <h3 className="text-2xl font-bold text-black dark:text-white">Interactive Demo</h3>
+                <button
+                  onClick={() => setShowDemoModal(false)}
+                  className="btn border border-light dark:border-dark hover:bg-light dark:hover:bg-dark"
+                >
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 space-y-6">
+              <div className="text-center">
+                <div className="icon-badge icon-badge-xl bg-primary/20 text-primary mx-auto mb-4">
+                  <Play className="w-8 h-8" />
+                </div>
+                <h4 className="text-xl font-semibold text-black dark:text-white mb-2">
+                  Experience RSA in Action
+                </h4>
+                <p className="text-dark dark:text-light mb-6">
+                  See how easy it is to book your perfect ride across Africa
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="card p-4 hover:shadow-lg transition-all duration-300">
+                  <div className="icon-badge icon-badge-lg bg-secondary/20 text-secondary mb-3">
+                    <Zap className="w-6 h-6" />
+                  </div>
+                  <h5 className="font-semibold text-black dark:text-white mb-2">Lightning Fast</h5>
+                  <p className="text-sm text-dark dark:text-light">Book in under 30 seconds</p>
+                </div>
+
+                <div className="card p-4 hover:shadow-lg transition-all duration-300">
+                  <div className="icon-badge icon-badge-lg bg-accent/20 text-accent mb-3">
+                    <Shield className="w-6 h-6" />
+                  </div>
+                  <h5 className="font-semibold text-black dark:text-white mb-2">100% Safe</h5>
+                  <p className="text-sm text-dark dark:text-light">Verified drivers & vehicles</p>
+                </div>
+
+                <div className="card p-4 hover:shadow-lg transition-all duration-300">
+                  <div className="icon-badge icon-badge-lg bg-primary/20 text-primary mb-3">
+                    <Globe className="w-6 h-6" />
+                  </div>
+                  <h5 className="font-semibold text-black dark:text-white mb-2">25+ Cities</h5>
+                  <p className="text-sm text-dark dark:text-light">Across Africa network</p>
+                </div>
+
+                <div className="card p-4 hover:shadow-lg transition-all duration-300">
+                  <div className="icon-badge icon-badge-lg bg-purple/20 text-purple mb-3">
+                    <Star className="w-6 h-6" />
+                  </div>
+                  <h5 className="font-semibold text-black dark:text-white mb-2">4.9 Rating</h5>
+                  <p className="text-sm text-dark dark:text-light">Loved by millions</p>
+                </div>
+              </div>
+
+              <div className="text-center pt-4">
+                <Link
+                  to="/booking"
+                  onClick={() => setShowDemoModal(false)}
+                  className="btn btn-primary btn-lg group"
+                >
+                  <Zap className="w-5 h-5 mr-2" />
+                  Start Booking Now
+                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );

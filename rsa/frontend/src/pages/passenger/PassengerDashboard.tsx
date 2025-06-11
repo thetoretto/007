@@ -1,87 +1,286 @@
 import '../../index.css';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Clock, MapPin, User, Search, TrendingUp, BarChart2, Ticket, Star, CreditCard, ChevronRight, AlertCircle, CheckCircle, ArrowRight, XCircle, Zap, Activity } from 'lucide-react';
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  User,
+  Search,
+  TrendingUp,
+  BarChart2,
+  Ticket,
+  Star,
+  CreditCard,
+  ChevronRight,
+  AlertCircle,
+  CheckCircle,
+  ArrowRight,
+  XCircle,
+  Zap,
+  Activity,
+  RefreshCw,
+  Filter,
+  Bell
+} from 'lucide-react';
 import useAuthStore from '../../store/authStore';
 import { useBookingStore, BookingWithDetails } from '../../store/bookingStore';
 import { getRandomRoutes, getRandomBookings } from '../../utils/mockData';
 import ToastContainer from '../../components/common/ToastContainer';
 
-// Dummy upcoming trips data
-const dummyTripStats = {
+// Types for better type safety
+interface TripStats {
+  total: number;
+  upcoming: number;
+  completed: number;
+  cancelled: number;
+}
+
+interface PopularRoute {
+  id: string;
+  origin: string;
+  destination: string;
+  count: number;
+  price: number;
+  duration?: string;
+  nextDeparture?: string;
+}
+
+interface RecentActivity {
+  id: string;
+  type: 'booking' | 'payment' | 'trip' | 'review';
+  description: string;
+  date: string;
+  status: 'completed' | 'cancelled' | 'pending';
+  amount?: number;
+  rating?: number;
+}
+
+// Enhanced dummy data with better structure
+const dummyTripStats: TripStats = {
   total: 24,
   upcoming: 3,
   completed: 18,
   cancelled: 3,
 };
 
-// Dummy popular routes
-const popularRoutes = [
-  { id: 'r1', origin: 'New York', destination: 'Boston', count: 5, price: 45 },
-  { id: 'r2', origin: 'Los Angeles', destination: 'San Francisco', count: 4, price: 55 },
-  { id: 'r3', origin: 'Chicago', destination: 'Detroit', count: 3, price: 35 },
+// Enhanced popular routes with more details
+const popularRoutes: PopularRoute[] = [
+  {
+    id: 'r1',
+    origin: 'New York',
+    destination: 'Boston',
+    count: 5,
+    price: 45,
+    duration: '4h 30m',
+    nextDeparture: '2:30 PM'
+  },
+  {
+    id: 'r2',
+    origin: 'Los Angeles',
+    destination: 'San Francisco',
+    count: 4,
+    price: 55,
+    duration: '6h 15m',
+    nextDeparture: '3:45 PM'
+  },
+  {
+    id: 'r3',
+    origin: 'Chicago',
+    destination: 'Detroit',
+    count: 3,
+    price: 35,
+    duration: '5h 20m',
+    nextDeparture: '1:15 PM'
+  },
+  {
+    id: 'r4',
+    origin: 'Miami',
+    destination: 'Orlando',
+    count: 6,
+    price: 28,
+    duration: '3h 45m',
+    nextDeparture: '4:00 PM'
+  },
 ];
 
-// Dummy recent activities
-const recentActivities = [
-  { id: 'a1', type: 'booking', description: 'Booked trip from New York to Boston', date: '2023-05-15', status: 'completed' },
-  { id: 'a2', type: 'payment', description: 'Made payment for trip to San Francisco', date: '2023-05-10', amount: 55, status: 'completed' },
-  { id: 'a3', type: 'trip', description: 'Trip to Chicago was cancelled', date: '2023-05-05', status: 'cancelled' },
-  { id: 'a4', type: 'review', description: 'Left 5-star review for driver', date: '2023-05-01', rating: 5, status: 'completed' },
+// Enhanced recent activities with better data
+const recentActivities: RecentActivity[] = [
+  {
+    id: 'a1',
+    type: 'booking',
+    description: 'Booked trip from New York to Boston',
+    date: '2024-01-15',
+    status: 'completed'
+  },
+  {
+    id: 'a2',
+    type: 'payment',
+    description: 'Payment confirmed for San Francisco trip',
+    date: '2024-01-12',
+    amount: 55,
+    status: 'completed'
+  },
+  {
+    id: 'a3',
+    type: 'trip',
+    description: 'Trip to Chicago was cancelled due to weather',
+    date: '2024-01-10',
+    status: 'cancelled'
+  },
+  {
+    id: 'a4',
+    type: 'review',
+    description: 'Left 5-star review for excellent service',
+    date: '2024-01-08',
+    rating: 5,
+    status: 'completed'
+  },
+  {
+    id: 'a5',
+    type: 'booking',
+    description: 'New booking for Miami to Orlando',
+    date: '2024-01-05',
+    status: 'pending'
+  },
 ];
 
 const PassengerDashboard: React.FC = () => {
   const { user } = useAuthStore();
-  const { bookings, fetchBookingsByUserId, isLoading } = useBookingStore();
+  const { bookings, fetchBookingsByUserId, isLoading, error } = useBookingStore();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTimeframe, setSelectedTimeframe] = useState<'daily' | 'weekly' | 'monthly' | 'all'>('all');
-  
-  useEffect(() => {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [filteredRoutes, setFilteredRoutes] = useState<PopularRoute[]>(popularRoutes);
+
+  // Enhanced data fetching with error handling
+  const fetchData = useCallback(async () => {
     if (user?.id) {
-      fetchBookingsByUserId(user.id);
+      setIsRefreshing(true);
+      try {
+        await fetchBookingsByUserId(user.id);
+      } catch (err) {
+        console.error('Failed to fetch bookings:', err);
+      } finally {
+        setIsRefreshing(false);
+      }
     }
   }, [user?.id, fetchBookingsByUserId]);
 
-  // Get upcoming and past bookings
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+
+  // Scroll to top on page load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Filter routes based on search term
+  useEffect(() => {
+    if (searchTerm.trim()) {
+      const filtered = popularRoutes.filter(route =>
+        route.origin.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        route.destination.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setFilteredRoutes(filtered);
+    } else {
+      setFilteredRoutes(popularRoutes);
+    }
+  }, [searchTerm]);
+
+  // Enhanced booking calculations with better logic
   const upcomingBookings: BookingWithDetails[] = useMemo(() => {
     if (bookings.length === 0) {
       // If no bookings in store, generate some dummy ones
-      return getRandomBookings(3).filter(b => 
+      return getRandomBookings(3).filter(b =>
         ['pending', 'confirmed', 'booked'].includes(b.status as string)
-      ) as BookingWithDetails[]; // Cast to store's BookingWithDetails
+      ) as BookingWithDetails[];
     }
-    
+
     return bookings
       .filter(b => ['pending', 'confirmed', 'booked'].includes(b.status as string))
+      .sort((a, b) => {
+        // Sort by date, earliest first
+        const dateA = new Date(a.trip?.date || '').getTime();
+        const dateB = new Date(b.trip?.date || '').getTime();
+        return dateA - dateB;
+      })
       .slice(0, 3);
   }, [bookings]);
 
   const pastBookings: BookingWithDetails[] = useMemo(() => {
     if (bookings.length === 0) {
       // If no bookings in store, generate some dummy ones
-      return getRandomBookings(3).filter(b => 
+      return getRandomBookings(6).filter(b =>
         ['completed', 'cancelled'].includes(b.status as string)
-      ) as BookingWithDetails[]; // Cast to store's BookingWithDetails
+      ) as BookingWithDetails[];
     }
-    
+
     return bookings
       .filter(b => ['completed', 'cancelled'].includes(b.status as string))
-      .slice(0, 3);
+      .sort((a, b) => {
+        // Sort by date, most recent first
+        const dateA = new Date(a.trip?.date || '').getTime();
+        const dateB = new Date(b.trip?.date || '').getTime();
+        return dateB - dateA;
+      })
+      .slice(0, 6);
   }, [bookings]);
 
-  const formatDate = (dateString: string, timeString: string = '') => {
-    try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('en-US', { 
-        weekday: 'short', 
-        year: 'numeric', 
-        month: 'short', 
-        day: 'numeric' 
-      }) + (timeString ? ` at ${timeString}` : '');
-    } catch (e) {
-      return dateString;
+  // Calculate real-time stats from actual bookings
+  const tripStats: TripStats = useMemo(() => {
+    if (bookings.length === 0) {
+      return dummyTripStats;
     }
-  };
+
+    const stats = bookings.reduce((acc, booking) => {
+      acc.total++;
+      switch (booking.status) {
+        case 'pending':
+        case 'confirmed':
+        case 'booked':
+          acc.upcoming++;
+          break;
+        case 'completed':
+          acc.completed++;
+          break;
+        case 'cancelled':
+          acc.cancelled++;
+          break;
+      }
+      return acc;
+    }, { total: 0, upcoming: 0, completed: 0, cancelled: 0 });
+
+    return stats;
+  }, [bookings]);
+
+  // Enhanced date formatting with better error handling
+  const formatDate = useCallback((dateString: string, timeString: string = '') => {
+    try {
+      if (!dateString) return 'Date TBD';
+
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return 'Invalid Date';
+
+      const formattedDate = date.toLocaleDateString('en-US', {
+        weekday: 'short',
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+
+      return timeString ? `${formattedDate} at ${timeString}` : formattedDate;
+    } catch (e) {
+      console.error('Date formatting error:', e);
+      return 'Date Error';
+    }
+  }, []);
+
+  // Enhanced refresh handler
+  const handleRefresh = useCallback(async () => {
+    await fetchData();
+  }, [fetchData]);
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -126,136 +325,243 @@ const PassengerDashboard: React.FC = () => {
   };
 
   return (
-    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
+    <div className="driver-dashboard">
       <ToastContainer />
-      <main className="container-app py-8 md:py-12">
-        {/* Header with greeting and search */}
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
-          <div className="flex-1 min-w-0 mb-4 md:mb-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">Passenger Dashboard</h1>
-            <p className="mt-1 text-sm text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">
-              {user && `Welcome back, ${user.firstName} ${user.lastName}`}
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-3 items-center">
-            <div className="relative flex ">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-text-light-tertiary dark:text-text-dark-tertiary transition-colors duration-300" />
+
+      {/* Modern Header */}
+      <header className="driver-header mb-8">
+        <div className="container-app">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="icon-badge icon-badge-lg bg-primary text-on-primary">
+                  <User className="h-6 w-6" />
+                </div>
+                <div>
+                  <h1 className="text-2xl lg:text-3xl font-bold text-light-primary dark:text-dark-primary">
+                    Passenger Dashboard
+                  </h1>
+                  <p className="text-sm text-light-secondary dark:text-dark-secondary">
+                    {user && `Welcome back, ${user.firstName} ${user.lastName}`}
+                  </p>
+                </div>
               </div>
-              <input
-                type="text"
-                placeholder="Search routes..."
-                className="form-input block w-full pr-4 py-2 transition-colors duration-300"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+              <div className="driver-status-badge online">
+                <div className="w-2 h-2 bg-secondary rounded-full animate-pulse"></div>
+                Travel Ready
+              </div>
             </div>
-            <Link to="/book" className="btn btn-primary py-3 px-4 flex items-center gap-2">
-              <Ticket className="h-4 w-4" />
-              Book a Trip
+
+            <div className="flex flex-wrap gap-3 items-center">
+              <div className="relative flex">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Search className="h-4 w-4 text-light-tertiary dark:text-dark-tertiary" />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search routes..."
+                  className="form-input block w-full pl-10 pr-4 py-2"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  aria-label="Search routes"
+                />
+              </div>
+
+              <button
+                onClick={handleRefresh}
+                disabled={isRefreshing}
+                className="btn btn-outline flex items-center gap-2 px-3 py-2"
+                aria-label="Refresh data"
+              >
+                <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                {isRefreshing ? 'Refreshing...' : 'Refresh'}
+              </button>
+
+              <Link to="/book" className="btn btn-primary flex items-center gap-2 px-4 py-3 shadow-primary">
+                <Ticket className="h-5 w-5" />
+                Book a Trip
+              </Link>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container-app py-8">
+
+        {/* Enhanced Quick Stats with Error Handling */}
+        {error ? (
+          <div className="driver-loading-card mb-8">
+            <div className="icon-badge icon-badge-lg bg-error-light text-error mx-auto mb-4">
+              <AlertCircle className="h-6 w-6" />
+            </div>
+            <h3 className="text-lg font-semibold text-light-primary dark:text-dark-primary mb-2">
+              Error Loading Dashboard
+            </h3>
+            <p className="text-light-secondary dark:text-dark-secondary mb-4">
+              {error}
+            </p>
+            <button onClick={handleRefresh} className="btn btn-primary">
+              Try Again
+            </button>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <div className="driver-metric-card group hover:shadow-lg transition-all duration-300">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-sm font-medium text-light-secondary dark:text-dark-secondary">Total Trips</p>
+                  <p className="text-3xl font-bold text-light-primary dark:text-dark-primary">
+                    {isLoading ? '...' : tripStats.total}
+                  </p>
+                  <p className="text-xs text-light-tertiary dark:text-dark-tertiary mt-1">Lifetime trips</p>
+                </div>
+                <div className="icon-badge icon-badge-lg bg-primary-light text-primary group-hover:scale-110 transition-transform duration-300">
+                  <BarChart2 className="h-6 w-6" />
+                </div>
+              </div>
+            </div>
+
+            <div className="driver-metric-card group hover:shadow-lg transition-all duration-300">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-sm font-medium text-light-secondary dark:text-dark-secondary">Upcoming</p>
+                  <p className="text-3xl font-bold text-light-primary dark:text-dark-primary">
+                    {isLoading ? '...' : tripStats.upcoming}
+                  </p>
+                  <p className="text-xs text-light-tertiary dark:text-dark-tertiary mt-1">Scheduled trips</p>
+                </div>
+                <div className="icon-badge icon-badge-lg bg-info-light text-info group-hover:scale-110 transition-transform duration-300">
+                  <Clock className="h-6 w-6" />
+                </div>
+              </div>
+            </div>
+
+            <div className="driver-metric-card group hover:shadow-lg transition-all duration-300">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-sm font-medium text-light-secondary dark:text-dark-secondary">Completed</p>
+                  <p className="text-3xl font-bold text-light-primary dark:text-dark-primary">
+                    {isLoading ? '...' : tripStats.completed}
+                  </p>
+                  <p className="text-xs text-light-tertiary dark:text-dark-tertiary mt-1">Successfully completed</p>
+                </div>
+                <div className="icon-badge icon-badge-lg bg-success-light text-success group-hover:scale-110 transition-transform duration-300">
+                  <CheckCircle className="h-6 w-6" />
+                </div>
+              </div>
+            </div>
+
+            <div className="driver-metric-card group hover:shadow-lg transition-all duration-300">
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <p className="text-sm font-medium text-light-secondary dark:text-dark-secondary">Cancelled</p>
+                  <p className="text-3xl font-bold text-light-primary dark:text-dark-primary">
+                    {isLoading ? '...' : tripStats.cancelled}
+                  </p>
+                  <p className="text-xs text-light-tertiary dark:text-dark-tertiary mt-1">Cancelled trips</p>
+                </div>
+                <div className="icon-badge icon-badge-lg bg-error-light text-error group-hover:scale-110 transition-transform duration-300">
+                  <XCircle className="h-6 w-6" />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Quick Actions - Prominent Position */}
+        <div className="driver-metric-card mb-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="icon-badge icon-badge-md bg-secondary-light text-secondary">
+              <Zap className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="text-xl font-semibold text-light-primary dark:text-dark-primary">
+                Quick Actions
+              </h2>
+              <p className="text-sm text-light-secondary dark:text-dark-secondary">
+                Start your journey with these common tasks
+              </p>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <Link to="/book" className="btn btn-primary flex items-center justify-center gap-2 py-4">
+              <Ticket className="h-5 w-5" />
+              Book New Trip
+            </Link>
+            <Link to="/passenger/trips" className="btn btn-secondary flex items-center justify-center gap-2 py-4">
+              <Calendar className="h-5 w-5" />
+              View All Trips
+            </Link>
+            <Link to="/passenger/settings" className="btn btn-outline flex items-center justify-center gap-2 py-4">
+              <User className="h-5 w-5" />
+              Profile Settings
             </Link>
           </div>
         </div>
 
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          <div className="card p-6 card-interactive hover:shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">Total Trips</p>
-              <div className="icon-badge icon-badge-md bg-primary-100 text-primary-700 dark:bg-primary-900 dark:text-primary-700">
-                <Calendar className="h-6 w-6" />
-              </div>
-            </div>
-            <p className="text-3xl font-semibold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">{dummyTripStats.total}</p>
-            <p className="text-xs text-text-light-tertiary dark:text-text-dark-tertiary mt-1 transition-colors duration-300">Lifetime trips</p>
-          </div>
-
-          <div className="card p-6 card-interactive hover:shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Upcoming</p>
-              <div className="icon-badge icon-badge-md bg-info-light text-info dark:bg-info-dark dark:text-info-light">
-                <Clock className="h-6 w-6" />
-              </div>
-            </div>
-            <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{dummyTripStats.upcoming}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300">Scheduled trips</p>
-          </div>
-          
-          <div className="card p-6 card-interactive hover:shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Completed</p>
-              <div className="icon-badge icon-badge-md bg-success-light text-success dark:bg-success-dark dark:text-success-light">
-                <CheckCircle className="h-6 w-6" />
-              </div>
-            </div>
-            <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{dummyTripStats.completed}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300">Successfully completed</p>
-          </div>
-          
-          <div className="card p-6 card-interactive hover:shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Cancelled</p>
-              <div className="icon-badge icon-badge-md bg-error-light text-error dark:bg-error-dark dark:text-error-light">
-                <XCircle className="h-6 w-6" />
-              </div>
-            </div>
-            <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{dummyTripStats.cancelled}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300">Cancelled trips</p>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Upcoming Trips */}
-          <div className="lg:col-span-2">
-            <div className="card overflow-hidden mb-8">
-              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300 flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300 flex items-center">
-                  <Calendar className="h-5 w-5 mr-2 text-primary-700 transition-colors duration-300" />
-                  Upcoming Trips
-                </h2>
-                <Link to="/passenger/trips" className="btn btn-ghost btn-sm text-primary-700 flex items-center gap-2 transition-colors duration-300">
+        {/* Main Content Grid - Symmetric Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Left Column - Upcoming Trips */}
+          <div>
+            <div className="driver-metric-card mb-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="icon-badge icon-badge-md bg-primary-light text-primary">
+                  <Calendar className="h-5 w-5" />
+                </div>
+                <div className="flex-1">
+                  <h2 className="text-xl font-semibold text-light-primary dark:text-dark-primary">
+                    Upcoming Trips
+                  </h2>
+                  <p className="text-sm text-light-secondary dark:text-dark-secondary">
+                    Your scheduled travel plans
+                  </p>
+                </div>
+                <Link to="/passenger/trips" className="btn btn-secondary btn-sm flex items-center gap-2">
                   View all <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
 
-              <div className="overflow-hidden">
+              <div className="space-y-4">
                 {isLoading ? (
-                  <div className="p-8 text-center">
-                    <p className="text-gray-600 dark:text-gray-300 transition-colors duration-300">Loading your trips...</p>
+                  <div className="driver-loading-card">
+                    <div className="icon-badge icon-badge-lg bg-primary-light text-primary mx-auto mb-4">
+                      <Calendar className="h-6 w-6" />
+                    </div>
+                    <p className="text-light-secondary dark:text-dark-secondary">Loading your trips...</p>
                   </div>
                 ) : upcomingBookings.length > 0 ? (
-                  <div className="divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
+                  <div className="space-y-4">
                     {upcomingBookings.map((booking) => (
                       <Link
                         key={booking.id}
                         to={`/passenger/trips/${booking.id}`}
-                        className="block p-6 card-interactive hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-300"
+                        className="driver-trip-card group"
                       >
                         <div className="flex items-center justify-between">
-                          <div>
-                            <h3 className="text-base font-medium text-gray-900 dark:text-white transition-colors duration-300">
+                          <div className="flex-1">
+                            <h3 className="text-base font-medium text-light-primary dark:text-dark-primary group-hover:text-primary">
                               {booking.route?.origin?.name || 'Origin'} to {booking.route?.destination?.name || 'Destination'}
                             </h3>
-                            <div className="mt-1 flex items-center text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
-                              <Calendar className="h-4 w-4 mr-1" />
+                            <div className="mt-2 flex items-center text-sm text-light-secondary dark:text-dark-secondary">
+                              <Calendar className="h-4 w-4 mr-2" />
                               <span>{booking.trip?.date && booking.trip?.time ? formatDate(booking.trip.date, booking.trip.time) : 'Date TBD'}</span>
                             </div>
-                            <div className="mt-1 flex items-center">
+                            <div className="mt-2 flex items-center gap-3">
                               {getStatusBadge(booking.status)}
-                              
-                              <span className="ml-3 text-xs text-gray-600 dark:text-gray-300 transition-colors duration-300">
+                              <span className="text-xs text-light-tertiary dark:text-dark-tertiary">
                                 {booking.trip?.vehicle?.model ? `${booking.trip.vehicle.model}` : 'Vehicle TBD'}
                               </span>
                             </div>
                           </div>
 
                           <div className="flex flex-col items-end">
-                            <span className="text-lg font-semibold text-primary-600 dark:text-primary-400 transition-colors duration-300">
+                            <span className="text-xl font-bold text-primary">
                               ${booking.trip?.price?.toFixed(2) || '0.00'}
                             </span>
-                            <div className="flex items-center text-xs text-gray-600 dark:text-gray-300 mt-1 transition-colors duration-300">
+                            <div className="flex items-center text-xs text-light-secondary dark:text-dark-secondary mt-1">
                               <span>Seat{(booking.seats && booking.seats.length > 1) ? 's' : ''} {booking.seats && booking.seats.length > 0 ? booking.seats.length : 'TBD'}</span>
-                              <ChevronRight className="h-4 w-4 ml-1" />
+                              <ChevronRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
                             </div>
                           </div>
                         </div>
@@ -263,15 +569,17 @@ const PassengerDashboard: React.FC = () => {
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-12 card">
-                    <div className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 transition-colors duration-300">
+                  <div className="driver-loading-card">
+                    <div className="icon-badge icon-badge-lg bg-primary-light text-primary mx-auto mb-4">
                       <Calendar className="h-6 w-6" />
                     </div>
-                    <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white transition-colors duration-300">No upcoming trips</h3>
-                    <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
+                    <h3 className="text-lg font-semibold text-light-primary dark:text-dark-primary mb-2">
+                      No upcoming trips
+                    </h3>
+                    <p className="text-light-secondary dark:text-dark-secondary mb-6">
                       You don't have any upcoming trips scheduled.
                     </p>
-                    <Link to="/book" className="btn btn-accentmt-4">
+                    <Link to="/book" className="btn btn-primary">
                       Book a Trip
                     </Link>
                   </div>
@@ -279,165 +587,243 @@ const PassengerDashboard: React.FC = () => {
               </div>
             </div>
 
-            {/* Travel History */}
-            <div className="card overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300 flex justify-between items-center">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
-                  <TrendingUp className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
-                  Recent Travel History
-                </h2>
-                <Link to="/passenger/trips" className="btn btn-ghost btn-sm text-primary-600 dark:text-primary-400 flex items-center gap-2 transition-colors duration-300">
-                  View all <ArrowRight className="h-4 w-4" />
-                </Link>
+          </div>
+
+          {/* Right Column - Popular Routes & Activities */}
+          <div>
+            {/* Popular Routes */}
+            <div className="driver-metric-card mb-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="icon-badge icon-badge-md bg-primary-light text-primary">
+                  <MapPin className="h-5 w-5" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-light-primary dark:text-dark-primary">
+                    Popular Routes
+                  </h2>
+                  <p className="text-sm text-light-secondary dark:text-dark-secondary">
+                    Most traveled destinations
+                  </p>
+                </div>
               </div>
-
-              <div className="overflow-hidden">
-                {pastBookings.length > 0 ? (
-                  <div className="divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
-                    {pastBookings.map((booking) => (
-                      <Link
-                        key={booking.id}
-                        to={`/passenger/trips/${booking.id}`}
-                        className="block p-6 card-interactive hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-300"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <h3 className="text-base font-medium text-gray-900 dark:text-white transition-colors duration-300">
-                              {booking.route?.origin?.name || 'Origin'} to {booking.route?.destination?.name || 'Destination'}
-                            </h3>
-                            <div className="mt-1 flex items-center text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
-                              <Calendar className="h-4 w-4 mr-1" />
-                              <span>{booking.trip?.date && booking.trip?.time ? formatDate(booking.trip.date, booking.trip.time) : 'Date N/A'}</span>
-                            </div>
-                            <div className="mt-1 flex items-center">
-                              {getStatusBadge(booking.status)}
-                            </div>
-                          </div>
-
-                          <div className="flex flex-col items-end">
-                            <span className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300">
-                              ${booking.trip?.price?.toFixed(2) || '0.00'}
-                            </span>
-                            {booking.status === 'completed' && (
-                              <div className="flex items-center text-xs text-warning-600 dark:text-warning-400 mt-1 transition-colors duration-300">
-                                <Star className="h-4 w-4 mr-1 fill-current" />
-                                <Star className="h-4 w-4 mr-1 fill-current" />
-                                <Star className="h-4 w-4 mr-1 fill-current" />
-                                <Star className="h-4 w-4 mr-1 fill-current" />
-                                <Star className="h-4 w-4 mr-1" />
-                              </div>
-                            )}
-                          </div>
+              <div className="space-y-3">
+                {filteredRoutes.slice(0, 4).map(route => (
+                  <Link
+                    key={route.id}
+                    to={`/book?from=${encodeURIComponent(route.origin)}&to=${encodeURIComponent(route.destination)}`}
+                    className="driver-trip-card group"
+                    aria-label={`Book trip from ${route.origin} to ${route.destination}`}
+                  >
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <p className="font-medium text-light-primary dark:text-dark-primary group-hover:text-primary transition-colors duration-200">
+                          {route.origin} to {route.destination}
+                        </p>
+                        <div className="flex items-center gap-4 mt-1">
+                          <p className="text-xs text-light-secondary dark:text-dark-secondary">
+                            {route.count} trips this month
+                          </p>
+                          {route.duration && (
+                            <p className="text-xs text-light-tertiary dark:text-dark-tertiary">
+                              {route.duration}
+                            </p>
+                          )}
                         </div>
-                      </Link>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-8 card">
-                    <p className="text-gray-600 dark:text-gray-300 transition-colors duration-300">No travel history found.</p>
+                        {route.nextDeparture && (
+                          <p className="text-xs text-info mt-1">
+                            Next: {route.nextDeparture}
+                          </p>
+                        )}
+                      </div>
+                      <div className="text-right">
+                        <span className="text-lg font-bold text-primary">
+                          ${route.price}
+                        </span>
+                        <div className="flex items-center justify-end text-primary text-xs mt-1">
+                          <span>Book now</span>
+                          <ArrowRight className="h-3.5 w-3.5 ml-1 group-hover:translate-x-1 transition-transform duration-200" />
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+
+                {filteredRoutes.length === 0 && searchTerm && (
+                  <div className="driver-loading-card">
+                    <div className="icon-badge icon-badge-md bg-warning-light text-warning mx-auto mb-2">
+                      <Search className="h-5 w-5" />
+                    </div>
+                    <p className="text-sm text-light-secondary dark:text-dark-secondary">
+                      No routes found for "{searchTerm}"
+                    </p>
                   </div>
                 )}
               </div>
             </div>
-          </div>
-
-          {/* Right Sidebar */}
-          <div>
-            {/* Popular Routes */}
-            <div className="card overflow-hidden mb-8">
-              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
-                  <MapPin className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
-                  Popular Routes
-                </h2>
-              </div>
-              <div className="p-4">
-                <div className="space-y-3">
-                  {popularRoutes.map(route => (
-                    <Link
-                      key={route.id}
-                      to={`/passenger/booking?from=${route.origin}&to=${route.destination}`}
-                      className="block p-3 card-interactive hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-300"
-                    >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <p className="font-medium text-gray-900 dark:text-white transition-colors duration-300">{route.origin} to {route.destination}</p>
-                          <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 transition-colors duration-300">
-                            {route.count} trips this month
-                          </p>
-                        </div>
-                        <span className="text-lg font-semibold text-primary-600 dark:text-primary-400 transition-colors duration-300">
-                          ${route.price}
-                        </span>
-                      </div>
-                      <div className="mt-2 flex items-center justify-end text-primary-600 dark:text-primary-400 text-xs transition-colors duration-300">
-                        <span>Book now</span>
-                        <ArrowRight className="h-3.5 w-3.5 ml-1" />
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </div>
 
             {/* Recent Activities */}
-            <div className="card overflow-hidden mb-8">
-              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
-                  <Activity className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
-                  Recent Activities
-                </h2>
+            <div className="driver-metric-card">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="icon-badge icon-badge-md bg-info-light text-info">
+                  <Activity className="h-5 w-5" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-semibold text-light-primary dark:text-dark-primary">
+                    Recent Activities
+                  </h2>
+                  <p className="text-sm text-light-secondary dark:text-dark-secondary">
+                    Your latest travel activities
+                  </p>
+                </div>
               </div>
-              <div className="px-4 py-2 divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
-                {recentActivities.map(activity => (
-                  <div key={activity.id} className="py-3">
-                    <div className="flex items-start">
-                      <div className={`icon-badge icon-badge-sm ${activity.type === 'booking' ? 'bg-info-light text-info dark:bg-info-dark dark:text-info-light' : activity.type === 'payment' ? 'bg-success-light text-success dark:bg-success-dark dark:text-success-light' : activity.type === 'review' ? 'bg-warning-light text-warning dark:bg-warning-dark dark:text-warning-light' : 'bg-error-light text-error dark:bg-error-dark dark:text-error-light'} mr-3 transition-colors duration-300`}>
+              <div className="space-y-4">
+                {recentActivities.slice(0, 5).map(activity => (
+                  <div key={activity.id} className="driver-trip-card group hover:shadow-md transition-all duration-200">
+                    <div className="flex items-start gap-3">
+                      <div className={`icon-badge icon-badge-sm transition-transform duration-200 group-hover:scale-110 ${
+                        activity.type === 'booking' ? 'bg-info-light text-info' :
+                        activity.type === 'payment' ? 'bg-success-light text-success' :
+                        activity.type === 'review' ? 'bg-warning-light text-warning' :
+                        'bg-error-light text-error'
+                      }`}>
                         {activity.type === 'booking' ? <Ticket className="h-4 w-4" /> :
                          activity.type === 'payment' ? <CreditCard className="h-4 w-4" /> :
                          activity.type === 'review' ? <Star className="h-4 w-4" /> :
                          <XCircle className="h-4 w-4" />}
                       </div>
-                      <div>
-                        <p className="text-sm text-gray-900 dark:text-white transition-colors duration-300">{activity.description}</p>
-                        <p className="text-xs text-gray-600 dark:text-gray-300 mt-1 transition-colors duration-300">
-                          {new Date(activity.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}
+                      <div className="flex-1">
+                        <p className="text-sm font-medium text-light-primary dark:text-dark-primary group-hover:text-primary transition-colors duration-200">
+                          {activity.description}
                         </p>
+                        <div className="flex items-center justify-between mt-1">
+                          <p className="text-xs text-light-secondary dark:text-dark-secondary">
+                            {formatDate(activity.date)}
+                          </p>
+                          <div className="flex items-center gap-2">
+                            {activity.amount && (
+                              <span className="text-xs font-medium text-success">
+                                ${activity.amount}
+                              </span>
+                            )}
+                            {activity.rating && (
+                              <div className="flex items-center">
+                                {[...Array(activity.rating)].map((_, i) => (
+                                  <Star key={i} className="h-3 w-3 text-warning fill-current" />
+                                ))}
+                              </div>
+                            )}
+                            <span className={`text-xs px-2 py-1 rounded-full ${
+                              activity.status === 'completed' ? 'bg-success-light text-success' :
+                              activity.status === 'cancelled' ? 'bg-error-light text-error' :
+                              'bg-warning-light text-warning'
+                            }`}>
+                              {activity.status}
+                            </span>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 ))}
-              </div>
-            </div>
 
-            {/* Quick Actions */}
-            <div className="card overflow-hidden">
-              <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
-                <h2 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
-                  <Zap className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
-                  Quick Actions
-                </h2>
-              </div>
-              <div className="p-4">
-                <div className="space-y-3">
-                  <Link to="/book" className="btn btn-accentw-full flex items-center justify-center gap-2">
-                    <Ticket className="h-5 w-5" />
-                    Book New Trip
-                  </Link>
-                  <Link to="/passenger/trips" className="btn btn-secondary w-full flex items-center justify-center gap-2">
-                    <Calendar className="h-5 w-5" />
-                    View All Trips
-                  </Link>
-                  <Link to="/profile" className="btn btn-outline w-full flex items-center justify-center gap-2">
-                    <User className="h-5 w-5" />
-                    Edit Profile
-                  </Link>
-                </div>
+                {recentActivities.length === 0 && (
+                  <div className="driver-loading-card">
+                    <div className="icon-badge icon-badge-md bg-info-light text-info mx-auto mb-2">
+                      <Activity className="h-5 w-5" />
+                    </div>
+                    <p className="text-sm text-light-secondary dark:text-dark-secondary">
+                      No recent activities to display
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           </div>
         </div>
+
+        {/* Travel History - Full Width Section */}
+        <div className="driver-metric-card mt-8">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="icon-badge icon-badge-md bg-secondary-light text-secondary">
+              <TrendingUp className="h-5 w-5" />
+            </div>
+            <div className="flex-1">
+              <h2 className="text-xl font-semibold text-light-primary dark:text-dark-primary">
+                Recent Travel History
+              </h2>
+              <p className="text-sm text-light-secondary dark:text-dark-secondary">
+                Your completed and cancelled trips
+              </p>
+            </div>
+            <Link to="/passenger/trips" className="btn btn-secondary btn-sm flex items-center gap-2">
+              View all <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          <div className="space-y-4">
+            {pastBookings.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {pastBookings.slice(0, 6).map((booking) => (
+                  <Link
+                    key={booking.id}
+                    to={`/passenger/trips/${booking.id}`}
+                    className="driver-trip-card group"
+                  >
+                    <div className="flex flex-col">
+                      <div className="flex items-start justify-between mb-3">
+                        <div className="flex-1">
+                          <h3 className="text-base font-medium text-light-primary dark:text-dark-primary group-hover:text-primary">
+                            {booking.route?.origin?.name || 'Origin'} to {booking.route?.destination?.name || 'Destination'}
+                          </h3>
+                          <div className="mt-1 flex items-center text-sm text-light-secondary dark:text-dark-secondary">
+                            <Calendar className="h-4 w-4 mr-2" />
+                            <span>{booking.trip?.date && booking.trip?.time ? formatDate(booking.trip.date, booking.trip.time) : 'Date N/A'}</span>
+                          </div>
+                        </div>
+                        <span className="text-lg font-bold text-primary">
+                          ${booking.trip?.price?.toFixed(2) || '0.00'}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          {getStatusBadge(booking.status)}
+                          {booking.status === 'completed' && (
+                            <div className="flex items-center text-xs text-warning">
+                              <Star className="h-3 w-3 mr-1 fill-current" />
+                              <Star className="h-3 w-3 mr-1 fill-current" />
+                              <Star className="h-3 w-3 mr-1 fill-current" />
+                              <Star className="h-3 w-3 mr-1 fill-current" />
+                              <Star className="h-3 w-3 mr-1" />
+                            </div>
+                          )}
+                        </div>
+                        <ChevronRight className="h-4 w-4 text-light-secondary dark:text-dark-secondary group-hover:translate-x-1 transition-transform" />
+                      </div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            ) : (
+              <div className="driver-loading-card">
+                <div className="icon-badge icon-badge-lg bg-secondary-light text-secondary mx-auto mb-4">
+                  <TrendingUp className="h-6 w-6" />
+                </div>
+                <h3 className="text-lg font-semibold text-light-primary dark:text-dark-primary mb-2">
+                  No Travel History
+                </h3>
+                <p className="text-light-secondary dark:text-dark-secondary mb-6">
+                  You haven't completed any trips yet. Your travel history will appear here once you start traveling.
+                </p>
+                <Link to="/book" className="btn btn-primary">
+                  Book Your First Trip
+                </Link>
+              </div>
+            )}
+          </div>
+        </div>
       </main>
+      <ToastContainer />
     </div>
   );
 };

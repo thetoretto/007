@@ -4,7 +4,7 @@ import SeatSelector from './SeatSelector';
 import UserRegistrationPrompt, { TicketDeliveryMethod } from './UserRegistrationPrompt';
 import PaymentForm from '../common/PaymentForm';
 import BookingConfirmation, { BookingDetails } from '../common/BookingConfirmation';
-import { showNotification } from '../../utils/notifications';
+
 
 // Enhanced Trip interface using mock data
 interface Trip {

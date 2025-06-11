@@ -72,6 +72,11 @@ const AdminHotPointManagement: React.FC<AdminHotPointManagementProps> = ({ mode 
     }
   }, [mode]);
 
+  // Scroll to top on page load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const filteredHotPoints = useMemo(() => {
     return hotPoints.filter(hp => {
       const matchesSearch = hp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -163,11 +168,11 @@ const AdminHotPointManagement: React.FC<AdminHotPointManagementProps> = ({ mode 
 
   if (isLoading) {
     return (
-      <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
-        <main className="container-app py-8 md:py-12 min-h-screen flex items-center justify-center">
+      <div className="driver-dashboard">
+        <main className="container-app py-8 min-h-screen flex items-center justify-center">
           <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600 mb-4"></div>
-            <p className="text-xl text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">Loading Hot Points...</p>
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mb-4"></div>
+            <p className="text-xl text-light-secondary dark:text-dark-secondary">Loading Hot Points...</p>
           </div>
         </main>
       </div>
@@ -175,131 +180,164 @@ const AdminHotPointManagement: React.FC<AdminHotPointManagementProps> = ({ mode 
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
+    <div className="driver-dashboard">
       <ToastContainer />
 
-      <main className="container-app py-8 md:py-12">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-          <div className="flex-1 min-w-0 mb-4 md:mb-0">
-            <h1 className="text-2xl md:text-3xl font-bold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300 flex items-center">
-              <MapPin className="h-7 w-7 mr-2 sm:mr-3 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
-              Hot Point Management
-            </h1>
-            <p className="mt-1 text-sm text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">
-              Manage pickup and drop-off locations
-            </p>
-          </div>
-          <div className="mt-4 flex-1 sm:mt-0 sm:flex-none">
-            <button
-              onClick={openAddModal}
-              className="btn btn-accent inline-flex items-center w-full sm:w-auto justify-center py-3 px-4"
-            >
-              <PlusCircle size={18} className="mr-2" />
-              Add Hot Point
-            </button>
-          </div>
-        </div>
-
-        {/* Filters and Search */} 
-        <div className="mb-6 p-4 card rounded-lg shadow-md">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-            <div className="md:col-span-2">
-              <label htmlFor="search" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Search Hot Points</label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400" />
+      {/* Modern Header */}
+      <header className="driver-header mb-8">
+        <div className="container-app">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="icon-badge icon-badge-lg bg-primary text-on-primary">
+                  <MapPin className="h-6 w-6" />
                 </div>
-                <input
-                  type="text"
-                  id="search"
-                  placeholder="Search by name or address..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="form-input pl-10 w-full"
-                />
+                <div>
+                  <h1 className="text-2xl lg:text-3xl font-bold text-light-primary dark:text-dark-primary">
+                    Hot Point Management
+                  </h1>
+                  <p className="text-sm text-light-secondary dark:text-dark-secondary">
+                    Manage pickup and drop-off locations
+                  </p>
+                </div>
+              </div>
+              <div className="driver-status-badge online">
+                <div className="w-2 h-2 bg-secondary rounded-full animate-pulse"></div>
+                {filteredHotPoints.length} Hot Points Active
               </div>
             </div>
-            <div>
-              <label htmlFor="statusFilter" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Filter by Status</label>
-              <select 
-                id="statusFilter" 
-                value={statusFilter} 
-                onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-                className="form-input w-full"
+
+            <div className="flex flex-wrap gap-3 items-center">
+              <button
+                onClick={openAddModal}
+                className="btn btn-primary flex items-center gap-2 px-4 py-3 shadow-primary"
               >
-                <option value="all">All Statuses</option>
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-              </select>
+                <PlusCircle className="h-5 w-5" />
+                Add Hot Point
+              </button>
             </div>
           </div>
         </div>
+      </header>
 
-        {/* Hot Points Table */} 
-        <div className="card shadow-lg rounded-lg overflow-hidden">
-          {filteredHotPoints.length === 0 ? (
-            <div className="p-6 text-center">
-              <MapPin className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-              <p className="text-gray-500">No hot points found. Try adjusting your search or filters, or add a new hot point.</p>
+      {/* Main Content */}
+      <main className="container-app py-8">
+
+        {/* Filters and Search */}
+        <section className="mb-8">
+          <div className="driver-metric-card">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="icon-badge icon-badge-md bg-primary-light text-primary">
+                <Search className="h-5 w-5" />
+              </div>
+              <h2 className="text-lg font-semibold text-light-primary dark:text-dark-primary">
+                Search & Filter
+              </h2>
             </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50 dark:bg-gray-800">
-                  <tr>
-                    <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Name</th>
-                    <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Address</th>
-                    <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider hidden md:table-cell">Coordinates</th>
-                    <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Status</th>
-                    <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="card divide-y divide-gray-200 dark:divide-gray-700">
-                  {filteredHotPoints.map((hp) => (
-                    <tr key={hp.id} className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-100">{hp.name}</td>
-                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 max-w-[200px] truncate">{hp.address}</td>
-                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 hidden md:table-cell">{hp.latitude.toFixed(4)}, {hp.longitude.toFixed(4)}</td>
-                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                        <span 
-                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${hp.status === 'active' ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200'}`}
-                        >
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="md:col-span-2">
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Search className="h-5 w-5 text-light-tertiary dark:text-dark-tertiary" />
+                  </div>
+                  <input
+                    type="text"
+                    id="search"
+                    placeholder="Search by name or address..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="form-input pl-10 w-full"
+                  />
+                </div>
+              </div>
+              <div>
+                <select
+                  id="statusFilter"
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
+                  className="form-input w-full"
+                >
+                  <option value="all">All Statuses</option>
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Hot Points List */}
+        <section className="mb-8">
+          <div className="driver-metric-card">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="icon-badge icon-badge-md bg-secondary-light text-secondary">
+                <MapPin className="h-5 w-5" />
+              </div>
+              <h2 className="text-xl font-semibold text-light-primary dark:text-dark-primary">
+                Hot Points ({filteredHotPoints.length})
+              </h2>
+            </div>
+
+            {filteredHotPoints.length === 0 ? (
+              <div className="text-center py-12 bg-light dark:bg-dark rounded-lg">
+                <MapPin className="mx-auto h-12 w-12 text-light-tertiary dark:text-dark-tertiary mb-3" />
+                <h3 className="text-sm font-medium text-light-primary dark:text-dark-primary mb-2">No hot points found</h3>
+                <p className="text-light-secondary dark:text-dark-secondary mb-4">Try adjusting your search or filters, or add a new hot point.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 gap-4">
+                {filteredHotPoints.map((hp) => (
+                  <div key={hp.id} className="driver-trip-card group">
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-light-primary dark:text-dark-primary mb-1">
+                          {hp.name}
+                        </h3>
+                        <div className={`driver-status-badge ${hp.status === 'active' ? 'online' : 'offline'}`}>
                           {hp.status.charAt(0).toUpperCase() + hp.status.slice(1)}
-                        </span>
-                      </td>
-                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm font-medium flex space-x-2">
-                        <button 
-                          onClick={() => handleToggleStatus(hp.id)} 
-                          className={`p-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors ${hp.status === 'active' ? 'text-yellow-600 hover:text-yellow-700 dark:text-yellow-500' : 'text-green-600 hover:text-green-700 dark:text-green-500'}`} 
-                          title={hp.status === 'active' ? 'Deactivate' : 'Activate'}
-                          aria-label={hp.status === 'active' ? 'Deactivate hot point' : 'Activate hot point'}
-                        >
-                          {hp.status === 'active' ? <ToggleRight size={20} /> : <ToggleLeft size={20} />}
-                        </button>
-                        <button 
-                          onClick={() => openEditModal(hp)} 
-                          className="text-primary-600 hover:text-primary-800 dark:text-primary-400 dark:hover:text-primary-300 p-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" 
-                          title="Edit Hot Point"
-                          aria-label="Edit hot point"
-                        >
-                          <Edit size={20} />
-                        </button>
-                        <button 
-                          onClick={() => handleDelete(hp.id)} 
-                          className="text-red-600 hover:text-red-800 dark:text-red-500 dark:hover:text-red-400 p-1 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors" 
-                          title="Delete Hot Point"
-                          aria-label="Delete hot point"
-                        >
-                          <Trash2 size={20} />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
+                        </div>
+                      </div>
+                      <div className="icon-badge icon-badge-sm bg-primary-light text-primary">
+                        <MapPin className="h-4 w-4" />
+                      </div>
+                    </div>
+
+                    <div className="text-sm text-light-secondary dark:text-dark-secondary mb-3">
+                      <p className="mb-1">{hp.address}</p>
+                      <p className="text-xs text-light-tertiary dark:text-dark-tertiary">
+                        Coordinates: {hp.latitude.toFixed(4)}, {hp.longitude.toFixed(4)}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2">
+                      <button
+                        onClick={() => handleToggleStatus(hp.id)}
+                        className={`btn btn-ghost btn-sm p-1 ${hp.status === 'active' ? 'text-primary' : 'text-secondary'}`}
+                        title={hp.status === 'active' ? 'Deactivate' : 'Activate'}
+                      >
+                        {hp.status === 'active' ? <ToggleRight size={16} /> : <ToggleLeft size={16} />}
+                      </button>
+                      <button
+                        onClick={() => openEditModal(hp)}
+                        className="btn btn-ghost btn-sm text-primary p-1"
+                        title="Edit Hot Point"
+                      >
+                        <Edit size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(hp.id)}
+                        className="btn btn-ghost btn-sm text-accent p-1"
+                        title="Delete Hot Point"
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
 
         {/* Mobile view for coordinates - shown on tap */}
         <div className="md:hidden mt-4">

@@ -1,11 +1,9 @@
-import { createContext } from 'react';
+import React, { createContext } from 'react';
 
-interface TransitionContextType {
-  startPageTransition: (callback: () => void) => void;
-  isPending: boolean;
-}
-
-export const TransitionContext = createContext<TransitionContextType>({
+// Create a context for the transition function
+export const TransitionContext = createContext({
   startPageTransition: (callback: () => void) => callback(),
   isPending: false
 });
+
+export default TransitionContext;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import VehicleManagement from '../../components/driver/VehicleManagement';
 import useAuthStore from '../../store/authStore';
 import {
@@ -6,7 +6,13 @@ import {
   } from '../../types';
 
 const VehiclePage: React.FC = () => {
-  const { user } = useAuthStore(); 
+  const { user } = useAuthStore();
+
+  // Scroll to top on page load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   // Determine userRole, default to 'driver' if not available or not admin/driver
   let userRoleForVehicle: "driver" | "admin" = 'driver';
   if (user?.role === 'admin') {

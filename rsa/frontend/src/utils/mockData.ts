@@ -1,4 +1,4 @@
-import { User, Passenger, Driver, Admin, Route, Vehicle, Seat, TimeSlot, Booking, Location, BookingExtra, PaymentMethod } from '../types';
+import { User, Passenger, Driver, Admin, Route, Vehicle, Seat, TimeSlot, Booking, Location, BookingExtra, PaymentMethod, Trip } from '../types';
 
 // Static Content (can be moved elsewhere if needed)
 export const promoMessages = [

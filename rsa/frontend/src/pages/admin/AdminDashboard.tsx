@@ -123,6 +123,11 @@ const AdminDashboard: React.FC = () => {
     setAdminData(generateAdminMockData(timePeriod, trips));
   }, [timePeriod, trips]);
 
+  // Scroll to top on page load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const openEditModal = (trip: Trip) => {
     setTripToEdit(trip);
     setIsTripModalOpen(true);
@@ -178,268 +183,328 @@ const AdminDashboard: React.FC = () => {
   };
 
   return (
-    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
-      <main className="container-app py-8 md:py-12">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-            <div className="flex-1 min-w-0 mb-4 md:mb-0">
-              <h1 className="text-2xl md:text-3xl font-bold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300 flex items-center">
-                  <LayoutDashboard className="h-7 w-7 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
-                  Admin Dashboard
-              </h1>
-              <p className="mt-1 text-sm text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">
-                Manage your transportation system
-              </p>
-            </div>
-        </div>
-        
-        {/* Quick Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <div className="card p-6">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Total Trips</p>
-              <div className="icon-badge icon-badge-md icon-badge-primary">
-                <Calendar className="h-5 w-5" />
-              </div>
-            </div>
-            <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{adminData.totalTrips}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 capitalize transition-colors duration-300">For {timePeriod} Period</p>
-          </div>
-
-          <div className="card p-6">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Total Passengers</p>
-              <div className="icon-badge icon-badge-md bg-secondary-100 text-secondary-600 dark:bg-secondary-900 dark:text-secondary-400">
-                <Users className="h-5 w-5" />
-              </div>
-            </div>
-            <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{adminData.totalPassengers}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 capitalize transition-colors duration-300">For {timePeriod} Period</p>
-          </div>
-          
-          <div className="card p-6">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Upcoming Trips</p>
-              <div className="icon-badge icon-badge-md bg-info-light text-info dark:bg-info-dark dark:text-info-light">
-                <Clock className="h-5 w-5" />
-              </div>
-            </div>
-            <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{upcomingTripsCount}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300">Scheduled for the future</p>
-        </div>
-
-          <div className="card p-6">
-            <div className="flex items-center justify-between mb-4">
-              <p className="text-sm font-medium text-gray-600 dark:text-gray-300 transition-colors duration-300">Total Routes</p>
-              <div className="icon-badge icon-badge-md bg-accent-gold-light text-accent-gold-dark dark:bg-accent-gold-darker dark:text-accent-gold-light">
-                <Map className="h-5 w-5" />
-              </div>
-          </div>
-            <p className="text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{adminData.activeRoutes.length}</p>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 transition-colors duration-300">Active in this period</p>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-12">
-        {/* Best Performing Drivers */}
-          <div className="card p-6">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
-              <User className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
-              Top Drivers
-            </h2>
-          {adminData.bestPerformingDrivers.length > 0 ? (
-            <ul className="space-y-4">
-              {adminData.bestPerformingDrivers.map((driver, index) => (
-                  <li key={driver.id} className="flex items-center p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                    <div className="relative flex-shrink-0">
-                      <img 
-                        src={driver.avatar || `https://ui-avatars.com/api/?name=${driver.name.replace(' ', '+')}&background=random`} 
-                        alt={driver.name} 
-                        className="h-10 w-10 rounded-full object-cover border-2 border-primary-200 dark:border-primary-700 transition-colors duration-300"
-                      />
-                      {index < 3 && (
-                        <div className={`absolute -top-1 -right-1 h-5 w-5 rounded-full flex items-center justify-center text-xs font-bold text-white
-                          ${index === 0 ? 'bg-accent-gold-medium' : index === 1 ? 'bg-gray-400' : 'bg-earth-clay'}`}>
-                          {index + 1}
-                        </div>
-                      )}
-                    </div>
-                    <div className="ml-4">
-                      <p className="font-medium text-gray-900 dark:text-white transition-colors duration-300">{driver.name}</p>
-                      <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 transition-colors duration-300">
-                      <Star className="h-4 w-4 text-accent-gold mr-1 transition-colors duration-300" /> {driver.rating.toFixed(1)}
-                      <span className="mx-1.5 text-gray-400 dark:text-gray-500 transition-colors duration-300">•</span>
-                      {driver.completedTrips} trips
-                    </div>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          ) : (
-              <div className="text-center py-8 bg-gray-100 dark:bg-gray-700 rounded-lg transition-colors duration-300">
-                <p className="text-gray-600 dark:text-gray-300 transition-colors duration-300">No driver data for this period</p>
-              </div>
-          )}
-            
-            <Link to="/admin/drivers" className="mt-6 text-sm font-medium text-primary-600 dark:text-primary-400 hover:underline flex items-center justify-end transition-colors duration-300">
-              View all drivers <ArrowRight className="h-4 w-4 ml-1" />
-            </Link>
-        </div>
-
-        {/* Active Routes */}
-          <div className="lg:col-span-2 card p-6">
-            <h2 className="text-xl font-semibold mb-4 text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
-              <Map className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
-              Most Active Routes
-            </h2>
-          {adminData.activeRoutes.length > 0 ? (
-            <div className="space-y-3">
-              {adminData.activeRoutes.map(route => (
-                  <div key={route.name} className="p-4 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
-                  <div className="flex items-center justify-between">
-                      <p className="font-medium text-gray-900 dark:text-white transition-colors duration-300 truncate max-w-[70%]">{route.name}</p>
-                      <span className="text-sm font-semibold text-primary-600 dark:text-primary-400 transition-colors duration-300 whitespace-nowrap">{route.count} trips</span>
-                  </div>
-                    <div className="text-xs text-gray-600 dark:text-gray-400 mt-2 flex items-center transition-colors duration-300">
-                      <MapPin size={12} className="inline mr-1 text-primary-500 dark:text-primary-400 transition-colors duration-300"/> {route.origin} 
-                      <ArrowRight size={12} className="inline mx-2 text-gray-400 dark:text-gray-500 transition-colors duration-300"/> 
-                      <MapPin size={12} className="inline mr-1 text-primary-500 dark:text-primary-400 transition-colors duration-300"/> {route.destination}
-                  </div>
+    <div className="driver-dashboard">
+      {/* Modern Header */}
+      <header className="driver-header mb-8">
+        <div className="container-app">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="icon-badge icon-badge-lg bg-primary text-on-primary">
+                  <LayoutDashboard className="h-6 w-6" />
                 </div>
-              ))}
+                <div>
+                  <h1 className="text-2xl lg:text-3xl font-bold text-light-primary dark:text-dark-primary">
+                    Admin Dashboard
+                  </h1>
+                  <p className="text-sm text-light-secondary dark:text-dark-secondary">
+                    {user && `Welcome back, ${user.firstName} ${user.lastName}`}
+                  </p>
+                </div>
+              </div>
+              <div className="driver-status-badge online">
+                <div className="w-2 h-2 bg-secondary rounded-full animate-pulse"></div>
+                System Online & Active
+              </div>
             </div>
-          ) : (
-              <div className="text-center py-8 bg-gray-100 dark:bg-gray-700 rounded-lg transition-colors duration-300">
-                <p className="text-gray-600 dark:text-gray-300 transition-colors duration-300">No route data for this period</p>
+
+            <div className="flex flex-wrap gap-3 items-center">
+              <button
+                onClick={() => {
+                  setTripToEdit(null);
+                  setIsTripModalOpen(true);
+                }}
+                className="btn btn-primary flex items-center gap-2 px-4 py-3 shadow-primary"
+              >
+                <Plus className="h-5 w-5" />
+                New Trip
+              </button>
+              <Link
+                to="/admin/routes"
+                className="btn btn-secondary flex items-center gap-2 px-4 py-3 shadow-secondary"
+              >
+                <Map className="h-5 w-5" />
+                Manage Routes
+              </Link>
+              <Link
+                to="/admin/settings"
+                className="btn btn-ghost flex items-center gap-2 px-4 py-3"
+                title="Admin Settings"
+              >
+                <Settings className="h-5 w-5" />
+                Settings
+              </Link>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container-app py-8">
+        {/* Key Metrics Section */}
+        <section className="mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="driver-metric-card">
+              <div className="flex items-center justify-between mb-3">
+                <div className="driver-metric-label">Total Trips</div>
+                <div className="icon-badge icon-badge-md bg-primary-light text-primary">
+                  <Calendar className="h-5 w-5" />
+                </div>
+              </div>
+              <div className="driver-metric-value">{adminData.totalTrips}</div>
+              <div className="driver-metric-change positive">
+                <ArrowRight className="h-3 w-3 rotate-[-45deg]" />
+                For {timePeriod} period
+              </div>
+            </div>
+
+            <div className="driver-metric-card">
+              <div className="flex items-center justify-between mb-3">
+                <div className="driver-metric-label">Total Passengers</div>
+                <div className="icon-badge icon-badge-md bg-secondary-light text-secondary">
+                  <Users className="h-5 w-5" />
+                </div>
+              </div>
+              <div className="driver-metric-value">{adminData.totalPassengers}</div>
+              <div className="driver-metric-change positive">
+                <ArrowRight className="h-3 w-3 rotate-[-45deg]" />
+                For {timePeriod} period
+              </div>
+            </div>
+
+            <div className="driver-metric-card">
+              <div className="flex items-center justify-between mb-3">
+                <div className="driver-metric-label">Upcoming Trips</div>
+                <div className="icon-badge icon-badge-md bg-primary-light text-primary">
+                  <Clock className="h-5 w-5" />
+                </div>
+              </div>
+              <div className="driver-metric-value">{upcomingTripsCount}</div>
+              <div className="driver-metric-change positive">
+                <ArrowRight className="h-3 w-3 rotate-[-45deg]" />
+                Scheduled ahead
+              </div>
+            </div>
+
+            <div className="driver-metric-card">
+              <div className="flex items-center justify-between mb-3">
+                <div className="driver-metric-label">Active Routes</div>
+                <div className="icon-badge icon-badge-md bg-secondary-light text-secondary">
+                  <Map className="h-5 w-5" />
+                </div>
+              </div>
+              <div className="driver-metric-value">{adminData.activeRoutes.length}</div>
+              <div className="driver-metric-change positive">
+                <ArrowRight className="h-3 w-3 rotate-[-45deg]" />
+                In this period
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          {/* Best Performing Drivers */}
+          <div className="driver-metric-card">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="icon-badge icon-badge-md bg-primary-light text-primary">
+                <User className="h-5 w-5" />
+              </div>
+              <h2 className="text-xl font-semibold text-light-primary dark:text-dark-primary">
+                Top Drivers
+              </h2>
+            </div>
+            {adminData.bestPerformingDrivers.length > 0 ? (
+              <div className="space-y-3">
+                {adminData.bestPerformingDrivers.map((driver, index) => (
+                  <div key={driver.id} className="driver-trip-card group">
+                    <div className="flex items-center gap-3">
+                      <div className="relative flex-shrink-0">
+                        <img
+                          src={driver.avatar || `https://ui-avatars.com/api/?name=${driver.name.replace(' ', '+')}&background=random`}
+                          alt={driver.name}
+                          className="h-10 w-10 rounded-full object-cover border-2 border-primary-light"
+                        />
+                        {index < 3 && (
+                          <div className={`absolute -top-1 -right-1 h-5 w-5 rounded-full flex items-center justify-center text-xs font-bold text-white
+                            ${index === 0 ? 'bg-secondary' : index === 1 ? 'bg-primary' : 'bg-accent'}`}>
+                            {index + 1}
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1">
+                        <p className="font-semibold text-light-primary dark:text-dark-primary">{driver.name}</p>
+                        <div className="flex items-center text-sm text-light-secondary dark:text-dark-secondary">
+                          <div className="driver-status-badge online mr-2">
+                            <Star className="h-3 w-3" /> {driver.rating.toFixed(1)}
+                          </div>
+                          {driver.completedTrips} trips
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 bg-light dark:bg-dark rounded-lg">
+                <p className="text-light-secondary dark:text-dark-secondary">No driver data for this period</p>
               </div>
             )}
-            
-            <Link to="/admin/routes" className="mt-6 text-sm font-medium text-primary-600 dark:text-primary-400 hover:underline flex items-center justify-end transition-colors duration-300">
-              Manage routes <ArrowRight className="h-4 w-4 ml-1" />
+
+            <Link to="/admin/users" className="mt-4 btn btn-ghost btn-sm flex items-center gap-2 justify-center">
+              View all drivers <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+
+          {/* Active Routes */}
+          <div className="lg:col-span-2 driver-metric-card">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="icon-badge icon-badge-md bg-secondary-light text-secondary">
+                <Map className="h-5 w-5" />
+              </div>
+              <h2 className="text-xl font-semibold text-light-primary dark:text-dark-primary">
+                Most Active Routes
+              </h2>
+            </div>
+            {adminData.activeRoutes.length > 0 ? (
+              <div className="space-y-3">
+                {adminData.activeRoutes.map(route => (
+                  <div key={route.name} className="driver-trip-card group">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-light-primary dark:text-dark-primary mb-1 truncate">
+                          {route.name}
+                        </h3>
+                        <div className="driver-status-badge online">
+                          {route.count} trips
+                        </div>
+                      </div>
+                      <div className="icon-badge icon-badge-sm bg-primary-light text-primary">
+                        <Navigation className="h-4 w-4" />
+                      </div>
+                    </div>
+                    <div className="text-xs text-light-secondary dark:text-dark-secondary flex items-center">
+                      <MapPin size={12} className="inline mr-1 text-primary"/> {route.origin}
+                      <ArrowRight size={12} className="inline mx-2 text-light-tertiary dark:text-dark-tertiary"/>
+                      <MapPin size={12} className="inline mr-1 text-primary"/> {route.destination}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 bg-light dark:bg-dark rounded-lg">
+                <p className="text-light-secondary dark:text-dark-secondary">No route data for this period</p>
+              </div>
+            )}
+
+            <Link to="/admin/routes" className="mt-4 btn btn-ghost btn-sm flex items-center gap-2 justify-center">
+              Manage routes <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
         </div>
 
         {/* Recent Trips List */}
-        <div className="card overflow-hidden mb-12">
-          <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300 flex justify-between items-center">
-            <h2 className="text-lg font-semibold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
-              <Calendar className="h-5 w-5 mr-2 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
-              Manage Trips
-            </h2>
-            <div className="flex items-center">
-              <button 
-                onClick={() => {
-                  setTripToEdit(null);
-                  setIsTripModalOpen(true);
-                }}
-                className="btn btn-accent py-3 px-4 mr-4 flex items-center gap-2"
-              >
-                <Plus className="h-4 w-4" /> New Trip
-              </button>
-              <span className="text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
-                Showing {sortedTrips.slice(0,5).length} of {sortedTrips.length} trips
-              </span>
-        </div>
-      </div>
-
-          <div className="overflow-x-auto">
-          {sortedTrips.length > 0 ? (
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
-                <thead className="bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
-                  <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Route</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Date & Time</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Status</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Onboarding</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Driver</th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Vehicle</th>
-                  <th scope="col" className="relative px-6 py-3">
-                    <span className="sr-only">Actions</span>
-                  </th>
-                </tr>
-              </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
-                {sortedTrips.slice(0, 10).map((trip) => (
-                    <tr 
-                      key={trip.id} 
-                      className={`hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer ${selectedTrip?.id === trip.id ? 'bg-primary-50 dark:bg-gray-700' : ''}`} 
-                      onClick={() => setSelectedTrip(trip.id === selectedTrip?.id ? null : trip)}
-                    >
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white transition-colors duration-300">{trip.fromLocation} to {trip.toLocation}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">{trip.date} at {trip.time}</td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`badge ${
-                          trip.status === 'completed' ? 'badge-success' :
-                          trip.status === 'active' ? 'badge-info' :
-                          trip.status === 'scheduled' ? 'badge-warning' :
-                          trip.status === 'pending_approval' ? 'badge-warning' :
-                          trip.status === 'cancelled' ? 'badge-error' :
-                          'badge-gray'}`}>
-                        {trip.status.charAt(0).toUpperCase() + trip.status.slice(1).replace('_', ' ')}
-                      </span>
-                    </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
-                        <div className="flex items-center">
-                          <Users className="h-4 w-4 mr-1 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
-                      {`${trip.checkedInCount || 0} / ${trip.confirmedBookings || 0} (${trip.totalBookingsForTrip || 0} total)`}
-                        </div>
-                    </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">{trip.driverId || 'Not assigned'}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">{mockVehicles.find(v => v.id === trip.vehicleId)?.model || 'N/A'}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex items-center justify-end space-x-2">
-                          <button 
-                            onClick={(e) => { e.stopPropagation(); openEditModal(trip); }} 
-                            className="btn btn-ghost btn-sm text-primary-600 dark:text-primary-400 p-1"
-                          >
-                            <Edit size={16}/>
-                          </button>
-                          <button 
-                            onClick={(e) => { e.stopPropagation(); handleDeleteTrip(trip.id); }} 
-                            className="btn btn-ghost btn-sm text-error dark:text-error-light p-1"
-                          >
-                            <Trash2 size={16}/>
-                          </button>
-                        </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <div className="text-center py-12 bg-gray-100 dark:bg-gray-700 rounded-lg transition-colors duration-300">
-                <Calendar className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-500 transition-colors duration-300" />
-                <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white transition-colors duration-300">No trips found</h3>
-                <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">Create the first trip using the button above.</p>
-                <button
-                  onClick={() => {
-                    setTripToEdit(null);
-                    setIsTripModalOpen(true);
-                  }}
-                  className="mt-4 btn btn-accentinline-flex items-center gap-2"
-                >
-                  <Plus className="h-4 w-4" /> Create Trip
-                </button>
+        <section className="mb-8">
+          <div className="driver-metric-card overflow-hidden">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="icon-badge icon-badge-md bg-primary-light text-primary">
+                  <Calendar className="h-5 w-5" />
+                </div>
+                <h2 className="text-xl font-semibold text-light-primary dark:text-dark-primary">
+                  Manage Trips
+                </h2>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-light-secondary dark:text-dark-secondary">
+                  Showing {sortedTrips.slice(0,10).length} of {sortedTrips.length} trips
+                </span>
+              </div>
             </div>
-          )}
-      </div>
 
-          {sortedTrips.length > 10 && (
-            <div className="px-6 py-3 border-t border-gray-200 dark:border-gray-700 transition-colors duration-300 flex justify-center">
-              <Link to="/admin/trips" className="btn btn-ghost btn-sm text-primary-600 dark:text-primary-400 flex items-center gap-2 transition-colors duration-300">
-                View all trips <ArrowRight className="h-4 w-4" />
-              </Link>
+            <div className="grid grid-cols-1 gap-4">
+              {sortedTrips.length > 0 ? (
+                sortedTrips.slice(0, 10).map((trip) => (
+                  <div
+                    key={trip.id}
+                    className={`driver-trip-card group cursor-pointer ${selectedTrip?.id === trip.id ? 'selected' : ''}`}
+                    onClick={() => setSelectedTrip(trip.id === selectedTrip?.id ? null : trip)}
+                  >
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-light-primary dark:text-dark-primary mb-1">
+                          {trip.fromLocation} → {trip.toLocation}
+                        </h3>
+                        <div className={`driver-status-badge ${
+                          trip.status === 'completed' ? 'online' :
+                          trip.status === 'active' ? 'busy' :
+                          'offline'
+                        }`}>
+                          {trip.status.replace('_', ' ')}
+                        </div>
+                      </div>
+                      <div className="icon-badge icon-badge-sm bg-primary-light text-primary">
+                        <Navigation className="h-4 w-4" />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4 text-sm text-light-secondary dark:text-dark-secondary mb-3">
+                      <div className="flex items-center gap-2">
+                        <Calendar className="h-4 w-4" />
+                        {trip.date} at {trip.time}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Users className="h-4 w-4" />
+                        {`${trip.checkedInCount || 0}/${trip.confirmedBookings || 0} passengers`}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs text-light-tertiary dark:text-dark-tertiary">
+                        Driver: {trip.driverId || 'Not assigned'} • Vehicle: {mockVehicles.find(v => v.id === trip.vehicleId)?.model || 'N/A'}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={(e) => { e.stopPropagation(); openEditModal(trip); }}
+                          className="btn btn-ghost btn-sm text-primary p-1"
+                        >
+                          <Edit size={14}/>
+                        </button>
+                        <button
+                          onClick={(e) => { e.stopPropagation(); handleDeleteTrip(trip.id); }}
+                          className="btn btn-ghost btn-sm text-accent p-1"
+                        >
+                          <Trash2 size={14}/>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-12 bg-light dark:bg-dark rounded-lg">
+                  <Calendar className="mx-auto h-12 w-12 text-light-tertiary dark:text-dark-tertiary" />
+                  <h3 className="mt-2 text-sm font-medium text-light-primary dark:text-dark-primary">No trips found</h3>
+                  <p className="mt-1 text-sm text-light-secondary dark:text-dark-secondary">Create the first trip using the button above.</p>
+                </div>
+              )}
             </div>
-          )}
-      </div>
+
+            {sortedTrips.length > 10 && (
+              <div className="mt-6 text-center">
+                <Link to="/admin/trips" className="btn btn-ghost btn-sm flex items-center gap-2 justify-center">
+                  View all trips <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            )}
+          </div>
+        </section>
 
         {/* Trip Form Modal */}
-      <TripForm
-        isOpen={isTripModalOpen}
-        onClose={() => setIsTripModalOpen(false)}
+        <TripForm
+          isOpen={isTripModalOpen}
+          onClose={() => setIsTripModalOpen(false)}
           onSubmit={handleTripFormSubmit}
-        tripToEdit={tripToEdit}
-      />
+          tripToEdit={tripToEdit}
+        />
       </main>
     </div>
   );

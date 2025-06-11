@@ -1,9 +1,9 @@
 import '../../index.css';
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useBookingStore, BookingWithDetails } from '../../store/bookingStore'; // Corrected import
-import TripTicket from '../../components/trips/TripTicket'; // We'll create this next
-import { ArrowLeft, Printer, Share2 } from 'lucide-react';
+import { useBookingStore, BookingWithDetails } from '../../store/bookingStore';
+import TripTicket from '../../components/trips/TripTicket';
+import { ArrowLeft, Printer, Share2, Ticket } from 'lucide-react';
 
 const TripDetailsPage: React.FC = () => {
   const { tripId } = useParams<{ tripId: string }>();
@@ -68,18 +68,31 @@ const TripDetailsPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-lg text-gray-600 dark:text-gray-300 transition-colors duration-300">Loading trip details...</p>
+      <div className="driver-dashboard">
+        <div className="driver-loading-card">
+          <div className="icon-badge icon-badge-lg bg-primary-light text-primary mx-auto mb-4">
+            <Ticket className="h-6 w-6" />
+          </div>
+          <p className="text-light-secondary dark:text-dark-secondary">Loading trip details...</p>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
-        <div className="container-app py-8 md:py-12 min-h-screen flex flex-col items-center justify-center">
-          <p className="text-lg text-red-600 dark:text-red-400 transition-colors duration-300">Error: {error}</p>
-          <Link to="/passenger/dashboard" className="mt-4 btn btn-primary">
+      <div className="driver-dashboard">
+        <div className="driver-loading-card">
+          <div className="icon-badge icon-badge-lg bg-error-light text-error mx-auto mb-4">
+            <Ticket className="h-6 w-6" />
+          </div>
+          <h3 className="text-lg font-semibold text-light-primary dark:text-dark-primary mb-2">
+            Error Loading Trip
+          </h3>
+          <p className="text-light-secondary dark:text-dark-secondary mb-6">
+            {error}
+          </p>
+          <Link to="/passenger/dashboard" className="btn btn-primary">
             Back to Dashboard
           </Link>
         </div>
@@ -89,10 +102,18 @@ const TripDetailsPage: React.FC = () => {
 
   if (!booking) {
     return (
-      <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
-        <div className="container-app py-8 md:py-12 min-h-screen flex flex-col items-center justify-center">
-          <p className="text-lg text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">No booking details found for this trip.</p>
-          <Link to="/passenger/dashboard" className="mt-4 btn btn-primary">
+      <div className="driver-dashboard">
+        <div className="driver-loading-card">
+          <div className="icon-badge icon-badge-lg bg-warning-light text-warning mx-auto mb-4">
+            <Ticket className="h-6 w-6" />
+          </div>
+          <h3 className="text-lg font-semibold text-light-primary dark:text-dark-primary mb-2">
+            Trip Not Found
+          </h3>
+          <p className="text-light-secondary dark:text-dark-secondary mb-6">
+            No booking details found for this trip.
+          </p>
+          <Link to="/passenger/dashboard" className="btn btn-primary">
             Back to Dashboard
           </Link>
         </div>
@@ -101,43 +122,60 @@ const TripDetailsPage: React.FC = () => {
   }
 
   return (
-    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
-      <div className="container-app max-w-4xl py-8 md:py-12">
-        <button
-          onClick={() => navigate(-1)} // Go back to the previous page
-          className="mb-6 inline-flex items-center text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-800 dark:hover:text-primary-200 transition-colors duration-300"
-        >
-          <ArrowLeft className="h-4 w-4 mr-1.5" />
-          Back
-        </button>
-
-        <div className="card overflow-hidden shadow-lg">
-          <div className="p-6 sm:p-8 card-body">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2 sm:mb-0 transition-colors duration-300">
-                Trip Details
-              </h1>
-              <div className="flex space-x-2">
+    <div className="driver-dashboard">
+      {/* Modern Header */}
+      <header className="driver-header mb-8">
+        <div className="container-app">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 mb-2">
                 <button
-                  onClick={handlePrint}
-                  className="btn btn-outline btn-sm inline-flex items-center text-gray-600 dark:text-gray-300"
+                  onClick={() => navigate(-1)}
+                  className="btn btn-ghost btn-sm flex items-center"
                 >
-                  <Printer className="h-4 w-4 mr-1.5" /> Print
+                  <ArrowLeft className="h-4 w-4 mr-1" />
+                  Back
                 </button>
-                <button
-                  onClick={handleShare}
-                  className="btn btn-outline btn-sm inline-flex items-center text-gray-600 dark:text-gray-300"
-                >
-                  <Share2 className="h-4 w-4 mr-1.5" /> Share
-                </button>
+                <div className="icon-badge icon-badge-lg bg-primary text-on-primary">
+                  <Ticket className="h-6 w-6" />
+                </div>
+                <div>
+                  <h1 className="text-2xl lg:text-3xl font-bold text-light-primary dark:text-dark-primary">
+                    Trip Details
+                  </h1>
+                  <p className="text-sm text-light-secondary dark:text-dark-secondary">
+                    Booking ID: {booking.id.slice(0, 8)}...
+                  </p>
+                </div>
               </div>
             </div>
-            
-            <TripTicket booking={booking} />
 
+            <div className="flex flex-wrap gap-3 items-center">
+              <button
+                onClick={handlePrint}
+                className="btn btn-secondary flex items-center gap-2 px-4 py-3"
+              >
+                <Printer className="h-5 w-5" />
+                Print
+              </button>
+              <button
+                onClick={handleShare}
+                className="btn btn-outline flex items-center gap-2 px-4 py-3"
+              >
+                <Share2 className="h-5 w-5" />
+                Share
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container-app py-8">
+        <div className="driver-metric-card">
+          <TripTicket booking={booking} />
+        </div>
+      </main>
     </div>
   );
 };

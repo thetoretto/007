@@ -3,7 +3,7 @@ import { MapPin, Calendar, Clock, User, ArrowRight, Check, X, ChevronLeft, Chevr
 import TripViewer, { Trip } from '../common/TripViewer';
 import PaymentForm from '../common/PaymentForm';
 import BookingConfirmation, { BookingDetails } from '../common/BookingConfirmation';
-import { showNotification } from '../../utils/notifications';
+
 
 // Mock data for demonstration
 const mockTrips: Trip[] = [

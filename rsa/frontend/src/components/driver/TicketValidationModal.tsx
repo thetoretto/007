@@ -42,77 +42,89 @@ const TicketValidationModal: React.FC<TicketValidationModalProps> = ({ isOpen, o
   if (!isOpen) return null;
 
   return (
-    <div 
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn"
-        // onClick={handleClose} // Removed to prevent closing when clicking overlay if that's desired, or keep if not.
-    >
-      <div
-        className="card w-full max-w-md transform transition-all duration-300 ease-out scale-100 opacity-100"
-        // onClick={(e) => e.stopPropagation()} // Keep if overlay click should not close.
-      >
-        <div className="p-4 border-b border-light dark:border-dark flex justify-between items-center">
-            <h3 className="text-lg font-semibold text-light-primary dark:text-dark-primary">Validate Ticket</h3>
-            <button onClick={handleClose} className="btn btn-sm btn-ghost text-light-tertiary dark:text-dark-tertiary hover:bg-light dark:hover:bg-dark" aria-label="Close modal">
-              <X size={20} />
-            </button>
+    <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+      <div className="driver-modal animate-scale-in">
+        <div className="driver-modal-header">
+          <div className="flex items-center gap-3">
+            <div className="icon-badge icon-badge-md bg-primary-light text-primary">
+              <Search className="h-5 w-5" />
+            </div>
+            <div className="driver-modal-title">Validate Ticket</div>
+          </div>
+          <button onClick={handleClose} className="btn btn-ghost btn-sm p-2">
+            <X className="h-5 w-5" />
+          </button>
         </div>
 
-        <div className="p-4 sm:p-6 space-y-5">
-            <p className="text-sm text-light-secondary dark:text-dark-secondary">
-              Enter the passenger's ticket ID below or use the QR code scanner.
-            </p>
+        <div className="driver-modal-body">
+          <p className="text-light-secondary dark:text-dark-secondary mb-6">
+            Enter the passenger's ticket ID below or use the QR code scanner to validate their booking.
+          </p>
 
+          <div className="space-y-4">
             <div>
-              <label htmlFor="ticketIdInputModal" className="form-label flex items-center">
-                <Search size={14} className="mr-1.5 text-light-tertiary dark:text-dark-tertiary" /> Ticket ID
+              <label htmlFor="ticketIdInputModal" className="form-label">
+                Ticket ID or QR Code
               </label>
-              <input
-                type="text"
-                id="ticketIdInputModal"
-                value={ticketId}
-                onChange={(e) => setTicketId(e.target.value)}
-                placeholder="E.g., TICKET123XYZ"
-                className="form-input w-full"
-                disabled={isLoading}
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  id="ticketIdInputModal"
+                  value={ticketId}
+                  onChange={(e) => setTicketId(e.target.value)}
+                  placeholder="Enter ticket ID (e.g., TICKET123XYZ)"
+                  className="form-input w-full pl-10"
+                  disabled={isLoading}
+                />
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-light-tertiary dark:text-dark-tertiary" />
+              </div>
             </div>
 
-            {/* QR Scanner Button Placeholder - requires a QR library */}
-            {/*
-            <div className="divider text-xs text-light-tertiary dark:text-dark-tertiary">OR</div>
-            <button className="btn btn-outline btn-primary w-full flex items-center gap-2" disabled={isLoading}>
-                <Search size={20} /> Scan QR Code
-            </button>
-            */}
-
             {validationResult && (
-              <div className={`alert shadow-md text-sm mt-4 ${validationResult.success ? 'alert-success' : 'alert-error'}`}>
-                {validationResult.success ? <CheckCircle size={20} /> : <AlertTriangle size={20} />}
-                <span>{validationResult.message}</span>
+              <div className={`driver-notification ${validationResult.success ? 'success' : 'urgent'}`}>
+                <div className="flex items-start gap-3">
+                  <div className={`icon-badge icon-badge-sm ${validationResult.success ? 'bg-secondary-light text-secondary' : 'bg-accent-light text-accent'} mt-0.5`}>
+                    {validationResult.success ? <CheckCircle className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
+                  </div>
+                  <div>
+                    <div className="font-medium text-light-primary dark:text-dark-primary mb-1">
+                      {validationResult.success ? 'Validation Successful' : 'Validation Failed'}
+                    </div>
+                    <div className="text-sm text-light-secondary dark:text-dark-secondary">
+                      {validationResult.message}
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
+          </div>
         </div>
 
-        <div className="p-4 border-t border-light dark:border-dark flex justify-end space-x-3">
-            <button 
-              onClick={handleClose} 
-              className="btn btn-ghost" 
-              disabled={isLoading}
-            >
-              Cancel
-            </button>
-            <button 
-              onClick={handleValidation} 
-              className="btn btn-primary flex items-center gap-2 min-w-[120px]"
-              disabled={isLoading || !ticketId.trim()}
-            >
-              {isLoading ? (
-                <>
-                  <span className="loading loading-spinner loading-xs"></span>
-                  Validating...
-                </>
-              ) : 'Validate'}
-            </button>
+        <div className="driver-modal-footer">
+          <button
+            onClick={handleClose}
+            className="btn btn-ghost"
+            disabled={isLoading}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleValidation}
+            className="btn btn-primary flex items-center gap-2 min-w-[140px] shadow-primary"
+            disabled={isLoading || !ticketId.trim()}
+          >
+            {isLoading ? (
+              <>
+                <div className="driver-loading-spinner w-4 h-4"></div>
+                Validating...
+              </>
+            ) : (
+              <>
+                <CheckCircle className="h-4 w-4" />
+                Validate Ticket
+              </>
+            )}
+          </button>
         </div>
       </div>
     </div>

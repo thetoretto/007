@@ -857,6 +857,273 @@ a:hover {
 .dark .bg-base-200 { background-color: var(--dark); }
 .dark .bg-base-300 { background-color: var(--border-dark); }
 
+/* ===== DRIVER DASHBOARD STYLES ===== */
+
+/* Driver Dashboard Layout */
+.driver-dashboard {
+  min-height: 100vh;
+  background: var(--bg-light);
+  transition: var(--transition-theme);
+}
+
+.dark .driver-dashboard {
+  background: var(--bg-dark);
+}
+
+/* Enhanced Section Spacing */
+.driver-dashboard section {
+  margin-bottom: 2rem;
+}
+
+.driver-dashboard section:last-child {
+  margin-bottom: 0;
+}
+
+/* Improved Container Spacing */
+.driver-dashboard .container-app {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+@media (min-width: 640px) {
+  .driver-dashboard .container-app {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .driver-dashboard .container-app {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Driver Header */
+.driver-header {
+  background: var(--surface-light);
+  border-bottom: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  padding: 1.5rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  backdrop-filter: blur(8px);
+}
+
+.dark .driver-header {
+  background: var(--surface-dark);
+  border-color: var(--border-dark);
+}
+
+/* Driver Metrics Cards */
+.driver-metric-card {
+  background: var(--surface-light);
+  border: 1px solid var(--border-light);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: var(--shadow-md);
+  transition: var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.driver-metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.driver-metric-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.driver-metric-card:hover::before {
+  opacity: 1;
+}
+
+.dark .driver-metric-card {
+  background: var(--surface-dark);
+  border-color: var(--border-dark);
+}
+
+/* Enhanced Grid Spacing */
+.driver-dashboard .grid {
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .driver-dashboard .grid {
+    gap: 2rem;
+  }
+}
+
+/* Section Headers */
+.driver-dashboard h2 {
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.driver-dashboard .section-description {
+  margin-bottom: 1.5rem;
+  opacity: 0.8;
+}
+
+/* Driver Metric Values */
+.driver-metric-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--text-light-primary);
+  transition: var(--transition-theme);
+}
+
+.dark .driver-metric-value {
+  color: var(--text-dark-primary);
+}
+
+.driver-metric-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-light-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem;
+  transition: var(--transition-theme);
+}
+
+.dark .driver-metric-label {
+  color: var(--text-dark-secondary);
+}
+
+.driver-metric-change {
+  font-size: 0.75rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.driver-metric-change.positive {
+  color: var(--secondary);
+}
+
+.driver-metric-change.negative {
+  color: var(--accent);
+}
+
+/* Driver Trip Cards */
+.driver-trip-card {
+  background: var(--surface-light);
+  border: 1px solid var(--border-light);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-base);
+  cursor: pointer;
+  position: relative;
+}
+
+.driver-trip-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--primary-medium);
+}
+
+.driver-trip-card.selected {
+  border-color: var(--primary);
+  background: var(--primary-light);
+  box-shadow: var(--shadow-primary);
+}
+
+.dark .driver-trip-card {
+  background: var(--surface-dark);
+  border-color: var(--border-dark);
+}
+
+.dark .driver-trip-card.selected {
+  background: var(--primary-dark);
+}
+
+/* Driver Status Badges */
+.driver-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: var(--transition-base);
+}
+
+.driver-status-badge.online {
+  background: var(--secondary-light);
+  color: var(--secondary);
+  border: 1px solid var(--secondary-medium);
+}
+
+.driver-status-badge.offline {
+  background: var(--accent-light);
+  color: var(--accent);
+  border: 1px solid var(--accent-medium);
+}
+
+.driver-status-badge.busy {
+  background: var(--primary-light);
+  color: var(--primary-dark);
+  border: 1px solid var(--primary-medium);
+}
+
+/* Driver Quick Actions */
+.driver-quick-actions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.driver-quick-action {
+  background: var(--surface-light);
+  border: 1px solid var(--border-light);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  text-align: center;
+  transition: var(--transition-base);
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--text-light-primary);
+}
+
+.driver-quick-action:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
+  color: var(--text-light-primary);
+}
+
+.dark .driver-quick-action {
+  background: var(--surface-dark);
+  border-color: var(--border-dark);
+  color: var(--text-dark-primary);
+}
+
+.dark .driver-quick-action:hover {
+  color: var(--text-dark-primary);
+}
+
 /* ===== ANIMATIONS ===== */
 
 /* Scroll-triggered animations */
@@ -899,6 +1166,404 @@ a:hover {
 .animate-float-slow {
   animation: float-slow 10s ease-in-out infinite;
   animation-delay: 4s;
+}
+
+/* Driver Income Section */
+.driver-income-card {
+  background: linear-gradient(135deg, var(--primary-light), var(--primary-medium));
+  border: 1px solid var(--primary);
+  border-radius: 1rem;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.dark .driver-income-card {
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary-medium));
+}
+
+.driver-income-card::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.driver-income-value {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--text-on-primary);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.driver-income-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-on-primary);
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* Driver Progress Bars */
+.driver-progress-bar {
+  width: 100%;
+  height: 0.5rem;
+  background: var(--border-light);
+  border-radius: 0.25rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.dark .driver-progress-bar {
+  background: var(--border-dark);
+}
+
+.driver-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  border-radius: 0.25rem;
+  transition: width 0.8s ease;
+  position: relative;
+}
+
+.driver-progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Driver Vehicle Cards */
+.driver-vehicle-card {
+  background: var(--surface-light);
+  border: 1px solid var(--border-light);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-base);
+  position: relative;
+}
+
+.driver-vehicle-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.dark .driver-vehicle-card {
+  background: var(--surface-dark);
+  border-color: var(--border-dark);
+}
+
+.driver-vehicle-status {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  border: 2px solid var(--surface-light);
+}
+
+.driver-vehicle-status.active {
+  background: var(--secondary);
+  box-shadow: 0 0 0 2px var(--secondary-light);
+}
+
+.driver-vehicle-status.inactive {
+  background: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-light);
+}
+
+.driver-vehicle-status.maintenance {
+  background: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary-light);
+}
+
+/* Driver Settings Tabs */
+.driver-settings-nav {
+  background: var(--surface-light);
+  border-right: 1px solid var(--border-light);
+  min-height: 100vh;
+  padding: 1.5rem 0;
+}
+
+.dark .driver-settings-nav {
+  background: var(--surface-dark);
+  border-color: var(--border-dark);
+}
+
+.driver-settings-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  margin: 0.25rem 1rem;
+  border-radius: 0.5rem;
+  color: var(--text-light-secondary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: var(--transition-base);
+  cursor: pointer;
+  border: none;
+  background: none;
+  width: calc(100% - 2rem);
+  text-align: left;
+}
+
+.driver-settings-tab:hover {
+  background: var(--primary-light);
+  color: var(--text-light-primary);
+}
+
+.driver-settings-tab.active {
+  background: var(--primary);
+  color: var(--text-on-primary);
+  box-shadow: var(--shadow-primary);
+}
+
+.dark .driver-settings-tab {
+  color: var(--text-dark-secondary);
+}
+
+.dark .driver-settings-tab:hover {
+  background: var(--primary-dark);
+  color: var(--text-dark-primary);
+}
+
+.dark .driver-settings-tab.active {
+  color: var(--text-on-primary);
+}
+
+/* Driver Form Sections */
+.driver-form-section {
+  background: var(--surface-light);
+  border: 1px solid var(--border-light);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.dark .driver-form-section {
+  background: var(--surface-dark);
+  border-color: var(--border-dark);
+}
+
+.driver-form-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-light-primary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.dark .driver-form-title {
+  color: var(--text-dark-primary);
+}
+
+/* Driver Toggle Switches */
+.driver-toggle {
+  position: relative;
+  display: inline-block;
+  width: 3rem;
+  height: 1.5rem;
+}
+
+.driver-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.driver-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--border-light);
+  transition: var(--transition-base);
+  border-radius: 1.5rem;
+}
+
+.driver-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 1.125rem;
+  width: 1.125rem;
+  left: 0.1875rem;
+  bottom: 0.1875rem;
+  background: var(--white);
+  transition: var(--transition-base);
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
+}
+
+.driver-toggle input:checked + .driver-toggle-slider {
+  background: var(--primary);
+}
+
+.driver-toggle input:checked + .driver-toggle-slider:before {
+  transform: translateX(1.5rem);
+}
+
+.dark .driver-toggle-slider {
+  background: var(--border-dark);
+}
+
+.dark .driver-toggle-slider:before {
+  background: var(--light);
+}
+
+/* Driver Notification Cards */
+.driver-notification {
+  background: var(--surface-light);
+  border: 1px solid var(--border-light);
+  border-left: 4px solid var(--primary);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-base);
+}
+
+.driver-notification:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateX(4px);
+}
+
+.driver-notification.urgent {
+  border-left-color: var(--accent);
+  background: var(--accent-light);
+}
+
+.driver-notification.success {
+  border-left-color: var(--secondary);
+  background: var(--secondary-light);
+}
+
+.dark .driver-notification {
+  background: var(--surface-dark);
+  border-color: var(--border-dark);
+}
+
+.dark .driver-notification.urgent {
+  background: var(--accent-dark);
+}
+
+.dark .driver-notification.success {
+  background: var(--secondary-dark);
+}
+
+/* Driver Modal Enhancements */
+.driver-modal {
+  background: var(--surface-light);
+  border: 1px solid var(--border-light);
+  border-radius: 1rem;
+  box-shadow: var(--shadow-xl);
+  max-width: 32rem;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.dark .driver-modal {
+  background: var(--surface-dark);
+  border-color: var(--border-dark);
+}
+
+.driver-modal-header {
+  padding: 1.5rem;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: between;
+  gap: 1rem;
+}
+
+.dark .driver-modal-header {
+  border-color: var(--border-dark);
+}
+
+.driver-modal-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-light-primary);
+  flex: 1;
+}
+
+.dark .driver-modal-title {
+  color: var(--text-dark-primary);
+}
+
+.driver-modal-body {
+  padding: 1.5rem;
+}
+
+.driver-modal-footer {
+  padding: 1.5rem;
+  border-top: 1px solid var(--border-light);
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.dark .driver-modal-footer {
+  border-color: var(--border-dark);
+}
+
+/* Driver Loading States */
+.driver-loading-card {
+  background: var(--surface-light);
+  border: 1px solid var(--border-light);
+  border-radius: 0.75rem;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
+}
+
+.dark .driver-loading-card {
+  background: var(--surface-dark);
+  border-color: var(--border-dark);
+}
+
+.driver-loading-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 3px solid var(--border-light);
+  border-top: 3px solid var(--primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+.dark .driver-loading-spinner {
+  border-color: var(--border-dark);
+  border-top-color: var(--primary);
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Scale animations */
@@ -1524,14 +2189,43 @@ input.pl-12,
 .form-input.pl-12,
 .input-field.pl-10,
 .input-field.pl-12 {
-  padding-left: 3rem !important;
+  padding-left: 3.5rem !important;
 }
 
 /* Ensure consistent spacing for all icon inputs */
 .relative input[class*="pl-"],
 .relative .form-input[class*="pl-"],
 .relative .input-field[class*="pl-"] {
-  padding-left: 3rem !important;
+  padding-left: 3.5rem !important;
+}
+
+/* Enhanced icon positioning for better spacing */
+.relative .absolute.left-3 {
+  left: 1rem !important;
+}
+
+/* Special handling for date and time inputs */
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"] {
+  position: relative;
+}
+
+/* Fix for date/time inputs with icons */
+.relative input[type="date"].pl-10,
+.relative input[type="time"].pl-10,
+.relative input[type="datetime-local"].pl-10,
+.relative .input-field[type="date"],
+.relative .input-field[type="time"],
+.relative .input-field[type="datetime-local"] {
+  padding-left: 3.5rem !important;
+}
+
+/* Dropdown/Select with icons */
+.relative select.pl-10,
+.relative .form-select.pl-10 {
+  padding-left: 3.5rem !important;
+  padding-right: 3rem !important; /* Space for dropdown arrow */
 }
 
 /* Mobile responsive adjustments for form inputs */
@@ -1553,6 +2247,20 @@ input.pl-12,
     width: 1.125rem;
     height: 1.125rem;
   }
+
+  /* Mobile adjustments for icon inputs */
+  input.pl-10,
+  input.pl-12,
+  .form-input.pl-10,
+  .form-input.pl-12,
+  .input-field.pl-10,
+  .input-field.pl-12 {
+    padding-left: 3rem !important;
+  }
+
+  .relative .absolute.left-3 {
+    left: 0.75rem !important;
+  }
 }
 
 .form-error {
@@ -1562,6 +2270,60 @@ input.pl-12,
   align-items: center;
   gap: 0.5rem;
   margin-top: 0.25rem;
+}
+
+/* Additional icon collision prevention rules */
+.input-with-icon {
+  position: relative;
+}
+
+.input-with-icon input,
+.input-with-icon .form-input,
+.input-with-icon .input-field,
+.input-with-icon select,
+.input-with-icon .form-select {
+  padding-left: 3.5rem !important;
+}
+
+.input-with-icon .icon-left {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light-tertiary);
+  pointer-events: none;
+  z-index: 1;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.dark .input-with-icon .icon-left {
+  color: var(--text-dark-tertiary);
+}
+
+/* Focus state for icon inputs */
+.input-with-icon input:focus ~ .icon-left,
+.input-with-icon .form-input:focus ~ .icon-left,
+.input-with-icon .input-field:focus ~ .icon-left,
+.input-with-icon select:focus ~ .icon-left,
+.input-with-icon .form-select:focus ~ .icon-left {
+  color: var(--primary);
+}
+
+/* Ensure proper spacing for all input types */
+input[type="text"].pl-10,
+input[type="email"].pl-10,
+input[type="password"].pl-10,
+input[type="tel"].pl-10,
+input[type="url"].pl-10,
+input[type="search"].pl-10,
+input[type="number"].pl-10,
+input[type="date"].pl-10,
+input[type="time"].pl-10,
+input[type="datetime-local"].pl-10,
+select.pl-10,
+textarea.pl-10 {
+  padding-left: 3.5rem !important;
 }
 
 /* Button Styles */
@@ -1809,6 +2571,32 @@ input.pl-12,
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* Backdrop blur utilities */
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.backdrop-blur {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.backdrop-blur-lg {
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+.backdrop-blur-xl {
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
 }
 
 /* Icon badge utilities */

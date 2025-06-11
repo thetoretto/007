@@ -117,6 +117,7 @@ const Navbar: React.FC = () => {
           icon: <Settings className="h-5 w-5" />,
           roles: ['driver'],
           submenu: [
+            { path: `${basePath}/settings`, label: 'My Account' },
             { path: `${basePath}/vehicle`, label: 'Vehicle Management' }
           ]
         },

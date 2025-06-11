@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { MapPin, Calendar, Clock, User, Car, Filter, ArrowUpDown, Info, ChevronDown, ChevronUp, X, Sliders, Search, ArrowRight } from 'lucide-react';
 import MapDisplay, { generateMockRoute } from './MapDisplay';
-import { showNotification } from '../../utils/notifications';
+
 import ConfirmationModal from './ConfirmationModal';
 
 // Define types for reusability

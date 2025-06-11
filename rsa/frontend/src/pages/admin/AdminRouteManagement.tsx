@@ -25,6 +25,11 @@ const AdminRouteManagement: React.FC = () => {
   const [currentRoute, setCurrentRoute] = useState<Route | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  // Scroll to top on page load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const handleCreate = () => {
     setCurrentRoute(null); // Reset for new route
     setIsModalOpen(true);
@@ -64,105 +69,131 @@ const AdminRouteManagement: React.FC = () => {
   };
 
   return (
-    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
+    <div className="driver-dashboard">
       <ToastContainer />
 
-      <main className="container-app py-8 md:py-12">
-        <div className="mb-8 md:mb-12">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
-            <div className="flex-1 min-w-0 mb-4 md:mb-0">
-              <h1 className="text-2xl md:text-3xl font-bold text-text-light-primary dark:text-text-dark-primary transition-colors duration-300 flex items-center">
-                <MapPin className="h-7 w-7 mr-3 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
-                Route Management
-              </h1>
-              <p className="mt-1 text-sm text-text-light-secondary dark:text-text-dark-secondary transition-colors duration-300">
-                Manage travel routes and destinations
-              </p>
-            </div>
-            <div className="flex items-center">
-              <div className="flex items-center">
-                <button
-                  onClick={handleCreate}
-                  className="btn btn-accent w-full sm:w-auto inline-flex items-center justify-center gap-2 py-3 px-4"
-                  disabled={isLoading}
-                >
-                  <Plus size={16} />
-                  Create New Route
-                </button>
+      {/* Modern Header */}
+      <header className="driver-header mb-8">
+        <div className="container-app">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="icon-badge icon-badge-lg bg-primary text-on-primary">
+                  <MapPin className="h-6 w-6" />
+                </div>
+                <div>
+                  <h1 className="text-2xl lg:text-3xl font-bold text-light-primary dark:text-dark-primary">
+                    Route Management
+                  </h1>
+                  <p className="text-sm text-light-secondary dark:text-dark-secondary">
+                    Manage travel routes and destinations
+                  </p>
+                </div>
+              </div>
+              <div className="driver-status-badge online">
+                <div className="w-2 h-2 bg-secondary rounded-full animate-pulse"></div>
+                {routes.length} Routes Active
               </div>
             </div>
-          </div>
 
-          {/* Route Table */}
-          <div className="card rounded-lg shadow-sm overflow-hidden">
-            {isLoading && (
-              <div className="absolute inset-0 bg-gray-100 dark:bg-gray-800 bg-opacity-50 dark:bg-opacity-50 flex items-center justify-center z-10 transition-colors duration-300">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary-600 dark:border-primary-400 transition-colors duration-300"></div>
-              </div>
-            )}
-            
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
-                <thead className="bg-gray-100 dark:bg-gray-800 transition-colors duration-300">
-                  <tr>
-                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Name</th>
-                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell transition-colors duration-300">Origin</th>
-                    <th className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell transition-colors duration-300">Destination</th>
-                    <th className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
-                  {routes.map((route) => (
-                    <tr key={route.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900 dark:text-white transition-colors duration-300">{route.name}</div>
-                        <div className="text-xs text-gray-600 dark:text-gray-400 mt-1 sm:hidden transition-colors duration-300">
-                          {route.origin} <ChevronRight size={12} className="inline mx-1 text-gray-400 dark:text-gray-500 transition-colors duration-300" /> {route.destination}
-                        </div>
-                      </td>
-                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 hidden sm:table-cell transition-colors duration-300">{route.origin}</td>
-                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 hidden sm:table-cell transition-colors duration-300">{route.destination}</td>
-                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex justify-end items-center space-x-2">
-                          <button 
-                            onClick={() => handleEdit(route)} 
-                            className="btn btn-ghost btn-sm text-primary-600 dark:text-primary-400 p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
-                            aria-label={`Edit route ${route.name}`}
-                          >
-                            <Edit2 size={16} />
-                          </button>
-                          <button 
-                            onClick={() => handleDelete(route.id)} 
-                            className="btn btn-ghost btn-sm text-error dark:text-error-light p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
-                            aria-label={`Delete route ${route.name}`}
-                          >
-                            <Trash size={16} />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                  {routes.length === 0 && (
-                    <tr>
-                      <td colSpan={4} className="px-6 py-8 text-center card">
-                        <div className="flex flex-col items-center">
-                          <MapPin className="h-12 w-12 text-gray-400 dark:text-gray-500 mb-3 transition-colors duration-300" />
-                          <p className="text-gray-600 dark:text-gray-300 mb-4 transition-colors duration-300">No routes found.</p>
-                          <button 
-                            onClick={handleCreate}
-                            className="btn btn-accentbtn-sm inline-flex items-center gap-2"
-                          >
-                             <Plus size={16} /> Create your first route
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  )}
-                </tbody>
-              </table>
+            <div className="flex flex-wrap gap-3 items-center">
+              <button
+                onClick={handleCreate}
+                className="btn btn-primary flex items-center gap-2 px-4 py-3 shadow-primary"
+                disabled={isLoading}
+              >
+                <Plus className="h-5 w-5" />
+                Create New Route
+              </button>
             </div>
           </div>
         </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container-app py-8">
+        <section className="mb-8">
+
+          <div className="driver-metric-card overflow-hidden">
+            {isLoading && (
+              <div className="absolute inset-0 bg-light dark:bg-dark bg-opacity-50 flex items-center justify-center z-10">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+              </div>
+            )}
+
+            <div className="flex items-center gap-3 mb-6">
+              <div className="icon-badge icon-badge-md bg-primary-light text-primary">
+                <MapPin className="h-5 w-5" />
+              </div>
+              <h2 className="text-xl font-semibold text-light-primary dark:text-dark-primary">
+                All Routes ({routes.length})
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 gap-4">
+              {routes.map((route) => (
+                <div key={route.id} className="driver-trip-card group">
+                  <div className="flex justify-between items-start mb-3">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-light-primary dark:text-dark-primary mb-1">
+                        {route.name}
+                      </h3>
+                      <div className="driver-status-badge online">
+                        Active Route
+                      </div>
+                    </div>
+                    <div className="icon-badge icon-badge-sm bg-primary-light text-primary">
+                      <MapPin className="h-4 w-4" />
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-4 text-sm text-light-secondary dark:text-dark-secondary mb-3">
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4 text-primary" />
+                      {route.origin}
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-light-tertiary dark:text-dark-tertiary" />
+                    <div className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4 text-secondary" />
+                      {route.destination}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-end gap-2">
+                    <button
+                      onClick={() => handleEdit(route)}
+                      className="btn btn-ghost btn-sm text-primary p-1"
+                      aria-label={`Edit route ${route.name}`}
+                    >
+                      <Edit2 size={14} />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(route.id)}
+                      className="btn btn-ghost btn-sm text-accent p-1"
+                      aria-label={`Delete route ${route.name}`}
+                    >
+                      <Trash size={14} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+
+              {routes.length === 0 && (
+                <div className="text-center py-12 bg-light dark:bg-dark rounded-lg">
+                  <MapPin className="mx-auto h-12 w-12 text-light-tertiary dark:text-dark-tertiary mb-3" />
+                  <h3 className="text-sm font-medium text-light-primary dark:text-dark-primary mb-2">No routes found</h3>
+                  <p className="text-light-secondary dark:text-dark-secondary mb-4">Create your first route to get started.</p>
+                  <button
+                    onClick={handleCreate}
+                    className="btn btn-primary btn-sm inline-flex items-center gap-2"
+                  >
+                     <Plus size={16} /> Create your first route
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
 
         {/* Modal for Create/Edit Route */}
         {isModalOpen && (

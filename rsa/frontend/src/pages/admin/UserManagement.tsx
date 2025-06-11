@@ -62,6 +62,11 @@ const UserManagement: React.FC = () => {
     phoneNumber: ''
   });
 
+  // Scroll to top on page load
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const userStats = useMemo(() => {
     const total = users.length;
     const passengers = users.filter(u => u.role === 'passenger').length;
@@ -201,59 +206,102 @@ const UserManagement: React.FC = () => {
   };
 
   return (
-    <div className="bg-background-light dark:bg-background-dark text-text-light-primary dark:text-text-dark-primary transition-colors duration-300">
+    <div className="driver-dashboard">
       <ToastContainer />
 
-      <main className="container-app py-8 md:py-12">
-        {/* Dashboard Stats Section */}
-        <div className="mb-8 md:mb-12">
-          <h2 className="text-xl sm:text-2xl font-semibold mb-4 text-gray-900 dark:text-white transition-colors duration-300">User Overview</h2>
+      {/* Modern Header */}
+      <header className="driver-header mb-8">
+        <div className="container-app">
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="icon-badge icon-badge-lg bg-primary text-on-primary">
+                  <Users className="h-6 w-6" />
+                </div>
+                <div>
+                  <h1 className="text-2xl lg:text-3xl font-bold text-light-primary dark:text-dark-primary">
+                    User Management
+                  </h1>
+                  <p className="text-sm text-light-secondary dark:text-dark-secondary">
+                    Manage all users across the platform
+                  </p>
+                </div>
+              </div>
+              <div className="driver-status-badge online">
+                <div className="w-2 h-2 bg-secondary rounded-full animate-pulse"></div>
+                {userStats.total} Users Active
+              </div>
+            </div>
+
+            <div className="flex flex-wrap gap-3 items-center">
+              <button
+                onClick={openAddModal}
+                className="btn btn-primary flex items-center gap-2 px-4 py-3 shadow-primary"
+                disabled={isLoading}
+              >
+                <UserPlus className="h-5 w-5" />
+                Add User
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="container-app py-8">
+        {/* Key Metrics Section */}
+        <section className="mb-8">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {Object.entries(userStats).map(([key, value]) => (
-              <div key={key} className="card p-4">
-                <h3 className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-300 capitalize truncate transition-colors duration-300">{key === 'total' ? 'Total Users' : key}</h3>
-                <p className="mt-1 text-2xl sm:text-3xl font-semibold text-gray-900 dark:text-white transition-colors duration-300">{value}</p>
+              <div key={key} className="driver-metric-card">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="driver-metric-label">{key === 'total' ? 'Total Users' : key}</div>
+                  <div className={`icon-badge icon-badge-sm ${
+                    key === 'total' ? 'bg-primary-light text-primary' :
+                    key === 'active' ? 'bg-secondary-light text-secondary' :
+                    key === 'admins' ? 'bg-accent-light text-accent' :
+                    'bg-primary-light text-primary'
+                  }`}>
+                    <Users className="h-4 w-4" />
+                  </div>
+                </div>
+                <div className="driver-metric-value text-2xl">{value}</div>
+                <div className="driver-progress-bar mt-2">
+                  <div
+                    className="driver-progress-fill"
+                    style={{ width: `${Math.min((value / userStats.total) * 100, 100)}%` }}
+                  ></div>
+                </div>
               </div>
             ))}
           </div>
-        </div>
+        </section>
 
         {/* User Management Table Section */}
-        <div className="mb-8 md:mb-12">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
-          <div className="flex-1 min-w-0 mb-4 sm:mb-0">
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white transition-colors duration-300 flex items-center">
-                <Users className="h-7 w-7 mr-3 text-primary-600 dark:text-primary-400 transition-colors duration-300" />
-              User Management
-            </h1>
-              <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
-              Manage all users across the platform
-            </p>
-          </div>
-          <div className="mt-4 flex sm:mt-0 sm:ml-4">
-            <button 
-              onClick={openAddModal} 
-                className="btn btn-accent inline-flex items-center w-full sm:w-auto justify-center gap-2 py-3 px-4"
-              disabled={isLoading}
-            >
-                <UserPlus className="h-4 w-4" />
-              Add User
-            </button>
-          </div>
-        </div>
+        <section className="mb-8">
+          <div className="driver-metric-card overflow-hidden">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center gap-3">
+                <div className="icon-badge icon-badge-md bg-primary-light text-primary">
+                  <Users className="h-5 w-5" />
+                </div>
+                <h2 className="text-xl font-semibold text-light-primary dark:text-dark-primary">
+                  All Users ({filteredUsers.length})
+                </h2>
+              </div>
+            </div>
 
-          <div className="card rounded-lg shadow-sm overflow-hidden">
-            <div className="px-4 sm:px-6 lg:px-8 py-4 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <h2 className="text-lg font-medium text-gray-900 dark:text-white transition-colors duration-300">Users ({filteredUsers.length})</h2>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+              <div className="text-sm text-light-secondary dark:text-dark-secondary">
+                Manage user accounts and permissions
+              </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full md:w-auto">
                 {/* Role Filter */}
                 <div className="flex-1 sm:flex-none">
-                  <label htmlFor="role-filter" className="sr-only">Role:</label>
                   <select
                     id="role-filter"
-                      className="form-select block w-full text-sm rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:focus:ring-primary-500 dark:focus:border-primary-500 transition-colors duration-300"
+                    className="form-select block w-full text-sm rounded-lg"
                     value={roleFilter}
                     onChange={handleRoleFilterChange}
                   >
@@ -266,10 +314,9 @@ const UserManagement: React.FC = () => {
 
                 {/* Status Filter */}
                 <div className="flex-1 sm:flex-none">
-                  <label htmlFor="status-filter" className="sr-only">Status:</label>
                   <select
                     id="status-filter"
-                      className="form-select block w-full text-sm rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:focus:ring-primary-500 dark:focus:border-primary-500 transition-colors duration-300"
+                    className="form-select block w-full text-sm rounded-lg"
                     value={statusFilter}
                     onChange={handleStatusFilterChange}
                   >
@@ -280,13 +327,13 @@ const UserManagement: React.FC = () => {
                 </div>
 
                 {/* Search Input */}
-                  <div className="relative flex-1 sm:flex-none md:w-48">
+                <div className="relative flex-1 sm:flex-none md:w-48">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Search className="h-4 w-4 text-gray-400 dark:text-gray-500 transition-colors duration-300" />
+                    <Search className="h-4 w-4 text-light-tertiary dark:text-dark-tertiary" />
                   </div>
                   <input
                     type="text"
-                      className="form-input pl-10 pr-4 py-2 block w-full text-sm rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-gray-300 dark:focus:ring-primary-500 dark:focus:border-primary-500 transition-colors duration-300"
+                    className="form-input pl-10 pr-4 py-2 block w-full text-sm rounded-lg"
                     placeholder="Search users..."
                     value={searchTerm}
                     onChange={handleSearch}
@@ -294,106 +341,81 @@ const UserManagement: React.FC = () => {
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
-                <thead className="bg-gray-50 dark:bg-gray-800 transition-colors duration-300">
-                  <tr>
-                    <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Name</th>
-                    <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider hidden md:table-cell transition-colors duration-300">Email</th>
-                    <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Role</th>
-                    <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider hidden sm:table-cell transition-colors duration-300">Status</th>
-                    <th scope="col" className="px-4 sm:px-6 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider hidden lg:table-cell transition-colors duration-300">Joined</th>
-                    <th scope="col" className="px-4 sm:px-6 py-3 text-right text-xs font-medium text-gray-600 dark:text-gray-300 uppercase tracking-wider transition-colors duration-300">Actions</th>
-                </tr>
-              </thead>
-                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700 transition-colors duration-300">
-                {isLoading && filteredUsers.length === 0 && (
-                  <tr>
-                      <td colSpan={6} className="px-6 py-10 text-center text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
-                        <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary-600 dark:border-primary-400 mb-2 transition-colors duration-300"></div>
-                      <div>Loading users...</div>
-                    </td>
-                  </tr>
-                )}
-                {!isLoading && filteredUsers.length === 0 ? (
-                  <tr>
-                      <td colSpan={6} className="px-6 py-10 text-center text-sm text-gray-600 dark:text-gray-300 transition-colors duration-300">
-                      No users found matching your criteria.
-                    </td>
-                  </tr>
-                ) : (
-                  filteredUsers.map((u) => (
-                    <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
-                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                            <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary-100 dark:bg-primary-700 flex items-center justify-center transition-colors duration-300">
-                              <span className="text-primary-800 dark:text-primary-100 font-medium transition-colors duration-300">
-                              {u.firstName?.[0]?.toUpperCase()}{u.lastName?.[0]?.toUpperCase()}
-                            </span>
-                          </div>
-                          <div className="ml-3 sm:ml-4">
-                              <div className="text-sm font-medium text-gray-900 dark:text-white transition-colors duration-300">{u.firstName} {u.lastName}</div>
-                              <div className="text-xs text-gray-600 dark:text-gray-400 md:hidden transition-colors duration-300">{u.email}</div>
-                          </div>
+            <div className="grid grid-cols-1 gap-4">
+              {isLoading && filteredUsers.length === 0 && (
+                <div className="text-center py-10">
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-primary mb-2"></div>
+                  <div className="text-light-secondary dark:text-dark-secondary">Loading users...</div>
+                </div>
+              )}
+              {!isLoading && filteredUsers.length === 0 ? (
+                <div className="text-center py-10">
+                  <div className="text-light-secondary dark:text-dark-secondary">No users found matching your criteria.</div>
+                </div>
+              ) : (
+                filteredUsers.map((u) => (
+                  <div key={u.id} className="driver-trip-card group">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-3 flex-1">
+                        <div className="icon-badge icon-badge-md bg-primary-light text-primary">
+                          <span className="font-medium text-sm">
+                            {u.firstName?.[0]?.toUpperCase()}{u.lastName?.[0]?.toUpperCase()}
+                          </span>
                         </div>
-                      </td>
-                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 hidden md:table-cell transition-colors duration-300">{u.email}</td>
-                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap">
-                          <span className={`badge ${
-                            u.role === 'admin' ? 'badge-error' : // Using error badge for admin role for visibility
-                            u.role === 'driver' ? 'badge-success' :
-                            'badge-primary' // Using primary badge for passenger role
-                          }`}>
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-light-primary dark:text-dark-primary">
+                            {u.firstName} {u.lastName}
+                          </h3>
+                          <p className="text-sm text-light-secondary dark:text-dark-secondary">{u.email}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className={`driver-status-badge ${
+                          u.role === 'admin' ? 'busy' :
+                          u.role === 'driver' ? 'online' :
+                          'offline'
+                        }`}>
                           {u.role}
-                        </span>
-                      </td>
-                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap hidden sm:table-cell">
-                        <button 
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-4 text-sm text-light-secondary dark:text-dark-secondary">
+                        <button
                           onClick={() => handleToggleUserStatus(u.id, u.status as UserStatus)}
-                            className={`px-2 py-0.5 inline-flex text-xs leading-5 font-semibold rounded-full transition-opacity hover:opacity-80 transition-colors duration-300 ${u.status === 'active' ? 'badge-success' : 'badge-error'}`}
-                          aria-label={`Toggle status for ${u.firstName} ${u.lastName}, current status ${u.status}`}
+                          className={`driver-status-badge ${u.status === 'active' ? 'online' : 'offline'}`}
                         >
                           {u.status}
                         </button>
-                      </td>
-                        <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-600 dark:text-gray-300 hidden lg:table-cell transition-colors duration-300">
-                        {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}
-                      </td>
-                      <td className="px-4 sm:px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <div className="flex justify-end items-center space-x-1 sm:space-x-2">
-                          <button
-                            onClick={() => openEditModal(u)}
-                              className="btn btn-ghost btn-sm text-primary-600 dark:text-primary-400 p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
-                            title="Edit User"
-                          >
-                            <Edit className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDeleteUser(u.id)}
-                              className="btn btn-ghost btn-sm text-error dark:text-error-light p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300"
-                            title="Delete User"
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                          <button
-                            onClick={() => handleToggleUserStatus(u.id, u.status as UserStatus)}
-                              className={`sm:hidden p-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-300 ${u.status === 'active' ? 'text-success' : 'text-error'}`}
-                            title={u.status === 'active' ? "Deactivate User" : "Activate User"}
-                          >
-                            {u.status === 'active' ? <CheckCircle className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                        <span className="text-xs">
+                          Joined: {u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => openEditModal(u)}
+                          className="btn btn-ghost btn-sm text-primary p-1"
+                          title="Edit User"
+                        >
+                          <Edit className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteUser(u.id)}
+                          className="btn btn-ghost btn-sm text-accent p-1"
+                          title="Delete User"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Add User Modal */}
         <Modal isOpen={isAddModalOpen} onClose={closeAddModal} title="Add New User" size="lg">

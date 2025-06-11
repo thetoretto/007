@@ -1,8 +1,20 @@
 import '../../index.css';
 import React, { useState, useEffect } from 'react';
-import useVehicleStore, { Vehicle } from '../../store/vehicleStore';
+import useVehicleStore from '../../store/vehicleStore';
 import useAuthStore from '../../store/authStore';
-import { Plus, Edit, Trash2, Save, X, Car, Users, Hash, User as UserIcon, Briefcase } from 'lucide-react'; // Added Briefcase for Brand, UserIcon for Driver ID
+import { Plus, Edit, Trash2, Save, X, Car, Users, Settings, AlertTriangle } from 'lucide-react';
+
+interface Vehicle {
+  id: string;
+  brand: string;
+  model: string;
+  licensePlate: string;
+  type: string;
+  capacity: number;
+  isActive?: boolean;
+  driverId?: string;
+  features?: string[];
+}
 
 interface VehicleManagementProps {
   userRole: 'driver' | 'admin';
@@ -10,7 +22,9 @@ interface VehicleManagementProps {
 
 const VehicleManagement: React.FC<VehicleManagementProps> = ({ userRole }) => {
   const { user } = useAuthStore();
-  const { vehicles, fetchVehicles, addVehicle, updateVehicle, deleteVehicle, loading, error } = useVehicleStore(); // Added loading/error
+  const { vehicles, fetchVehicles, addVehicle, updateVehicle, removeVehicle } = useVehicleStore();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [vehicleToEdit, setVehicleToEdit] = useState<Vehicle | null>(null);
   // Initialize capacity as string for form input, but it will be number in Vehicle type
@@ -26,11 +40,23 @@ const VehicleManagement: React.FC<VehicleManagementProps> = ({ userRole }) => {
   });
 
   useEffect(() => {
-    if (userRole === 'admin') {
-      fetchVehicles(); 
-    } else if (user?.id && userRole === 'driver') {
-      fetchVehicles(user.id); 
-    }
+    const loadVehicles = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        if (userRole === 'admin') {
+          await fetchVehicles();
+        } else if (user?.id && userRole === 'driver') {
+          await fetchVehicles();
+        }
+      } catch (err) {
+        setError('Failed to load vehicles');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadVehicles();
   }, [user?.id, userRole, fetchVehicles]);
 
   useEffect(() => {
@@ -133,8 +159,15 @@ const VehicleManagement: React.FC<VehicleManagementProps> = ({ userRole }) => {
   };
 
   const handleDelete = async (id: string) => {
-    if (window.confirm('Are you sure you want to delete this vehicle?')) { // Replace with styled confirmation modal
-      await deleteVehicle(id);
+    if (window.confirm('Are you sure you want to delete this vehicle?')) {
+      try {
+        setLoading(true);
+        await removeVehicle(id);
+      } catch (err) {
+        setError('Failed to delete vehicle');
+      } finally {
+        setLoading(false);
+      }
     }
   };
   
@@ -143,181 +176,373 @@ const VehicleManagement: React.FC<VehicleManagementProps> = ({ userRole }) => {
 
 
   return (
-    <div className="card p-4 sm:p-6">
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 pb-4 border-b border-light dark:border-dark gap-3">
-        <div>
-            <h2 className="text-xl sm:text-2xl font-semibold text-light-primary dark:text-dark-primary">Vehicle Fleet</h2>
-            <p className="text-sm text-light-secondary dark:text-dark-secondary mt-1">
-                {userRole === 'admin' ? 'Manage all registered vehicles.' : 'Manage your personal vehicles.'}
-            </p>
+    <div className="card p-6">
+      <div className="driver-header mb-8">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <div className="icon-badge icon-badge-lg bg-accent text-on-accent">
+              <Car className="h-6 w-6" />
+            </div>
+            <div>
+              <h2 className="text-2xl font-bold text-light-primary dark:text-dark-primary">
+                Vehicle Fleet
+              </h2>
+              <p className="text-light-secondary dark:text-dark-secondary mt-1">
+                {userRole === 'admin' ? 'Manage all registered vehicles in the system.' : 'Manage your personal vehicle fleet.'}
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => handleOpenModal()}
+            className="btn btn-primary flex items-center gap-2 shadow-primary"
+          >
+            <Plus className="h-5 w-5" />
+            Add Vehicle
+          </button>
         </div>
-        <button
-          onClick={() => handleOpenModal()}
-          className="btn btn-accent flex items-center gap-2 w-full sm:w-auto py-3 px-4"
-        >
-          <Plus size={20} />
-          Add Vehicle
-        </button>
       </div>
 
-      {loading && <div className="loading loading-lg text-primary mx-auto my-6"></div>} 
-      {error && <div className="alert alert-error my-4"><AlertTriangle className="h-5 w-5"/> {error}</div>} 
+      {loading && (
+        <div className="driver-loading-card">
+          <div className="driver-loading-spinner mx-auto mb-4"></div>
+          <h3 className="text-lg font-semibold text-light-primary dark:text-dark-primary mb-2">
+            Loading Vehicles
+          </h3>
+          <p className="text-light-secondary dark:text-dark-secondary">
+            Please wait while we fetch your vehicle information...
+          </p>
+        </div>
+      )}
+
+      {error && (
+        <div className="driver-notification urgent">
+          <div className="flex items-start gap-3">
+            <div className="icon-badge icon-badge-sm bg-accent-light text-accent mt-0.5">
+              <AlertTriangle className="h-4 w-4" />
+            </div>
+            <div>
+              <div className="font-medium text-light-primary dark:text-dark-primary mb-1">
+                Error Loading Vehicles
+              </div>
+              <div className="text-sm text-light-secondary dark:text-dark-secondary">
+                {error}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {!loading && vehicles.length === 0 && !error && (
-         <div className="text-center py-10 px-6 bg-surface-light dark:bg-surface-dark rounded-lg">
-            <Car size={48} className="mx-auto text-light-tertiary dark:text-dark-tertiary mb-4" />
-            <h3 className="text-lg font-semibold text-light-primary dark:text-dark-primary">No Vehicles Found</h3>
-            <p className="text-sm text-light-secondary dark:text-dark-secondary mt-1">
-                {userRole === 'driver' ? 'You haven\'t added any vehicles yet.' : 'There are no vehicles in the system.'}
-            </p>
-            <button
-              onClick={() => handleOpenModal()}
-              className="btn btn-secondary  mt-6 py-3 px-4"
-            >
-              <Plus size={18} className="mr-1" />
-              Add Your First Vehicle
-            </button>
+        <div className="driver-loading-card py-16">
+          <div className="icon-badge icon-badge-xl bg-accent-light text-accent mx-auto mb-6">
+            <Car className="h-8 w-8" />
+          </div>
+          <h3 className="text-xl font-semibold text-light-primary dark:text-dark-primary mb-3">
+            No Vehicles Found
+          </h3>
+          <p className="text-light-secondary dark:text-dark-secondary mb-6 max-w-md mx-auto">
+            {userRole === 'driver'
+              ? 'You haven\'t added any vehicles yet. Add your first vehicle to start managing your fleet.'
+              : 'There are no vehicles in the system. Add the first vehicle to get started.'
+            }
+          </p>
+          <button
+            onClick={() => handleOpenModal()}
+            className="btn btn-primary flex items-center gap-2 mx-auto shadow-primary"
+          >
+            <Plus className="h-4 w-4" />
+            Add Your First Vehicle
+          </button>
         </div>
       )}
 
       {!loading && vehicles.length > 0 && (
-        <div className="overflow-x-auto rounded-lg border border-light dark:border-dark">
-          <table className="min-w-full divide-y divide-light dark:divide-dark table-auto">
-            <thead className="bg-surface-light dark:bg-surface-dark">
-              <tr>
-                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-light-tertiary dark:text-dark-tertiary uppercase tracking-wider">Brand/Model</th>
-                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-light-tertiary dark:text-dark-tertiary uppercase tracking-wider">License Plate</th>
-                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-light-tertiary dark:text-dark-tertiary uppercase tracking-wider hidden md:table-cell">Type</th>
-                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-light-tertiary dark:text-dark-tertiary uppercase tracking-wider text-center">Capacity</th>
-                <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-light-tertiary dark:text-dark-tertiary uppercase tracking-wider text-center hidden sm:table-cell">Status</th>
-                {userRole === 'admin' && (
-                  <th scope="col" className="px-4 py-3 text-left text-xs font-semibold text-light-tertiary dark:text-dark-tertiary uppercase tracking-wider hidden lg:table-cell">Driver ID</th>
-                )}
-                <th scope="col" className="px-4 py-3 text-center text-xs font-semibold text-light-tertiary dark:text-dark-tertiary uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-surface-light dark:bg-surface-dark divide-y divide-light dark:divide-dark">
-              {vehicles.map((vehicle) => (
-                <tr key={vehicle.id} className="hover:bg-light dark:hover:bg-dark transition-colors duration-150">
-                  <td className="px-4 py-3 whitespace-nowrap text-sm">
-                    <div className="font-medium text-light-primary dark:text-dark-primary">{vehicle.brand}</div>
-                    <div className="text-xs text-light-tertiary dark:text-dark-tertiary">{vehicle.model}</div>
-                  </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-light-primary dark:text-dark-primary font-mono">{vehicle.licensePlate}</td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-light-secondary dark:text-dark-secondary hidden md:table-cell">{vehicle.type}</td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-light-primary dark:text-dark-primary text-center">{vehicle.capacity}</td>
-                  <td className="px-4 py-3 whitespace-nowrap text-sm text-center hidden sm:table-cell">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${vehicle.isActive ? 'bg-success-soft text-success' : 'bg-error-soft text-error'}`}>
-                        {vehicle.isActive ? 'Active' : 'Inactive'}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-light-primary dark:text-dark-primary">
+              Vehicle Fleet ({vehicles.length})
+            </h3>
+            <div className="driver-status-badge online">
+              {vehicles.filter(v => v.isActive).length} Active
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            {vehicles.map((vehicle) => (
+              <div key={vehicle.id} className="driver-vehicle-card">
+                <div className={`driver-vehicle-status ${vehicle.isActive ? 'active' : 'inactive'}`}></div>
+
+                <div className="flex items-start justify-between mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="icon-badge icon-badge-md bg-accent-light text-accent">
+                      <Car className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <h4 className="font-semibold text-light-primary dark:text-dark-primary">
+                        {vehicle.brand} {vehicle.model}
+                      </h4>
+                      <p className="text-sm text-light-secondary dark:text-dark-secondary">
+                        {vehicle.type}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="space-y-3 mb-4">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-light-secondary dark:text-dark-secondary">License Plate</span>
+                    <span className="font-mono text-light-primary dark:text-dark-primary">
+                      {vehicle.licensePlate}
                     </span>
-                  </td>
+                  </div>
+
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-light-secondary dark:text-dark-secondary">Capacity</span>
+                    <div className="flex items-center gap-1">
+                      <Users className="h-3 w-3" />
+                      <span className="text-light-primary dark:text-dark-primary">
+                        {vehicle.capacity} seats
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-light-secondary dark:text-dark-secondary">Status</span>
+                    <div className={`driver-status-badge ${vehicle.isActive ? 'online' : 'offline'}`}>
+                      {vehicle.isActive ? 'Active' : 'Inactive'}
+                    </div>
+                  </div>
+
                   {userRole === 'admin' && (
-                    <td className="px-4 py-3 whitespace-nowrap text-sm text-light-secondary dark:text-dark-secondary hidden lg:table-cell">{vehicle.driverId || 'N/A'}</td>
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-light-secondary dark:text-dark-secondary">Driver ID</span>
+                      <span className="text-light-primary dark:text-dark-primary">
+                        {vehicle.driverId || 'Unassigned'}
+                      </span>
+                    </div>
                   )}
-                  <td className="px-4 py-3 whitespace-nowrap text-center text-sm font-medium space-x-1">
-                    <button
-                      onClick={() => handleOpenModal(vehicle)}
-                      className="btn btn-ghost btn-xs text-primary hover:bg-primary-soft dark:text-primary-300 dark:hover:bg-primary-800"
-                      title="Edit Vehicle"
-                    >
-                      <Edit size={16} />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(vehicle.id)}
-                      className="btn btn-ghost btn-xs text-error hover:bg-error-soft dark:hover:bg-error-800"
-                      title="Delete Vehicle"
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+                </div>
+
+                <div className="flex gap-2 pt-4 border-t border-light dark:border-dark">
+                  <button
+                    onClick={() => handleOpenModal(vehicle)}
+                    className="btn btn-ghost btn-sm flex items-center gap-2 flex-1"
+                    title="Edit Vehicle"
+                  >
+                    <Edit className="h-4 w-4" />
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => handleDelete(vehicle.id)}
+                    className="btn btn-ghost btn-sm flex items-center gap-2 text-accent hover:bg-accent-light"
+                    title="Delete Vehicle"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       )}
 
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fadeIn">
-          <div className="card w-full max-w-lg transform transition-all duration-300 ease-out scale-100 opacity-100">
-            <div className="flex justify-between items-center p-4 border-b border-light dark:border-dark">
-              <h3 className="text-lg font-semibold text-light-primary dark:text-dark-primary">
-                {vehicleToEdit ? 'Edit Vehicle Details' : 'Register New Vehicle'}
-              </h3>
-              <button onClick={handleCloseModal} className="btn btn-sm btn-ghost text-light-tertiary dark:text-dark-tertiary hover:bg-light dark:hover:bg-dark" aria-label="Close modal">
-                <X size={20} />
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+          <div className="driver-modal max-w-2xl w-full animate-scale-in">
+            <div className="driver-modal-header">
+              <div className="flex items-center gap-3">
+                <div className="icon-badge icon-badge-md bg-accent-light text-accent">
+                  <Car className="h-5 w-5" />
+                </div>
+                <div className="driver-modal-title">
+                  {vehicleToEdit ? 'Edit Vehicle Details' : 'Register New Vehicle'}
+                </div>
+              </div>
+              <button onClick={handleCloseModal} className="btn btn-ghost btn-sm p-2">
+                <X className="h-5 w-5" />
               </button>
             </div>
-            <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 max-h-[80vh] overflow-y-auto">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label htmlFor="brand" className="form-label flex items-center"><Briefcase size={14} className="mr-1.5 text-light-tertiary dark:text-dark-tertiary"/>Brand</label>
-                  <input type="text" id="brand" name="brand" value={formData.brand} onChange={handleChange} required className="form-input" placeholder="e.g., Toyota" />
-                </div>
-                <div>
-                  <label htmlFor="model" className="form-label flex items-center"><Car size={14} className="mr-1.5 text-light-tertiary dark:text-dark-tertiary"/>Model</label>
-                  <input type="text" id="model" name="model" value={formData.model} onChange={handleChange} required className="form-input" placeholder="e.g., Camry" />
-                </div>
-              </div>
-              
-              <div>
-                  <label htmlFor="type" className="form-label flex items-center"><Car size={14} className="mr-1.5 text-light-tertiary dark:text-dark-tertiary"/>Vehicle Type</label>
-                  <select id="type" name="type" value={formData.type} onChange={handleChange} required className="form-select w-full">
-                    {vehicleTypes.map(type => <option key={type} value={type.toLowerCase()}>{type}</option>)}
-                  </select>
-              </div>
-
-              {userRole === 'admin' && (
-                <div>
-                  <label htmlFor="driverId" className="form-label flex items-center"><UserIcon size={14} className="mr-1.5 text-light-tertiary dark:text-dark-tertiary"/>Driver ID (Optional)</label>
-                  <input type="text" id="driverId" name="driverId" value={formData.driverId} onChange={handleChange} className="form-input" placeholder="Assign Driver ID" />
-                </div>
-              )}
-              <div>
-                <label htmlFor="licensePlate" className="form-label flex items-center"><Hash size={14} className="mr-1.5 text-light-tertiary dark:text-dark-tertiary"/>License Plate</label>
-                <input type="text" id="licensePlate" name="licensePlate" value={formData.licensePlate} onChange={handleChange} required className="form-input" placeholder="e.g., RAE 123 X" />
-              </div>
-              <div>
-                <label htmlFor="capacity" className="form-label flex items-center"><Users size={14} className="mr-1.5 text-light-tertiary dark:text-dark-tertiary"/>Capacity (Seats)</label>
-                <input type="number" id="capacity" name="capacity" value={formData.capacity} onChange={handleChange} required min="1" className="form-input" placeholder="e.g., 4" />
-              </div>
-              
-              <div>
-                  <label className="form-label block">Features (Optional)</label>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 p-3 border border-light dark:border-dark rounded-md bg-surface-light dark:bg-surface-dark">
-                    {commonFeatures.map(feature => (
-                        <label key={feature} className="flex items-center space-x-2 cursor-pointer p-1.5 rounded hover:bg-light dark:hover:bg-dark text-sm">
-                            <input 
-                                type="checkbox" 
-                                name="features" 
-                                value={feature}
-                                checked={formData.features?.includes(feature)} 
-                                onChange={handleFeatureChange} 
-                                className="checkbox checkbox-sm checkbox-primary"
-                            />
-                            <span>{feature}</span>
-                        </label>
-                    ))}
+            <form onSubmit={handleSubmit} className="driver-modal-body max-h-[70vh] overflow-y-auto">
+              <div className="space-y-6">
+                <div className="driver-form-section">
+                  <div className="driver-form-title">
+                    <Car className="h-5 w-5" />
+                    Vehicle Information
                   </div>
-              </div>
-              
-              <div className="form-control">
-                <label className="label cursor-pointer">
-                  <span className="label-text">Vehicle Active</span> 
-                  <input type="checkbox" name="isActive" checked={formData.isActive} onChange={handleChange} className="toggle toggle-success" />
-                </label>
-              </div>
-              
-              <div className="flex justify-end space-x-3 pt-4 border-t border-light dark:border-dark mt-6">
-                <button type="button" onClick={handleCloseModal} className="btn btn-secondary py-3 px-4" disabled={loading}>
-                  Cancel
-                </button>
-                <button type="submit" className="btn btn-accent py-3 px-4 flex items-center gap-2" disabled={loading}>
-                  {loading ? <span className="loading loading-spinner loading-xs"></span> : <Save size={18}/>}
-                  {vehicleToEdit ? 'Update Vehicle' : 'Add Vehicle'}
-                </button>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="brand" className="form-label">Brand</label>
+                      <input
+                        type="text"
+                        id="brand"
+                        name="brand"
+                        value={formData.brand}
+                        onChange={handleChange}
+                        required
+                        className="form-input"
+                        placeholder="e.g., Toyota"
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="model" className="form-label">Model</label>
+                      <input
+                        type="text"
+                        id="model"
+                        name="model"
+                        value={formData.model}
+                        onChange={handleChange}
+                        required
+                        className="form-input"
+                        placeholder="e.g., Camry"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="type" className="form-label">Vehicle Type</label>
+                      <select
+                        id="type"
+                        name="type"
+                        value={formData.type}
+                        onChange={handleChange}
+                        required
+                        className="form-select w-full"
+                      >
+                        {vehicleTypes.map(type => (
+                          <option key={type} value={type.toLowerCase()}>{type}</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div>
+                      <label htmlFor="capacity" className="form-label">Capacity (Seats)</label>
+                      <input
+                        type="number"
+                        id="capacity"
+                        name="capacity"
+                        value={formData.capacity}
+                        onChange={handleChange}
+                        required
+                        min="1"
+                        className="form-input"
+                        placeholder="e.g., 4"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label htmlFor="licensePlate" className="form-label">License Plate</label>
+                    <input
+                      type="text"
+                      id="licensePlate"
+                      name="licensePlate"
+                      value={formData.licensePlate}
+                      onChange={handleChange}
+                      required
+                      className="form-input"
+                      placeholder="e.g., RAE 123 X"
+                    />
+                  </div>
+
+                  {userRole === 'admin' && (
+                    <div>
+                      <label htmlFor="driverId" className="form-label">Driver ID (Optional)</label>
+                      <input
+                        type="text"
+                        id="driverId"
+                        name="driverId"
+                        value={formData.driverId}
+                        onChange={handleChange}
+                        className="form-input"
+                        placeholder="Assign Driver ID"
+                      />
+                    </div>
+                  )}
+                </div>
+
+                <div className="driver-form-section">
+                  <div className="driver-form-title">
+                    <Settings className="h-5 w-5" />
+                    Features & Settings
+                  </div>
+
+                  <div>
+                    <label className="form-label">Vehicle Features (Optional)</label>
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {commonFeatures.map(feature => (
+                        <label key={feature} className="driver-notification p-3 cursor-pointer">
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="checkbox"
+                              name="features"
+                              value={feature}
+                              checked={formData.features?.includes(feature)}
+                              onChange={handleFeatureChange}
+                              className="form-checkbox"
+                            />
+                            <span className="text-sm">{feature}</span>
+                          </div>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="driver-notification">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="font-medium text-light-primary dark:text-dark-primary mb-1">
+                          Vehicle Active
+                        </div>
+                        <div className="text-sm text-light-secondary dark:text-dark-secondary">
+                          Enable this vehicle for trip assignments
+                        </div>
+                      </div>
+                      <label className="driver-toggle">
+                        <input
+                          type="checkbox"
+                          name="isActive"
+                          checked={formData.isActive}
+                          onChange={handleChange}
+                        />
+                        <span className="driver-toggle-slider"></span>
+                      </label>
+                    </div>
+                  </div>
+                </div>
               </div>
             </form>
+
+            <div className="driver-modal-footer">
+              <button
+                type="button"
+                onClick={handleCloseModal}
+                className="btn btn-ghost"
+                disabled={loading}
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                form="vehicle-form"
+                onClick={handleSubmit}
+                className="btn btn-primary flex items-center gap-2 shadow-primary"
+                disabled={loading}
+              >
+                {loading ? (
+                  <>
+                    <div className="driver-loading-spinner w-4 h-4"></div>
+                    {vehicleToEdit ? 'Updating...' : 'Adding...'}
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4" />
+                    {vehicleToEdit ? 'Update Vehicle' : 'Add Vehicle'}
+                  </>
+                )}
+              </button>
+            </div>
           </div>
         </div>
       )}

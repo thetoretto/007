@@ -265,50 +265,50 @@ const TripForm: React.FC<TripFormProps> = ({ isOpen, onClose, tripToEdit, onSubm
       {/* Date/Time/Price Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div>
-          <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">Date</label>
+          <label htmlFor="date" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Date</label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Calendar className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              <Calendar className="h-5 w-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
             </div>
             <input
               type="date"
               id="date"
-                  name="date"
-                  value={formData.date}
-                  onChange={handleChange}
-                  className="input input-bordered w-full"
-                  disabled={!!tripToEdit && user?.role === 'driver'}
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
+              className="form-input w-full pl-10"
+              disabled={!!tripToEdit && user?.role === 'driver'}
             />
           </div>
         </div>
         <div>
-          <label htmlFor="time" className="block text-sm font-medium text-gray-700 mb-1">Time</label>
+          <label htmlFor="time" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Time</label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Clock className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              <Clock className="h-5 w-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
             </div>
             <input
               type="time"
               id="time"
-                  name="time"
-                  value={formData.time}
-                  onChange={handleChange}
-                  className="input input-bordered w-full"
-                  disabled={false} // Explicitly enable, though default is enabled
+              name="time"
+              value={formData.time}
+              onChange={handleChange}
+              className="form-input w-full pl-10"
+              disabled={false}
             />
           </div>
         </div>
         <div>
-          <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">Price</label>
+          <label htmlFor="price" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Price</label>
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <DollarSign className="h-5 w-5 text-gray-400" aria-hidden="true" />
+              <DollarSign className="h-5 w-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
             </div>
             <input
-              type="number" // Keep as number for native validation, state handles string
+              type="number"
               id="price"
               name="price"
-              value={formData.price} // formData.price is string, input type number handles conversion
+              value={formData.price}
               onChange={handleChange}
               required
               min="0.01"
@@ -322,10 +322,10 @@ const TripForm: React.FC<TripFormProps> = ({ isOpen, onClose, tripToEdit, onSubm
 
       {/* Notes Textarea */}
       <div>
-        <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-1">Notes (Optional)</label>
+        <label htmlFor="notes" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Notes (Optional)</label>
         <div className="relative">
           <div className="absolute top-3 left-0 pl-3 flex items-center pointer-events-none">
-             <FileText className="h-5 w-5 text-gray-400" aria-hidden="true" />
+             <FileText className="h-5 w-5 text-gray-400 dark:text-gray-500" aria-hidden="true" />
           </div>
           <textarea
             id="notes"

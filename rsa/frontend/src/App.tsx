@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, lazy, useTransition, createContext } from 'react';
+import React, { Suspense, useEffect, lazy, useTransition } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './components/common/Layout';
 import HomePage from './pages/HomePage';
@@ -11,11 +11,15 @@ import BecomeMemberPage from './pages/BecomeMemberPage'; // Import the new becom
 import TripsPage from './pages/passenger/TripsPage';
 import TripDetailsPage from './pages/passenger/TripDetailsPage'; // Import the new TripDetailsPage
 import PassengerDashboard from './pages/passenger/PassengerDashboard'; // Import PassengerDashboard
+import PassengerSettingsPage from './pages/passenger/SettingsPage';
 import DriverDashboard from './pages/driver/DriverDashboard';
+import DriverSettingsPage from './pages/driver/SettingsPage';
 import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminSettingsPage from './pages/admin/SettingsPage';
 import useAuthStore from './store/authStore';
 import FloatingThemeToggle from './components/common/FloatingThemeToggle';
 import ErrorBoundary from './components/common/ErrorBoundary';
+import { TransitionContext } from './context/TransitionContext';
 
 // Lazy-loaded components
 
@@ -58,11 +62,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ element, allowedRoles =
   return <>{element}</>;
 };
 
-// Create a context for the transition function
-export const TransitionContext = createContext({
-  startPageTransition: (callback: () => void) => callback(),
-  isPending: false
-});
+
 
 function App() {
   const { checkAuth } = useAuthStore();
@@ -129,9 +129,13 @@ function App() {
               path="/passenger/trips" 
               element={<ProtectedRoute element={<TripsPage />} allowedRoles={['passenger']} />} 
             />
-            <Route 
+            <Route
               path="/passenger/trips/:tripId"
               element={<ProtectedRoute element={<TripDetailsPage />} allowedRoles={['passenger', 'driver', 'admin']} />}
+            />
+            <Route
+              path="/passenger/settings"
+              element={<ProtectedRoute element={<PassengerSettingsPage />} allowedRoles={['passenger']} />}
             />
             
             {/* Driver routes */}
@@ -187,20 +191,24 @@ function App() {
                 />
               }
             />
-            <Route 
+            <Route
               path="/driver/check-in"
               element={
-                <ProtectedRoute 
+                <ProtectedRoute
                   element={
                     <ErrorBoundary>
                       <Suspense fallback={<div>Loading...</div>}>
                         <DriverCheckInPage />
                       </Suspense>
                     </ErrorBoundary>
-                  } 
-                  allowedRoles={['driver']} 
+                  }
+                  allowedRoles={['driver']}
                 />
               }
+            />
+            <Route
+              path="/driver/settings"
+              element={<ProtectedRoute element={<DriverSettingsPage />} allowedRoles={['driver']} />}
             />
             
             {/* Admin routes */}
@@ -314,20 +322,24 @@ function App() {
                 />
               }
             />
-            <Route 
-              path="/admin/trips/new" 
+            <Route
+              path="/admin/trips/new"
               element={
-                <ProtectedRoute 
+                <ProtectedRoute
                   element={
                     <ErrorBoundary>
                       <Suspense fallback={<div>Loading...</div>}>
                         <CreateTripPage />
                       </Suspense>
                     </ErrorBoundary>
-                  } 
-                  allowedRoles={['admin']} 
+                  }
+                  allowedRoles={['admin']}
                 />
               }
+            />
+            <Route
+              path="/admin/settings"
+              element={<ProtectedRoute element={<AdminSettingsPage />} allowedRoles={['admin']} />}
             />
             
             {/* Fallback route */}

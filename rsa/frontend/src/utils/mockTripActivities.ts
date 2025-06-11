@@ -1,4 +1,4 @@
-import { TripActivity } from './components/common/TripActivityLog';
+import { TripActivity } from '../components/common/TripActivityLog';
 
 export const mockTripActivities: TripActivity[] = [
   {
