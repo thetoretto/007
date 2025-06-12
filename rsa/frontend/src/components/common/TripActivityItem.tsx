@@ -1,6 +1,7 @@
+import '../../index.css';
 import React from 'react';
-import { LogTripActivity, LogTripStatus } from './TripActivityLog'; // Import shared types from TripActivityLog
-import { ChevronDown, ChevronUp, CheckCircle, RefreshCw, XCircle, Clock, AlertCircle, Star, MapIcon, Download, Share2, Edit3, MessageSquare, Phone, MapPin as LocationPin, CalendarDays, Users, CreditCard } from 'lucide-react';
+import { LogTripActivity, LogTripStatus } from './TripActivityLog';
+import { ChevronDown, ChevronUp, CheckCircle, RefreshCw, XCircle, Clock, AlertCircle, Star, MapIcon, Download, Share2, Edit3, MessageSquare, MapPin as LocationPin, CalendarDays, Users, CreditCard } from 'lucide-react';
 
 interface TripActivityItemProps {
   activity: LogTripActivity;
@@ -51,14 +52,13 @@ const TripActivityItem: React.FC<TripActivityItemProps> = ({
     }
   };
 
-  const constActionButtonClass = "btn btn-sm btn-outline flex items-center gap-2 transition-all duration-200";
-  const primaryActionButtonClass = "btn btn-sm btn-accent flex items-center gap-2 transition-all duration-200";
+
 
 
   return (
-    <div className="card bg-base-100 dark:bg-section-medium shadow-md rounded-lg overflow-hidden transition-all duration-300 ease-in-out hover:shadow-lg">
+    <div className="driver-trip-card group">
       <div
-        className={`flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 cursor-pointer hover:bg-base-200 dark:hover:bg-section-dark transition-colors duration-200 ${isExpanded ? 'border-b border-border dark:border-border-dark' : ''}`}
+        className={`flex flex-col sm:flex-row items-start sm:items-center justify-between cursor-pointer transition-colors duration-200 ${isExpanded ? 'border-b border-light dark:border-dark pb-4 mb-4' : ''}`}
         onClick={() => onToggleExpand(activity.id)}
         role="button"
         aria-expanded={isExpanded}
@@ -69,10 +69,10 @@ const TripActivityItem: React.FC<TripActivityItemProps> = ({
             {getLogStatusIcon(activity.status)}
           </div>
           <div className="min-w-0">
-            <p className="font-semibold text-base text-text-base dark:text-text-inverse truncate" title={`${activity.fromLocation} to ${activity.toLocation}`}>
-              {activity.fromLocation} <span className="text-text-muted dark:text-text-muted-dark mx-1 text-sm">→</span> {activity.toLocation}
+            <p className="font-semibold text-base text-light-primary dark:text-dark-primary group-hover:text-primary transition-colors duration-200 truncate" title={`${activity.fromLocation} to ${activity.toLocation}`}>
+              {activity.fromLocation} <span className="text-light-secondary dark:text-dark-secondary mx-1 text-sm">→</span> {activity.toLocation}
             </p>
-            <p className="text-xs text-text-muted dark:text-text-muted-dark">
+            <p className="text-xs text-light-secondary dark:text-dark-secondary">
               {new Date(activity.date).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })} at {activity.time}
             </p>
           </div>
@@ -89,25 +89,45 @@ const TripActivityItem: React.FC<TripActivityItemProps> = ({
         <div id={`trip-details-${activity.id}`} className="p-4 bg-base-200 dark:bg-section-dark animate-fadeIn space-y-4">
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm">
-            <div className="space-y-1">
-              <h4 className="font-medium text-text-base dark:text-text-inverse flex items-center"><LocationPin className="h-4 w-4 mr-1.5 text-primary dark:text-primary-300"/>Route</h4>
-              <p className="text-text-muted dark:text-text-muted-dark">From: {activity.fromLocation}</p>
-              <p className="text-text-muted dark:text-text-muted-dark">To: {activity.toLocation}</p>
+            <div className="space-y-2">
+              <h4 className="font-medium text-light-primary dark:text-dark-primary flex items-center">
+                <LocationPin className="h-4 w-4 mr-2 text-primary"/>
+                Route
+              </h4>
+              <div className="space-y-1">
+                <p className="text-light-secondary dark:text-dark-secondary">From: {activity.fromLocation}</p>
+                <p className="text-light-secondary dark:text-dark-secondary">To: {activity.toLocation}</p>
+              </div>
             </div>
-            <div className="space-y-1">
-              <h4 className="font-medium text-text-base dark:text-text-inverse flex items-center"><CalendarDays className="h-4 w-4 mr-1.5 text-primary dark:text-primary-300"/>Schedule</h4>
-              <p className="text-text-muted dark:text-text-muted-dark">Date: {new Date(activity.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
-              <p className="text-text-muted dark:text-text-muted-dark">Departure: {activity.time}</p>
-              {activity.estimatedArrival && <p className="text-text-muted dark:text-text-muted-dark">Est. Arrival: {activity.estimatedArrival}</p>}
+            <div className="space-y-2">
+              <h4 className="font-medium text-light-primary dark:text-dark-primary flex items-center">
+                <CalendarDays className="h-4 w-4 mr-2 text-primary"/>
+                Schedule
+              </h4>
+              <div className="space-y-1">
+                <p className="text-light-secondary dark:text-dark-secondary">Date: {new Date(activity.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                <p className="text-light-secondary dark:text-dark-secondary">Departure: {activity.time}</p>
+                {activity.estimatedArrival && <p className="text-light-secondary dark:text-dark-secondary">Est. Arrival: {activity.estimatedArrival}</p>}
+              </div>
             </div>
-            <div className="space-y-1">
-              <h4 className="font-medium text-text-base dark:text-text-inverse flex items-center"><Users className="h-4 w-4 mr-1.5 text-primary dark:text-primary-300"/>Passengers</h4>
-              <p className="text-text-muted dark:text-text-muted-dark">{activity.passengers} Passenger{activity.passengers !== 1 ? 's' : ''}</p>
+            <div className="space-y-2">
+              <h4 className="font-medium text-light-primary dark:text-dark-primary flex items-center">
+                <Users className="h-4 w-4 mr-2 text-primary"/>
+                Passengers
+              </h4>
+              <div className="space-y-1">
+                <p className="text-light-secondary dark:text-dark-secondary">{activity.passengers} Passenger{activity.passengers !== 1 ? 's' : ''}</p>
+              </div>
             </div>
-            <div className="space-y-1">
-              <h4 className="font-medium text-text-base dark:text-text-inverse flex items-center"><CreditCard className="h-4 w-4 mr-1.5 text-primary dark:text-primary-300"/>Payment</h4>
-              <p className="text-text-muted dark:text-text-muted-dark">Price: ${activity.price.toFixed(2)}</p>
-              <p className="text-text-muted dark:text-text-muted-dark">Method: {activity.paymentMethod || 'N/A'}</p>
+            <div className="space-y-2">
+              <h4 className="font-medium text-light-primary dark:text-dark-primary flex items-center">
+                <CreditCard className="h-4 w-4 mr-2 text-primary"/>
+                Payment
+              </h4>
+              <div className="space-y-1">
+                <p className="text-light-secondary dark:text-dark-secondary">Price: ${activity.price?.toFixed(2) || 'N/A'}</p>
+                <p className="text-light-secondary dark:text-dark-secondary">Method: {activity.paymentMethod || 'N/A'}</p>
+              </div>
             </div>
              {activity.driver && (
               <div className="lg:col-span-2 space-y-1">
@@ -148,36 +168,66 @@ const TripActivityItem: React.FC<TripActivityItemProps> = ({
             </div>
           )}
 
-          <div className="pt-3 border-t border-border dark:border-border-dark flex flex-wrap items-center gap-2">
+          <div className="pt-4 mt-4 border-t border-light dark:border-dark flex flex-wrap items-center gap-3">
             {/* Status-specific actions */}
             {activity.status === 'in-progress' && (
               <>
-                <button className={`${primaryActionButtonClass} btn-info`}><MapIcon className="h-4 w-4"/>Track Live</button>
-                <button className={`${constActionButtonClass} text-error hover:bg-error hover:text-white dark:text-error dark:hover:bg-error dark:hover:text-white`}><AlertCircle className="h-4 w-4"/>Report Issue</button>
+                <button className="btn btn-info btn-sm flex items-center gap-2">
+                  <MapIcon className="h-4 w-4"/>
+                  Track Live
+                </button>
+                <button className="btn btn-error btn-sm flex items-center gap-2">
+                  <AlertCircle className="h-4 w-4"/>
+                  Report Issue
+                </button>
               </>
             )}
             {activity.status === 'scheduled' && (
               <>
-                <button className={`${constActionButtonClass} text-error hover:bg-error hover:text-white dark:text-error dark:hover:bg-error dark:hover:text-white`}><XCircle className="h-4 w-4"/>Cancel Trip</button>
-                <button className={`${constActionButtonClass} text-secondary hover:bg-secondary hover:text-white dark:text-secondary dark:hover:bg-secondary dark:hover:text-white`}><Edit3 className="h-4 w-4"/>Modify Details</button>
+                <button className="btn btn-error btn-sm flex items-center gap-2">
+                  <XCircle className="h-4 w-4"/>
+                  Cancel Trip
+                </button>
+                <button className="btn btn-secondary btn-sm flex items-center gap-2">
+                  <Edit3 className="h-4 w-4"/>
+                  Modify Details
+                </button>
               </>
             )}
             {activity.status === 'completed' && (
-              <button className={`${primaryActionButtonClass} btn-success`}><Star className="h-4 w-4"/>Leave Feedback</button>
+              <button className="btn btn-success btn-sm flex items-center gap-2">
+                <Star className="h-4 w-4"/>
+                Leave Feedback
+              </button>
             )}
-             {activity.status === 'delayed' && (
-              <button className={`${constActionButtonClass} text-warning hover:bg-warning hover:text-white dark:text-warning dark:hover:bg-warning dark:hover:text-white`}><MessageSquare className="h-4 w-4"/>Get Updates</button>
+            {activity.status === 'delayed' && (
+              <button className="btn btn-warning btn-sm flex items-center gap-2">
+                <MessageSquare className="h-4 w-4"/>
+                Get Updates
+              </button>
             )}
 
             {/* Common actions */}
-            <button onClick={() => onViewOnMap(activity)} className={`${constActionButtonClass} text-primary hover:bg-primary hover:text-white dark:text-primary-300 dark:hover:bg-primary-300 dark:hover:text-black`}>
-              <MapIcon className="h-4 w-4"/>View Map
+            <button
+              onClick={() => onViewOnMap(activity)}
+              className="btn btn-outline btn-sm flex items-center gap-2"
+            >
+              <MapIcon className="h-4 w-4"/>
+              View Map
             </button>
-            <button onClick={() => onDownloadReceipt(activity.id, activity.date)} className={constActionButtonClass}>
-              <Download className="h-4 w-4"/>Receipt
+            <button
+              onClick={() => onDownloadReceipt(activity.id, activity.date)}
+              className="btn btn-outline btn-sm flex items-center gap-2"
+            >
+              <Download className="h-4 w-4"/>
+              Receipt
             </button>
-            <button onClick={() => onShareTrip(activity)} className={constActionButtonClass}>
-              <Share2 className="h-4 w-4"/>Share
+            <button
+              onClick={() => onShareTrip(activity)}
+              className="btn btn-outline btn-sm flex items-center gap-2"
+            >
+              <Share2 className="h-4 w-4"/>
+              Share
             </button>
           </div>
         </div>
